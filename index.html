@@ -74,6 +74,7 @@
     <label><input type="checkbox" id="tFg"> Foreground masks (FG1)</label>
     <label><input type="checkbox" id="tLabels" checked> Object labels (zoomed)</label>
     <label><input type="checkbox" id="tDim"> Dim backgrounds</label>
+    <label><input type="checkbox" id="tRuler"> Ruler (drag to measure)</label>
   </div>
   <h2>Objects <span style="float:right"><a href="#" id="fAll" style="color:var(--dim)">all</a> · <a href="#" id="fNone" style="color:var(--dim)">none</a></span></h2>
   <div class="filters" id="filterBox"></div>
@@ -139,6 +140,8 @@ const images = {};                   // png -> Image
 let hoverTlvs = [], mouse = {x:0,y:0};
 let panMoved = false;
 let flash = null;          // {x, y, t0} follow-destination highlight
+let ruler = null;          // {x1, y1, x2, y2} in draw space
+let measuring = false;
 
 const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
 const tip = document.getElementById("tip"), hud = document.getElementById("hud");
@@ -214,6 +217,11 @@ CATS.forEach(c => {
 document.getElementById("fAll").onclick = e => { e.preventDefault(); CATS.forEach(c => { c.on = true; c._lab.style.opacity = 1; }); draw(); };
 document.getElementById("fNone").onclick = e => { e.preventDefault(); CATS.forEach(c => { c.on = false; c._lab.style.opacity = .45; }); draw(); };
 ["tGrid","tColl","tFg","tLabels","tDim"].forEach(id => document.getElementById(id).onchange = draw);
+document.getElementById("tRuler").onchange = () => {
+  if (!document.getElementById("tRuler").checked) ruler = null;
+  cv.style.cursor = document.getElementById("tRuler").checked ? "crosshair" : "";
+  draw();
+};
 
 function updateCounts() {
   const counts = {};
@@ -378,18 +386,31 @@ window.addEventListener("hashchange", () => { if (!applyingHash) applyHash(); })
 
 // ---- interaction ------------------------------------------------------
 let panning = false, panStart = null;
-cv.addEventListener("mousedown", e => { panning = true; panMoved = false; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y }; });
+cv.addEventListener("mousedown", e => {
+  if (document.getElementById("tRuler").checked) {
+    const w = worldAtMouse();
+    ruler = { x1: w.x, y1: w.y, x2: w.x, y2: w.y };
+    measuring = true;
+    draw();
+    return;
+  }
+  panning = true; panMoved = false; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y };
+});
 cv.addEventListener("click", () => {
-  if (panMoved) return;
+  if (panMoved || document.getElementById("tRuler").checked) return;
   for (const t of hoverTlvs) {
     const d = destOf(t);
     if (d) { navigateToDest(d); return; }
   }
 });
-window.addEventListener("mouseup", () => { if (panning && panMoved) scheduleHash(false); panning = false; cv.classList.remove("panning"); });
+window.addEventListener("mouseup", () => { measuring = false; if (panning && panMoved) scheduleHash(false); panning = false; cv.classList.remove("panning"); });
 window.addEventListener("mousemove", e => {
   const r = cv.getBoundingClientRect();
   mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  if (measuring && ruler) {
+    const w = worldAtMouse();
+    ruler.x2 = w.x; ruler.y2 = w.y;
+  }
   if (panning) {
     if (Math.abs(e.clientX - panStart.x) + Math.abs(e.clientY - panStart.y) > 4) panMoved = true;
     cam.x = panStart.cx - (e.clientX - panStart.x) / cam.z;
@@ -579,6 +600,27 @@ function draw() {
       ctx.fillStyle = c.color;
       ctx.fillText(t.name, x1, y1 - 3 / cam.z);
     }
+  }
+
+  if (ruler) {
+    const dx = ruler.x2 - ruler.x1, dy = ruler.y2 - ruler.y1;
+    const len = Math.hypot(dx, dy);
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2 / cam.z;
+    ctx.setLineDash([6 / cam.z, 5 / cam.z]);
+    ctx.beginPath(); ctx.moveTo(ruler.x1, ruler.y1); ctx.lineTo(ruler.x2, ruler.y2); ctx.stroke();
+    ctx.setLineDash([]);
+    for (const [ex, ey] of [[ruler.x1, ruler.y1], [ruler.x2, ruler.y2]]) {
+      ctx.beginPath(); ctx.arc(ex, ey, 3.5 / cam.z, 0, Math.PI * 2); ctx.fillStyle = "#ffffff"; ctx.fill();
+    }
+    const label = `${Math.round(Math.abs(dx))} × ${Math.round(Math.abs(dy))} · ${Math.round(len)}u ≈ ${(len / 25).toFixed(1)} grid`;
+    ctx.font = `${13 / cam.z}px sans-serif`;
+    const midx = (ruler.x1 + ruler.x2) / 2, midy = (ruler.y1 + ruler.y2) / 2 - 10 / cam.z;
+    ctx.fillStyle = "rgba(14,15,18,.85)";
+    const tw = ctx.measureText(label).width;
+    ctx.fillRect(midx - tw / 2 - 5 / cam.z, midy - 13 / cam.z, tw + 10 / cam.z, 18 / cam.z);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(label, midx - tw / 2, midy);
   }
 
   if (flash) {

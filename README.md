@@ -16,6 +16,7 @@ Open **[index.html](index.html)** in a browser — the whole site is static, no 
 - **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")
 - the URL hash (`#LEVEL/path/x/y/zoom`) always reflects the current view — copy it to share an exact location; the browser back button retraces follows
 - **search** (sidebar) matches object names and decoded fields across the whole game — try `mudokon`, `lcdstatusboard` or `switch_id=70` — and clicking a result jumps straight to it
+- **Ruler**: enable, then drag to measure — Δx × Δy, length in world units (1 unit = 1 PS1 screen pixel) and 25-unit grid squares; hovering a collision line shows its type and length the same way
 
 One grid cell = one in-game camera. Each camera occupies a 1024×480-unit cell in the game's world grid, but the visible screen is a 368×240-unit window centered at (cell·1024+440, cell·480+240) — world units map 1:1 to PS1 screen pixels. The viewer lays the visible windows out edge to edge and translates all object/collision coordinates accordingly, so markers land on the artwork.
 
