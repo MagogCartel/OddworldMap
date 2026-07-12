@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Oddworld Map Viewer</title>
+<style>
+  :root {
+    --bg: #14161a; --panel: #1d2026; --panel2: #23262e; --text: #d8dbe2;
+    --dim: #8a8f9c; --accent: #e8a33d; --line: #32363f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body { background: var(--bg); color: var(--text); font: 13px/1.45 -apple-system, "Segoe UI", sans-serif; display: flex; }
+  #sidebar { width: 250px; min-width: 250px; background: var(--panel); border-right: 1px solid var(--line);
+             display: flex; flex-direction: column; overflow-y: auto; }
+  #sidebar h1 { font-size: 14px; padding: 12px 14px 8px; color: var(--accent); letter-spacing: .04em; }
+  #sidebar h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim);
+                padding: 12px 14px 4px; }
+  .btnrow { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px 12px; }
+  .btnrow button { background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 5px;
+                   padding: 4px 8px; cursor: pointer; font-size: 12px; }
+  .btnrow button:hover { border-color: var(--accent); }
+  .btnrow button.on { background: var(--accent); color: #14161a; border-color: var(--accent); font-weight: 600; }
+  .filters { padding: 4px 12px 12px; }
+  .filters label { display: flex; align-items: center; gap: 7px; padding: 2.5px 2px; cursor: pointer; user-select: none; }
+  .filters .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex: none; }
+  .filters .cnt { margin-left: auto; color: var(--dim); font-size: 11px; }
+  #toggles { padding: 0 12px 10px; }
+  #toggles label { display: flex; align-items: center; gap: 7px; padding: 2.5px 2px; cursor: pointer; }
+  #main { flex: 1; position: relative; }
+  #cv { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+  #cv.panning { cursor: grabbing; }
+  #tip { position: absolute; pointer-events: none; background: rgba(18,20,24,.94); border: 1px solid var(--line);
+         border-radius: 6px; padding: 8px 10px; font-size: 12px; max-width: 340px; display: none; z-index: 5;
+         box-shadow: 0 4px 18px rgba(0,0,0,.5); }
+  #tip .t { color: var(--accent); font-weight: 600; }
+  #tip .e { color: var(--dim); }
+  #hud { position: absolute; right: 10px; bottom: 8px; color: var(--dim); font-size: 11px;
+         background: rgba(18,20,24,.7); padding: 3px 8px; border-radius: 5px; }
+  #help { position: absolute; left: 10px; bottom: 8px; color: var(--dim); font-size: 11px;
+          background: rgba(18,20,24,.7); padding: 3px 8px; border-radius: 5px; }
+  .muted { color: var(--dim); padding: 2px 14px 8px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <h1>ODDWORLD MAP VIEWER</h1>
+  <div class="muted" id="gameName"></div>
+  <h2>Level</h2>
+  <div class="btnrow" id="levelBtns"></div>
+  <h2>Path</h2>
+  <div class="btnrow" id="pathBtns"></div>
+  <h2>Display</h2>
+  <div id="toggles">
+    <label><input type="checkbox" id="tGrid" checked> Camera grid + names</label>
+    <label><input type="checkbox" id="tColl"> Collision lines</label>
+    <label><input type="checkbox" id="tLabels" checked> Object labels (zoomed)</label>
+    <label><input type="checkbox" id="tDim"> Dim backgrounds</label>
+  </div>
+  <h2>Objects <span style="float:right"><a href="#" id="fAll" style="color:var(--dim)">all</a> · <a href="#" id="fNone" style="color:var(--dim)">none</a></span></h2>
+  <div class="filters" id="filterBox"></div>
+</div>
+<div id="main">
+  <canvas id="cv"></canvas>
+  <div id="tip"></div>
+  <div id="help">drag = pan · wheel = zoom · hover = inspect</div>
+  <div id="hud"></div>
+</div>
+
+<script src="map_data_ao.js"></script>
+<script>
+const CELL_W = 1024, CELL_H = 480;
+const DATA = window.MAP_DATA_AO;
+
+// ---- categories -------------------------------------------------------
+const CATS = [
+  { key:"board",  label:"LCD Status Boards", color:"#ff3860", types:[103], on:true },
+  { key:"mud",    label:"Mudokons",          color:"#3ec6ff", types:[82,41,50,32,89], on:true },
+  { key:"door",   label:"Doors / Transitions", color:"#ffd23e", types:[6,1,52,53,11,45], on:true },
+  { key:"cont",   label:"Continue points",   color:"#ffffff", types:[0,37,38], on:true },
+  { key:"switch", label:"Switches / levers", color:"#5dde75", types:[26,81,60,27,100,94,61,29,95,54,69], on:true },
+  { key:"hazard", label:"Hazards",           color:"#ff8b3d", types:[5,22,46,47,67,84,86,88,97,108,110,55,15,56,14], on:true },
+  { key:"enemy",  label:"Enemies / spawners", color:"#c85dff", types:[24,25,48,49,43,66,72,107,111,112], on:true },
+  { key:"screen", label:"LCD marquees / stones", color:"#3effc8", types:[98,51,92,96,20,36,42,34,71,13,12], on:false },
+  { key:"nav",    label:"Hoists / edges / lifts", color:"#8f9bb3", types:[3,4,8,68,35,18,40,93,59,73,58], on:false },
+  { key:"meta",   label:"Meta / bounds / fx", color:"#5b6270", types:[2,7,19,28,57,74,75,76,77,79,83,87,90,99,101,102,105,106,109,113,114,115,62], on:false },
+];
+const typeCat = {};
+CATS.forEach(c => c.types.forEach(t => typeCat[t] = c));
+
+// ---- state ------------------------------------------------------------
+let lvl = null, path = null;
+let cam = { x: 0, y: 0, z: 0.3 };   // world offset + zoom (px per unit)
+const images = {};                   // png -> Image
+let hoverTlvs = [], mouse = {x:0,y:0};
+
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const tip = document.getElementById("tip"), hud = document.getElementById("hud");
+
+function resize() {
+  cv.width = cv.clientWidth * devicePixelRatio;
+  cv.height = cv.clientHeight * devicePixelRatio;
+  draw();
+}
+window.addEventListener("resize", resize);
+
+// ---- UI build ---------------------------------------------------------
+document.getElementById("gameName").textContent = DATA.game;
+const levelBtns = document.getElementById("levelBtns");
+const pathBtns = document.getElementById("pathBtns");
+
+DATA.levels.forEach(L => {
+  const b = document.createElement("button");
+  b.textContent = L.short;
+  b.title = L.name;
+  b.onclick = () => selectLevel(L, b);
+  levelBtns.appendChild(b);
+});
+
+function selectLevel(L, btn) {
+  lvl = L;
+  [...levelBtns.children].forEach(x => x.classList.remove("on"));
+  btn.classList.add("on");
+  pathBtns.innerHTML = "";
+  L.paths.forEach(P => {
+    const b = document.createElement("button");
+    b.textContent = "P" + P.id;
+    b.onclick = () => selectPath(P, b);
+    pathBtns.appendChild(b);
+  });
+  if (L.paths.length) selectPath(L.paths[0], pathBtns.children[0]);
+}
+
+function selectPath(P, btn) {
+  path = P;
+  [...pathBtns.children].forEach(x => x.classList.remove("on"));
+  if (btn) btn.classList.add("on");
+  fitView();
+  updateCounts();
+  draw();
+}
+
+function fitView() {
+  if (!cv.clientWidth || !cv.clientHeight) { requestAnimationFrame(() => { fitView(); draw(); }); return; }
+  const w = path.w * CELL_W, h = path.h * CELL_H;
+  const zx = cv.clientWidth / (w + 200), zy = cv.clientHeight / (h + 200);
+  cam.z = Math.max(0.02, Math.min(zx, zy));
+  cam.x = -(cv.clientWidth / cam.z - w) / 2;
+  cam.y = -(cv.clientHeight / cam.z - h) / 2;
+}
+
+// filters
+const filterBox = document.getElementById("filterBox");
+CATS.forEach(c => {
+  const lab = document.createElement("label");
+  lab.innerHTML = `<span class="sw" style="background:${c.color}"></span>
+    <input type="checkbox" ${c.on ? "checked" : ""} style="display:none">
+    <span>${c.label}</span><span class="cnt"></span>`;
+  const cb = lab.querySelector("input");
+  lab.onclick = (e) => { e.preventDefault(); c.on = !c.on; lab.style.opacity = c.on ? 1 : .45; draw(); };
+  filterBox.appendChild(lab);
+  c._lab = lab;
+});
+document.getElementById("fAll").onclick = e => { e.preventDefault(); CATS.forEach(c => { c.on = true; c._lab.style.opacity = 1; }); draw(); };
+document.getElementById("fNone").onclick = e => { e.preventDefault(); CATS.forEach(c => { c.on = false; c._lab.style.opacity = .45; }); draw(); };
+["tGrid","tColl","tLabels","tDim"].forEach(id => document.getElementById(id).onchange = draw);
+
+function updateCounts() {
+  const counts = {};
+  path.tlvs.forEach(t => { const c = typeCat[t.t]; if (c) counts[c.key] = (counts[c.key] || 0) + 1; });
+  CATS.forEach(c => c._lab.querySelector(".cnt").textContent = counts[c.key] || "");
+}
+
+// ---- interaction ------------------------------------------------------
+let panning = false, panStart = null;
+cv.addEventListener("mousedown", e => { panning = true; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y }; });
+window.addEventListener("mouseup", () => { panning = false; cv.classList.remove("panning"); });
+window.addEventListener("mousemove", e => {
+  const r = cv.getBoundingClientRect();
+  mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+  if (panning) {
+    cam.x = panStart.cx - (e.clientX - panStart.x) / cam.z;
+    cam.y = panStart.cy - (e.clientY - panStart.y) / cam.z;
+  }
+  updateHover();
+  draw();
+});
+cv.addEventListener("wheel", e => {
+  e.preventDefault();
+  const f = Math.exp(-e.deltaY * 0.0015);
+  const wx = cam.x + mouse.x / cam.z, wy = cam.y + mouse.y / cam.z;
+  cam.z = Math.min(4, Math.max(0.02, cam.z * f));
+  cam.x = wx - mouse.x / cam.z;
+  cam.y = wy - mouse.y / cam.z;
+  updateHover();
+  draw();
+}, { passive: false });
+
+function worldAtMouse() { return { x: cam.x + mouse.x / cam.z, y: cam.y + mouse.y / cam.z }; }
+
+function updateHover() {
+  if (!path) return;
+  const w = worldAtMouse();
+  hoverTlvs = path.tlvs.filter(t => {
+    const c = typeCat[t.t];
+    if (!c || !c.on) return false;
+    const x2 = Math.max(t.x2, t.x1 + 8), y2 = Math.max(t.y2, t.y1 + 8);
+    return w.x >= t.x1 - 4 && w.x <= x2 + 4 && w.y >= t.y1 - 4 && w.y <= y2 + 4;
+  });
+  if (hoverTlvs.length) {
+    tip.style.display = "block";
+    const px = Math.min(mouse.x + 16, cv.clientWidth - 350);
+    tip.style.left = px + "px";
+    tip.style.top = (mouse.y + 16) + "px";
+    tip.innerHTML = hoverTlvs.slice(0, 8).map(t => {
+      const ex = Object.entries(t.extra || {}).filter(([k,v]) => v !== null && v !== "")
+        .map(([k, v]) => `${k}=${v}`).join("  ");
+      return `<div><span class="t">${t.name}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
+             (ex ? `<br><span class="e">${ex}</span>` : "") + `</div>`;
+    }).join("<hr style='border:0;border-top:1px solid #32363f;margin:5px 0'>")
+      + (hoverTlvs.length > 8 ? `<div class="e">+${hoverTlvs.length - 8} more…</div>` : "");
+  } else {
+    tip.style.display = "none";
+  }
+  hud.textContent = `x ${Math.round(w.x)}  y ${Math.round(w.y)}  ·  cell C${1 + Math.floor(w.x / CELL_W) + Math.floor(w.y / CELL_H) * path.w}?  ·  zoom ${cam.z.toFixed(2)}`;
+}
+
+// ---- drawing ----------------------------------------------------------
+function img(src) {
+  if (!images[src]) {
+    const im = new Image();
+    im.src = src;
+    im.onload = draw;
+    images[src] = im;
+  }
+  return images[src];
+}
+
+const LINE_COLORS = { 0:"#43d94c", 1:"#ff5c5c", 2:"#ff9d3d", 3:"#5ca9ff", 4:"#2b8f33", 5:"#a33c3c", 6:"#a3702b" };
+
+function draw() {
+  if (!path) { ctx.fillStyle = "#14161a"; ctx.fillRect(0, 0, cv.width, cv.height); return; }
+  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  ctx.fillStyle = "#0e0f12";
+  ctx.fillRect(0, 0, cv.clientWidth, cv.clientHeight);
+  ctx.save();
+  ctx.scale(cam.z, cam.z);
+  ctx.translate(-cam.x, -cam.y);
+
+  const dim = document.getElementById("tDim").checked;
+
+  // cameras
+  ctx.imageSmoothingEnabled = cam.z < 1;
+  for (const c of path.cams) {
+    const cx = (c.cell % path.w) * CELL_W, cy = Math.floor(c.cell / path.w) * CELL_H;
+    if (c.png) {
+      const im = img(c.png);
+      if (im.complete && im.naturalWidth) {
+        ctx.globalAlpha = dim ? 0.35 : 1;
+        ctx.drawImage(im, cx, cy, CELL_W, CELL_H);
+        ctx.globalAlpha = 1;
+      }
+    } else {
+      ctx.fillStyle = "#1a1d22";
+      ctx.fillRect(cx, cy, CELL_W, CELL_H);
+    }
+  }
+
+  // grid + names
+  if (document.getElementById("tGrid").checked) {
+    ctx.strokeStyle = "rgba(255,255,255,.18)";
+    ctx.lineWidth = 1.5 / cam.z;
+    for (let gx = 0; gx <= path.w; gx++) { ctx.beginPath(); ctx.moveTo(gx * CELL_W, 0); ctx.lineTo(gx * CELL_W, path.h * CELL_H); ctx.stroke(); }
+    for (let gy = 0; gy <= path.h; gy++) { ctx.beginPath(); ctx.moveTo(0, gy * CELL_H); ctx.lineTo(path.w * CELL_W, gy * CELL_H); ctx.stroke(); }
+    if (CELL_W * cam.z > 90) {
+      ctx.fillStyle = "rgba(255,255,255,.8)";
+      ctx.font = `${12 / cam.z}px sans-serif`;
+      ctx.shadowColor = "rgba(0,0,0,.9)"; ctx.shadowBlur = 3 / cam.z;
+      for (const c of path.cams) {
+        const cx = (c.cell % path.w) * CELL_W, cy = Math.floor(c.cell / path.w) * CELL_H;
+        ctx.fillText(c.name, cx + 10, cy + 18 / cam.z);
+      }
+      ctx.shadowBlur = 0;
+    }
+  }
+
+  // collision lines
+  if (document.getElementById("tColl").checked) {
+    ctx.lineWidth = 2.5 / cam.z;
+    for (const [x1, y1, x2, y2, t] of path.lines) {
+      ctx.strokeStyle = LINE_COLORS[t] || "#999";
+      ctx.setLineDash(t >= 4 ? [8 / cam.z, 6 / cam.z] : []);
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+  }
+
+  // TLVs
+  const showLabels = document.getElementById("tLabels").checked && cam.z > 0.45;
+  ctx.font = `${11 / cam.z}px sans-serif`;
+  for (const t of path.tlvs) {
+    const c = typeCat[t.t];
+    if (!c || !c.on) continue;
+    const w = Math.max(t.x2 - t.x1, 10), h = Math.max(t.y2 - t.y1, 10);
+    ctx.strokeStyle = c.color;
+    ctx.lineWidth = (t.t === 103 ? 3.5 : 2) / cam.z;
+    ctx.strokeRect(t.x1, t.y1, w, h);
+    ctx.fillStyle = c.color + "26";
+    ctx.fillRect(t.x1, t.y1, w, h);
+    if (showLabels) {
+      ctx.fillStyle = c.color;
+      ctx.fillText(t.name, t.x1, t.y1 - 3 / cam.z);
+    }
+  }
+
+  ctx.restore();
+}
+
+// boot
+resize();
+if (DATA.levels.length) {
+  const r2 = DATA.levels.findIndex(L => L.short === "R2");
+  const i = r2 >= 0 ? r2 : 0;
+  selectLevel(DATA.levels[i], levelBtns.children[i]);
+}
+</script>
+</body>
+</html>
