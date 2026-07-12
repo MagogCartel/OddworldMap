@@ -164,15 +164,24 @@ function selectPath(P, btn) {
   fitView();
   updateCounts();
   draw();
+  scheduleHash(true);
 }
 
+let camToken = 0;   // bumped on explicit positioning to invalidate pending fits
+
 function fitView() {
-  if (!cv.clientWidth || !cv.clientHeight) { requestAnimationFrame(() => { fitView(); draw(); }); return; }
-  const w = path.w * CELL_W, h = path.h * CELL_H;
-  const zx = cv.clientWidth / (w + 200), zy = cv.clientHeight / (h + 200);
-  cam.z = Math.max(0.02, Math.min(zx, zy));
-  cam.x = -(cv.clientWidth / cam.z - w) / 2;
-  cam.y = -(cv.clientHeight / cam.z - h) / 2;
+  const token = ++camToken;
+  const attempt = () => {
+    if (token !== camToken) return;   // superseded by hash restore or follow
+    if (!cv.clientWidth || !cv.clientHeight) { requestAnimationFrame(attempt); return; }
+    const w = path.w * CELL_W, h = path.h * CELL_H;
+    const zx = cv.clientWidth / (w + 200), zy = cv.clientHeight / (h + 200);
+    cam.z = Math.max(0.02, Math.min(zx, zy));
+    cam.x = -(cv.clientWidth / cam.z - w) / 2;
+    cam.y = -(cv.clientHeight / cam.z - h) / 2;
+    draw();
+  };
+  attempt();
 }
 
 // filters
@@ -245,8 +254,10 @@ function navigateToDest(d) {
   cam.z = Math.max(0.5, Math.min(1.6, Math.min(cv.clientWidth / (2.6 * CELL_W), cv.clientHeight / (2.6 * CELL_H))));
   cam.x = fx - cv.clientWidth / (2 * cam.z);
   cam.y = fy - cv.clientHeight / (2 * cam.z);
+  camToken++;   // cancel any fit still waiting on layout
   flash = { x: fx, y: fy, t0: performance.now() };
   animateFlash();
+  scheduleHash(true);
 }
 
 function animateFlash() {
@@ -255,6 +266,44 @@ function animateFlash() {
   draw();
   requestAnimationFrame(animateFlash);
 }
+
+// ---- permalinks: #LEVEL/PATH/x/y/zoom ----------------------------------
+let applyingHash = false, hashTimer = null;
+
+function hashFor() {
+  return `#${lvl.short}/${path.id}/${Math.round(cam.x)}/${Math.round(cam.y)}/${cam.z.toFixed(2)}`;
+}
+
+function scheduleHash(push) {
+  if (applyingHash || !path) return;
+  clearTimeout(hashTimer);
+  hashTimer = setTimeout(() => {
+    const h = hashFor();
+    if (h === location.hash) return;
+    if (push) location.hash = h;                 // history entry (level/path/follow)
+    else history.replaceState(null, "", h);      // silent update (pan/zoom)
+  }, push ? 0 : 350);
+}
+
+function applyHash() {
+  const m = location.hash.match(/^#(\w+)\/(\d+)(?:\/(-?\d+)\/(-?\d+)\/([\d.]+))?$/);
+  if (!m) return false;
+  const L = DATA.levels.find(l => l.short === m[1].toUpperCase());
+  if (!L) return false;
+  applyingHash = true;
+  if (lvl !== L) selectLevel(L, levelBtns.children[DATA.levels.indexOf(L)]);
+  if (!selectPathById(+m[2])) { applyingHash = false; return false; }
+  if (m[3] != null) {
+    cam.x = +m[3]; cam.y = +m[4];
+    cam.z = Math.max(0.02, Math.min(4, +m[5]));
+    camToken++;   // cancel any fit still waiting on layout
+  }
+  applyingHash = false;
+  draw();
+  return true;
+}
+
+window.addEventListener("hashchange", () => { if (!applyingHash) applyHash(); });
 
 // ---- interaction ------------------------------------------------------
 let panning = false, panStart = null;
@@ -266,7 +315,7 @@ cv.addEventListener("click", () => {
     if (d) { navigateToDest(d); return; }
   }
 });
-window.addEventListener("mouseup", () => { panning = false; cv.classList.remove("panning"); });
+window.addEventListener("mouseup", () => { if (panning && panMoved) scheduleHash(false); panning = false; cv.classList.remove("panning"); });
 window.addEventListener("mousemove", e => {
   const r = cv.getBoundingClientRect();
   mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
@@ -287,6 +336,7 @@ cv.addEventListener("wheel", e => {
   cam.y = wy - mouse.y / cam.z;
   updateHover();
   draw();
+  scheduleHash(false);
 }, { passive: false });
 
 function worldAtMouse() { return { x: cam.x + mouse.x / cam.z, y: cam.y + mouse.y / cam.z }; }
@@ -449,7 +499,7 @@ loadData().then(d => {
     levelBtns.appendChild(b);
   });
   resize();
-  if (DATA.levels.length) selectLevel(DATA.levels[0], levelBtns.children[0]);
+  if (!applyHash() && DATA.levels.length) selectLevel(DATA.levels[0], levelBtns.children[0]);
 });
 </script>
 </body>
