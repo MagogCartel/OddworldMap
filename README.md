@@ -10,6 +10,7 @@ Open **[index.html](index.html)** in a browser — the whole site is static, no 
 
 - **drag** to pan, **mouse wheel** to zoom (anchored at the cursor)
 - **hover** any object for decoded details — door destinations (level/path/door#), switch IDs, path-transition targets, continue-point zones
+- **click** a door, path transition, travel portal or express well to follow it to its destination, including across levels
 - level and path buttons top-left; object category filters with counts below
 - **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
 

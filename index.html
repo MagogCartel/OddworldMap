@@ -37,6 +37,7 @@
          box-shadow: 0 4px 18px rgba(0,0,0,.5); }
   #tip .t { color: var(--accent); font-weight: 600; }
   #tip .e { color: var(--dim); }
+  #tip .f { color: var(--accent); }
   #hud { position: absolute; right: 10px; bottom: 8px; color: var(--dim); font-size: 11px;
          background: rgba(18,20,24,.7); padding: 3px 8px; border-radius: 5px; }
   #help { position: absolute; left: 10px; bottom: 8px; color: var(--dim); font-size: 11px;
@@ -121,6 +122,8 @@ let lvl = null, path = null;
 let cam = { x: 0, y: 0, z: 0.3 };   // world offset + zoom (px per unit)
 const images = {};                   // png -> Image
 let hoverTlvs = [], mouse = {x:0,y:0};
+let panMoved = false;
+let flash = null;          // {x, y, t0} follow-destination highlight
 
 const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
 const tip = document.getElementById("tip"), hud = document.getElementById("hud");
@@ -194,14 +197,81 @@ function updateCounts() {
   CATS.forEach(c => c._lab.querySelector(".cnt").textContent = counts[c.key] || "");
 }
 
+// ---- follow (click a door/portal/well to jump to its destination) -----
+function destOf(t) {
+  const e = t.extra || {};
+  const mk = (lv, pa, ca, door) => (lv != null && pa != null) ? { lv, pa, ca, door } : null;
+  const a = mk(e.to_level, e.to_path, e.to_cam, e["target_door#"]);
+  const b = mk(e.alt_level, e.alt_path, e.alt_cam, null);
+  const differs = d => d && !(lvl && path && d.lv === lvl.short && d.pa === path.id && d.door == null);
+  return differs(a) ? a : (differs(b) ? b : (a || b));
+}
+
+function selectPathById(id) {
+  const idx = lvl.paths.findIndex(p => p.id === id);
+  if (idx < 0) return false;
+  selectPath(lvl.paths[idx], pathBtns.children[idx]);
+  return true;
+}
+
+function navigateToDest(d) {
+  if (!cv.clientWidth) { requestAnimationFrame(() => navigateToDest(d)); return; }
+  const L = DATA.levels.find(l => l.short === d.lv);
+  if (!L) return;
+  if (lvl !== L) selectLevel(L, levelBtns.children[DATA.levels.indexOf(L)]);
+  if (!selectPathById(d.pa)) return;
+
+  // door numbers are only unique per camera, so resolve the destination
+  // camera cell first and match the target door inside it
+  let cell = null;
+  if (d.ca != null) {
+    const suffix = "C" + String(d.ca).padStart(2, "0");
+    const cm = path.cams.find(c => c.name && c.name.endsWith(suffix));
+    if (cm) cell = cm.cell;
+  }
+  let fx = null, fy = null;
+  if (d.door != null) {
+    const inCell = t => cell == null ||
+      (Math.floor(t.x1 / WCELL_W) === cell % path.w && Math.floor(t.y1 / WCELL_H) === Math.floor(cell / path.w));
+    const tgt = path.tlvs.find(t => t.t === 6 && (t.extra || {})["door#"] === d.door && inCell(t));
+    if (tgt) { fx = dX(tgt.x1) + (tgt.x2 - tgt.x1) / 2; fy = dY(tgt.y1) + (tgt.y2 - tgt.y1) / 2; }
+  }
+  if (fx == null && cell != null) {
+    fx = (cell % path.w) * CELL_W + CELL_W / 2;
+    fy = Math.floor(cell / path.w) * CELL_H + CELL_H / 2;
+  }
+  if (fx == null) return;   // path-level target: selectPath already fit the view
+
+  cam.z = Math.max(0.5, Math.min(1.6, Math.min(cv.clientWidth / (2.6 * CELL_W), cv.clientHeight / (2.6 * CELL_H))));
+  cam.x = fx - cv.clientWidth / (2 * cam.z);
+  cam.y = fy - cv.clientHeight / (2 * cam.z);
+  flash = { x: fx, y: fy, t0: performance.now() };
+  animateFlash();
+}
+
+function animateFlash() {
+  if (!flash) return;
+  if (performance.now() - flash.t0 > 1600) { flash = null; draw(); return; }
+  draw();
+  requestAnimationFrame(animateFlash);
+}
+
 // ---- interaction ------------------------------------------------------
 let panning = false, panStart = null;
-cv.addEventListener("mousedown", e => { panning = true; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y }; });
+cv.addEventListener("mousedown", e => { panning = true; panMoved = false; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y }; });
+cv.addEventListener("click", () => {
+  if (panMoved) return;
+  for (const t of hoverTlvs) {
+    const d = destOf(t);
+    if (d) { navigateToDest(d); return; }
+  }
+});
 window.addEventListener("mouseup", () => { panning = false; cv.classList.remove("panning"); });
 window.addEventListener("mousemove", e => {
   const r = cv.getBoundingClientRect();
   mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
   if (panning) {
+    if (Math.abs(e.clientX - panStart.x) + Math.abs(e.clientY - panStart.y) > 4) panMoved = true;
     cam.x = panStart.cx - (e.clientX - panStart.x) / cam.z;
     cam.y = panStart.cy - (e.clientY - panStart.y) / cam.z;
   }
@@ -239,12 +309,16 @@ function updateHover() {
     tip.innerHTML = hoverTlvs.slice(0, 8).map(t => {
       const ex = Object.entries(t.extra || {}).filter(([k,v]) => v !== null && v !== "")
         .map(([k, v]) => `${k}=${v}`).join("  ");
+      const d = destOf(t);
       return `<div><span class="t">${t.name}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
-             (ex ? `<br><span class="e">${ex}</span>` : "") + `</div>`;
+             (ex ? `<br><span class="e">${ex}</span>` : "") +
+             (d ? `<br><span class="f">➜ click to follow to ${d.lv} P${d.pa}${d.ca != null ? " C" + d.ca : ""}</span>` : "") + `</div>`;
     }).join("<hr style='border:0;border-top:1px solid #32363f;margin:5px 0'>")
       + (hoverTlvs.length > 8 ? `<div class="e">+${hoverTlvs.length - 8} more…</div>` : "");
+    if (!panning) cv.style.cursor = hoverTlvs.some(t => destOf(t)) ? "pointer" : "";
   } else {
     tip.style.display = "none";
+    if (!panning) cv.style.cursor = "";
   }
   hud.textContent = `world x ${Math.round(wX(w.x))}  y ${Math.round(wY(w.y))}  ·  zoom ${cam.z.toFixed(2)}`;
 }
@@ -337,6 +411,15 @@ function draw() {
       ctx.fillStyle = c.color;
       ctx.fillText(t.name, x1, y1 - 3 / cam.z);
     }
+  }
+
+  if (flash) {
+    const el = performance.now() - flash.t0;
+    const a = Math.max(0, 1 - el / 1600);
+    ctx.strokeStyle = `rgba(232,163,61,${a})`;
+    ctx.lineWidth = 3.5 / cam.z;
+    const r = (46 + 10 * Math.sin(el / 110)) / Math.sqrt(cam.z);
+    ctx.beginPath(); ctx.arc(flash.x, flash.y, r, 0, Math.PI * 2); ctx.stroke();
   }
 
   ctx.restore();
