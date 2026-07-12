@@ -21,6 +21,8 @@
                    padding: 4px 8px; cursor: pointer; font-size: 12px; }
   .btnrow button:hover { border-color: var(--accent); }
   .btnrow button.on { background: var(--accent); color: #14161a; border-color: var(--accent); font-weight: 600; }
+  .btnrow button.entry::before { content: "\25B8"; color: var(--accent); margin-right: 3px; }
+  .btnrow button.entry.on::before { color: #14161a; }
   .filters { padding: 4px 12px 12px; }
   .filters label { display: flex; align-items: center; gap: 7px; padding: 2.5px 2px; cursor: pointer; user-select: none; }
   .filters .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex: none; }
@@ -77,6 +79,21 @@ const CELL_W = 368, CELL_H = 240;
 const WCELL_W = 1024, WCELL_H = 480;
 const WIN_X = 440 - 184, WIN_Y = 240 - 120;   // window top-left inside the world cell
 let DATA = null;   // assigned at boot (fresh fetch over http, script tag on file://)
+let ENTRY = {};    // level short -> Set of path ids that other levels arrive into
+
+function computeEntryPaths(data) {
+  const entries = {};
+  const add = (lv, pa) => { if (lv != null && pa != null) (entries[lv] ??= new Set()).add(pa); };
+  for (const L of data.levels)
+    for (const P of L.paths)
+      for (const t of P.tlvs) {
+        const e = t.extra || {};
+        if (e.to_level && e.to_level !== L.short) add(e.to_level, e.to_path);
+        if (e.alt_level && e.alt_level !== L.short) add(e.alt_level, e.alt_path);
+        if (t.t === 37) add(L.short, P.id);   // AbeStart (game start / re-entry)
+      }
+  return entries;
+}
 
 function dX(wx) { const c = Math.floor(wx / WCELL_W); return c * CELL_W + (wx - c * WCELL_W - WIN_X); }
 function dY(wy) { const c = Math.floor(wy / WCELL_H); return c * CELL_H + (wy - c * WCELL_H - WIN_Y); }
@@ -127,6 +144,10 @@ function selectLevel(L, btn) {
   L.paths.forEach(P => {
     const b = document.createElement("button");
     b.textContent = "P" + P.id;
+    if (ENTRY[L.short] && ENTRY[L.short].has(P.id)) {
+      b.classList.add("entry");
+      b.title = "entry point (arrived at from another level)";
+    }
     b.onclick = () => selectPath(P, b);
     pathBtns.appendChild(b);
   });
@@ -335,6 +356,7 @@ async function loadData() {
 
 loadData().then(d => {
   DATA = d;
+  ENTRY = computeEntryPaths(DATA);
   document.getElementById("gameName").textContent = DATA.game;
   DATA.levels.forEach(L => {
     const b = document.createElement("button");
