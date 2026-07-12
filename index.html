@@ -69,8 +69,19 @@
 
 <script src="map_data_ao.js"></script>
 <script>
-const CELL_W = 1024, CELL_H = 480;
+// One camera cell occupies 1024x480 *world* units, but the visible screen is a
+// 368x240 window centered at (cell*1024+440, cell*480+240)  [Map.cpp: SetActiveCam,
+// ScreenManager: field_14_xpos=184/field_16_ypos=120]. We lay screens out edge to
+// edge at 368x240 pitch and translate coordinates by the per-cell window offset.
+const CELL_W = 368, CELL_H = 240;
+const WCELL_W = 1024, WCELL_H = 480;
+const WIN_X = 440 - 184, WIN_Y = 240 - 120;   // window top-left inside the world cell
 const DATA = window.MAP_DATA_AO;
+
+function dX(wx) { const c = Math.floor(wx / WCELL_W); return c * CELL_W + (wx - c * WCELL_W - WIN_X); }
+function dY(wy) { const c = Math.floor(wy / WCELL_H); return c * CELL_H + (wy - c * WCELL_H - WIN_Y); }
+function wX(dx) { const c = Math.floor(dx / CELL_W); return c * WCELL_W + WIN_X + (dx - c * CELL_W); }
+function wY(dy) { const c = Math.floor(dy / CELL_H); return c * WCELL_H + WIN_Y + (dy - c * CELL_H); }
 
 // ---- categories -------------------------------------------------------
 const CATS = [
@@ -204,8 +215,9 @@ function updateHover() {
   hoverTlvs = path.tlvs.filter(t => {
     const c = typeCat[t.t];
     if (!c || !c.on) return false;
-    const x2 = Math.max(t.x2, t.x1 + 8), y2 = Math.max(t.y2, t.y1 + 8);
-    return w.x >= t.x1 - 4 && w.x <= x2 + 4 && w.y >= t.y1 - 4 && w.y <= y2 + 4;
+    const x1 = dX(t.x1), y1 = dY(t.y1);
+    const x2 = Math.max(x1 + (t.x2 - t.x1), x1 + 8), y2 = Math.max(y1 + (t.y2 - t.y1), y1 + 8);
+    return w.x >= x1 - 4 && w.x <= x2 + 4 && w.y >= y1 - 4 && w.y <= y2 + 4;
   });
   if (hoverTlvs.length) {
     tip.style.display = "block";
@@ -222,7 +234,7 @@ function updateHover() {
   } else {
     tip.style.display = "none";
   }
-  hud.textContent = `x ${Math.round(w.x)}  y ${Math.round(w.y)}  ·  cell C${1 + Math.floor(w.x / CELL_W) + Math.floor(w.y / CELL_H) * path.w}?  ·  zoom ${cam.z.toFixed(2)}`;
+  hud.textContent = `world x ${Math.round(wX(w.x))}  y ${Math.round(wY(w.y))}  ·  zoom ${cam.z.toFixed(2)}`;
 }
 
 // ---- drawing ----------------------------------------------------------
@@ -257,7 +269,8 @@ function draw() {
       const im = img(c.png);
       if (im.complete && im.naturalWidth) {
         ctx.globalAlpha = dim ? 0.35 : 1;
-        ctx.drawImage(im, cx, cy, CELL_W, CELL_H);
+        // source is 384px wide (24 MDEC macroblocks); only the first 368 columns are real
+        ctx.drawImage(im, 0, 0, CELL_W, CELL_H, cx, cy, CELL_W, CELL_H);
         ctx.globalAlpha = 1;
       }
     } else {
@@ -290,7 +303,7 @@ function draw() {
     for (const [x1, y1, x2, y2, t] of path.lines) {
       ctx.strokeStyle = LINE_COLORS[t] || "#999";
       ctx.setLineDash(t >= 4 ? [8 / cam.z, 6 / cam.z] : []);
-      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(dX(x1), dY(y1)); ctx.lineTo(dX(x2), dY(y2)); ctx.stroke();
     }
     ctx.setLineDash([]);
   }
@@ -301,15 +314,16 @@ function draw() {
   for (const t of path.tlvs) {
     const c = typeCat[t.t];
     if (!c || !c.on) continue;
+    const x1 = dX(t.x1), y1 = dY(t.y1);
     const w = Math.max(t.x2 - t.x1, 10), h = Math.max(t.y2 - t.y1, 10);
     ctx.strokeStyle = c.color;
     ctx.lineWidth = (t.t === 103 ? 3.5 : 2) / cam.z;
-    ctx.strokeRect(t.x1, t.y1, w, h);
+    ctx.strokeRect(x1, y1, w, h);
     ctx.fillStyle = c.color + "26";
-    ctx.fillRect(t.x1, t.y1, w, h);
+    ctx.fillRect(x1, y1, w, h);
     if (showLabels) {
       ctx.fillStyle = c.color;
-      ctx.fillText(t.name, t.x1, t.y1 - 3 / cam.z);
+      ctx.fillText(t.name, x1, y1 - 3 / cam.z);
     }
   }
 

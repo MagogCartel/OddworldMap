@@ -13,7 +13,7 @@ Open **[index.html](index.html)** in a browser — the whole site is static, no 
 - level and path buttons top-left; object category filters with counts below
 - **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
 
-One grid cell = one in-game camera = 1024×480 world units (rendered from the 384×240 PS1 background image).
+One grid cell = one in-game camera. Each camera occupies a 1024×480-unit cell in the game's world grid, but the visible screen is a 368×240-unit window centered at (cell·1024+440, cell·480+240) — world units map 1:1 to PS1 screen pixels. The viewer lays the visible windows out edge to edge and translates all object/collision coordinates accordingly, so markers land on the artwork.
 
 ## Rebuilding from a disc image
 
@@ -32,7 +32,7 @@ The script compiles `tools/cam2rgba` automatically on first run (needs a C++17 c
 
 - **Disc → files**: raw MODE2/FORM1 sectors are parsed as ISO9660; each level is a `.LVL` archive (32-byte header + 24-byte file records) containing the path data (`xxPATH.BND`) and one `.CAM` per camera.
 - **Path chunks** hold, in order: the camera-name table (8 bytes/cell), collision lines (20 bytes: `x1,y1,x2,y2,type,pad,prev,next`), and packed TLV object records (0x18-byte header + type-specific payload) which the builder walks linearly and places by world coordinates.
-- **Camera backgrounds** are MDEC-compressed: 12 strips per screen, each a `u16 length` + standard PS1 BS v3 bitstream decoding to 32×240, assembled into 384×240, cropped to the 368 visible columns (the rest is macroblock padding) and written as PNG. The decoder (`tools/cam2rgba.cpp`) is built on `PSXMDECDecoder` from the [alive_reversing](https://github.com/AliveTeam/alive_reversing) project, patched for bounds-safe decoding of camera strip streams.
+- **Camera backgrounds** are MDEC-compressed: 12 strips per screen, each a `u16 length` + standard PS1 BS v3 bitstream decoding to 32×240, assembled into 384×240 and written as PNG (368 visible columns + 16 columns of macroblock padding, cropped by the viewer). The decoder (`tools/cam2rgba.cpp`) is built on `PSXMDECDecoder` from the [alive_reversing](https://github.com/AliveTeam/alive_reversing) project, patched for bounds-safe decoding of camera strip streams.
 - The viewer ([index.html](index.html)) is a single dependency-free HTML file; `map_data_ao.js` carries the level/path/TLV/collision data as JSON.
 
 Structure layouts (TLV types, path tables, collision records) come from the alive_reversing decompilation at commit `c1ba4c6c8`, which matches the PS1 data formats.
