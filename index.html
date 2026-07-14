@@ -57,6 +57,11 @@
   #searchResults .hit .loc { color: var(--accent); }
   #searchResults .hit .ex { color: var(--dim); }
   #searchResults .more { color: var(--dim); font-size: 11px; padding: 3px 8px; }
+  #searchResults .shead { display: flex; justify-content: space-between; color: var(--dim); font-size: 10px;
+                          text-transform: uppercase; letter-spacing: .07em; padding: 7px 8px 2px; }
+  #searchResults .showmore { display: block; width: 100%; text-align: left; background: none; border: 0;
+                             color: var(--accent); padding: 2px 8px 4px; cursor: pointer; font-size: 11px; }
+  #searchResults .showmore:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -347,32 +352,72 @@ function tlvSearchText(t) {
   return (t.name + " " + ex).toLowerCase();
 }
 
+const HIT_CAP = 1500, GROUP_MAX = 8;
+
+function hitButton(h) {
+  const b = document.createElement("button");
+  b.className = "hit";
+  const ex = Object.entries(h.t.extra || {}).filter(([k, v]) => v !== null && v !== "")
+    .map(([k, v]) => `${k}=${v}`).join(" ");
+  b.innerHTML = `<span class="loc">${h.L.short} P${h.P.id}</span> ${h.t.name}` +
+                (ex ? ` <span class="ex">${ex}</span>` : "");
+  b.onclick = () => jumpToTlv(h.G, h.L, h.P, h.t);
+  return b;
+}
+
 function runSearch(q) {
   searchResults.innerHTML = "";
   q = q.trim().toLowerCase();
   if (q.length < 2) return;
+
   const hits = [];
+  outer:
   for (const G of GAMES_DATA)
     for (const L of G.levels)
       for (const P of L.paths)
-        for (const t of P.tlvs) {
-          if (tlvSearchText(t).includes(q)) hits.push({ G, L, P, t });
-          if (hits.length > 400) break;
-        }
-  const MAX = 60;
-  for (const h of hits.slice(0, MAX)) {
-    const b = document.createElement("button");
-    b.className = "hit";
-    const ex = Object.entries(h.t.extra || {}).filter(([k, v]) => v !== null && v !== "")
-      .map(([k, v]) => `${k}=${v}`).join(" ");
-    b.innerHTML = `<span class="loc">${GAMES_DATA.length > 1 ? h.G.id + " · " : ""}${h.L.short} P${h.P.id}</span> ${h.t.name}` +
-                  (ex ? ` <span class="ex">${ex}</span>` : "");
-    b.onclick = () => jumpToTlv(h.G, h.L, h.P, h.t);
-    searchResults.appendChild(b);
+        for (const t of P.tlvs)
+          if (tlvSearchText(t).includes(q)) {
+            hits.push({ G, L, P, t });
+            if (hits.length >= HIT_CAP) break outer;
+          }
+
+  // group by context: current path, then current level, then per game
+  const groups = [];
+  const byKey = {};
+  const group = (key, label) => byKey[key] ||
+    (byKey[key] = groups[groups.push({ label, hits: [] }) - 1]);
+  if (path) group("p", `${DATA.id} · ${lvl.short} P${path.id}`);
+  if (lvl) group("l", `${DATA.id} · ${lvl.short}`);
+  for (const G of [DATA, ...GAMES_DATA.filter(G => G !== DATA)]) group("g" + G.id, G.id);
+  for (const h of hits) {
+    if (h.G === DATA && h.L === lvl && h.P === path) group("p").hits.push(h);
+    else if (h.G === DATA && h.L === lvl) group("l").hits.push(h);
+    else group("g" + h.G.id).hits.push(h);
   }
+
+  for (const g of groups) {
+    if (!g.hits.length) continue;
+    const head = document.createElement("div");
+    head.className = "shead";
+    head.innerHTML = `<span>${g.label}</span><span>${g.hits.length}</span>`;
+    searchResults.appendChild(head);
+    g.hits.slice(0, GROUP_MAX).forEach(h => searchResults.appendChild(hitButton(h)));
+    if (g.hits.length > GROUP_MAX) {
+      const rest = g.hits.slice(GROUP_MAX);
+      const btn = document.createElement("button");
+      btn.className = "showmore";
+      btn.textContent = `show ${rest.length} more`;
+      btn.onclick = () => { rest.forEach(h => searchResults.insertBefore(hitButton(h), btn)); btn.remove(); };
+      searchResults.appendChild(btn);
+    }
+  }
+
   const more = document.createElement("div");
   more.className = "more";
-  more.textContent = hits.length ? `${hits.length}${hits.length > 400 ? "+" : ""} hit${hits.length === 1 ? "" : "s"}` + (hits.length > MAX ? `, showing ${MAX}` : "") : "no hits";
+  const perGame = GAMES_DATA.map(G => `${G.id} ${hits.filter(h => h.G === G).length}`).join(" · ");
+  more.textContent = hits.length
+    ? `${hits.length}${hits.length >= HIT_CAP ? "+" : ""} hit${hits.length === 1 ? "" : "s"} — ${perGame}`
+    : "no hits";
   searchResults.appendChild(more);
 }
 
