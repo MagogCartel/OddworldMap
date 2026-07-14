@@ -18,6 +18,7 @@ Open **[index.html](index.html)** in a browser — the whole site is static, no 
 - the URL hash (`#LEVEL/path/x/y/zoom`) always reflects the current view — copy it to share an exact location; the browser back button retraces follows
 - **search** (`/` to focus) matches object names and decoded fields across both games — try `mudokon`, `lcdstatusboard` or `switch_id=70`. Results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit; a scope bar narrows the search to the current game/level/path
 - **Ruler**: enable, then drag to measure — Δx × Δy, length in world units (1 unit = 1 PS1 screen pixel) and 25-unit grid squares; hovering a collision line shows its type and length the same way
+- on touch devices one finger pans and two fingers pinch-zoom; the sidebar collapses behind a menu button on narrow screens
 
 One grid cell = one in-game camera. Each camera occupies a 1024×480-unit cell in the game's world grid, but the visible screen is a 368×240-unit window centered at (cell·1024+440, cell·480+240) — world units map 1:1 to PS1 screen pixels. The viewer lays the visible windows out edge to edge and translates all object/collision coordinates accordingly, so markers land on the artwork.
 
