@@ -4,12 +4,13 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
 
 ## Source vs generated
 
-- Source: `index.html` (the entire viewer, dependency-free vanilla JS), `tools/build_map.py`, `tools/cam2rgba.cpp` plus the vendored `PSXMDECDecoder.*` / `Types.hpp`.
+- Source: the viewer — `index.html`, `css/main.css` and the ES modules under `js/` (dependency-free vanilla JS, no build step; `js/main.js` is the boot entry, `js/state.js` holds shared state + world→draw transforms, and selection announces itself via a `selection-changed` window event so modules stay one-directional) — plus `tools/build_map.py`, `tools/cam2rgba.cpp` and the vendored `PSXMDECDecoder.*` / `Types.hpp`.
 - Generated **and committed** (they are the site's data): `map_data_ao.js`, `map_data_ae.js`, `cams/ao/**`, `cams/ae/**`. Regenerate with the builder from disc images; never hand-edit.
 - `tools/data/pathdata_ao.json` / `pathdata_ae.json`: cached level/path tables and TLV type enums parsed from the alive_reversing decompilation. Used as-is by builds; only re-parsed when the cache file is deleted, which requires an `alive_reversing` checkout as a sibling directory of this repo (AO tables come from commit `c1ba4c6c8`, AE tables from the current sources).
 
 ## Build & verify
 
+- `npm run lint` — ESLint over the viewer modules; CI runs it on every push. There is no JS build step: the modules are served as-is, so lint is the only pre-runtime error check.
 - `python3 tools/build_map.py --game AO|AE --disc <image.bin ...>` — AE takes both discs; env fallbacks are `$ODDWORLD_DISC_AO` / `$ODDWORLD_DISC_AE` (2352-byte-sector raw images). `cam2rgba` is compiled automatically on first run; `oxipng` must be installed (every emitted PNG is losslessly recompressed with `-o 2 --strip safe`, so byte-determinism of images also depends on the oxipng version — committed images were made with oxipng 10.x).
 - The pipeline is byte-deterministic. To verify builder changes, build into a scratch dir with `--out` and `cmp` the data file (and spot-check PNGs) against the committed outputs.
 - `--levels X,Y` subset builds merge into the existing data file — they do not clobber other levels.
