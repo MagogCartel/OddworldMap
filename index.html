@@ -54,8 +54,15 @@
   .btnrow button.entry.on::before { color: #14161a; }
   .filters { padding: 4px 12px 12px; }
   .filters label { display: flex; align-items: center; gap: 7px; padding: 2.5px 2px; cursor: pointer; user-select: none; }
+  .filters input { position: absolute; opacity: 0; pointer-events: none; }   /* keyboard-focusable; the swatch is the visual indicator */
+  .filters label:not(:has(input:checked)) { opacity: .45; }
+  .filters label:has(input:focus-visible) { outline: 1px solid var(--accent); border-radius: 4px; }
   .filters .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex: none; }
   .filters .cnt { margin-left: auto; color: var(--dim); font-size: 11px; }
+  .h2tools { float: right; }
+  .h2tools button { background: none; border: 0; padding: 0; font: inherit; text-transform: inherit;
+                    letter-spacing: inherit; color: var(--dim); cursor: pointer; text-decoration: underline; }
+  .h2tools button:hover { color: var(--accent); }
   #toggles { padding: 0 12px 10px; }
   #toggles label { display: flex; align-items: center; gap: 7px; padding: 2.5px 2px; cursor: pointer; }
   #exportBtn { margin: 6px 12px 2px; background: var(--panel2); color: var(--text); border: 1px solid var(--line);
@@ -148,7 +155,7 @@
     <label><input type="checkbox" id="tRuler" autocomplete="off"> Ruler (drag to measure)</label>
     <button id="exportBtn" title="save the current view as an image">Export view as PNG</button>
   </div>
-  <h2>Objects <span style="float:right"><a href="#" id="fAll" style="color:var(--dim)">all</a> · <a href="#" id="fNone" style="color:var(--dim)">none</a></span></h2>
+  <h2>Objects <span class="h2tools"><button id="fAll">all</button> · <button id="fNone">none</button></span></h2>
   <div class="filters" id="filterBox"></div>
 </div>
 <div id="main">
@@ -332,15 +339,19 @@ const filterBox = document.getElementById("filterBox");
 CATS.forEach(c => {
   const lab = document.createElement("label");
   lab.innerHTML = `<span class="sw" style="background:${c.color}"></span>
-    <input type="checkbox" ${c.on ? "checked" : ""} style="display:none">
+    <input type="checkbox" ${c.on ? "checked" : ""}>
     <span>${c.label}</span><span class="cnt"></span>`;
-  const cb = lab.querySelector("input");
-  lab.onclick = (e) => { e.preventDefault(); c.on = !c.on; lab.style.opacity = c.on ? 1 : .45; draw(); };
+  c._cb = lab.querySelector("input");
+  c._cnt = lab.querySelector(".cnt");
+  c._cb.onchange = () => { c.on = c._cb.checked; draw(); };
   filterBox.appendChild(lab);
-  c._lab = lab;
 });
-document.getElementById("fAll").onclick = e => { e.preventDefault(); CATS.forEach(c => { c.on = true; c._lab.style.opacity = 1; }); draw(); };
-document.getElementById("fNone").onclick = e => { e.preventDefault(); CATS.forEach(c => { c.on = false; c._lab.style.opacity = .45; }); draw(); };
+function setAllFilters(on) {
+  CATS.forEach(c => { c.on = on; c._cb.checked = on; });
+  draw();
+}
+document.getElementById("fAll").onclick = () => setAllFilters(true);
+document.getElementById("fNone").onclick = () => setAllFilters(false);
 // display toggles: `show` mirrors the sidebar checkboxes (initial state comes from the HTML)
 const show = {};
 for (const [key, id] of Object.entries({ grid: "tGrid", coll: "tColl", fg: "tFg",
@@ -367,7 +378,7 @@ document.getElementById("exportBtn").onclick = () => {
 function updateCounts() {
   const counts = {};
   path.tlvs.forEach(t => { const c = catOf(t); counts[c.key] = (counts[c.key] || 0) + 1; });
-  CATS.forEach(c => c._lab.querySelector(".cnt").textContent = counts[c.key] || "");
+  CATS.forEach(c => c._cnt.textContent = counts[c.key] || "");
 }
 
 // ---- follow (click a door/portal/well to jump to its destination) -----
