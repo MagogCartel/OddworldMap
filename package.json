@@ -1,0 +1,13 @@
+{
+  "name": "oddworldmap",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "eslint": "^9",
+    "globals": "^15"
+  }
+}
