@@ -3,24 +3,7 @@ import { ZOOM_MIN, ZOOM_MAX, FOCUS_ZOOM_MIN, FOCUS_ZOOM_MAX, FOCUS_SCREENS, FLAS
          TIP_MAX_W, narrowMQ, COLOR, CATS, catOf, LINE_COLORS, LINE_NAMES } from "./config.js";
 import { $, cv, ctx, tip, hud, menuBtn, scrim, gameBtns, levelBtns, pathBtns, filterBox,
          searchInput, searchResults, scopeBar } from "./dom.js";
-
-// Each game maps world coordinates to screen artwork differently (data.geometry):
-// AO cameras occupy 1024x480-unit world cells with a 368x240 window at +256/+120
-// (1:1 world:pixel; Map.cpp SetActiveCam + ScreenManager xpos/ypos); AE cameras
-// are 375x260-unit cells shown scaled into 368x240. Screens are laid out edge to
-// edge at cellW x cellH pitch either way.
-let CELL_W = 368, CELL_H = 240;
-let GEO = null, SX = 1, SY = 1;
-
-function setGeometry(g) {
-  GEO = g;
-  CELL_W = g.cellW; CELL_H = g.cellH;
-  SX = g.cellW / g.visW; SY = g.cellH / g.visH;
-}
-
-let GAMES_DATA = [];   // one dataset per available game
-let DATA = null;       // current game's dataset
-let ENTRY = {};        // per game: level short -> Set of path ids arrived into from other levels
+import { state, GEO, CELL_W, CELL_H, setGeometry, dX, dY, wX, wY } from "./state.js";
 
 function computeEntryPaths(data) {
   const entries = {};
@@ -36,19 +19,10 @@ function computeEntryPaths(data) {
   return entries;
 }
 
-function dX(wx) { const c = Math.floor(wx / GEO.worldW); return c * CELL_W + (wx - c * GEO.worldW - GEO.winX) * SX; }
-function dY(wy) { const c = Math.floor(wy / GEO.worldH); return c * CELL_H + (wy - c * GEO.worldH - GEO.winY) * SY; }
-function wX(dx) { const c = Math.floor(dx / CELL_W); return c * GEO.worldW + GEO.winX + (dx - c * CELL_W) / SX; }
-function wY(dy) { const c = Math.floor(dy / CELL_H); return c * GEO.worldH + GEO.winY + (dy - c * CELL_H) / SY; }
-
-// ---- state ------------------------------------------------------------
-let lvl = null, path = null;
-let cam = { x: 0, y: 0, z: 0.3 };   // world offset + zoom (px per unit)
 const images = {};                   // png -> Image
 let hoverTlvs = [], mouse = {x:0,y:0};
 let panMoved = false;
 let flash = null;          // {x, y, t0} follow-destination highlight
-let ruler = null;          // {x1, y1, x2, y2} in draw space
 let measuring = false;
 
 const isNarrow = () => narrowMQ.matches;
@@ -72,11 +46,11 @@ function markOn(box, key) {
 }
 
 function selectGame(G, keepView) {
-  DATA = G;
+  state.data = G;
   setGeometry(G.geometry);
   markOn(gameBtns, G.id);
   $("gameName").textContent = G.game;
-  ENTRY = computeEntryPaths(G);
+  state.entry = computeEntryPaths(G);
   levelBtns.innerHTML = "";
   G.levels.forEach(L => {
     const b = document.createElement("button");
@@ -90,14 +64,14 @@ function selectGame(G, keepView) {
 }
 
 function selectLevel(L) {
-  lvl = L;
+  state.lvl = L;
   markOn(levelBtns, L.short);
   pathBtns.innerHTML = "";
   L.paths.forEach(P => {
     const b = document.createElement("button");
     b.textContent = "P" + P.id;
     b.dataset.key = String(P.id);
-    if (ENTRY[L.short] && ENTRY[L.short].has(P.id)) {
+    if (state.entry[L.short] && state.entry[L.short].has(P.id)) {
       b.classList.add("entry");
       b.title = "entry point (arrived at from another level)";
     }
@@ -108,7 +82,7 @@ function selectLevel(L) {
 }
 
 function selectPath(P) {
-  path = P;
+  state.path = P;
   markOn(pathBtns, String(P.id));
   if (isNarrow() && !applyingHash) toggleMenu(false);   // reveal the map after picking
   fitView();
@@ -125,11 +99,11 @@ function fitView() {
   const attempt = () => {
     if (token !== camToken) return;   // superseded by hash restore or follow
     if (!cv.clientWidth || !cv.clientHeight) { requestAnimationFrame(attempt); return; }
-    const w = path.w * CELL_W, h = path.h * CELL_H;
+    const w = state.path.w * CELL_W, h = state.path.h * CELL_H;
     const zx = cv.clientWidth / (w + 200), zy = cv.clientHeight / (h + 200);
-    cam.z = Math.max(ZOOM_MIN, Math.min(zx, zy));
-    cam.x = -(cv.clientWidth / cam.z - w) / 2;
-    cam.y = -(cv.clientHeight / cam.z - h) / 2;
+    state.cam.z = Math.max(ZOOM_MIN, Math.min(zx, zy));
+    state.cam.x = -(cv.clientWidth / state.cam.z - w) / 2;
+    state.cam.y = -(cv.clientHeight / state.cam.z - h) / 2;
     draw();
   };
   attempt();
@@ -152,15 +126,14 @@ function setAllFilters(on) {
 }
 $("fAll").onclick = () => setAllFilters(true);
 $("fNone").onclick = () => setAllFilters(false);
-// display toggles: `show` mirrors the sidebar checkboxes (initial state comes from the HTML)
-const show = {};
+// display toggles: state.show mirrors the sidebar checkboxes (initial state comes from the HTML)
 for (const [key, id] of Object.entries({ grid: "tGrid", coll: "tColl", fg: "tFg",
                                          labels: "tLabels", dim: "tDim", ruler: "tRuler" })) {
   const cb = $(id);
-  show[key] = cb.checked;
+  state.show[key] = cb.checked;
   cb.onchange = () => {
-    show[key] = cb.checked;
-    if (key === "ruler") { if (!show.ruler) ruler = null; cv.style.cursor = show.ruler ? "crosshair" : ""; }
+    state.show[key] = cb.checked;
+    if (key === "ruler") { if (!state.show.ruler) state.ruler = null; cv.style.cursor = state.show.ruler ? "crosshair" : ""; }
     draw();
   };
 }
@@ -169,7 +142,7 @@ $("exportBtn").onclick = () => {
     if (!blob) return;
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `oddworld-${DATA.id.toLowerCase()}${lvl ? "-" + lvl.short : ""}${path ? "-P" + path.id : ""}.png`;
+    a.download = `oddworld-${state.data.id.toLowerCase()}${state.lvl ? "-" + state.lvl.short : ""}${state.path ? "-P" + state.path.id : ""}.png`;
     a.click();
     URL.revokeObjectURL(a.href);
   }, "image/png");
@@ -177,7 +150,7 @@ $("exportBtn").onclick = () => {
 
 function updateCounts() {
   const counts = {};
-  path.tlvs.forEach(t => { const c = catOf(t); counts[c.key] = (counts[c.key] || 0) + 1; });
+  state.path.tlvs.forEach(t => { const c = catOf(t); counts[c.key] = (counts[c.key] || 0) + 1; });
   CATS.forEach(c => c._cnt.textContent = counts[c.key] || "");
 }
 
@@ -191,12 +164,12 @@ function destOf(t) {
   const mk = (lv, pa, ca, tgt) => (lv != null && pa != null) ? { lv, pa, ca, target: tgt } : null;
   const a = mk(e.to_level, e.to_path, e.to_cam, target);
   const b = mk(e.alt_level, e.alt_path, e.alt_cam, null);
-  const differs = d => d && !(lvl && path && d.lv === lvl.short && d.pa === path.id && d.target == null);
+  const differs = d => d && !(state.lvl && state.path && d.lv === state.lvl.short && d.pa === state.path.id && d.target == null);
   return differs(a) ? a : (differs(b) ? b : (a || b));
 }
 
 function selectPathById(id) {
-  const P = lvl.paths.find(p => p.id === id);
+  const P = state.lvl.paths.find(p => p.id === id);
   if (!P) return false;
   selectPath(P);
   return true;
@@ -204,10 +177,10 @@ function selectPathById(id) {
 
 // center on (fx, fy) zoomed to a few screens across, flash the spot
 function focusOn(fx, fy) {
-  cam.z = clamp(Math.min(cv.clientWidth / (FOCUS_SCREENS * CELL_W), cv.clientHeight / (FOCUS_SCREENS * CELL_H)),
+  state.cam.z = clamp(Math.min(cv.clientWidth / (FOCUS_SCREENS * CELL_W), cv.clientHeight / (FOCUS_SCREENS * CELL_H)),
                 FOCUS_ZOOM_MIN, FOCUS_ZOOM_MAX);
-  cam.x = fx - cv.clientWidth / (2 * cam.z);
-  cam.y = fy - cv.clientHeight / (2 * cam.z);
+  state.cam.x = fx - cv.clientWidth / (2 * state.cam.z);
+  state.cam.y = fy - cv.clientHeight / (2 * state.cam.z);
   camToken++;   // cancel any fit still waiting on layout
   flash = { x: fx, y: fy, t0: performance.now() };
   animateFlash();
@@ -216,9 +189,9 @@ function focusOn(fx, fy) {
 
 function navigateToDest(d) {
   if (!cv.clientWidth) { requestAnimationFrame(() => navigateToDest(d)); return; }
-  const L = DATA.levels.find(l => l.short === d.lv);
+  const L = state.data.levels.find(l => l.short === d.lv);
   if (!L) return;
-  if (lvl !== L) selectLevel(L);
+  if (state.lvl !== L) selectLevel(L);
   if (!selectPathById(d.pa)) return;
 
   // door numbers are only unique per camera, so resolve the destination
@@ -226,20 +199,20 @@ function navigateToDest(d) {
   let cell = null;
   if (d.ca != null) {
     const suffix = "C" + String(d.ca).padStart(2, "0");
-    const cm = path.cams.find(c => c.name && c.name.endsWith(suffix));
+    const cm = state.path.cams.find(c => c.name && c.name.endsWith(suffix));
     if (cm) cell = cm.cell;
   }
   let fx = null, fy = null;
   if (d.target != null) {
     const inCell = t => cell == null ||
-      (Math.floor(t.x1 / GEO.worldW) === cell % path.w && Math.floor(t.y1 / GEO.worldH) === Math.floor(cell / path.w));
-    const tgt = path.tlvs.find(t => t.name === d.target.name && (t.extra || {})[d.target.field] === d.target.value && inCell(t)) ||
-                path.tlvs.find(t => t.name === d.target.name && (t.extra || {})[d.target.field] === d.target.value);
+      (Math.floor(t.x1 / GEO.worldW) === cell % state.path.w && Math.floor(t.y1 / GEO.worldH) === Math.floor(cell / state.path.w));
+    const tgt = state.path.tlvs.find(t => t.name === d.target.name && (t.extra || {})[d.target.field] === d.target.value && inCell(t)) ||
+                state.path.tlvs.find(t => t.name === d.target.name && (t.extra || {})[d.target.field] === d.target.value);
     if (tgt) { fx = (dX(tgt.x1) + dX(tgt.x2)) / 2; fy = (dY(tgt.y1) + dY(tgt.y2)) / 2; }
   }
   if (fx == null && cell != null) {
-    fx = (cell % path.w) * CELL_W + CELL_W / 2;
-    fy = Math.floor(cell / path.w) * CELL_H + CELL_H / 2;
+    fx = (cell % state.path.w) * CELL_W + CELL_W / 2;
+    fy = Math.floor(cell / state.path.w) * CELL_H + CELL_H / 2;
   }
   if (fx == null) return;   // path-level target: selectPath already fit the view
   focusOn(fx, fy);
@@ -263,21 +236,21 @@ const HIT_CAP = 1500, GROUP_MAX = 8;
 let searchScope = "all";   // all | game | level | path (relative to the current selection)
 
 function scopeAccepts(h) {
-  if (searchScope === "game") return h.G === DATA;
-  if (searchScope === "level") return h.G === DATA && h.L === lvl;
-  if (searchScope === "path") return h.G === DATA && h.L === lvl && h.P === path;
+  if (searchScope === "game") return h.G === state.data;
+  if (searchScope === "level") return h.G === state.data && h.L === state.lvl;
+  if (searchScope === "path") return h.G === state.data && h.L === state.lvl && h.P === state.path;
   return true;
 }
 
 function scopeLabel() {
-  return { all: "everywhere", game: DATA.id, level: `${DATA.id} · ${lvl.short}`,
-           path: `${DATA.id} · ${lvl.short} P${path.id}` }[searchScope];
+  return { all: "everywhere", game: state.data.id, level: `${state.data.id} · ${state.lvl.short}`,
+           path: `${state.data.id} · ${state.lvl.short} P${state.path.id}` }[searchScope];
 }
 
 function updateScopeBar() {
-  if (!DATA || !lvl || !path) return;
+  if (!state.data || !state.lvl || !state.path) return;
   scopeBar.innerHTML = "";
-  for (const [key, label] of [["all", "All"], ["game", DATA.id], ["level", lvl.short], ["path", "P" + path.id]]) {
+  for (const [key, label] of [["all", "All"], ["game", state.data.id], ["level", state.lvl.short], ["path", "P" + state.path.id]]) {
     const b = document.createElement("button");
     b.textContent = label;
     if (searchScope === key) b.classList.add("on");
@@ -318,7 +291,7 @@ function runSearch(q) {
 
   const hits = [];
   outer:
-  for (const G of GAMES_DATA)
+  for (const G of state.games)
     for (const L of G.levels)
       for (const P of L.paths)
         for (const t of P.tlvs)
@@ -334,12 +307,12 @@ function runSearch(q) {
   const byKey = {};
   const group = (key, label) => byKey[key] ||
     (byKey[key] = groups[groups.push({ label, hits: [] }) - 1]);
-  if (path) group("p", `${DATA.id} · ${lvl.short} P${path.id}`);
-  if (lvl) group("l", `${DATA.id} · ${lvl.short}`);
-  for (const G of [DATA, ...GAMES_DATA.filter(G => G !== DATA)]) group("g" + G.id, G.id);
+  if (state.path) group("p", `${state.data.id} · ${state.lvl.short} P${state.path.id}`);
+  if (state.lvl) group("l", `${state.data.id} · ${state.lvl.short}`);
+  for (const G of [state.data, ...state.games.filter(G => G !== state.data)]) group("g" + G.id, G.id);
   for (const h of hits) {
-    if (h.G === DATA && h.L === lvl && h.P === path) group("p").hits.push(h);
-    else if (h.G === DATA && h.L === lvl) group("l").hits.push(h);
+    if (h.G === state.data && h.L === state.lvl && h.P === state.path) group("p").hits.push(h);
+    else if (h.G === state.data && h.L === state.lvl) group("l").hits.push(h);
     else group("g" + h.G.id).hits.push(h);
   }
 
@@ -363,7 +336,7 @@ function runSearch(q) {
 
   const more = document.createElement("div");
   more.className = "more";
-  const perGame = GAMES_DATA.map(G => `${G.id} ${hits.filter(h => h.G === G).length}`).join(" · ");
+  const perGame = state.games.map(G => `${G.id} ${hits.filter(h => h.G === G).length}`).join(" · ");
   const summary = hits.length
     ? `${hits.length}${hits.length >= HIT_CAP ? "+" : ""} hit${hits.length === 1 ? "" : "s"}` +
       (searchScope === "all" ? ` — ${perGame}` : ` in ${scopeLabel()}`)
@@ -414,9 +387,9 @@ window.addEventListener("keydown", e => {
 });
 
 function jumpToTlv(G, L, P, t) {
-  if (DATA !== G) selectGame(G, true);
-  if (lvl !== L) selectLevel(L);
-  if (path !== P) selectPathById(P.id);
+  if (state.data !== G) selectGame(G, true);
+  if (state.lvl !== L) selectLevel(L);
+  if (state.path !== P) selectPathById(P.id);
   focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
 }
 
@@ -424,11 +397,11 @@ function jumpToTlv(G, L, P, t) {
 let applyingHash = false, hashTimer = null;
 
 function hashFor() {
-  return `#${DATA.id}/${lvl.short}/${path.id}/${Math.round(cam.x)}/${Math.round(cam.y)}/${cam.z.toFixed(2)}`;
+  return `#${state.data.id}/${state.lvl.short}/${state.path.id}/${Math.round(state.cam.x)}/${Math.round(state.cam.y)}/${state.cam.z.toFixed(2)}`;
 }
 
 function scheduleHash(push) {
-  if (applyingHash || !path) return;
+  if (applyingHash || !state.path) return;
   clearTimeout(hashTimer);
   hashTimer = setTimeout(() => {
     const h = hashFor();
@@ -442,18 +415,18 @@ function applyHash() {
   let h = location.hash.replace(/^#/, "");
   if (!h) return false;
   let parts = h.split("/");
-  const G = GAMES_DATA.find(g => g.id === parts[0].toUpperCase());
+  const G = state.games.find(g => g.id === parts[0].toUpperCase());
   if (!G) return false;
   parts = parts.slice(1);
   const L = G.levels.find(l => l.short === (parts[0] || "").toUpperCase());
   if (!L) return false;
   applyingHash = true;
-  if (DATA !== G) selectGame(G, true);
-  if (lvl !== L) selectLevel(L);
+  if (state.data !== G) selectGame(G, true);
+  if (state.lvl !== L) selectLevel(L);
   if (!selectPathById(+parts[1])) { applyingHash = false; return false; }
   if (parts[2] != null && parts.length >= 5) {
-    cam.x = +parts[2]; cam.y = +parts[3];
-    cam.z = clamp(+parts[4], ZOOM_MIN, ZOOM_MAX);
+    state.cam.x = +parts[2]; state.cam.y = +parts[3];
+    state.cam.z = clamp(+parts[4], ZOOM_MIN, ZOOM_MAX);
     camToken++;   // cancel any fit still waiting on layout
   }
   applyingHash = false;
@@ -466,17 +439,17 @@ window.addEventListener("hashchange", () => { if (!applyingHash) applyHash(); })
 // ---- interaction ------------------------------------------------------
 let panning = false, panStart = null;
 cv.addEventListener("mousedown", e => {
-  if (show.ruler) {
+  if (state.show.ruler) {
     const w = worldAtMouse();
-    ruler = { x1: w.x, y1: w.y, x2: w.x, y2: w.y };
+    state.ruler = { x1: w.x, y1: w.y, x2: w.x, y2: w.y };
     measuring = true;
     draw();
     return;
   }
-  panning = true; panMoved = false; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y };
+  panning = true; panMoved = false; cv.classList.add("panning"); panStart = { x: e.clientX, y: e.clientY, cx: state.cam.x, cy: state.cam.y };
 });
 cv.addEventListener("click", () => {
-  if (panMoved || show.ruler) return;
+  if (panMoved || state.show.ruler) return;
   for (const t of hoverTlvs) {
     const d = destOf(t);
     if (d) { navigateToDest(d); return; }
@@ -486,14 +459,14 @@ window.addEventListener("mouseup", () => { measuring = false; if (panning && pan
 window.addEventListener("mousemove", e => {
   const r = cv.getBoundingClientRect();
   mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
-  if (measuring && ruler) {
+  if (measuring && state.ruler) {
     const w = worldAtMouse();
-    ruler.x2 = w.x; ruler.y2 = w.y;
+    state.ruler.x2 = w.x; state.ruler.y2 = w.y;
   }
   if (panning) {
     if (Math.abs(e.clientX - panStart.x) + Math.abs(e.clientY - panStart.y) > 4) panMoved = true;
-    cam.x = panStart.cx - (e.clientX - panStart.x) / cam.z;
-    cam.y = panStart.cy - (e.clientY - panStart.y) / cam.z;
+    state.cam.x = panStart.cx - (e.clientX - panStart.x) / state.cam.z;
+    state.cam.y = panStart.cy - (e.clientY - panStart.y) / state.cam.z;
   }
   updateHover();
   scheduleDraw();
@@ -501,16 +474,16 @@ window.addEventListener("mousemove", e => {
 cv.addEventListener("wheel", e => {
   e.preventDefault();
   const f = Math.exp(-e.deltaY * 0.0015);
-  const wx = cam.x + mouse.x / cam.z, wy = cam.y + mouse.y / cam.z;
-  cam.z = clamp(cam.z * f, ZOOM_MIN, ZOOM_MAX);
-  cam.x = wx - mouse.x / cam.z;
-  cam.y = wy - mouse.y / cam.z;
+  const wx = state.cam.x + mouse.x / state.cam.z, wy = state.cam.y + mouse.y / state.cam.z;
+  state.cam.z = clamp(state.cam.z * f, ZOOM_MIN, ZOOM_MAX);
+  state.cam.x = wx - mouse.x / state.cam.z;
+  state.cam.y = wy - mouse.y / state.cam.z;
   updateHover();
   scheduleDraw();
   scheduleHash(false);
 }, { passive: false });
 
-function worldAtMouse() { return { x: cam.x + mouse.x / cam.z, y: cam.y + mouse.y / cam.z }; }
+function worldAtMouse() { return { x: state.cam.x + mouse.x / state.cam.z, y: state.cam.y + mouse.y / state.cam.z }; }
 
 // ---- touch: one finger pans, two fingers pinch-zoom (into the map, not the page) ----
 let touchState = null;   // { mode, ... }
@@ -520,7 +493,7 @@ cv.addEventListener("touchstart", e => {
   e.preventDefault();
   if (e.touches.length === 1) {
     const p = touchXY(e.touches[0]);
-    touchState = { mode: "pan", sx: p.x, sy: p.y, cx: cam.x, cy: cam.y, moved: false, tapT: e.target };
+    touchState = { mode: "pan", sx: p.x, sy: p.y, cx: state.cam.x, cy: state.cam.y, moved: false, tapT: e.target };
     mouse.x = p.x; mouse.y = p.y;
   } else if (e.touches.length === 2) {
     const a = touchXY(e.touches[0]), b = touchXY(e.touches[1]);
@@ -535,17 +508,17 @@ cv.addEventListener("touchmove", e => {
   if (touchState.mode === "pan" && e.touches.length === 1) {
     const p = touchXY(e.touches[0]);
     if (Math.abs(p.x - touchState.sx) + Math.abs(p.y - touchState.sy) > 6) touchState.moved = true;
-    cam.x = touchState.cx - (p.x - touchState.sx) / cam.z;
-    cam.y = touchState.cy - (p.y - touchState.sy) / cam.z;
+    state.cam.x = touchState.cx - (p.x - touchState.sx) / state.cam.z;
+    state.cam.y = touchState.cy - (p.y - touchState.sy) / state.cam.z;
     scheduleDraw();
   } else if (touchState.mode === "pinch" && e.touches.length === 2) {
     const a = touchXY(e.touches[0]), b = touchXY(e.touches[1]);
     const dist = Math.hypot(a.x - b.x, a.y - b.y);
     const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
-    const wx = cam.x + mx / cam.z, wy = cam.y + my / cam.z;   // anchor at pinch midpoint
-    cam.z = clamp(cam.z * dist / touchState.dist, ZOOM_MIN, ZOOM_MAX);
-    cam.x = wx - mx / cam.z;
-    cam.y = wy - my / cam.z;
+    const wx = state.cam.x + mx / state.cam.z, wy = state.cam.y + my / state.cam.z;   // anchor at pinch midpoint
+    state.cam.z = clamp(state.cam.z * dist / touchState.dist, ZOOM_MIN, ZOOM_MAX);
+    state.cam.x = wx - mx / state.cam.z;
+    state.cam.y = wy - my / state.cam.z;
     touchState.dist = dist; touchState.mx = mx; touchState.my = my;
     scheduleDraw();
   }
@@ -562,15 +535,15 @@ cv.addEventListener("touchend", e => {
 }, { passive: false });
 
 function updateHover() {
-  if (!path) return;
+  if (!state.path) return;
   const w = worldAtMouse();
   let hoverLines = [];
-  if (show.coll) {
-    const tol = 6 / cam.z;
-    hoverLines = path.lines.filter(([x1, y1, x2, y2]) =>
+  if (state.show.coll) {
+    const tol = 6 / state.cam.z;
+    hoverLines = state.path.lines.filter(([x1, y1, x2, y2]) =>
       segDist(w.x, w.y, dX(x1), dY(y1), dX(x2), dY(y2)) <= tol).slice(0, 4);
   }
-  hoverTlvs = path.tlvs.filter(t => {
+  hoverTlvs = state.path.tlvs.filter(t => {
     const c = catOf(t);
     if (!c.on) return false;
     const x1 = dX(t.x1), y1 = dY(t.y1);
@@ -599,7 +572,7 @@ function updateHover() {
     tip.style.display = "none";
     if (!panning) cv.style.cursor = "";
   }
-  hud.textContent = `world x ${Math.round(wX(w.x))}  y ${Math.round(wY(w.y))}  ·  zoom ${cam.z.toFixed(2)}`;
+  hud.textContent = `world x ${Math.round(wX(w.x))}  y ${Math.round(wY(w.y))}  ·  zoom ${state.cam.z.toFixed(2)}`;
 }
 
 // ---- drawing ----------------------------------------------------------
@@ -638,22 +611,22 @@ function scheduleDraw() {
 }
 
 function draw() {
-  if (!path) { ctx.fillStyle = COLOR.bg; ctx.fillRect(0, 0, cv.width, cv.height); return; }
+  if (!state.path) { ctx.fillStyle = COLOR.bg; ctx.fillRect(0, 0, cv.width, cv.height); return; }
   ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
   ctx.fillStyle = COLOR.mapBg;
   ctx.fillRect(0, 0, cv.clientWidth, cv.clientHeight);
   ctx.save();
-  ctx.scale(cam.z, cam.z);
-  ctx.translate(-cam.x, -cam.y);
+  ctx.scale(state.cam.z, state.cam.z);
+  ctx.translate(-state.cam.x, -state.cam.y);
 
   // cameras
-  ctx.imageSmoothingEnabled = cam.z < 1;
-  for (const c of path.cams) {
-    const cx = (c.cell % path.w) * CELL_W, cy = Math.floor(c.cell / path.w) * CELL_H;
+  ctx.imageSmoothingEnabled = state.cam.z < 1;
+  for (const c of state.path.cams) {
+    const cx = (c.cell % state.path.w) * CELL_W, cy = Math.floor(c.cell / state.path.w) * CELL_H;
     if (c.png) {
       const im = img(c.png);
       if (im.complete && im.naturalWidth) {
-        ctx.globalAlpha = show.dim ? 0.35 : 1;
+        ctx.globalAlpha = state.show.dim ? 0.35 : 1;
         // source is 384px wide (24 MDEC macroblocks); only the first 368 columns are real
         ctx.drawImage(im, 0, 0, CELL_W, CELL_H, cx, cy, CELL_W, CELL_H);
         ctx.globalAlpha = 1;
@@ -665,12 +638,12 @@ function draw() {
   }
 
   // foreground occlusion masks, tinted so they stand out from the identical background art
-  if (show.fg) {
-    for (const c of path.cams) {
+  if (state.show.fg) {
+    for (const c of state.path.cams) {
       if (!c.fg) continue;
       const t = tintedImg(c.fg);
       if (!t) continue;
-      const cx = (c.cell % path.w) * CELL_W, cy = Math.floor(c.cell / path.w) * CELL_H;
+      const cx = (c.cell % state.path.w) * CELL_W, cy = Math.floor(c.cell / state.path.w) * CELL_H;
       ctx.globalAlpha = 0.6;
       ctx.drawImage(t, cx, cy, CELL_W, CELL_H);
       ctx.globalAlpha = 1;
@@ -678,38 +651,38 @@ function draw() {
   }
 
   // grid + names
-  if (show.grid) {
+  if (state.show.grid) {
     ctx.strokeStyle = "rgba(255,255,255,.18)";
-    ctx.lineWidth = 1.5 / cam.z;
-    for (let gx = 0; gx <= path.w; gx++) { ctx.beginPath(); ctx.moveTo(gx * CELL_W, 0); ctx.lineTo(gx * CELL_W, path.h * CELL_H); ctx.stroke(); }
-    for (let gy = 0; gy <= path.h; gy++) { ctx.beginPath(); ctx.moveTo(0, gy * CELL_H); ctx.lineTo(path.w * CELL_W, gy * CELL_H); ctx.stroke(); }
-    if (CELL_W * cam.z > 90) {
+    ctx.lineWidth = 1.5 / state.cam.z;
+    for (let gx = 0; gx <= state.path.w; gx++) { ctx.beginPath(); ctx.moveTo(gx * CELL_W, 0); ctx.lineTo(gx * CELL_W, state.path.h * CELL_H); ctx.stroke(); }
+    for (let gy = 0; gy <= state.path.h; gy++) { ctx.beginPath(); ctx.moveTo(0, gy * CELL_H); ctx.lineTo(state.path.w * CELL_W, gy * CELL_H); ctx.stroke(); }
+    if (CELL_W * state.cam.z > 90) {
       ctx.fillStyle = "rgba(255,255,255,.8)";
-      ctx.font = `${12 / cam.z}px sans-serif`;
-      ctx.shadowColor = "rgba(0,0,0,.9)"; ctx.shadowBlur = 3 / cam.z;
-      for (const c of path.cams) {
-        const cx = (c.cell % path.w) * CELL_W, cy = Math.floor(c.cell / path.w) * CELL_H;
-        ctx.fillText(c.name, cx + 10, cy + 18 / cam.z);
+      ctx.font = `${12 / state.cam.z}px sans-serif`;
+      ctx.shadowColor = "rgba(0,0,0,.9)"; ctx.shadowBlur = 3 / state.cam.z;
+      for (const c of state.path.cams) {
+        const cx = (c.cell % state.path.w) * CELL_W, cy = Math.floor(c.cell / state.path.w) * CELL_H;
+        ctx.fillText(c.name, cx + 10, cy + 18 / state.cam.z);
       }
       ctx.shadowBlur = 0;
     }
   }
 
   // collision lines
-  if (show.coll) {
-    ctx.lineWidth = 2.5 / cam.z;
-    for (const [x1, y1, x2, y2, t] of path.lines) {
+  if (state.show.coll) {
+    ctx.lineWidth = 2.5 / state.cam.z;
+    for (const [x1, y1, x2, y2, t] of state.path.lines) {
       ctx.strokeStyle = LINE_COLORS[t] || "#999";
-      ctx.setLineDash(t >= 4 ? [8 / cam.z, 6 / cam.z] : []);
+      ctx.setLineDash(t >= 4 ? [8 / state.cam.z, 6 / state.cam.z] : []);
       ctx.beginPath(); ctx.moveTo(dX(x1), dY(y1)); ctx.lineTo(dX(x2), dY(y2)); ctx.stroke();
     }
     ctx.setLineDash([]);
   }
 
   // TLVs
-  const showLabels = show.labels && cam.z > 0.45;
-  ctx.font = `${11 / cam.z}px sans-serif`;
-  for (const t of path.tlvs) {
+  const showLabels = state.show.labels && state.cam.z > 0.45;
+  ctx.font = `${11 / state.cam.z}px sans-serif`;
+  for (const t of state.path.tlvs) {
     const c = catOf(t);
     if (!c.on) continue;
     // far edge goes through the transform too: AE cells are scaled and AO
@@ -717,33 +690,33 @@ function draw() {
     const x1 = dX(t.x1), y1 = dY(t.y1);
     const w = Math.max(dX(t.x2) - x1, 10), h = Math.max(dY(t.y2) - y1, 10);
     ctx.strokeStyle = c.color;
-    ctx.lineWidth = (t.name === "LCDStatusBoard" ? 3.5 : 2) / cam.z;
+    ctx.lineWidth = (t.name === "LCDStatusBoard" ? 3.5 : 2) / state.cam.z;
     ctx.strokeRect(x1, y1, w, h);
     ctx.fillStyle = c.color + "26";
     ctx.fillRect(x1, y1, w, h);
     if (showLabels) {
       ctx.fillStyle = c.color;
-      ctx.fillText(t.name, x1, y1 - 3 / cam.z);
+      ctx.fillText(t.name, x1, y1 - 3 / state.cam.z);
     }
   }
 
-  if (ruler) {
-    const dx = ruler.x2 - ruler.x1, dy = ruler.y2 - ruler.y1;
+  if (state.ruler) {
+    const dx = state.ruler.x2 - state.ruler.x1, dy = state.ruler.y2 - state.ruler.y1;
     const len = Math.hypot(dx, dy);
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 2 / cam.z;
-    ctx.setLineDash([6 / cam.z, 5 / cam.z]);
-    ctx.beginPath(); ctx.moveTo(ruler.x1, ruler.y1); ctx.lineTo(ruler.x2, ruler.y2); ctx.stroke();
+    ctx.lineWidth = 2 / state.cam.z;
+    ctx.setLineDash([6 / state.cam.z, 5 / state.cam.z]);
+    ctx.beginPath(); ctx.moveTo(state.ruler.x1, state.ruler.y1); ctx.lineTo(state.ruler.x2, state.ruler.y2); ctx.stroke();
     ctx.setLineDash([]);
-    for (const [ex, ey] of [[ruler.x1, ruler.y1], [ruler.x2, ruler.y2]]) {
-      ctx.beginPath(); ctx.arc(ex, ey, 3.5 / cam.z, 0, Math.PI * 2); ctx.fillStyle = "#ffffff"; ctx.fill();
+    for (const [ex, ey] of [[state.ruler.x1, state.ruler.y1], [state.ruler.x2, state.ruler.y2]]) {
+      ctx.beginPath(); ctx.arc(ex, ey, 3.5 / state.cam.z, 0, Math.PI * 2); ctx.fillStyle = "#ffffff"; ctx.fill();
     }
     const label = `${Math.round(Math.abs(dx))} × ${Math.round(Math.abs(dy))} · ${Math.round(len)}u ≈ ${(len / 25).toFixed(1)} grid`;
-    ctx.font = `${13 / cam.z}px sans-serif`;
-    const midx = (ruler.x1 + ruler.x2) / 2, midy = (ruler.y1 + ruler.y2) / 2 - 10 / cam.z;
+    ctx.font = `${13 / state.cam.z}px sans-serif`;
+    const midx = (state.ruler.x1 + state.ruler.x2) / 2, midy = (state.ruler.y1 + state.ruler.y2) / 2 - 10 / state.cam.z;
     ctx.fillStyle = `rgba(${COLOR.mapBgRgb},.85)`;
     const tw = ctx.measureText(label).width;
-    ctx.fillRect(midx - tw / 2 - 5 / cam.z, midy - 13 / cam.z, tw + 10 / cam.z, 18 / cam.z);
+    ctx.fillRect(midx - tw / 2 - 5 / state.cam.z, midy - 13 / state.cam.z, tw + 10 / state.cam.z, 18 / state.cam.z);
     ctx.fillStyle = "#ffffff";
     ctx.fillText(label, midx - tw / 2, midy);
   }
@@ -752,8 +725,8 @@ function draw() {
     const el = performance.now() - flash.t0;
     const a = Math.max(0, 1 - el / FLASH_MS);
     ctx.strokeStyle = `rgba(${COLOR.accentRgb},${a})`;
-    ctx.lineWidth = 3.5 / cam.z;
-    const r = (46 + 10 * Math.sin(el / 110)) / Math.sqrt(cam.z);
+    ctx.lineWidth = 3.5 / state.cam.z;
+    const r = (46 + 10 * Math.sin(el / 110)) / Math.sqrt(state.cam.z);
     ctx.beginPath(); ctx.arc(flash.x, flash.y, r, 0, Math.PI * 2); ctx.stroke();
   }
 
@@ -776,13 +749,13 @@ Promise.all([
   loadOne("map_data_ao.js"),
   loadOne("map_data_ae.js"),
 ]).then(datasets => {
-  GAMES_DATA = datasets.filter(d => d && d.levels && d.levels.length);
-  if (!GAMES_DATA.length) {
+  state.games = datasets.filter(d => d && d.levels && d.levels.length);
+  if (!state.games.length) {
     $("gameName").textContent = "Map data failed to load.";
     $("help").textContent = "map data failed to load — check that map_data_ao.js / map_data_ae.js are served";
     return;
   }
-  GAMES_DATA.forEach(G => {
+  state.games.forEach(G => {
     const b = document.createElement("button");
     b.textContent = G.id;
     b.title = G.game;
@@ -791,5 +764,5 @@ Promise.all([
     gameBtns.appendChild(b);
   });
   resize();
-  if (!applyHash()) selectGame(GAMES_DATA[0]);
+  if (!applyHash()) selectGame(state.games[0]);
 });
