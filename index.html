@@ -687,7 +687,7 @@ window.addEventListener("mousemove", e => {
     cam.y = panStart.cy - (e.clientY - panStart.y) / cam.z;
   }
   updateHover();
-  draw();
+  scheduleDraw();
 });
 cv.addEventListener("wheel", e => {
   e.preventDefault();
@@ -697,7 +697,7 @@ cv.addEventListener("wheel", e => {
   cam.x = wx - mouse.x / cam.z;
   cam.y = wy - mouse.y / cam.z;
   updateHover();
-  draw();
+  scheduleDraw();
   scheduleHash(false);
 }, { passive: false });
 
@@ -728,7 +728,7 @@ cv.addEventListener("touchmove", e => {
     if (Math.abs(p.x - touchState.sx) + Math.abs(p.y - touchState.sy) > 6) touchState.moved = true;
     cam.x = touchState.cx - (p.x - touchState.sx) / cam.z;
     cam.y = touchState.cy - (p.y - touchState.sy) / cam.z;
-    draw();
+    scheduleDraw();
   } else if (touchState.mode === "pinch" && e.touches.length === 2) {
     const a = touchXY(e.touches[0]), b = touchXY(e.touches[1]);
     const dist = Math.hypot(a.x - b.x, a.y - b.y);
@@ -738,7 +738,7 @@ cv.addEventListener("touchmove", e => {
     cam.x = wx - mx / cam.z;
     cam.y = wy - my / cam.z;
     touchState.dist = dist; touchState.mx = mx; touchState.my = my;
-    draw();
+    scheduleDraw();
   }
 }, { passive: false });
 
@@ -798,7 +798,7 @@ function img(src) {
   if (!images[src]) {
     const im = new Image();
     im.src = src;
-    im.onload = draw;
+    im.onload = scheduleDraw;
     images[src] = im;
   }
   return images[src];
@@ -828,6 +828,14 @@ function tintedImg(src) {
   octx.fillRect(0, 0, oc.width, oc.height);
   tintCache[src] = oc;
   return oc;
+}
+
+// coalesce bursty redraw sources (pointer moves, image loads) into one paint per frame
+let drawPending = false;
+function scheduleDraw() {
+  if (drawPending) return;
+  drawPending = true;
+  requestAnimationFrame(() => { drawPending = false; draw(); });
 }
 
 function draw() {
