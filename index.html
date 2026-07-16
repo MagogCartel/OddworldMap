@@ -369,6 +369,17 @@ function selectPathById(id) {
   return true;
 }
 
+// center on (fx, fy) at roughly 2.6 screens across, flash the spot
+function focusOn(fx, fy) {
+  cam.z = Math.max(0.5, Math.min(1.6, Math.min(cv.clientWidth / (2.6 * CELL_W), cv.clientHeight / (2.6 * CELL_H))));
+  cam.x = fx - cv.clientWidth / (2 * cam.z);
+  cam.y = fy - cv.clientHeight / (2 * cam.z);
+  camToken++;   // cancel any fit still waiting on layout
+  flash = { x: fx, y: fy, t0: performance.now() };
+  animateFlash();
+  scheduleHash(true);
+}
+
 function navigateToDest(d) {
   if (!cv.clientWidth) { requestAnimationFrame(() => navigateToDest(d)); return; }
   const L = DATA.levels.find(l => l.short === d.lv);
@@ -397,14 +408,7 @@ function navigateToDest(d) {
     fy = Math.floor(cell / path.w) * CELL_H + CELL_H / 2;
   }
   if (fx == null) return;   // path-level target: selectPath already fit the view
-
-  cam.z = Math.max(0.5, Math.min(1.6, Math.min(cv.clientWidth / (2.6 * CELL_W), cv.clientHeight / (2.6 * CELL_H))));
-  cam.x = fx - cv.clientWidth / (2 * cam.z);
-  cam.y = fy - cv.clientHeight / (2 * cam.z);
-  camToken++;   // cancel any fit still waiting on layout
-  flash = { x: fx, y: fy, t0: performance.now() };
-  animateFlash();
-  scheduleHash(true);
+  focusOn(fx, fy);
 }
 
 function animateFlash() {
@@ -586,14 +590,7 @@ function jumpToTlv(G, L, P, t) {
   if (DATA !== G) selectGame(G, gameBtns.children[GAMES_DATA.indexOf(G)], true);
   if (lvl !== L) selectLevel(L, levelBtns.children[G.levels.indexOf(L)]);
   if (path !== P) selectPathById(P.id);
-  const fx = (dX(t.x1) + dX(t.x2)) / 2, fy = (dY(t.y1) + dY(t.y2)) / 2;
-  cam.z = Math.max(0.5, Math.min(1.6, Math.min(cv.clientWidth / (2.6 * CELL_W), cv.clientHeight / (2.6 * CELL_H))));
-  cam.x = fx - cv.clientWidth / (2 * cam.z);
-  cam.y = fy - cv.clientHeight / (2 * cam.z);
-  camToken++;
-  flash = { x: fx, y: fy, t0: performance.now() };
-  animateFlash();
-  scheduleHash(true);
+  focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
 }
 
 // ---- permalinks: #LEVEL/PATH/x/y/zoom ----------------------------------
