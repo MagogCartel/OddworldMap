@@ -586,7 +586,7 @@ function jumpToTlv(G, L, P, t) {
   if (DATA !== G) selectGame(G, gameBtns.children[GAMES_DATA.indexOf(G)], true);
   if (lvl !== L) selectLevel(L, levelBtns.children[G.levels.indexOf(L)]);
   if (path !== P) selectPathById(P.id);
-  const fx = dX(t.x1) + (t.x2 - t.x1) / 2, fy = dY(t.y1) + (t.y2 - t.y1) / 2;
+  const fx = (dX(t.x1) + dX(t.x2)) / 2, fy = (dY(t.y1) + dY(t.y2)) / 2;
   cam.z = Math.max(0.5, Math.min(1.6, Math.min(cv.clientWidth / (2.6 * CELL_W), cv.clientHeight / (2.6 * CELL_H))));
   cam.x = fx - cv.clientWidth / (2 * cam.z);
   cam.y = fy - cv.clientHeight / (2 * cam.z);
@@ -750,7 +750,7 @@ function updateHover() {
     const c = catOf(t);
     if (!c.on) return false;
     const x1 = dX(t.x1), y1 = dY(t.y1);
-    const x2 = Math.max(x1 + (t.x2 - t.x1), x1 + 8), y2 = Math.max(y1 + (t.y2 - t.y1), y1 + 8);
+    const x2 = Math.max(dX(t.x2), x1 + 8), y2 = Math.max(dY(t.y2), y1 + 8);
     return w.x >= x1 - 4 && w.x <= x2 + 4 && w.y >= y1 - 4 && w.y <= y2 + 4;
   });
   if (hoverTlvs.length || hoverLines.length) {
@@ -893,8 +893,10 @@ function draw() {
   for (const t of path.tlvs) {
     const c = catOf(t);
     if (!c.on) continue;
+    // far edge goes through the transform too: AE cells are scaled and AO
+    // spans can cross cells, so raw world deltas overshoot
     const x1 = dX(t.x1), y1 = dY(t.y1);
-    const w = Math.max(t.x2 - t.x1, 10), h = Math.max(t.y2 - t.y1, 10);
+    const w = Math.max(dX(t.x2) - x1, 10), h = Math.max(dY(t.y2) - y1, 10);
     ctx.strokeStyle = c.color;
     ctx.lineWidth = (t.name === "LCDStatusBoard" ? 3.5 : 2) / cam.z;
     ctx.strokeRect(x1, y1, w, h);
