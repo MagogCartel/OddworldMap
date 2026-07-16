@@ -245,11 +245,15 @@ const gameBtns = document.getElementById("gameBtns");
 const levelBtns = document.getElementById("levelBtns");
 const pathBtns = document.getElementById("pathBtns");
 
-function selectGame(G, btn, keepView) {
+// highlight the button whose data-key matches, clear the rest
+function markOn(box, key) {
+  for (const b of box.children) b.classList.toggle("on", b.dataset.key === key);
+}
+
+function selectGame(G, keepView) {
   DATA = G;
   setGeometry(G.geometry);
-  [...gameBtns.children].forEach(x => x.classList.remove("on"));
-  if (btn) btn.classList.add("on");
+  markOn(gameBtns, G.id);
   document.getElementById("gameName").textContent = G.game;
   ENTRY = computeEntryPaths(G);
   levelBtns.innerHTML = "";
@@ -257,34 +261,34 @@ function selectGame(G, btn, keepView) {
     const b = document.createElement("button");
     b.textContent = L.short;
     b.title = L.name;
-    b.onclick = () => selectLevel(L, b);
+    b.dataset.key = L.short;
+    b.onclick = () => selectLevel(L);
     levelBtns.appendChild(b);
   });
-  if (!keepView && G.levels.length) selectLevel(G.levels[0], levelBtns.children[0]);
+  if (!keepView && G.levels.length) selectLevel(G.levels[0]);
 }
 
-function selectLevel(L, btn) {
+function selectLevel(L) {
   lvl = L;
-  [...levelBtns.children].forEach(x => x.classList.remove("on"));
-  btn.classList.add("on");
+  markOn(levelBtns, L.short);
   pathBtns.innerHTML = "";
   L.paths.forEach(P => {
     const b = document.createElement("button");
     b.textContent = "P" + P.id;
+    b.dataset.key = String(P.id);
     if (ENTRY[L.short] && ENTRY[L.short].has(P.id)) {
       b.classList.add("entry");
       b.title = "entry point (arrived at from another level)";
     }
-    b.onclick = () => selectPath(P, b);
+    b.onclick = () => selectPath(P);
     pathBtns.appendChild(b);
   });
-  if (L.paths.length) selectPath(L.paths[0], pathBtns.children[0]);
+  if (L.paths.length) selectPath(L.paths[0]);
 }
 
-function selectPath(P, btn) {
+function selectPath(P) {
   path = P;
-  [...pathBtns.children].forEach(x => x.classList.remove("on"));
-  if (btn) btn.classList.add("on");
+  markOn(pathBtns, String(P.id));
   if (isNarrow() && !applyingHash) toggleMenu(false);   // reveal the map after picking
   fitView();
   updateCounts();
@@ -363,9 +367,9 @@ function destOf(t) {
 }
 
 function selectPathById(id) {
-  const idx = lvl.paths.findIndex(p => p.id === id);
-  if (idx < 0) return false;
-  selectPath(lvl.paths[idx], pathBtns.children[idx]);
+  const P = lvl.paths.find(p => p.id === id);
+  if (!P) return false;
+  selectPath(P);
   return true;
 }
 
@@ -384,7 +388,7 @@ function navigateToDest(d) {
   if (!cv.clientWidth) { requestAnimationFrame(() => navigateToDest(d)); return; }
   const L = DATA.levels.find(l => l.short === d.lv);
   if (!L) return;
-  if (lvl !== L) selectLevel(L, levelBtns.children[DATA.levels.indexOf(L)]);
+  if (lvl !== L) selectLevel(L);
   if (!selectPathById(d.pa)) return;
 
   // door numbers are only unique per camera, so resolve the destination
@@ -587,8 +591,8 @@ window.addEventListener("keydown", e => {
 });
 
 function jumpToTlv(G, L, P, t) {
-  if (DATA !== G) selectGame(G, gameBtns.children[GAMES_DATA.indexOf(G)], true);
-  if (lvl !== L) selectLevel(L, levelBtns.children[G.levels.indexOf(L)]);
+  if (DATA !== G) selectGame(G, true);
+  if (lvl !== L) selectLevel(L);
   if (path !== P) selectPathById(P.id);
   focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
 }
@@ -621,8 +625,8 @@ function applyHash() {
   const L = G.levels.find(l => l.short === (parts[0] || "").toUpperCase());
   if (!L) return false;
   applyingHash = true;
-  if (DATA !== G) selectGame(G, gameBtns.children[GAMES_DATA.indexOf(G)], true);
-  if (lvl !== L) selectLevel(L, levelBtns.children[G.levels.indexOf(L)]);
+  if (DATA !== G) selectGame(G, true);
+  if (lvl !== L) selectLevel(L);
   if (!selectPathById(+parts[1])) { applyingHash = false; return false; }
   if (parts[2] != null && parts.length >= 5) {
     cam.x = +parts[2]; cam.y = +parts[3];
@@ -964,11 +968,12 @@ Promise.all([
     const b = document.createElement("button");
     b.textContent = G.id;
     b.title = G.game;
-    b.onclick = () => selectGame(G, b);
+    b.dataset.key = G.id;
+    b.onclick = () => selectGame(G);
     gameBtns.appendChild(b);
   });
   resize();
-  if (!applyHash()) selectGame(GAMES_DATA[0], gameBtns.children[0]);
+  if (!applyHash()) selectGame(GAMES_DATA[0]);
 });
 </script>
 </body>
