@@ -382,33 +382,11 @@ body:not(.menu-open) #sidebar {
   text-decoration: underline;
 }
 
-/* menu toggle sits at the map's top-left corner, clear of the sidebar when it is open */
-#menuBtn {
+/* corner icon-buttons over the map (menu, What's New): a dim glyph that
+   brightens to full colour with an accent border on hover/focus */
+.iconbtn {
   position: absolute;
   top: 10px;
-  left: 10px;
-  z-index: 20;
-  background: rgba(18, 20, 24, 0.85);
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-}
-#menuBtn:hover {
-  border-color: var(--accent);
-}
-#scrim {
-  display: none;
-}
-
-/* What's New: corner control (top-right, clear of the menu button) + centered panel */
-#whatsnewBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   z-index: 21;
   display: grid;
   place-items: center;
@@ -424,17 +402,27 @@ body:not(.menu-open) #sidebar {
     background 0.15s ease,
     border-color 0.15s ease;
 }
-#whatsnewBtn:hover,
-#whatsnewBtn:focus-visible {
+.iconbtn:hover,
+.iconbtn:focus-visible {
   color: var(--text);
   background: rgba(18, 20, 24, 0.85);
   border-color: var(--accent);
   outline: none;
 }
-#whatsnewBtn svg {
+.iconbtn svg {
   display: block;
   width: 19px;
   height: 19px;
+}
+/* menu toggle sits at the map's top-left corner, clear of the sidebar when it is open */
+#menuBtn {
+  left: 10px;
+}
+#scrim {
+  display: none;
+}
+#whatsnewBtn {
+  right: 10px;
 }
 #whatsnewBtn[hidden] {
   display: none;

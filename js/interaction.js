@@ -7,6 +7,7 @@ import { state, dX, dY, wX, wY } from "./state.js";
 import { draw, scheduleDraw } from "./render.js";
 import { destOf, isLoopback, zoomAt } from "./model.js";
 import { navigateToDest, objectHash, scheduleHash } from "./navigate.js";
+import { HAMBURGER_SVG } from "./icons.js";
 
 const TIP_MAX_W = parseFloat(cssVar("--tip-max-w"));
 
@@ -24,6 +25,7 @@ function toggleMenu(open) {
     open ?? !document.body.classList.contains("menu-open"),
   );
 }
+menuBtn.insertAdjacentHTML("afterbegin", HAMBURGER_SVG);
 menuBtn.onclick = () => toggleMenu();
 scrim.onclick = () => toggleMenu(false);
 window.addEventListener("selection-changed", (e) => {
