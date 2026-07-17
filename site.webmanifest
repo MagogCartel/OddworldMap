@@ -1,7 +1,7 @@
 {
   "name": "Oddworld Map",
   "short_name": "Oddworld Map",
-  "description": "Interactive PS1 map of Oddworld: Abe's Oddysee & Exoddus.",
+  "description": "Interactive map of Oddworld: Abe's Oddysee & Exoddus.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#14161a",

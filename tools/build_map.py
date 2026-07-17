@@ -616,7 +616,7 @@ def decode_cam(lvl, cam_name, out_png, tmpdir, bitmask_fg1):
 
 GAMES = {
     "AO": {
-        "title": "Oddworld: Abe's Oddysee (PS1 NTSC-U)",
+        "title": "Oddworld: Abe's Oddysee",
         "data_file": "map_data_ao.json",
         "cams_dir": "cams/ao",
         "cache": "pathdata_ao.json",
@@ -629,7 +629,7 @@ GAMES = {
         "parse_tables": parse_pathdata_cpp_ao,
     },
     "AE": {
-        "title": "Oddworld: Abe's Exoddus (PS1 NTSC-U)",
+        "title": "Oddworld: Abe's Exoddus",
         "data_file": "map_data_ae.json",
         "cams_dir": "cams/ae",
         "cache": "pathdata_ae.json",

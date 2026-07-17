@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-17",
+   "tag": "improved",
+   "title": "One map for every version of the games",
+   "detail": "The map is built from the PS1 discs, but level layouts and object placements are identical in the PC releases too, so the site no longer leads with PS1 in its titles."
+  },
+  {
+   "date": "2026-07-17",
    "tag": "new",
    "title": "Follow hand stones to the view they show",
    "detail": "Click a hand stone to jump straight to the camera it reveals, the same way doors, portals and wells follow to their destination."
