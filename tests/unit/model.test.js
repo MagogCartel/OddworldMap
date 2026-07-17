@@ -28,6 +28,25 @@ test("destOf: a paired target keeps even a same-path destination", () => {
     { lv: "R1", pa: 15, ca: 2, target: { name: "Door", field: "door#", value: 0 } });
 });
 
+test("destOf: hand stone views follow the first viewed camera", () => {
+  // AE shape: bare camera ids, viewed within the stone's own path
+  const ae = tlv("HandStone", { view1_cam: 50, view2_cam: 53 });
+  assert.deepEqual(destOf(ae, ...HERE), { lv: "R1", pa: 15, ca: 50, target: null });
+  // AO shape: full level/path/camera triples
+  const ao = tlv("HandStone", { view1_level: "F1", view1_path: 2, view1_cam: 5 });
+  assert.deepEqual(destOf(ao, ...HERE), { lv: "F1", pa: 2, ca: 5, target: null });
+  // no selection and no triple: nothing to resolve against
+  assert.equal(destOf(ae, null, null), null);
+});
+
+test("computeEntryPaths: hand stone views are not arrivals", () => {
+  const d = dataset([
+    level("R1", path(15, [tlv("HandStone", { view1_level: "F1", view1_path: 2, view1_cam: 5 })])),
+    level("F1", path(2, [])),
+  ]);
+  assert.deepEqual(computeEntryPaths(d), {});
+});
+
 test("destOf: both destinations self -> primary still returned", () => {
   const t = tlv("Door", { to_level: "R1", to_path: 15, to_cam: 1 });
   assert.deepEqual(destOf(t, ...HERE), { lv: "R1", pa: 15, ca: 1, target: null });

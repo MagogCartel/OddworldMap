@@ -11,7 +11,7 @@ Browse it at **[oddworldmap.com](https://oddworldmap.com/)** — or serve the re
 - **AO / AE** buttons switch between the two games
 - **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom
 - **hover** any object for decoded details — door destinations (level/path/door#), switch IDs, path-transition targets, continue-point zones
-- **click** a door, path transition, travel portal or express well to follow it to its destination, including across levels
+- **click** a door, path transition, travel portal, express well, teleporter or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
 - level and path buttons top-left; object category filters with counts below
 - **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
 - **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")

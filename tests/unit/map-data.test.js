@@ -44,6 +44,24 @@ for (const [file, id, geometry] of [["map_data_ao.json", "AO", AO_GEOMETRY],
   });
 }
 
+// every shipped hand stone is decoded: at least one view, no raw fallback,
+// and no transition fields (views must not create entry markers)
+test("hand stones in the shipped data carry decoded views", () => {
+  for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
+    const data = load(file);
+    let count = 0;
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs)
+          if (t.name === "HandStone") {
+            count++;
+            assert.ok(t.extra && t.extra.view1_cam != null, `${data.id} ${L.short} P${P.id} stone lacks view1_cam`);
+            assert.ok(!("raw" in t.extra) && !("to_level" in t.extra), `${data.id} ${L.short} P${P.id} stone has stray fields`);
+          }
+    assert.ok(count > 0, `${data.id}: no hand stones found`);
+  }
+});
+
 // the shipped data contains exactly three genuinely self-referencing paired
 // objects; dangling destinations (e.g. AE MI P11, SV P6) must not be flagged
 test("loopbacks in the shipped data are exactly the three known ones", () => {
