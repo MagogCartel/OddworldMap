@@ -19986,7 +19986,7 @@
        "x2": 5598,
        "y2": 324,
        "extra": {
-        "raw": "0 0 0 5003 -268 -1500"
+        "well#": 0
        }
       },
       {
@@ -20069,7 +20069,10 @@
         "alt_level": "L1",
         "alt_path": 1,
         "alt_cam": 11,
-        "trigger_id": 2
+        "trigger_id": 2,
+        "well#": 0,
+        "target_well#": 0,
+        "alt_target_well#": 0
        }
       },
       {
@@ -20652,7 +20655,9 @@
         "to_level": "L1",
         "to_path": 1,
         "to_cam": 16,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -20666,7 +20671,9 @@
         "to_level": "L1",
         "to_path": 1,
         "to_cam": 16,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -21650,7 +21657,9 @@
         "to_level": "L1",
         "to_path": 2,
         "to_cam": 10,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -21758,7 +21767,9 @@
         "to_level": "L1",
         "to_path": 2,
         "to_cam": 9,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -23117,7 +23128,10 @@
         "alt_level": "D1",
         "alt_path": 1,
         "alt_cam": 1,
-        "trigger_id": 198
+        "trigger_id": 198,
+        "well#": 2,
+        "target_well#": 2,
+        "alt_target_well#": 1
        }
       },
       {
@@ -23134,7 +23148,10 @@
         "alt_level": "F1",
         "alt_path": 1,
         "alt_cam": 1,
-        "trigger_id": 198
+        "trigger_id": 198,
+        "well#": 1,
+        "target_well#": 1,
+        "alt_target_well#": 0
        }
       },
       {
@@ -23702,7 +23719,7 @@
        "x2": 369,
        "y2": 698,
        "extra": {
-        "raw": "0 0 0 1200 0 0"
+        "well#": 0
        }
       },
       {
@@ -23812,7 +23829,7 @@
        "x2": 2575,
        "y2": 864,
        "extra": {
-        "raw": "0 120 0 1050 -268 -1500"
+        "well#": 0
        }
       },
       {
@@ -26024,7 +26041,7 @@
        "x2": 8543,
        "y2": 1674,
        "extra": {
-        "raw": "0 0 0 1018 -268 -1500"
+        "well#": 0
        }
       },
       {
@@ -26813,7 +26830,7 @@
        "x2": 429,
        "y2": 1763,
        "extra": {
-        "raw": "0 6 0 1017 -268 -5000"
+        "well#": 0
        }
       },
       {
@@ -28132,7 +28149,9 @@
         "to_level": "F1",
         "to_path": 9,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -28322,7 +28341,7 @@
        "x2": 1353,
        "y2": 333,
        "extra": {
-        "raw": "1 0 0 1039 -268 -1500"
+        "well#": 0
        }
       },
       {
@@ -28535,7 +28554,9 @@
         "to_level": "F2",
         "to_path": 1,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -28549,7 +28570,9 @@
         "to_level": "F2",
         "to_path": 1,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -32289,7 +32312,10 @@
         "alt_level": "F2",
         "alt_path": 4,
         "alt_cam": 8,
-        "trigger_id": 43
+        "trigger_id": 43,
+        "well#": 2,
+        "target_well#": 2,
+        "alt_target_well#": 2
        }
       },
       {
@@ -32303,7 +32329,9 @@
         "to_level": "F2",
         "to_path": 4,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -32317,7 +32345,9 @@
         "to_level": "F2",
         "to_path": 4,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -32544,7 +32574,9 @@
         "to_level": "F2",
         "to_path": 4,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 2,
+        "target_well#": 2
        }
       },
       {
@@ -33753,7 +33785,7 @@
        "x2": 356,
        "y2": 1822,
        "extra": {
-        "raw": "0 123 0 2022 268 -1500"
+        "well#": 0
        }
       },
       {
@@ -35697,7 +35729,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 10,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -35733,7 +35767,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 9,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 3,
+        "target_well#": 2
        }
       },
       {
@@ -35890,7 +35926,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 10,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -35915,7 +35953,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 10,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 3,
+        "target_well#": 2
        }
       },
       {
@@ -35932,7 +35972,10 @@
         "alt_level": "F4",
         "alt_path": 9,
         "alt_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 1,
+        "alt_target_well#": 0
        }
       },
       {
@@ -35957,7 +36000,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 11,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 2,
+        "target_well#": 3
        }
       },
       {
@@ -36048,7 +36093,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 8,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -36062,7 +36109,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 8,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -36480,7 +36529,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 9,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -36516,7 +36567,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 11,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -36530,7 +36583,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 9,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 2,
+        "target_well#": 3
        }
       },
       {
@@ -36827,7 +36882,7 @@
        "x2": 4596,
        "y2": 2122,
        "extra": {
-        "raw": "1 1 0 2043 -400 -1500"
+        "well#": 0
        }
       },
       {
@@ -36944,7 +36999,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -36977,7 +37034,7 @@
        "x2": 2457,
        "y2": 2564,
        "extra": {
-        "raw": "1 1 2 2042 268 -1500"
+        "well#": 2
        }
       },
       {
@@ -37013,7 +37070,9 @@
         "to_level": "F4",
         "to_path": 9,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 1
        }
       }
      ],
@@ -37857,7 +37916,9 @@
         "to_level": "D1",
         "to_path": 1,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 1
        }
       },
       {
@@ -38192,7 +38253,10 @@
         "alt_level": "D1",
         "alt_path": 1,
         "alt_cam": 3,
-        "trigger_id": 2
+        "trigger_id": 2,
+        "well#": 1,
+        "target_well#": 1,
+        "alt_target_well#": 1
        }
       },
       {
@@ -38348,7 +38412,7 @@
        "x2": 4689,
        "y2": 744,
        "extra": {
-        "raw": "0 0 1 3052 -268 1500"
+        "well#": 1
        }
       },
       {
@@ -38383,7 +38447,13 @@
         "to_level": "D1",
         "to_path": 1,
         "to_cam": 1,
-        "trigger_id": 50
+        "alt_level": "D1",
+        "alt_path": 1,
+        "alt_cam": 1,
+        "trigger_id": 50,
+        "well#": 17,
+        "target_well#": 17,
+        "alt_target_well#": 15
        }
       },
       {
@@ -38397,7 +38467,9 @@
         "to_level": "D1",
         "to_path": 1,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 15,
+        "target_well#": 17
        }
       },
       {
@@ -40819,7 +40891,9 @@
         "to_level": "D1",
         "to_path": 4,
         "to_cam": 2,
-        "trigger_id": 17
+        "trigger_id": 17,
+        "well#": 1,
+        "target_well#": 1
        }
       },
       {
@@ -41689,7 +41763,10 @@
         "alt_level": "D1",
         "alt_path": 4,
         "alt_cam": 2,
-        "trigger_id": 16
+        "trigger_id": 16,
+        "well#": 1,
+        "target_well#": 1,
+        "alt_target_well#": 1
        }
       },
       {
@@ -41918,7 +41995,9 @@
         "to_level": "D1",
         "to_path": 6,
         "to_cam": 8,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 3,
+        "target_well#": 3
        }
       },
       {
@@ -41932,7 +42011,9 @@
         "to_level": "D1",
         "to_path": 6,
         "to_cam": 8,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 3
        }
       },
       {
@@ -42129,7 +42210,9 @@
         "to_level": "D1",
         "to_path": 6,
         "to_cam": 8,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -42195,7 +42278,7 @@
        "x2": 4520,
        "y2": 1795,
        "extra": {
-        "raw": "0 0 0 3027 -268 -2000"
+        "well#": 0
        }
       },
       {
@@ -44696,7 +44779,9 @@
         "to_level": "D1",
         "to_path": 8,
         "to_cam": 1,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -44710,7 +44795,9 @@
         "to_level": "D1",
         "to_path": 8,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -44890,7 +44977,10 @@
         "alt_level": "D1",
         "alt_path": 8,
         "alt_cam": 1,
-        "trigger_id": 11
+        "trigger_id": 11,
+        "well#": 0,
+        "target_well#": 0,
+        "alt_target_well#": 1
        }
       },
       {
@@ -45402,7 +45492,9 @@
         "to_level": "D1",
         "to_path": 9,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 2,
+        "target_well#": 1
        }
       },
       {
@@ -45413,7 +45505,7 @@
        "x2": 1512,
        "y2": 253,
        "extra": {
-        "raw": "1 0 1 3032 500 -3000"
+        "well#": 1
        }
       },
       {
@@ -45645,7 +45737,9 @@
         "to_level": "D1",
         "to_path": 9,
         "to_cam": 6,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 2
        }
       },
       {
@@ -45656,7 +45750,7 @@
        "x2": 3427,
        "y2": 352,
        "extra": {
-        "raw": "0 0 2 3037 -268 -1500"
+        "well#": 2
        }
       },
       {
@@ -45752,7 +45846,9 @@
         "to_level": "D1",
         "to_path": 9,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 1
        }
       },
       {
@@ -45777,7 +45873,13 @@
         "to_level": "D1",
         "to_path": 9,
         "to_cam": 4,
-        "trigger_id": 94
+        "alt_level": "D1",
+        "alt_path": 9,
+        "alt_cam": 4,
+        "trigger_id": 94,
+        "well#": 1,
+        "target_well#": 1,
+        "alt_target_well#": 3
        }
       },
       {
@@ -45791,7 +45893,9 @@
         "to_level": "D1",
         "to_path": 9,
         "to_cam": 3,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 3,
+        "target_well#": 1
        }
       },
       {
@@ -49026,7 +49130,9 @@
         "to_level": "D2",
         "to_path": 3,
         "to_cam": 4,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 2
        }
       },
       {
@@ -49040,7 +49146,9 @@
         "to_level": "D2",
         "to_path": 3,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 2,
+        "target_well#": 1
        }
       },
       {
@@ -49282,7 +49390,9 @@
         "to_level": "D2",
         "to_path": 3,
         "to_cam": 5,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -49460,7 +49570,9 @@
         "to_level": "D2",
         "to_path": 3,
         "to_cam": 3,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -49952,7 +50064,9 @@
         "to_level": "D2",
         "to_path": 4,
         "to_cam": 1,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 1
        }
       },
       {
@@ -50105,7 +50219,7 @@
        "x2": 2526,
        "y2": 235,
        "extra": {
-        "raw": "0 1 0 4011 -800 -1500"
+        "well#": 0
        }
       },
       {
@@ -50171,7 +50285,7 @@
        "x2": 3525,
        "y2": 227,
        "extra": {
-        "raw": "0 52 0 4024 -268 -1500"
+        "well#": 0
        }
       },
       {
@@ -50248,7 +50362,7 @@
        "x2": 3400,
        "y2": 809,
        "extra": {
-        "raw": "0 1 0 4025 400 -4500"
+        "well#": 0
        }
       },
       {
@@ -50354,7 +50468,7 @@
        "x2": 3524,
        "y2": 1160,
        "extra": {
-        "raw": "0 185 1 4026 -268 -1500"
+        "well#": 1
        }
       },
       {
@@ -50368,7 +50482,9 @@
         "to_level": "D2",
         "to_path": 2,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 2,
+        "target_well#": 0
        }
       },
       {
@@ -50382,7 +50498,9 @@
         "to_level": "D2",
         "to_path": 2,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -50396,7 +50514,9 @@
         "to_level": "D2",
         "to_path": 2,
         "to_cam": 4,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 3,
+        "target_well#": 0
        }
       },
       {
@@ -51340,7 +51460,7 @@
        "x2": 4646,
        "y2": 1192,
        "extra": {
-        "raw": "0 44 0 4028 -268 -1500"
+        "well#": 0
        }
       }
      ],
@@ -52144,7 +52264,9 @@
         "to_level": "D2",
         "to_path": 6,
         "to_cam": 1,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 1
        }
       },
       {
@@ -52295,7 +52417,9 @@
         "to_level": "D2",
         "to_path": 6,
         "to_cam": 7,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 1
        }
       },
       {
@@ -52700,7 +52824,10 @@
         "alt_level": "D2",
         "alt_path": 6,
         "alt_cam": 1,
-        "trigger_id": 21
+        "trigger_id": 21,
+        "well#": 1,
+        "target_well#": 1,
+        "alt_target_well#": 1
        }
       },
       {
@@ -55370,7 +55497,9 @@
         "to_level": "D2",
         "to_path": 9,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 1,
+        "target_well#": 3
        }
       },
       {
@@ -55404,7 +55533,7 @@
        "x2": 1576,
        "y2": 782,
        "extra": {
-        "raw": "1 33 7 4014 -538 -3000"
+        "well#": 7
        }
       },
       {
@@ -55500,7 +55629,7 @@
        "x2": 1576,
        "y2": 782,
        "extra": {
-        "raw": "1 33 7 4014 -538 -3000"
+        "well#": 7
        }
       },
       {
@@ -55555,7 +55684,7 @@
        "x2": 404,
        "y2": 1296,
        "extra": {
-        "raw": "0 35 1 4021 410 -4000"
+        "well#": 1
        }
       },
       {
@@ -55653,7 +55782,7 @@
        "x2": 1505,
        "y2": 1290,
        "extra": {
-        "raw": "0 0 4 4017 500 -2500"
+        "well#": 4
        }
       },
       {
@@ -55678,7 +55807,9 @@
         "to_level": "D2",
         "to_path": 9,
         "to_cam": 2,
-        "trigger_id": 0
+        "trigger_id": 0,
+        "well#": 2,
+        "target_well#": 4
        }
       },
       {
@@ -55700,7 +55831,7 @@
        "x2": 1336,
        "y2": 1169,
        "extra": {
-        "raw": "1 0 3 4019 300 -1500"
+        "well#": 3
        }
       },
       {
@@ -55711,7 +55842,7 @@
        "x2": 1378,
        "y2": 1293,
        "extra": {
-        "raw": "0 34 1 4016 268 -1500"
+        "well#": 1
        }
       },
       {
@@ -56087,7 +56218,9 @@
         "to_level": "D2",
         "to_path": 10,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 2,
+        "target_well#": 3
        }
       },
       {
@@ -56098,7 +56231,7 @@
        "x2": 2588,
        "y2": 225,
        "extra": {
-        "raw": "1 0 3 4023 -268 -1500"
+        "well#": 3
        }
       },
       {
@@ -57329,7 +57462,9 @@
         "to_level": "D7",
         "to_path": 11,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 0
        }
       },
       {
@@ -57532,7 +57667,7 @@
        "x2": 4673,
        "y2": 1202,
        "extra": {
-        "raw": "1 1 0 4033 -50 -5500"
+        "well#": 0
        }
       },
       {
@@ -57651,7 +57786,7 @@
        "x2": 3479,
        "y2": 1619,
        "extra": {
-        "raw": "1 1 0 4032 375 -5000"
+        "well#": 0
        }
       },
       {
@@ -57859,7 +57994,9 @@
         "to_level": "D7",
         "to_path": 11,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 1,
+        "target_well#": 0
        }
       },
       {
@@ -57873,7 +58010,9 @@
         "to_level": "D7",
         "to_path": 11,
         "to_cam": 1,
-        "trigger_id": 1
+        "trigger_id": 1,
+        "well#": 0,
+        "target_well#": 1
        }
       },
       {
@@ -58241,7 +58380,7 @@
        "x2": 3416,
        "y2": 2130,
        "extra": {
-        "raw": "1 1 0 4031 400 -4300"
+        "well#": 0
        }
       },
       {

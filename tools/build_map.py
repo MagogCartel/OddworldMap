@@ -361,18 +361,30 @@ def tlv_extra_ao(t, blob, pos, length, level_short):
                     e[f"view{n + 1}_level"] = level_short.get(lv, lv)
                     e[f"view{n + 1}_path"] = pa
                     e[f"view{n + 1}_cam"] = ca
-    elif t == 45:  # WellExpress: off/on destinations (level/path/camera), switched by trigger id
-        v = s16s(13)
-        if len(v) >= 13:
+    elif t == 45:  # WellExpress: off/on destinations (level/path/camera/well id), switched by trigger id
+        v = s16s(14)
+        if len(v) >= 14:
             def dest(lv, pa, ca):
                 # level 0 is the menu; wells never really go there (zeroed fields)
                 return {"to_level": level_short.get(lv, lv), "to_path": pa, "to_cam": ca} \
                     if 1 <= lv <= 15 else {}
-            e = dest(v[6], v[7], v[8])
+            off = dest(v[6], v[7], v[8])
             on = dest(v[10], v[11], v[12])
-            if on and on != e:
+            alt = bool(on) and (on != off or v[13] != v[9])
+            e = dict(off)
+            if alt:
                 e.update({"alt_level": on["to_level"], "alt_path": on["to_path"], "alt_cam": on["to_cam"]})
             e["trigger_id"] = v[1]
+            # arrival lands on the well answering to the id in the destination camera
+            e["well#"] = v[2]
+            if off:
+                e["target_well#"] = v[9]
+            if alt:
+                e["alt_target_well#"] = v[13]
+    elif t == 11:  # WellLocal: WellBase header; the id is how express wells land on it
+        v = s16s(3)
+        if len(v) >= 3:
+            e = {"well#": v[2]}
     elif t == 52:  # BirdPortal: side, dest level/path/camera, scale, movie, type
         v = s16s(7)
         if len(v) >= 7:
@@ -409,14 +421,26 @@ def tlv_extra_ae(t, blob, pos, length, level_short):
         v = s16s(6)
         if len(v) >= 6:
             e = {"switch_id": v[5], "action": v[0]}
-    elif t == 23:  # WellExpress: WellBase then exit x/y, disabled dest, enabled dest
+    elif t == 23:  # WellExpress: WellBase then exit x/y, disabled dest, enabled dest (each with a well id)
         v = s16s(14)
         if len(v) >= 14:
-            e = dest(v[6], v[7], v[8])
+            off = dest(v[6], v[7], v[8])
             on = dest(v[10], v[11], v[12])
-            if on and on != e:
+            alt = bool(on) and (on != off or v[13] != v[9])
+            e = dict(off)
+            if alt:
                 e.update({"alt_level": on["to_level"], "alt_path": on["to_path"], "alt_cam": on["to_cam"]})
             e["switch_id"] = v[1]
+            # arrival lands on the well answering to the id in the destination camera
+            e["well#"] = v[2]
+            if off:
+                e["target_well#"] = v[9]
+            if alt:
+                e["alt_target_well#"] = v[13]
+    elif t == 8:  # WellLocal: WellBase header; the id is how express wells land on it
+        v = s16s(3)
+        if len(v) >= 3:
+            e = {"well#": v[2]}
     elif t == 61:  # HandStone: scale, up to three viewed camera ids (current path), trigger switch
         v = s16s(5)
         if len(v) >= 5:
