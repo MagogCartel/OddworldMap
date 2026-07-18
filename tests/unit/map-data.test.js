@@ -48,6 +48,27 @@ for (const [file, id, geometry] of [
   });
 }
 
+// destinations may dangle, but their level fields must be decoded shorts —
+// a raw numeric id means the builder's id map missed a level (the AE ender
+// ids regressed this way once)
+test("destination level fields are level shorts, never raw ids", () => {
+  for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
+    const data = load(file);
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs)
+          for (const k of ["to_level", "alt_level", "view1_level", "view2_level", "view3_level"]) {
+            const v = t.extra && t.extra[k];
+            if (v != null)
+              assert.equal(
+                typeof v,
+                "string",
+                `${data.id} ${L.short} P${P.id} ${t.name} ${k}=${v}`,
+              );
+          }
+  }
+});
+
 // every shipped hand stone is decoded: at least one view, no raw fallback,
 // and no transition fields (views must not create entry markers)
 test("hand stones in the shipped data carry decoded views", () => {

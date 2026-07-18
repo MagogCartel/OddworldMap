@@ -27,7 +27,7 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
 - TLV type ids are per-game (Door is 6 in AO, 5 in AE; numbers overlap with unrelated types). Match objects by `name` in shared code, never by numeric id.
 - Exoddus disc 1 ships `TL.LVL` as a 68-byte boot-config stub, not a LVL archive; the builder skips it. Archive reads are guarded (EOF raises, directories must fit their file) because a garbage header otherwise spins disc reads forever at end of image.
 - Both Exoddus discs list every level, but each disc carries full content only for its half — the other half are stubs with path data and no cam files. Always pick the largest copy of a level across discs (the builder does).
-- AE ender level ids reuse their base level's archive; the table parser deduplicates so each LVL file appears once in the level list.
+- AE ender level ids reuse their base level's archive; the table parser deduplicates so each LVL file appears once in the level list, but TLV destinations still name the ender ids — the builder's id→short map must cover every id, not just the kept ones.
 
 - Static site files that are not the viewer or its data: `favicon.svg` (source of truth for the icon; `favicon-96.png` and `apple-touch-icon.png` are rasterized from it), `og-image.png` (1200×630 social card, rendered by `tools/ogcard.swift` — edit the script and rerun it, don't touch the PNG directly), `site.webmanifest`, `robots.txt`, `sitemap.xml`, `CNAME` (oddworldmap.com). Regenerate the icon PNGs from the SVG if the icon changes (a CoreGraphics Swift script was used; any SVG rasterizer works).
 

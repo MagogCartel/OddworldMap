@@ -61,6 +61,25 @@
    "Test Level"
   ]
  ],
+ "id_to_short": {
+  "0": "ST",
+  "1": "MI",
+  "2": "NE",
+  "3": "PV",
+  "4": "SV",
+  "5": "FD",
+  "6": "BA",
+  "7": "SV",
+  "8": "BW",
+  "9": "BR",
+  "10": "BM",
+  "11": "PV",
+  "12": "FD",
+  "13": "BA",
+  "14": "BW",
+  "15": "TL",
+  "16": "CR"
+ },
  "tlv_names": {
   "0": "ContinuePoint",
   "1": "PathTransition",

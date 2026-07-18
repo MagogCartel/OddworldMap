@@ -264,9 +264,11 @@ def parse_pathdata_cpp_ae():
 
     tables = {}
     levels = []
+    id_to_short = {}
     for level_id, (bly_prefix, short, num_paths) in enumerate(roots):
         if not bly_prefix or not short:
             continue
+        id_to_short[level_id] = short
         paths = {}
         for path_id, e in enumerate(bly_arrays.get(bly_prefix, [])):
             if not e:
@@ -299,7 +301,7 @@ def parse_pathdata_cpp_ae():
         if short not in seen:
             seen.add(short)
             unique.append([lid, short, display])
-    return {"levels": unique, "tlv_names": tlv_names, "tables": tables}
+    return {"levels": unique, "id_to_short": id_to_short, "tlv_names": tlv_names, "tables": tables}
 
 def load_cache(game):
     cache = HERE / "data" / game["cache"]
@@ -657,7 +659,10 @@ def game_setup(game_key):
         game["tables"] = {short: {int(k): v for k, v in paths.items()} for short, paths in cache["tables"].items()}
         game["tlv"] = dict(game["tlv"])
         game["tlv"]["max_type"] = max(game["tlv_names"])
-    game["level_short"] = {lid: s for lid, s, _ in game["levels"]}
+    # TLV destinations name ender level ids too, so the id map must cover every
+    # id, not just the one kept per archive in the level list
+    game["level_short"] = {lid: s for lid, s, _ in game["levels"]} if game_key == "AO" \
+        else {int(k): v for k, v in cache["id_to_short"].items()}
     return game
 
 # ----------------------------------------------------------------------- main
