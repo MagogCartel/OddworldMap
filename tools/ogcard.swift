@@ -48,7 +48,7 @@ text("ODDWORLD MAP", 470, 250, 74, 0xe8a33d, bold: true)
 text("Interactive map — Abe's Oddysee & Exoddus", 472, 322, 30, 0xd8dbe2)
 text("Every camera, object and collision line,", 472, 372, 27, 0x8a8f9c)
 text("extracted straight from the game discs.", 472, 408, 27, 0x8a8f9c)
-text("oddworldmap.com", 472, 500, 30, 0x8cbb7f, bold: true)
+text("oddworldmap.com", 472, 500, 30, 0xe8a33d, bold: true)
 
 let img = ctx.makeImage()!
 let dest = CGImageDestinationCreateWithURL(URL(fileURLWithPath: outPath) as CFURL, UTType.png.identifier as CFString, 1, nil)!
