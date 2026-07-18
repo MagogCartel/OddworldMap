@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-18",
+   "tag": "new",
+   "title": "Path buttons name their area",
+   "detail": "Hover a path button to see the in-game name of the area where the game defines one: Rupture Farms Return's paths show their Zulag (1–4, straight from the save-name table on the disc), and Exoddus endgame paths show their ender area, like Mudanchee Vault Ender or Bonewerkz Ender."
+  },
+  {
+   "date": "2026-07-18",
    "tag": "fixed",
    "title": "Endgame doors and teleporters now follow correctly",
    "detail": "In Exoddus, doors, wells and teleporters leading into a level's endgame revisit (the vault trials and the Feeco, Barracks and Bonewerkz enders) pointed at nothing on the map and couldn't be followed. They now land where they should."

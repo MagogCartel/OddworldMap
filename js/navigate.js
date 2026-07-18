@@ -59,10 +59,13 @@ function selectLevel(L) {
     const b = document.createElement("button");
     b.textContent = "P" + P.id;
     b.dataset.key = String(P.id);
+    const tip = [];
+    if (P.name) tip.push(P.name);
     if (state.entry[L.short] && state.entry[L.short].has(P.id)) {
       b.classList.add("entry");
-      b.title = "entry point (arrived at from another level)";
+      tip.push("entry point (arrived at from another level)");
     }
+    if (tip.length) b.title = tip.join(" — ");
     b.onclick = () => selectPath(P);
     pathBtns.appendChild(b);
   });
