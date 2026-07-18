@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-18",
+   "tag": "fixed",
+   "title": "Follow markers land on the destination door",
+   "detail": "Doors and teleporters that don't name their partner by number (about 200 of them) used to drop the highlight ring at the center of the destination screen. When the destination camera has exactly one matching door or teleporter, the ring now lands on it; genuinely ambiguous screens keep the center marker."
+  },
+  {
+   "date": "2026-07-18",
    "tag": "new",
    "title": "Path buttons name their area",
    "detail": "Hover a path button to see the in-game name of the area where the game defines one: Rupture Farms Return's paths show their Zulag (1–4, straight from the save-name table on the disc), and Exoddus endgame paths show their ender area, like Mudanchee Vault Ender or Bonewerkz Ender."

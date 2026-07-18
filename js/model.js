@@ -34,12 +34,18 @@ export function destOf(t, lvl = state.lvl, path = state.path) {
     const pa = e.view1_path ?? (path && path.id);
     return lv != null && pa != null ? { lv, pa, ca: e.view1_cam, target: null } : null;
   }
-  // paired objects land on their counterpart within the destination camera
+  // paired objects land on their counterpart within the destination camera; a
+  // zero pair number names no partner (the engine never resolves it), so the
+  // landing is positional, like a travel portal's exit
   let target = null;
   if (e["target_door#"] != null)
-    target = { name: "Door", field: "door#", value: e["target_door#"] };
+    target = e["target_door#"]
+      ? { name: "Door", field: "door#", value: e["target_door#"] }
+      : { name: "Door" };
   else if (e["target_tp#"] != null)
-    target = { name: "Teleporter", field: "tp#", value: e["target_tp#"] };
+    target = e["target_tp#"]
+      ? { name: "Teleporter", field: "tp#", value: e["target_tp#"] }
+      : { name: "Teleporter" };
   else if (t.name === "BirdPortal" && e.portal === "travel") target = { name: "BirdPortalExit" };
   const mk = (lv, pa, ca, tgt) => (lv != null && pa != null ? { lv, pa, ca, target: tgt } : null);
   const a = mk(e.to_level, e.to_path, e.to_cam, target);
@@ -64,17 +70,19 @@ export const tlvCell = (t, path, geo) =>
 // the paired TLV a destination lands on: door numbers are only unique per
 // camera, so match inside the destination camera first, path-wide as a fallback.
 // A name-only target (no pair number) is positional — only the stated camera
-// can identify it, so it gets no fallback.
+// can identify it, and only when it holds exactly one candidate, so it gets
+// neither a fallback nor a first-of-many guess.
 export function resolveTarget(d, path, geo) {
   if (!d || !d.target) return null;
   const cell = camCell(path, d.ca);
   const match = (t) =>
     t.name === d.target.name &&
     (d.target.field == null || (t.extra || {})[d.target.field] === d.target.value);
-  if (d.target.field == null)
-    return cell == null
-      ? null
-      : path.tlvs.find((t) => match(t) && tlvCell(t, path, geo) === cell) || null;
+  if (d.target.field == null) {
+    if (cell == null) return null;
+    const hits = path.tlvs.filter((t) => match(t) && tlvCell(t, path, geo) === cell);
+    return hits.length === 1 ? hits[0] : null;
+  }
   return (
     path.tlvs.find((t) => match(t) && (cell == null || tlvCell(t, path, geo) === cell)) ||
     path.tlvs.find(match) ||

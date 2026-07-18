@@ -38,13 +38,31 @@ test("destOf: self destination falls through to the alternate", () => {
 });
 
 test("destOf: a paired target keeps even a same-path destination", () => {
-  // door numbers are only unique per camera; 0 is a valid target (!= null, not truthiness)
-  const t = tlv("Door", { to_level: "R1", to_path: 15, to_cam: 2, "target_door#": 0 });
+  const t = tlv("Door", { to_level: "R1", to_path: 15, to_cam: 2, "target_door#": 4 });
   assert.deepEqual(destOf(t, ...HERE), {
     lv: "R1",
     pa: 15,
     ca: 2,
-    target: { name: "Door", field: "door#", value: 0 },
+    target: { name: "Door", field: "door#", value: 4 },
+  });
+});
+
+test("destOf: a zero pair number becomes a positional target", () => {
+  // no retail door is numbered 0, so the engine never resolves a zero target;
+  // the landing is the destination camera's sole door, not a search for door#=0
+  const door = tlv("Door", { to_level: "R2", to_path: 1, to_cam: 2, "target_door#": 0 });
+  assert.deepEqual(destOf(door, ...HERE), {
+    lv: "R2",
+    pa: 1,
+    ca: 2,
+    target: { name: "Door" },
+  });
+  const tp = tlv("Teleporter", { to_level: "R2", to_path: 1, to_cam: 2, "target_tp#": 0 });
+  assert.deepEqual(destOf(tp, ...HERE), {
+    lv: "R2",
+    pa: 1,
+    ca: 2,
+    target: { name: "Teleporter" },
   });
 });
 
@@ -100,6 +118,10 @@ test("resolveTarget: name-only targets match only inside the stated camera", () 
   assert.equal(resolveTarget({ ca: 9, target }, P, SYNTH_GEOMETRY), null);
   const noExitInC2 = path(1, [exitA], cams, 2, 1);
   assert.equal(resolveTarget({ ca: 2, target }, noExitInC2, SYNTH_GEOMETRY), null);
+  // two candidates in the stated camera: ambiguous, no first-of-many guess
+  const exitB2 = at(tlv("BirdPortalExit"), 460, 40);
+  const twoInC2 = path(1, [exitA, exitB, exitB2], cams, 2, 1);
+  assert.equal(resolveTarget({ ca: 2, target }, twoInC2, SYNTH_GEOMETRY), null);
 });
 
 test("destOf: no or incomplete destination -> null", () => {
