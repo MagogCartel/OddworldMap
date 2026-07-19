@@ -381,7 +381,8 @@ body.fullnames .btnrow button {
   cursor: pointer;
   font-size: 12px;
 }
-.cp-row:hover {
+.cp-row:hover,
+.cp-row.active {
   background: var(--panel2);
 }
 .cp-none {
@@ -834,5 +835,18 @@ kbd {
   #shortcuts {
     width: 100%;
     max-height: 85vh;
+  }
+  /* the screen list becomes a bottom sheet: the upper map stays visible */
+  #camPanel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+    max-height: 40%;
+    border-radius: 10px 10px 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
   }
 }

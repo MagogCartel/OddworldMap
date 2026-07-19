@@ -23,8 +23,10 @@ function closeCamPanel() {
 }
 
 // (x, y) in draw space: list the camera cell under it, all categories —
-// the panel is an inventory of the screen, not a view of the filters
-export function openCamPanel(x, y) {
+// the panel is an inventory of the screen, not a view of the filters.
+// A focus object gets its row marked and scrolled into view, so tapping an
+// object reads as inspecting it (touch has no hover tooltip)
+export function openCamPanel(x, y, focus = null) {
   const { path } = state;
   if (!path) return;
   const cell = cellAt(x, y, path);
@@ -56,6 +58,7 @@ export function openCamPanel(x, y) {
     for (const t of tlvs) {
       const b = document.createElement("button");
       b.className = "cp-row";
+      if (t === focus) b.classList.add("active");
       const ex = extrasText(t);
       b.innerHTML = esc(t.name) + (ex ? ` <span class="e">${esc(ex)}</span>` : "");
       b.onclick = () => jumpToTlv(state.data, state.lvl, state.path, t);
@@ -67,6 +70,7 @@ export function openCamPanel(x, y) {
   if (!n) body.innerHTML = `<div class="cp-none">no objects on this screen</div>`;
   listedPath = path;
   panel.hidden = false;
+  body.querySelector(".active")?.scrollIntoView({ block: "nearest" }); // after unhide: needs layout
 }
 
 $("camPanelClose").onclick = closeCamPanel;

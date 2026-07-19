@@ -175,7 +175,7 @@ cv.addEventListener("click", () => {
   }
   if (!getSettings().screenList) return;
   const w = worldAtMouse(); // nothing to follow: list the screen's objects
-  openCamPanel(w.x, w.y);
+  openCamPanel(w.x, w.y, hoverTlvs[0] ?? null);
 });
 
 // right-click (long-press on touch) copies a permalink to the object under
