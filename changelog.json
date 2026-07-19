@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-19",
+   "tag": "improved",
+   "title": "Screens you've visited can load instantly on your next visit",
+   "detail": "Turn on \"Cache screen artwork on this device\" in Settings and visited screens stay stored locally (up to about 150 MB), so returning to the map doesn't re-download them screen by screen. Previously the whole map re-fetched after every site update. Off by default; switching it off removes everything stored."
+  },
+  {
    "date": "2026-07-18",
    "tag": "fixed",
    "title": "Express wells land on the arrival well",

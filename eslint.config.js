@@ -16,6 +16,14 @@ export default [
     },
   },
   {
+    files: ["sw.js"],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: "script",
+      globals: globals.serviceworker,
+    },
+  },
+  {
     files: ["tests/**/*.js"],
     languageOptions: {
       ecmaVersion: 2024,

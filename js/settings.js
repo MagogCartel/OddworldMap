@@ -13,7 +13,12 @@ const SETTINGS_KEY = "owm:settings";
 const VIEW_KEY = "owm:view";
 const LOC_KEY = "owm:lastloc";
 
-export const SETTINGS_DEFAULTS = { rememberView: true, rememberLoc: false, fullNames: false };
+export const SETTINGS_DEFAULTS = {
+  rememberView: true,
+  rememberLoc: false,
+  fullNames: false,
+  cacheImages: false,
+};
 export const SHOW_KEYS = ["grid", "coll", "fg", "labels", "dim"];
 
 // localStorage may be unavailable (private mode, blocked); never let that break the viewer
@@ -169,4 +174,30 @@ export function initSettings() {
     document.body.classList.toggle("fullnames", on);
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "fullNames" } }));
   });
+
+  applyCacheImages(s.cacheImages); // boot: register, or sweep leftovers from a mid-session disable
+  bind("sCacheImages", "cacheImages", applyCacheImages);
+}
+
+// cam-artwork caching (sw.js) is opt-in; the worker can't read settings, so
+// the page gates it. The "cams-on" marker bucket, not registration, is the
+// real switch: unregister() leaves the worker controlling the page until
+// reload, so only deleting the marker stops caching immediately.
+function applyCacheImages(on) {
+  if (!("serviceWorker" in navigator)) return;
+  if (on) {
+    if ("caches" in window) caches.open("cams-on").catch(() => {});
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+    return;
+  }
+  // every registration on the origin: sw.js is the only worker there is
+  navigator.serviceWorker.getRegistrations().then(
+    (regs) => regs.forEach((r) => r.unregister()),
+    () => {},
+  );
+  if ("caches" in window)
+    caches.keys().then(
+      (names) => names.filter((n) => n.startsWith("cams-")).forEach((n) => caches.delete(n)),
+      () => {},
+    );
 }
