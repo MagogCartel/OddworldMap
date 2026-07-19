@@ -19,6 +19,7 @@ import { state, GEO, dX, dY, wX, wY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
 import { destOf, isLoopback, resolveTarget, zoomAt } from "./model.js";
 import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
+import { levelInfo } from "./annotations.js";
 import { toggleShow } from "./sidebar.js";
 import { getSettings } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
@@ -167,7 +168,7 @@ cv.addEventListener("click", () => {
   if (panMoved || state.show.ruler) return;
   updateHover(); // taps arrive without a preceding hover move
   for (const t of hoverTlvs) {
-    const d = destOf(t);
+    const d = followableDest(t);
     if (d) {
       navigateToDest(d);
       return;
@@ -300,6 +301,16 @@ trapDialogKeys(
   closeShortcuts,
 );
 
+// a destination is followable only when its level AND path are on the map:
+// a couple of transitions point at levels the viewer doesn't render (AO's S1
+// menu), and one-way doors carry placeholder returns to paths that don't
+// exist (AE's "P0" doors — the door shuts behind Abe, the return is junk)
+function followableDest(t) {
+  const d = destOf(t);
+  const L = d && state.data.levels.find((l) => l.short === d.lv);
+  return L && L.paths.some((p) => p.id === d.pa) ? d : null;
+}
+
 // ---- hover inspection ----------------------------------------------------
 function updateHover() {
   if (!state.path) return;
@@ -346,15 +357,19 @@ function updateHover() {
         .map((t) => {
           const ex = extrasText(t, "  ");
           const d = destOf(t);
-          const follow =
-            d &&
-            (isLoopback(t)
-              ? `<br><span class="f loop">⟳ loops back to itself</span>`
-              : `<br><span class="f">➜ click to follow to ${esc(`${d.lv} P${d.pa}${d.ca != null ? " C" + d.ca : ""}`)}</span>`);
+          let follow = "";
+          if (d && isLoopback(t)) {
+            follow = `<br><span class="f loop">⟳ loops back to itself</span>`;
+          } else if (d && !followableDest(t)) {
+            const info = levelInfo(state.data.id, d.lv);
+            follow = `<br><span class="f loop">→ leads to ${esc(`${d.lv} P${d.pa}`)}${info ? ` (${esc(info.name)})` : ""} — not on the map</span>`;
+          } else if (d) {
+            follow = `<br><span class="f">➜ click to follow to ${esc(`${d.lv} P${d.pa}${d.ca != null ? " C" + d.ca : ""}`)}</span>`;
+          }
           return (
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
             (ex ? `<br><span class="e">${esc(ex)}</span>` : "") +
-            (follow || "") +
+            follow +
             `</div>`
           );
         })
@@ -369,7 +384,7 @@ function updateHover() {
         )
         .join("<hr>") +
       (hoverTlvs.length > 8 ? `<div class="e">+${hoverTlvs.length - 8} more…</div>` : "");
-    if (!panning) cv.style.cursor = hoverTlvs.some((t) => destOf(t)) ? "pointer" : "";
+    if (!panning) cv.style.cursor = hoverTlvs.some((t) => followableDest(t)) ? "pointer" : "";
   } else {
     tip.style.display = "none";
     if (!panning) cv.style.cursor = "";
