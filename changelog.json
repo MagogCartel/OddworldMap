@@ -3,6 +3,12 @@
   {
    "date": "2026-07-19",
    "tag": "new",
+   "title": "Hover a door to see its other end",
+   "detail": "Hovering a linked object (a door, teleporter, well or portal) puts a dashed outline on the object it leads to, whenever both ends sit on the current path. You see where you'd come out before committing to the click."
+  },
+  {
+   "date": "2026-07-19",
+   "tag": "new",
    "title": "Tap a screen to see everything on it",
    "detail": "Click or tap a camera screen (anywhere that isn't a followable object) and a panel lists every object on that screen, grouped by category. Hovering a row outlines the object on the map, and clicking it jumps straight there. On phones, where there's no hover to inspect with, this is the way to see what a screen holds."
   },

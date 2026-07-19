@@ -95,7 +95,8 @@ function animateFlash() {
 }
 
 // pointed-at object: a dashed outline around one TLV, for hover affordances
-// that reference an object without selecting it (camera-panel rows)
+// that reference an object without selecting it (camera-panel rows, a hovered
+// door's partner)
 let highlight = null;
 export function setHighlight(t) {
   if (highlight === t) return;

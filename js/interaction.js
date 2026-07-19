@@ -15,9 +15,9 @@ import {
   cssVar,
   toastEl,
 } from "./dom.js";
-import { state, dX, dY, wX, wY } from "./state.js";
-import { draw, scheduleDraw } from "./render.js";
-import { destOf, isLoopback, zoomAt } from "./model.js";
+import { state, GEO, dX, dY, wX, wY } from "./state.js";
+import { draw, scheduleDraw, setHighlight } from "./render.js";
+import { destOf, isLoopback, resolveTarget, zoomAt } from "./model.js";
 import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
 import { toggleShow } from "./sidebar.js";
 import { openCamPanel } from "./campanel.js";
@@ -158,6 +158,7 @@ cv.addEventListener("pointerleave", () => {
   hoverTlvs = [];
   tip.style.display = "none";
   cv.style.cursor = "";
+  setHighlight(null);
 });
 
 cv.addEventListener("click", () => {
@@ -316,6 +317,19 @@ function updateHover() {
       y2 = Math.max(dY(t.y2), y1 + 10);
     return w.x >= x1 - 4 && w.x <= x2 + 4 && w.y >= y1 - 4 && w.y <= y2 + 4;
   });
+  // partner preview: hovering a linked object outlines its counterpart when
+  // the destination resolves within the current path
+  let partner = null;
+  for (const t of hoverTlvs) {
+    const d = destOf(t);
+    if (!d || d.lv !== state.lvl.short || d.pa !== state.path.id) continue;
+    const tgt = resolveTarget(d, state.path, GEO);
+    if (tgt) {
+      partner = tgt;
+      break;
+    }
+  }
+  setHighlight(partner);
   if (hoverTlvs.length || hoverLines.length) {
     tip.style.display = "block";
     const px = Math.min(mouse.x + 16, cv.clientWidth - (TIP_MAX_W + 10));
