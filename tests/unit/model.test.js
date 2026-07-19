@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   camCell,
   cellAt,
+  computeConnections,
   computeEntryPaths,
   destOf,
   focusView,
@@ -381,6 +382,120 @@ test("computeEntryPaths: cross-level links and AbeStart mark entries", () => {
   assert.deepEqual([...entries.R1], [15]); // AbeStart only, not the same-level door
   assert.deepEqual([...entries.R2], [1]);
   assert.deepEqual([...entries.L1], [5]);
+});
+
+// two-camera stage shared by the connection-graph tests
+const CONN_CAMS = [
+  { cell: 0, name: "XXP15C01" },
+  { cell: 1, name: "XXP15C02" },
+];
+const R1 = { short: "R1" };
+
+test("computeConnections: a mutual door pair consolidates to one two-way edge", () => {
+  const a = at(
+    tlv("Door", { to_level: "R1", to_path: 15, to_cam: 2, "door#": 1, "target_door#": 1 }),
+    50,
+    20,
+  );
+  const b = at(
+    tlv("Door", { to_level: "R1", to_path: 15, to_cam: 1, "door#": 1, "target_door#": 1 }),
+    450,
+    20,
+  );
+  const P = path(15, [a, b, tlv("Slig")], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: a, dst: b, twoWay: true }]);
+});
+
+test("computeConnections: asymmetric chains stay directed", () => {
+  // stacked double doors and teleporter cycles: A→B while B→C, never merged
+  const a = at(
+    tlv("Door", { to_level: "R1", to_path: 15, to_cam: 2, "door#": 1, "target_door#": 2 }),
+    50,
+    20,
+  );
+  const b = at(
+    tlv("Door", { to_level: "R1", to_path: 15, to_cam: 1, "door#": 2, "target_door#": 3 }),
+    450,
+    20,
+  );
+  const c = at(tlv("Door", { "door#": 3 }), 60, 120); // no destination of its own
+  const P = path(15, [a, b, c], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [
+    { src: a, dst: b, twoWay: false },
+    { src: b, dst: c, twoWay: false },
+  ]);
+});
+
+test("computeConnections: mutual well pair by well# consolidates", () => {
+  const a = at(
+    tlv("WellExpress", {
+      to_level: "R1",
+      to_path: 15,
+      to_cam: 2,
+      "well#": 3,
+      "target_well#": 5,
+    }),
+    50,
+    20,
+  );
+  const b = at(
+    tlv("WellExpress", {
+      to_level: "R1",
+      to_path: 15,
+      to_cam: 1,
+      "well#": 5,
+      "target_well#": 3,
+    }),
+    450,
+    20,
+  );
+  const P = path(15, [a, b], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: a, dst: b, twoWay: true }]);
+});
+
+test("computeConnections: loopbacks, views and self-resolvers yield nothing", () => {
+  const loop = at(
+    tlv("Door", { to_level: "R1", to_path: 15, to_cam: 1, "door#": 1, "target_door#": 1 }),
+    50,
+    20,
+  );
+  const stone = tlv("HandStone", { view1_cam: 1 }); // a sight, not a transition
+  // dangling camera: the path-wide fallback resolves to the door itself
+  const selfR = at(
+    tlv("Door", { to_level: "R1", to_path: 15, to_cam: 9, "door#": 4, "target_door#": 4 }),
+    450,
+    20,
+  );
+  const P = path(15, [loop, stone, selfR], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), []);
+});
+
+test("computeConnections: off-path destinations become labelled stubs", () => {
+  const door = at(tlv("Door", { to_level: "R2", to_path: 1, to_cam: 3 }), 50, 20);
+  const P = path(15, [door], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: door, label: "R2 P1" }]);
+});
+
+test("computeConnections: an untargeted same-path destination points at its camera", () => {
+  const door = at(tlv("Door", { to_level: "R1", to_path: 15, to_cam: 2 }), 50, 20);
+  const P = path(15, [door], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: door, cell: 1 }]);
+  // the same destination naming a camera missing from the grid: nothing to draw
+  const dangling = at(tlv("Door", { to_level: "R1", to_path: 15, to_cam: 9 }), 50, 20);
+  const P2 = path(15, [dangling], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P2, SYNTH_GEOMETRY), []);
+});
+
+test("computeConnections: launcher wells don't arrow at their own camera", () => {
+  // destOf strips a launcher's pairing and returns its own screen; the graph
+  // must not reintroduce the self-reference as a camera edge
+  const launcher = at(
+    tlv("WellExpress", { to_level: "R1", to_path: 15, to_cam: 1, "well#": 3, "target_well#": 3 }),
+    50,
+    20,
+  );
+  const P = path(15, [launcher], CONN_CAMS, 2, 1);
+  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), []);
 });
 
 test("zoomAt keeps the world point under the anchor fixed", () => {

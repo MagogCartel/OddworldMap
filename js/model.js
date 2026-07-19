@@ -138,6 +138,50 @@ export function isLoopback(t, lvl = state.lvl, path = state.path, geo = GEO) {
   );
 }
 
+// consolidated connection edges for the circulation overlay, three shapes:
+//   {src, dst, twoWay} — resolved same-path pair (dst is the partner TLV)
+//   {src, cell}        — same-path destination without a resolvable partner
+//   {src, label}       — off-path destination, labelled "LV Pn"
+// Hand-stone views (sights, not transitions) and loopbacks are skipped; a
+// destination that resolves back to its own source (dangling camera plus the
+// path-wide fallback) or names a camera missing from the grid yields nothing,
+// and neither does one pointing at the source's own camera — launcher wells
+// and bounce-backs exit within their screen and must not read as arrows.
+export function computeConnections(lvl = state.lvl, path = state.path, geo = GEO) {
+  const edges = [];
+  const stubs = [];
+  const partner = new Map();
+  for (const t of path.tlvs) {
+    if ((t.extra || {}).view1_cam != null) continue;
+    const d = destOf(t, lvl, path, geo);
+    if (!d || isLoopback(t, lvl, path, geo)) continue;
+    if (d.lv !== lvl.short || d.pa !== path.id) {
+      stubs.push({ src: t, label: `${d.lv} P${d.pa}` });
+      continue;
+    }
+    const g = resolveTarget(d, path, geo);
+    if (g && g !== t) {
+      partner.set(t, g);
+    } else {
+      const cell = camCell(path, d.ca);
+      if (cell != null && cell !== tlvCell(t, path, geo)) edges.push({ src: t, cell });
+    }
+  }
+  // pairs whose partners resolve to each other merge into one two-way edge;
+  // asymmetric chains (stacked double doors, teleporter cycles) stay directed
+  const consumed = new Set();
+  for (const [t, g] of partner) {
+    if (consumed.has(t)) continue;
+    if (partner.get(g) === t) {
+      edges.push({ src: t, dst: g, twoWay: true });
+      consumed.add(g);
+    } else {
+      edges.push({ src: t, dst: g, twoWay: false });
+    }
+  }
+  return [...edges, ...stubs];
+}
+
 // zoom the camera by factor about a fixed canvas point: the world spot under
 // (px, py) stays put
 export function zoomAt(cam, factor, px, py) {
