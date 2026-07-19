@@ -3,6 +3,7 @@
 import { $ } from "./dom.js";
 import { resize } from "./render.js";
 import { initGames, selectGame, applyHash } from "./navigate.js";
+import { setAnnotations } from "./annotations.js";
 import { initSettings, storedLocationHash, clearStoredLocation } from "./settings.js";
 import "./sidebar.js";
 import "./search.js";
@@ -31,8 +32,13 @@ async function loadOne(file) {
   return null;
 }
 
-Promise.all([loadOne("map_data_ao.json"), loadOne("map_data_ae.json")]).then((datasets) => {
-  const games = datasets.filter((d) => d && d.levels && d.levels.length);
+Promise.all([
+  loadOne("map_data_ao.json"),
+  loadOne("map_data_ae.json"),
+  loadOne("annotations.json"),
+]).then(([ao, ae, annotations]) => {
+  setAnnotations(annotations); // before the path buttons build their labels
+  const games = [ao, ae].filter((d) => d && d.levels && d.levels.length);
   if (!games.length) {
     $("gameName").textContent = "Map data failed to load.";
     $("help").textContent =

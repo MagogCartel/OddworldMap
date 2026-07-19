@@ -14,6 +14,7 @@ import {
   parseHash,
   resolveTarget,
 } from "./model.js";
+import { pathDisplayName } from "./annotations.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
 
 // highlight the button whose data-key matches, clear the rest
@@ -73,12 +74,13 @@ function selectLevel(L) {
   pathBtns.innerHTML = "";
   L.paths.forEach((P) => {
     const b = document.createElement("button");
+    const name = pathDisplayName(state.data.id, L.short, P);
     b.dataset.code = "P" + P.id;
-    b.dataset.full = P.name || "";
+    b.dataset.full = name || "";
     setLabel(b);
     b.dataset.key = String(P.id);
     const tip = [];
-    if (P.name) tip.push(P.name);
+    if (name) tip.push(name);
     if (state.entry[L.short] && state.entry[L.short].has(P.id)) {
       b.classList.add("entry");
       tip.push("entry point (arrived at from another level)");

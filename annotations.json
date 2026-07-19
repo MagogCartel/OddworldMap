@@ -1,0 +1,15 @@
+{
+ "AO": {
+  "levels": {
+   "S1": {
+    "name": "Main Menu",
+    "note": "the menu level (LevelIds::eMenu_0); the attract demos in R1 P19 and L1 P1 return to it, hence the two PathTransitions pointing here"
+   }
+  },
+  "paths": {}
+ },
+ "AE": {
+  "levels": {},
+  "paths": {}
+ }
+}
