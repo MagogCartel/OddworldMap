@@ -36,6 +36,7 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
 
 ## Conventions
 
+- Code comments — default to none. A comment earns its place only by recording a durable *why* the code can't show: an invariant, a constraint, a non-obvious trade-off. Keep them generic enough that a routine change doesn't force a comment edit — put a per-item note *inline on the item* (`"deaf", // ignores Abe's speech`), never in a const-doc that re-describes the set's members (that rots the moment you add one). Don't name consumers or other modules ("used by X", "the picker reads this"); don't narrate history ("moved from Y", "was previously…"); don't restate a constant's value or units. Comment footprint matches code footprint — a concern touched at one line gets one comment there, not a header paragraph. Before committing, reread each comment and cut any that restates the code, names something that could be renamed, or would lie after a tune/refactor — an absent comment never goes stale.
 - One concern per commit; split bundled diffs before committing.
 - Prose files (README, docs, this file) are never manually line-wrapped — let lines run long.
 - A user-facing change ships its docs in the same commit — update the relevant README.md / CLAUDE.md, and add its `changelog.json` entry. Documenting the change is part of the same concern, not a follow-up commit.
