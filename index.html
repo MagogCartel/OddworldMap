@@ -118,6 +118,11 @@
         >
       </h2>
       <div class="filters" id="filterBox"></div>
+      <!-- populated by fieldpanel.js; shown only when "Show more object fields" is on -->
+      <div id="fieldPanel" hidden>
+        <h2>Fields</h2>
+        <div class="fp-body"></div>
+      </div>
       <div id="sbFooter"><a id="feedbackLink" href="mailto:">Send feedback</a></div>
     </div>
     <div id="main">
@@ -264,8 +269,9 @@
             fields</label
           >
           <div class="st-desc">
-            Reveal every field the game stores for objects (Slig shooting behaviour, patrol timings,
-            and more), not just the notable ones, in tooltips and the screen list.
+            Adds a Fields panel to the sidebar for picking, per object type, which of the game's
+            stored fields (Slig shooting behaviour, patrol timings, and more) show in tooltips and
+            the screen list.
           </div>
           <label
             ><input type="checkbox" id="sCacheImages" autocomplete="off" /> Cache screen artwork on

@@ -21,7 +21,7 @@ import { destOf, isLoopback, resolveTarget, zoomAt } from "./model.js";
 import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
 import { levelInfo } from "./annotations.js";
 import { toggleShow } from "./sidebar.js";
-import { getSettings } from "./settings.js";
+import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
 import { addRoutePoint, undoRoutePoint } from "./route.js";
 import { trapDialogKeys } from "./dialog.js";
@@ -368,7 +368,7 @@ function updateHover() {
       hoverTlvs
         .slice(0, 8)
         .map((t) => {
-          const ex = extrasText(t, "  ", getSettings().fieldPrefs);
+          const ex = extrasText(t, "  ", fieldPrefsFor(state.data.id));
           const d = destOf(t);
           let follow = "";
           if (d && isLoopback(t)) {

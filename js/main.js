@@ -8,9 +8,11 @@ import { initSettings, storedLocationHash, clearStoredLocation } from "./setting
 import "./sidebar.js";
 import "./search.js";
 import { toggleMenu } from "./interaction.js";
+import { initFieldPanel } from "./fieldpanel.js";
 import "./whatsnew.js";
 
 initSettings();
+initFieldPanel();
 
 // ?embed=1: iframe view (wikis, forums) — chrome hides via body.embed, and
 // the hash still works, so an embed can point at an exact screen

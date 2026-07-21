@@ -3,8 +3,8 @@
   {
    "date": "2026-07-21",
    "tag": "new",
-   "title": "Every object field, one toggle away",
-   "detail": "Hover a Slig and you'll now see how it attacks, for example shoot_on_sight_delay=0 means it shoots the instant it sees you, with no \"FREEZE!\" warning - a nasty surprise at some screens. And there's much more underneath: turn on \"Show more object fields\" in Settings to reveal every value the developers stored for an object (patrol timings, panic behaviour, and the rest) in tooltips, the screen list, and search. Search reaches every field even when it's hidden, so shoot_on_sight_delay=0 finds every ambush Slig in a level."
+   "title": "Every object field, yours to pick",
+   "detail": "Hover a Slig and you'll now see how it attacks, for example shoot_on_sight_delay=0 means it shoots the instant it sees you, with no \"FREEZE!\" warning - a nasty surprise at some screens. And there's much more underneath: turn on \"Show more object fields\" in Settings and a \"Fields\" panel appears in the sidebar, listing the object types on the current screen. Expand a type (Slig, Mudokon, ...) and tick exactly the fields you want in its tooltips and the screen list, with the notable ones pre-checked and \"all\" / \"reset\" shortcuts per type; your picks are remembered per game. Search always reaches every field even when it's hidden, so shoot_on_sight_delay=0 finds every ambush Slig in a level - and a result matched on a hidden field shows that field on the row."
   },
   {
    "date": "2026-07-21",

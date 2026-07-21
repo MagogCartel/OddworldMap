@@ -8,14 +8,20 @@ test("visibleFields: default shows DEFAULT_VISIBLE, 'all' shows everything", () 
   assert.equal(visibleFields("Slig", { mode: "all" }), "all");
 });
 
-test("visibleFields: 'more' shows everything until a per-type pick exists", () => {
-  // no picks yet -> the archive is revealed
-  assert.equal(visibleFields("Slig", { mode: "more", byType: {} }), "all");
-  // a per-type pick -> exactly those keys (the future picker's contract)
+test("visibleFields: 'more' uses per-type picks, else the defaults", () => {
+  // no pick for this type yet -> the picker starts from the defaults
+  assert.equal(visibleFields("Slig", { mode: "more", byType: {} }), DEFAULT_VISIBLE);
+  // a per-type pick -> exactly those keys (the picker's contract)
   const picked = visibleFields("Slig", { mode: "more", byType: { Slig: ["start_state"] } });
   assert.ok(picked instanceof Set && picked.has("start_state") && picked.size === 1);
-  // a pick for a different type doesn't apply
-  assert.equal(visibleFields("Slog", { mode: "more", byType: { Slig: ["start_state"] } }), "all");
+  // an explicit empty pick means "show nothing", not "fall back to defaults"
+  const none = visibleFields("Slig", { mode: "more", byType: { Slig: [] } });
+  assert.ok(none instanceof Set && none.size === 0);
+  // a pick for a different type doesn't apply -> that type keeps the defaults
+  assert.equal(
+    visibleFields("Slog", { mode: "more", byType: { Slig: ["start_state"] } }),
+    DEFAULT_VISIBLE,
+  );
 });
 
 test("prettify: enum ints map to text, Choice fields to booleans, unknowns raw", () => {

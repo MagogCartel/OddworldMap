@@ -181,6 +181,81 @@ body.fullnames .btnrow button {
 .h2tools button:hover {
   color: var(--accent);
 }
+/* Fields picker: per-type collapsible checklists, one type expanded at a time */
+#fieldPanel .fp-body {
+  padding: 0 12px 4px;
+}
+.fp-type {
+  border-top: 1px solid var(--line);
+}
+.fp-type > summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 2px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text);
+  user-select: none;
+  list-style: none;
+}
+.fp-type > summary::-webkit-details-marker {
+  display: none;
+}
+.fp-type > summary::before {
+  content: "\25B8";
+  color: var(--dim);
+  font-size: 9px;
+  transition: transform 0.12s;
+}
+.fp-type[open] > summary::before {
+  transform: rotate(90deg);
+}
+.fp-count {
+  margin-left: auto;
+  color: var(--dim);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.fp-fields {
+  padding: 1px 2px 7px 18px;
+}
+.fp-fields label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 1.5px 0;
+  font-size: 11px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+.fp-fields label:not(:has(input:checked)) {
+  opacity: 0.5;
+}
+.fp-fields input {
+  flex: none;
+  accent-color: var(--accent);
+  margin: 0;
+}
+.fp-tools {
+  display: flex;
+  gap: 10px;
+  padding-top: 5px;
+}
+.fp-tools button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 11px;
+  color: var(--dim);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.fp-tools button:hover {
+  color: var(--accent);
+}
 #toggles {
   padding: 0 12px 10px;
 }

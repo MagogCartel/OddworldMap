@@ -1,8 +1,10 @@
 // Global TLV search: scope bar, grouped results, keyboard navigation.
 
 import { esc, extrasText } from "./util.js";
+import { fieldEntries } from "./fields.js";
 import { searchInput, searchResults, scopeBar } from "./dom.js";
 import { state } from "./state.js";
+import { fieldPrefsFor } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
 
 const HIT_CAP = 1500,
@@ -78,7 +80,15 @@ function matchRank(t, q) {
 function hitButton(h, q) {
   const b = document.createElement("button");
   b.className = "hit";
-  const ex = extrasText(h.t);
+  let ex = extrasText(h.t, " ", fieldPrefsFor(h.G.id));
+  // the index matches every field but the row shows only the visible ones; a
+  // hit on a hidden field would look inexplicable, so append what matched
+  if (!`${h.t.name} ${ex}`.toLowerCase().includes(q)) {
+    const matched = fieldEntries(h.t, { mode: "all" })
+      .map(([k, v]) => `${k}=${v}`)
+      .filter((s) => s.toLowerCase().includes(q));
+    if (matched.length) ex += (ex ? " " : "") + matched.join(" ");
+  }
   b.innerHTML =
     `<span class="loc">${h.L.short} P${h.P.id}</span> ${highlight(h.t.name, q)}` +
     (ex ? ` <span class="ex">${highlight(ex, q)}</span>` : "");

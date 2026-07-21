@@ -61,17 +61,18 @@ const ENUM = {
 
 export const prettify = (key, value) => ENUM[key]?.[value] ?? value;
 
-// the field keys to display for a type, given the user's prefs. Returns the
-// sentinel "all" or a Set. Resolution order is the whole extensibility story:
-//   mode "all"     -> everything (search always passes this)
-//   mode "more"    -> the user's per-type picks, or everything until they pick
-//   default        -> DEFAULT_VISIBLE
+// the field keys to display for a type, given the user's prefs — the "all"
+// sentinel or a Set. The one indirection point for the display policy:
+//   "all"   -> every field
+//   "more"  -> the per-type picks, or the defaults until this type is picked
+//              (an explicit empty pick means "show nothing")
+//   default -> DEFAULT_VISIBLE
 export function visibleFields(typeName, prefs) {
   const mode = prefs && prefs.mode;
   if (mode === "all") return "all";
   if (mode === "more") {
     const picks = prefs.byType && prefs.byType[typeName];
-    return picks && picks.length ? new Set(picks) : "all";
+    return picks ? new Set(picks) : DEFAULT_VISIBLE;
   }
   return DEFAULT_VISIBLE;
 }

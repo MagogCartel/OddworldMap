@@ -21,8 +21,8 @@ export const SETTINGS_DEFAULTS = {
   cacheImages: false,
 };
 // fieldPrefs (not a boolean; added by sanitizeSettings) — which object fields
-// to show: mode "default" (the notable ones) or "more" (per-type picks in
-// byType, falling back to the defaults).
+// to show: mode "default" (the notable ones) or "more" (per-game, per-type
+// picks in byType, falling back to the defaults).
 export const SHOW_KEYS = ["grid", "coll", "fg", "conn", "labels", "dim"];
 
 // localStorage may be unavailable (private mode, blocked); never let that break the viewer
@@ -51,14 +51,20 @@ const store = {
 };
 
 // a fresh, validated fieldPrefs (never shares a reference with the default, so
-// callers may mutate byType without corrupting it)
+// callers may mutate byType without corrupting it). byType nests per game:
+// the games' field vocabularies differ even for same-named types, so a pick
+// made in one game must not hide the other game's fields
 function sanitizeFieldPrefs(p) {
   const out = { mode: "default", byType: {} };
   if (p && typeof p === "object") {
     if (p.mode === "more") out.mode = "more";
     if (p.byType && typeof p.byType === "object")
-      for (const [type, keys] of Object.entries(p.byType))
-        if (Array.isArray(keys)) out.byType[type] = keys.filter((k) => typeof k === "string");
+      for (const [game, types] of Object.entries(p.byType)) {
+        if (!types || typeof types !== "object" || Array.isArray(types)) continue;
+        const g = (out.byType[game] = {});
+        for (const [type, keys] of Object.entries(types))
+          if (Array.isArray(keys)) g[type] = keys.filter((k) => typeof k === "string");
+      }
   }
   return out;
 }
@@ -99,6 +105,18 @@ let settings = null;
 export function getSettings() {
   if (!settings) settings = sanitizeSettings(store.get(SETTINGS_KEY));
   return settings;
+}
+
+// persist the live settings object after an external mutation
+export function persistSettings() {
+  store.set(SETTINGS_KEY, JSON.stringify(getSettings()));
+}
+
+// the field prefs for one game's objects: the mode plus that game's live
+// per-type picks (created on demand, so mutations land in the stored object)
+export function fieldPrefsFor(gameId) {
+  const p = getSettings().fieldPrefs;
+  return { mode: p.mode, byType: (p.byType[gameId] ??= {}) };
 }
 
 // the persisted display/filter snapshot, or null when off/absent/corrupt

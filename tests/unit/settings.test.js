@@ -26,19 +26,22 @@ test("sanitizeSettings: known boolean keys apply, everything else is dropped", (
   assert.deepEqual(Object.keys(s).sort(), Object.keys(DEFAULTS).sort());
 });
 
-test("sanitizeSettings: fieldPrefs validates mode and per-type key lists", () => {
+test("sanitizeSettings: fieldPrefs validates mode and per-game type key lists", () => {
   const good = sanitizeSettings(
-    '{"fieldPrefs":{"mode":"more","byType":{"Slig":["start_state","pause_time"]}}}',
+    '{"fieldPrefs":{"mode":"more","byType":{"AO":{"Slig":["start_state","pause_time"]}}}}',
   );
   assert.deepEqual(good.fieldPrefs, {
     mode: "more",
-    byType: { Slig: ["start_state", "pause_time"] },
+    byType: { AO: { Slig: ["start_state", "pause_time"] } },
   });
-  // garbage mode/byType fall back cleanly; non-string keys are filtered out
-  const bad = sanitizeSettings('{"fieldPrefs":{"mode":"bogus","byType":{"Slig":[1,"ok",null]}}}');
-  assert.deepEqual(bad.fieldPrefs, { mode: "default", byType: { Slig: ["ok"] } });
+  // garbage mode falls back cleanly; non-string keys are filtered out; a flat
+  // (pre-per-game) pick is not a game bucket and is orphaned whole
+  const bad = sanitizeSettings(
+    '{"fieldPrefs":{"mode":"bogus","byType":{"AO":{"Slig":[1,"ok",null]},"Slog":["flat"]}}}',
+  );
+  assert.deepEqual(bad.fieldPrefs, { mode: "default", byType: { AO: { Slig: ["ok"] } } });
   // a fresh byType each time: mutating one result must not leak into the next
-  good.fieldPrefs.byType.Slig.push("leaked");
+  good.fieldPrefs.byType.AO.Slig.push("leaked");
   assert.deepEqual(sanitizeSettings(null).fieldPrefs, { mode: "default", byType: {} });
 });
 
