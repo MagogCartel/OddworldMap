@@ -13,7 +13,7 @@ import {
   resolveTarget,
   zoomAt,
 } from "../../js/model.js";
-import { ZOOM_MIN, ZOOM_MAX } from "../../js/config.js";
+import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../js/config.js";
 import { setGeometry } from "../../js/state.js";
 import { AO_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
 
@@ -537,6 +537,7 @@ test("parseHash round-trips a formatted hash (against the rounded values)", () =
     path: 1,
     view: { x: 177, y: 55, z: 2.23 },
     obj: null,
+    route: null,
   });
 });
 
@@ -563,8 +564,16 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     path: 1,
     view: null,
     obj: null,
+    route: null,
   });
-  assert.deepEqual(parseHash("#AO"), { game: "AO", level: "", path: NaN, view: null, obj: null });
+  assert.deepEqual(parseHash("#AO"), {
+    game: "AO",
+    level: "",
+    path: NaN,
+    view: null,
+    obj: null,
+    route: null,
+  });
   // x/y without z: the view is ignored as a whole
   assert.deepEqual(parseHash("#AO/R2/1/10/20"), {
     game: "AO",
@@ -572,6 +581,48 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     path: 1,
     view: null,
     obj: null,
+    route: null,
   });
   assert.ok(Number.isNaN(parseHash("#AO/R2/junk").path));
+});
+
+test("permalinks can carry a route of draw-space waypoints, rounded like the view", () => {
+  const route = [
+    { x: 10.4, y: 21.6 },
+    { x: -30, y: 40 },
+  ];
+  const h = formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }, null, route);
+  assert.equal(h, "#AO/R2/1/177/55/2.23/route=10,22;-30,40");
+  assert.deepEqual(parseHash(h).route, [
+    { x: 10, y: 22 },
+    { x: -30, y: 40 },
+  ]);
+  assert.equal(formatHash("AO", "R2", 1, { x: 0, y: 0, z: 1 }, null, []), "#AO/R2/1/0/0/1.00");
+});
+
+test("object and route segments coexist, matched by shape in either order", () => {
+  const obj = { name: "Door", x1: 8746, y1: 1232 };
+  const h = formatHash("AO", "R1", 18, { x: 0, y: 0, z: 1 }, obj, [{ x: 1, y: 2 }]);
+  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=1,2");
+  assert.deepEqual(parseHash(h).obj, obj);
+  assert.deepEqual(parseHash(h).route, [{ x: 1, y: 2 }]);
+  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=1,2/Door@8746,1232");
+  assert.deepEqual(swapped.obj, obj);
+  assert.deepEqual(swapped.route, [{ x: 1, y: 2 }]);
+  // an unknown segment in between bothers neither
+  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=1,2");
+  assert.equal(padded.obj, null);
+  assert.deepEqual(padded.route, [{ x: 1, y: 2 }]);
+});
+
+test("route segment is all-or-nothing: any malformed pair drops the whole route", () => {
+  const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`).route;
+  assert.equal(at("route="), null);
+  assert.equal(at("route=1,2;junk"), null);
+  assert.equal(at("route=1.5,2"), null);
+  assert.equal(at("route=1,2;;3,4"), null);
+  assert.deepEqual(at("route=1,2"), [{ x: 1, y: 2 }]);
+  const pairs = (n) => Array.from({ length: n }, (_, i) => `${i},${i}`).join(";");
+  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS)}`).length, MAX_ROUTE_PTS);
+  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS + 1)}`), null);
 });

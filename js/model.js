@@ -3,7 +3,14 @@
 // bare Node for the unit tests.
 
 import { clamp } from "./util.js";
-import { ZOOM_MIN, ZOOM_MAX, FOCUS_ZOOM_MIN, FOCUS_ZOOM_MAX, FOCUS_SCREENS } from "./config.js";
+import {
+  ZOOM_MIN,
+  ZOOM_MAX,
+  FOCUS_ZOOM_MIN,
+  FOCUS_ZOOM_MAX,
+  FOCUS_SCREENS,
+  MAX_ROUTE_PTS,
+} from "./config.js";
 import { GEO, state, CELL_W, CELL_H } from "./state.js";
 
 export function computeEntryPaths(data) {
@@ -199,20 +206,42 @@ export function focusView(fx, fy, cw, ch) {
   return { x: fx - cw / (2 * z), y: fy - ch / (2 * z), z };
 }
 
-// ---- permalinks: #GAME/LEVEL/PATH/x/y/zoom[/Name@x1,y1] -----------------
-export function formatHash(gameId, levelShort, pathId, cam, obj) {
-  const base = `#${gameId}/${levelShort}/${pathId}/${Math.round(cam.x)}/${Math.round(cam.y)}/${cam.z.toFixed(2)}`;
-  return obj ? `${base}/${obj.name}@${obj.x1},${obj.y1}` : base;
+// ---- permalinks: #GAME/LEVEL/PATH/x/y/zoom[/Name@x1,y1][/route=x1,y1;…] ----
+// Trailing segments are matched by shape, not position, and unknown ones are
+// ignored, so old viewers tolerate new segments and vice versa.
+export function formatHash(gameId, levelShort, pathId, cam, obj, route) {
+  let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(cam.x)}/${Math.round(cam.y)}/${cam.z.toFixed(2)}`;
+  if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
+  if (route?.length)
+    h += `/route=${route.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`).join(";")}`;
+  return h;
+}
+
+// route waypoints from a "route=" payload: all-or-nothing, so a truncated URL
+// yields no route rather than a silently shortened one
+function parseRoute(payload) {
+  const pairs = payload.split(";");
+  if (!payload || pairs.length > MAX_ROUTE_PTS) return null;
+  const pts = [];
+  for (const pair of pairs) {
+    const m = /^(-?\d+),(-?\d+)$/.exec(pair);
+    if (!m) return null;
+    pts.push({ x: +m[1], y: +m[2] });
+  }
+  return pts;
 }
 
 // null for an empty hash; view is null unless x/y/z are all present; obj names
-// a TLV to highlight, identified by name and origin. Numbers may come back
-// NaN — the caller resolves and validates against the data.
+// a TLV to highlight, identified by name and origin; route is a list of
+// draw-space waypoints. Numbers may come back NaN — the caller resolves and
+// validates against the data.
 export function parseHash(hash) {
   const h = hash.replace(/^#/, "");
   if (!h) return null;
   const parts = h.split("/");
-  const om = parts.length >= 7 ? /^(\w+)@(-?\d+),(-?\d+)$/.exec(parts[6]) : null;
+  const segs = parts.slice(6);
+  const om = segs.map((s) => /^(\w+)@(-?\d+),(-?\d+)$/.exec(s)).find(Boolean);
+  const rt = segs.find((s) => s.startsWith("route="));
   return {
     game: parts[0].toUpperCase(),
     level: (parts[1] || "").toUpperCase(),
@@ -220,5 +249,6 @@ export function parseHash(hash) {
     view:
       parts[3] != null && parts.length >= 6 ? { x: +parts[3], y: +parts[4], z: +parts[5] } : null,
     obj: om ? { name: om[1], x1: +om[2], y1: +om[3] } : null,
+    route: rt ? parseRoute(rt.slice(6)) : null,
   };
 }
