@@ -10,7 +10,8 @@
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    3,
@@ -24,7 +25,8 @@
  "38": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -32,21 +34,25 @@
   ],
   [
    2,
-   "start_state"
+   "start_state",
+   "ElectricWallStartState"
   ]
  ],
  "49": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "state"
+   "state",
+   "Mud_State"
   ],
   [
    2,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    3,
@@ -58,7 +64,8 @@
   ],
   [
    5,
-   "deaf"
+   "deaf",
+   "Choice_short"
   ],
   [
    6,
@@ -66,15 +73,18 @@
   ],
   [
    7,
-   "persist_reset_offscreen"
+   "persist_reset_offscreen",
+   "Choice_short"
   ],
   [
    8,
-   "emotion"
+   "emotion",
+   "Mud_TLV_Emotion"
   ],
   [
    9,
-   "blind"
+   "blind",
+   "Choice_short"
   ],
   [
    10,
@@ -82,11 +92,13 @@
   ],
   [
    11,
-   "work_after_turning_wheel"
+   "work_after_turning_wheel",
+   "Choice_short"
   ],
   [
    12,
-   "gets_depressed"
+   "gets_depressed",
+   "Choice_short"
   ],
   [
    13,
@@ -94,17 +106,20 @@
   ],
   [
    14,
-   "give_ring_without_password"
+   "give_ring_without_password",
+   "Choice_short"
   ]
  ],
  "28": [
   [
    0,
-   "enter_side"
+   "enter_side",
+   "PortalSide"
   ],
   [
    1,
-   "birdportalexit_level"
+   "birdportalexit_level",
+   "LevelIds"
   ],
   [
    2,
@@ -116,7 +131,8 @@
   ],
   [
    4,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    5,
@@ -124,7 +140,8 @@
   ],
   [
    6,
-   "portal_type"
+   "portal_type",
+   "PortalType"
   ],
   [
    7,
@@ -150,13 +167,15 @@
   ],
   [
    2,
-   "hide_board"
+   "hide_board",
+   "Choice_int"
   ]
  ],
  "5": [
   [
    0,
-   "level"
+   "level",
+   "LevelIds"
   ],
   [
    1,
@@ -168,7 +187,8 @@
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
@@ -184,11 +204,13 @@
   ],
   [
    7,
-   "door_type"
+   "door_type",
+   "DoorTypes"
   ],
   [
    8,
-   "start_state"
+   "start_state",
+   "DoorStates"
   ],
   [
    9,
@@ -224,7 +246,8 @@
   ],
   [
    17,
-   "wipe_effect"
+   "wipe_effect",
+   "ScreenChangeEffects"
   ],
   [
    18,
@@ -248,37 +271,45 @@
   ],
   [
    23,
-   "abe_direction_on_exit"
+   "abe_direction_on_exit",
+   "XDirection_short"
   ],
   [
    24,
-   "close_on_exit"
+   "close_on_exit",
+   "Choice_short"
   ],
   [
    25,
-   "clear_throwables"
+   "clear_throwables",
+   "Choice_short"
   ]
  ],
  "17": [
   [
    0,
-   "action"
+   "action",
+   "SwitchOp"
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    2,
-   "on_sound"
+   "on_sound",
+   "LeverSoundType"
   ],
   [
    3,
-   "off_sound"
+   "off_sound",
+   "LeverSoundType"
   ],
   [
    4,
-   "sound_direction"
+   "sound_direction",
+   "LeverSoundDirection"
   ],
   [
    5,
@@ -286,17 +317,20 @@
   ],
   [
    6,
-   "persist_offscreen"
+   "persist_offscreen",
+   "Choice_short"
   ]
  ],
  "2": [
   [
    0,
-   "hoist_type"
+   "hoist_type",
+   "Path_Hoist::Type"
   ],
   [
    1,
-   "grab_direction"
+   "grab_direction",
+   "Path_Hoist::GrabDirection"
   ],
   [
    2,
@@ -304,17 +338,20 @@
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "59": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "nozzle_side"
+   "nozzle_side",
+   "Path_BoomMachine::NozzleSide"
   ],
   [
    2,
@@ -328,11 +365,13 @@
  "15": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "start_state"
+   "start_state",
+   "Path_Slig::StartState"
   ],
   [
    2,
@@ -356,7 +395,8 @@
   ],
   [
    7,
-   "shoot_possessed_sligs"
+   "shoot_possessed_sligs",
+   "Path_Slig::ShootPossessedSligs"
   ],
   [
    8,
@@ -380,11 +420,13 @@
   ],
   [
    13,
-   "chase_abe_when_spotted"
+   "chase_abe_when_spotted",
+   "Choice_short"
   ],
   [
    14,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    15,
@@ -436,7 +478,8 @@
   ],
   [
    27,
-   "stay_awake"
+   "stay_awake",
+   "Choice_short"
   ],
   [
    28,
@@ -452,21 +495,25 @@
   ],
   [
    31,
-   "unlimited_spawns"
+   "unlimited_spawns",
+   "Choice_short"
   ]
  ],
  "83": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    2,
-   "asleep"
+   "asleep",
+   "Choice_short"
   ],
   [
    3,
@@ -490,7 +537,8 @@
   ],
   [
    8,
-   "hanging"
+   "hanging",
+   "Choice_short"
   ],
   [
    9,
@@ -498,7 +546,8 @@
   ],
   [
    10,
-   "goes_to_sleep"
+   "goes_to_sleep",
+   "Choice_short"
   ],
   [
    11,
@@ -514,7 +563,8 @@
   ],
   [
    14,
-   "persistant"
+   "persistant",
+   "Choice_short"
   ],
   [
    15,
@@ -524,7 +574,8 @@
  "47": [
   [
    0,
-   "stop_direction"
+   "stop_direction",
+   "Path_EnemyStopper::StopDirection"
   ],
   [
    1,
@@ -588,11 +639,13 @@
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    3,
-   "start_state"
+   "start_state",
+   "Path_UXB::StartState"
   ],
   [
    4,
@@ -624,15 +677,18 @@
  "3": [
   [
    0,
-   "grab_direction"
+   "grab_direction",
+   "Path_Edge::GrabDirection"
   ],
   [
    1,
-   "can_grab"
+   "can_grab",
+   "Choice_short"
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_int"
   ]
  ],
  "97": [
@@ -642,7 +698,8 @@
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    2,
@@ -666,7 +723,8 @@
   ],
   [
    7,
-   "ignore_grid_snapping"
+   "ignore_grid_snapping",
+   "Choice_short"
   ]
  ],
  "6": [
@@ -684,13 +742,15 @@
   ],
   [
    6,
-   "scale"
+   "scale",
+   "ShadowZoneScale"
   ]
  ],
  "79": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -706,17 +766,20 @@
   ],
   [
    4,
-   "turn_off_when_stopped"
+   "turn_off_when_stopped",
+   "Choice_short"
   ]
  ],
  "66": [
   [
    0,
-   "music_type"
+   "music_type",
+   "MusicTriggerMusicType"
   ],
   [
    1,
-   "triggered_by"
+   "triggered_by",
+   "TriggeredBy"
   ],
   [
    2,
@@ -750,7 +813,8 @@
   ],
   [
    6,
-   "disabled_well_level"
+   "disabled_well_level",
+   "LevelIds"
   ],
   [
    7,
@@ -766,7 +830,8 @@
   ],
   [
    10,
-   "enabled_well_level"
+   "enabled_well_level",
+   "LevelIds"
   ],
   [
    11,
@@ -782,7 +847,8 @@
   ],
   [
    14,
-   "emit_leaves"
+   "emit_leaves",
+   "Choice_short"
   ],
   [
    15,
@@ -800,11 +866,13 @@
  "85": [
   [
    0,
-   "start_shut"
+   "start_shut",
+   "Choice_short"
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    2,
@@ -812,17 +880,20 @@
   ],
   [
    3,
-   "flip_on_y_axis"
+   "flip_on_y_axis",
+   "Choice_short"
   ],
   [
    4,
-   "delete"
+   "delete",
+   "Choice_short"
   ]
  ],
  "61": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -844,7 +915,8 @@
  "81": [
   [
    0,
-   "is_laughing_gas"
+   "is_laughing_gas",
+   "Choice_short"
   ],
   [
    1,
@@ -870,7 +942,8 @@
   ],
   [
    1,
-   "action"
+   "action",
+   "SwitchOp"
   ],
   [
    2,
@@ -878,11 +951,13 @@
   ],
   [
    3,
-   "set_off_alarm"
+   "set_off_alarm",
+   "Choice_short"
   ],
   [
    4,
-   "scale"
+   "scale",
+   "InvisibleSwitchScale"
   ]
  ],
  "77": [
@@ -918,7 +993,8 @@
   ],
   [
    1,
-   "colour"
+   "colour",
+   "GasColour"
   ]
  ],
  "13": [
@@ -928,11 +1004,13 @@
   ],
   [
    1,
-   "is_semi_trans"
+   "is_semi_trans",
+   "Choice_short"
   ],
   [
    2,
-   "semi_trans_mode"
+   "semi_trans_mode",
+   "TPageAbr"
   ],
   [
    3,
@@ -944,7 +1022,8 @@
   ],
   [
    5,
-   "layer"
+   "layer",
+   "Layer"
   ]
  ],
  "7": [
@@ -954,7 +1033,8 @@
   ],
   [
    1,
-   "start_point"
+   "start_point",
+   "Choice_short"
   ],
   [
    2,
@@ -962,15 +1042,18 @@
   ],
   [
    3,
-   "lift_point_stop_type"
+   "lift_point_stop_type",
+   "LiftPointStopType"
   ],
   [
    4,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    5,
-   "ignore_lift_mover"
+   "ignore_lift_mover",
+   "Choice_short"
   ]
  ],
  "12": [
@@ -980,7 +1063,8 @@
   ],
   [
    1,
-   "action"
+   "action",
+   "SwitchOp"
   ],
   [
    2,
@@ -988,19 +1072,23 @@
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
-   "on_sound"
+   "on_sound",
+   "PullRingSwitchSound"
   ],
   [
    5,
-   "off_sound"
+   "off_sound",
+   "PullRingSwitchSound"
   ],
   [
    6,
-   "sound_direction"
+   "sound_direction",
+   "PullRingSoundDirection"
   ]
  ],
  "96": [
@@ -1010,7 +1098,8 @@
   ],
   [
    1,
-   "action"
+   "action",
+   "SwitchOp"
   ],
   [
    2,
@@ -1044,7 +1133,8 @@
  "19": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1054,7 +1144,8 @@
  "0": [
   [
    0,
-   "scale"
+   "scale",
+   "Path_ContinuePoint::Scale"
   ],
   [
    1,
@@ -1076,7 +1167,8 @@
   ],
   [
    3,
-   "output_requirement"
+   "output_requirement",
+   "WheelSyncerOutputRequirement"
   ],
   [
    4,
@@ -1102,7 +1194,8 @@
   ],
   [
    1,
-   "destination_level"
+   "destination_level",
+   "LevelIds"
   ],
   [
    2,
@@ -1288,11 +1381,13 @@
  "37": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "start_state"
+   "start_state",
+   "Path_Slig::StartState"
   ],
   [
    2,
@@ -1316,7 +1411,8 @@
   ],
   [
    7,
-   "shoot_possessed_sligs"
+   "shoot_possessed_sligs",
+   "Path_Slig::ShootPossessedSligs"
   ],
   [
    8,
@@ -1340,11 +1436,13 @@
   ],
   [
    13,
-   "chase_abe_when_spotted"
+   "chase_abe_when_spotted",
+   "XDirection_short"
   ],
   [
    14,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    15,
@@ -1412,7 +1510,8 @@
   ],
   [
    31,
-   "unlimited_spawns"
+   "unlimited_spawns",
+   "Choice_short"
   ]
  ],
  "32": [
@@ -1464,7 +1563,8 @@
   ],
   [
    8,
-   "emit_leaves"
+   "emit_leaves",
+   "Choice_short"
   ],
   [
    9,
@@ -1542,7 +1642,8 @@
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    3,
@@ -1550,21 +1651,25 @@
   ],
   [
    4,
-   "persist_offscreen"
+   "persist_offscreen",
+   "Choice_short"
   ]
  ],
  "16": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    2,
-   "asleep"
+   "asleep",
+   "Choice_short"
   ],
   [
    3,
@@ -1598,7 +1703,8 @@
  "76": [
   [
    0,
-   "reset_switches"
+   "reset_switches",
+   "Choice_short"
   ],
   [
    1,
@@ -1614,7 +1720,8 @@
   ],
   [
    4,
-   "free_path_resources"
+   "free_path_resources",
+   "Choice_short"
   ],
   [
    5,
@@ -1622,7 +1729,8 @@
   ],
   [
    6,
-   "enabled"
+   "enabled",
+   "Choice_short"
   ]
  ],
  "30": [
@@ -1632,15 +1740,18 @@
   ],
   [
    1,
-   "start_state"
+   "start_state",
+   "Path_TrapDoor::StartState"
   ],
   [
    2,
-   "self_closing"
+   "self_closing",
+   "Choice_short"
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
@@ -1648,7 +1759,8 @@
   ],
   [
    5,
-   "direction"
+   "direction",
+   "XDirection_short"
   ],
   [
    6,
@@ -1682,7 +1794,8 @@
   ],
   [
    5,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "39": [
@@ -1696,13 +1809,15 @@
   ],
   [
    2,
-   "move_direction"
+   "move_direction",
+   "Path_LiftMover::YDirection"
   ]
  ],
  "10": [
   [
    0,
-   "rock_fall_direction"
+   "rock_fall_direction",
+   "XDirection_short"
   ],
   [
    1,
@@ -1714,7 +1829,8 @@
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
@@ -1750,7 +1866,8 @@
  "36": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1766,11 +1883,13 @@
   ],
   [
    4,
-   "initial_move_direction"
+   "initial_move_direction",
+   "Path_MotionDetector::InitialMoveDirection"
   ],
   [
    5,
-   "draw_flare"
+   "draw_flare",
+   "Choice_short"
   ],
   [
    6,
@@ -1788,7 +1907,8 @@
  "93": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1798,7 +1918,8 @@
  "95": [
   [
    0,
-   "start_enabled"
+   "start_enabled",
+   "Choice_short"
   ],
   [
    1,
@@ -1806,7 +1927,8 @@
   ],
   [
    2,
-   "spawn_assets"
+   "spawn_assets",
+   "Choice_short"
   ],
   [
    3,
@@ -1814,7 +1936,8 @@
   ],
   [
    4,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    5,
@@ -1830,7 +1953,8 @@
   ],
   [
    8,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "91": [
@@ -1848,7 +1972,8 @@
   ],
   [
    3,
-   "start_filled"
+   "start_filled",
+   "Choice_short"
   ]
  ],
  "100": [
@@ -1864,7 +1989,8 @@
  "98": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1876,15 +2002,18 @@
   ],
   [
    3,
-   "persistant"
+   "persistant",
+   "Choice_short"
   ],
   [
    4,
-   "has_ghost"
+   "has_ghost",
+   "Choice_short"
   ],
   [
    5,
-   "give_invisibility_power_up"
+   "give_invisibility_power_up",
+   "Choice_short"
   ],
   [
    6,
@@ -1916,7 +2045,8 @@
  "109": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1930,21 +2060,25 @@
   ],
   [
    1,
-   "pixel_perfect"
+   "pixel_perfect",
+   "Choice_short"
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "29": [
   [
    0,
-   "exit_direction"
+   "exit_direction",
+   "PortalSide"
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "51": [
@@ -1954,7 +2088,8 @@
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    2,
@@ -1964,13 +2099,15 @@
  "111": [
   [
    0,
-   "direction"
+   "direction",
+   "XDirection_int"
   ]
  ],
  "106": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1978,13 +2115,15 @@
   ],
   [
    2,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ]
  ],
  "27": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2010,11 +2149,13 @@
   ],
   [
    2,
-   "triggered_by_alarm"
+   "triggered_by_alarm",
+   "Choice_short"
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
@@ -2030,7 +2171,8 @@
   ],
   [
    7,
-   "persist_offscreen"
+   "persist_offscreen",
+   "Choice_short"
   ]
  ],
  "53": [
@@ -2046,7 +2188,8 @@
  "58": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2072,19 +2215,23 @@
  "103": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    2,
-   "state"
+   "state",
+   "Path_CrawlingSlig::State"
   ],
   [
    3,
-   "crawl_direction"
+   "crawl_direction",
+   "Path_CrawlingSlig::CrawlDirection"
   ],
   [
    4,
@@ -2092,7 +2239,8 @@
   ],
   [
    5,
-   "respawn_on_death"
+   "respawn_on_death",
+   "Choice_short"
   ]
  ],
  "104": [
@@ -2102,7 +2250,8 @@
   ],
   [
    1,
-   "start_state"
+   "start_state",
+   "Path_Slig::StartState"
   ],
   [
    2,
@@ -2126,7 +2275,8 @@
   ],
   [
    7,
-   "shoot_possessed_sligs"
+   "shoot_possessed_sligs",
+   "Path_Slig::ShootPossessedSligs"
   ],
   [
    8,
@@ -2150,11 +2300,13 @@
   ],
   [
    13,
-   "chase_abe_when_spotted"
+   "chase_abe_when_spotted",
+   "Choice_short"
   ],
   [
    14,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    15,
@@ -2206,7 +2358,8 @@
   ],
   [
    27,
-   "stay_awake"
+   "stay_awake",
+   "Choice_short"
   ],
   [
    28,
@@ -2222,17 +2375,20 @@
   ],
   [
    31,
-   "unlimited_spawns"
+   "unlimited_spawns",
+   "Choice_short"
   ]
  ],
  "105": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "spawn_delay_state"
+   "spawn_delay_state",
+   "Path_FlyingSlig_Data::SpawnDelayStates"
   ],
   [
    2,
@@ -2248,7 +2404,8 @@
   ],
   [
    5,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    6,
@@ -2288,13 +2445,15 @@
   ],
   [
    15,
-   "persistant"
+   "persistant",
+   "Choice_short"
   ]
  ],
  "107": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2302,15 +2461,18 @@
   ],
   [
    2,
-   "action"
+   "action",
+   "SwitchOp"
   ],
   [
    3,
-   "on_sound"
+   "on_sound",
+   "CrawlingSligButtonSounds"
   ],
   [
    4,
-   "off_sound"
+   "off_sound",
+   "CrawlingSligButtonSounds"
   ],
   [
    5,
@@ -2320,15 +2482,18 @@
  "73": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "start_direction"
+   "start_direction",
+   "Path_Glukkon::StartDirection"
   ],
   [
    2,
-   "behavior"
+   "behavior",
+   "Path_Glukkon::Behavior"
   ],
   [
    3,
@@ -2348,7 +2513,8 @@
   ],
   [
    7,
-   "spawn_type"
+   "spawn_type",
+   "Path_Glukkon::SpawnType"
   ],
   [
    8,
@@ -2356,7 +2522,8 @@
   ],
   [
    9,
-   "glukkon_type"
+   "glukkon_type",
+   "GlukkonTypes"
   ],
   [
    10,
@@ -2374,7 +2541,8 @@
  "108": [
   [
    0,
-   "scale"
+   "scale",
+   "Path_GlukkonSwitch::Scale"
   ],
   [
    1,
@@ -2414,7 +2582,8 @@
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    2,
@@ -2426,13 +2595,15 @@
   ],
   [
    4,
-   "reset_switch_id_after_use"
+   "reset_switch_id_after_use",
+   "Choice_short"
   ]
  ],
  "94": [
   [
    0,
-   "bone_fall_direction"
+   "bone_fall_direction",
+   "XDirection_short"
   ],
   [
    1,
@@ -2444,7 +2615,8 @@
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
@@ -2454,7 +2626,8 @@
  "35": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_int"
   ],
   [
    1,
@@ -2472,21 +2645,25 @@
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    2,
-   "action"
+   "action",
+   "SwitchOp"
   ],
   [
    3,
-   "triggered_by"
+   "triggered_by",
+   "FootSwitchTriggerBy"
   ]
  ],
  "72": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2500,7 +2677,8 @@
  "68": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2512,7 +2690,8 @@
   ],
   [
    3,
-   "start_direction"
+   "start_direction",
+   "StartDirection"
   ],
   [
    4,
@@ -2524,7 +2703,8 @@
   ],
   [
    6,
-   "listen_to_sligs"
+   "listen_to_sligs",
+   "Choice_short"
   ],
   [
    7,
@@ -2544,7 +2724,8 @@
  "41": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2580,11 +2761,13 @@
   ],
   [
    9,
-   "roar_randomly"
+   "roar_randomly",
+   "Choice_short"
   ],
   [
    10,
-   "persistant"
+   "persistant",
+   "Choice_short"
   ],
   [
    11,
@@ -2596,7 +2779,8 @@
   ],
   [
    13,
-   "kill_enemy"
+   "kill_enemy",
+   "Choice_short"
   ]
  ],
  "102": [
@@ -2662,7 +2846,8 @@
   ],
   [
    15,
-   "scrab_spawn_direction"
+   "scrab_spawn_direction",
+   "ScrabSpawnDirection"
   ]
  ],
  "89": [
@@ -2698,11 +2883,13 @@
  "26": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "entrance_type"
+   "entrance_type",
+   "Path_Paramite::EntranceType"
   ],
   [
    2,
@@ -2730,27 +2917,32 @@
   ],
   [
    8,
-   "hiss_before_attacking"
+   "hiss_before_attacking",
+   "Choice_short"
   ],
   [
    9,
-   "delete_when_out_of_sight"
+   "delete_when_out_of_sight",
+   "Choice_short"
   ],
   [
    10,
-   "attack_fleeches"
+   "attack_fleeches",
+   "Choice_short"
   ]
  ],
  "99": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "40": [
   [
    0,
-   "meat_fall_direction"
+   "meat_fall_direction",
+   "XDirection_short"
   ],
   [
    1,
@@ -2762,7 +2954,8 @@
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,

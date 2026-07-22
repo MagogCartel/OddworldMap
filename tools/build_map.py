@@ -350,17 +350,91 @@ GAMEPLAY_FIELD_TYPES = {
     "ContinuePoint", "AbeStart", "ElumStart",
 }
 
+_SKIP_TYPES = {"s8", "s16", "s32", "s64", "u8", "u16", "u32", "u64", "int", "short", "char",
+               "bool", "float", "BYTE", "FP",
+               "const", "static", "using", "public", "private", "void", "return", "friend"}
+_ENUM_RE = r'\benum\s+(?:class\s+)?([A-Za-z0-9_]+)'
+
+def _match_brace(text, open_idx):
+    """index just past the } matching the { at open_idx"""
+    depth = 0
+    for i in range(open_idx, len(text)):
+        if text[i] == "{":
+            depth += 1
+        elif text[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return i + 1
+    return len(text)
+
+def parse_member_types(game_key):
+    """(data-struct, member) -> its declared game type, across the Tlvs header
+    and the AliveLib data-struct headers it includes. A field's game type is what
+    lets the viewer group value transforms across objects that share it (Slig and
+    SligSpawner both declare start_state as Path_Slig::StartState) while keeping
+    unrelated same-named fields apart (a Door's start_state is DoorStates). Enum
+    leaf names repeat across the decomp (StartState is both a Slig enum and a
+    MeatSaw enum), so a nested enum is qualified with its owning struct; the
+    decomp's own qualified references carry the cross-object sharing. Primitives
+    and sub-struct-valued fields carry no type."""
+    api = REPO / "Source/Tools/relive_api"
+    tlv = api / f"Tlvs{game_key}.hpp"
+    paths = [tlv]
+    for inc in re.finditer(r'#include\s+"([^"]+)"', tlv.read_text()):
+        p = (tlv.parent / inc.group(1)).resolve()
+        if p.exists():
+            paths.append(p)
+
+    struct_names, raw = set(), []
+    for p in paths:
+        src = p.read_text(errors="replace")
+        for sm in re.finditer(r'\bstruct\s+(Path_[A-Za-z0-9_]+)\b([^{;]*)\{', src):
+            struct = sm.group(1)
+            struct_names.add(struct)
+            if "TlvObjectBase" in sm.group(2):  # a viewer-API wrapper, not a data struct
+                continue
+            body = src[sm.end():_match_brace(src, sm.end() - 1) - 1]
+            nested = set(re.findall(_ENUM_RE, body))
+            # cut nested enum bodies so their enumerators aren't read as members
+            kept, i = [], 0
+            for em in re.finditer(_ENUM_RE + r'[^{;]*\{', body):
+                kept.append(body[i:em.start()])
+                i = _match_brace(body, em.end() - 1)
+            kept.append(body[i:])
+            for mm in re.finditer(
+                    r'(?m)^\s*([A-Za-z_]\w*(?:::[A-Za-z_]\w*)*)\s+'
+                    r'(field_[0-9A-Fa-f]+_\w+|[a-z_]\w*)\s*(?:=\s*[^;]+)?;', "".join(kept)):
+                ty, member = mm.group(1), mm.group(2)
+                if ty in _SKIP_TYPES:
+                    continue
+                if "::" not in ty and ty in nested:
+                    ty = f"{struct}::{ty}"
+                raw.append((struct, member, ty))
+
+    types = {}
+    for struct, member, ty in raw:  # second pass: now that every struct name is known
+        base = ty.split("::")[0]
+        if ty in struct_names or (base in struct_names and "::" not in ty):
+            continue  # a sub-struct-valued field, not an enum
+        if ty.split("::")[-1].endswith(("_data", "_Data")):
+            continue
+        types[(struct, member)] = ty
+    return types
+
 def parse_object_schema(game_key):
     """per-type payload field layout from the relive_api CTOR blocks: each
     ADD("Name", mTlv.field_XX_...) gives a field's payload word (from the hex
-    offset in the member name) and a snake_cased name. Fields are sequential
-    s16, so the offset holds except where the decomp names sequential members
-    with one offset (Door's 8 hub ids are all "field_22_hubN"): a non-increasing
-    offset means the name lies, so fall back to the next word. Members with no
-    field_XX offset are positional too. Values stay raw — prettifying is display."""
+    offset in the member name), a snake_cased name, and — where the decomp
+    declares an enum/Choice/Scale rather than a bare int — its game type (see
+    parse_member_types), so the viewer can key value transforms by it. Fields are
+    sequential s16, so the offset holds except where the decomp names sequential
+    members with one offset (Door's 8 hub ids are all "field_22_hubN"): a
+    non-increasing offset means the name lies, so fall back to the next word.
+    Members with no field_XX offset are positional too. Values stay raw."""
     src = (REPO / f"Source/Tools/relive_api/Tlvs{game_key}.hpp").read_text()
     base = 0x18 if game_key == "AO" else 0x10
     ctor = f"CTOR_{game_key}"
+    member_types = parse_member_types(game_key)
 
     def norm(label):
         label = re.sub(r"\([^)]*\)", "", label).replace("'", "")
@@ -368,10 +442,11 @@ def parse_object_schema(game_key):
 
     schema = {}
     for m in re.finditer(rf"{ctor}\([^)]*\)\s*\{{(.*?)\n    \}}", src, re.S):
-        head = re.search(rf'{ctor}\(\s*Path_\w+\s*,\s*"[^"]+"\s*,\s*(?:\w+::)?TlvTypes::\w+_(\d+)\s*\)',
+        head = re.search(rf'{ctor}\(\s*(Path_\w+)\s*,\s*"[^"]+"\s*,\s*(?:\w+::)?TlvTypes::\w+_(\d+)\s*\)',
                          src[m.start():m.start() + 300])
         if not head:
             continue
+        data_struct = head.group(1)
         fields = []
         last = -1
         for am in re.finditer(r'\bADD(?:_HIDDEN)?\(\s*"([^"]+)",\s*mTlv\.([^\n;]+?)\s*\)', m.group(1)):
@@ -384,10 +459,12 @@ def parse_object_schema(game_key):
                     word = last + 1
             else:
                 word = last + 1
-            fields.append([word, norm(am.group(1))])
+            member = re.split(r"[.\[]", am.group(2))[0]
+            ty = member_types.get((data_struct, member))
+            fields.append([word, norm(am.group(1)), ty] if ty else [word, norm(am.group(1))])
             last = word
         if fields:
-            schema[int(head.group(1))] = fields
+            schema[int(head.group(2))] = fields
     return schema
 
 def load_object_schema(game_key, game):
@@ -399,6 +476,23 @@ def load_object_schema(game_key, game):
         cache.parent.mkdir(exist_ok=True)
         cache.write_text(json.dumps(raw, indent=1))
     return {int(k): v for k, v in raw.items()}
+
+def write_field_types(game_key, out):
+    """the viewer's field->game-type sidecar for one game: {object: {field: type}}
+    over the enum-typed fields only. Derived from the schema cache alone (no disc),
+    keyed by object name the way the viewer sees it, so it maps a shown field to
+    the type its value transform is keyed by."""
+    game = game_setup(game_key)
+    ft = {}
+    for tid, rows in game["schema"].items():
+        name = game["tlv_names"].get(tid)
+        typed = {r[1]: r[2] for r in rows if len(r) > 2}
+        if name and typed:
+            ft[name] = {k: typed[k] for k in sorted(typed)}
+    dst = out / game["field_types_file"]
+    dst.write_text(json.dumps({k: ft[k] for k in sorted(ft)}, indent=1))
+    print(f"field types -> {dst} ({len(ft)} object types)")
+    return dst
 
 # ------------------------------------------------------------- TLV extraction
 
@@ -544,7 +638,7 @@ def object_fields(schema, t, blob, pos, length, header_len):
     if navail <= 0:
         return None
     words = struct.unpack_from(f"<{navail}h", blob, pos + header_len)
-    fields = {name: words[w] for w, name in layout if 0 <= w < navail}
+    fields = {name: words[w] for w, name, *_ in layout if 0 <= w < navail}
     return fields or None
 
 def walk_obj_region(blob, obj_off, region_end, game, level_short):
@@ -745,6 +839,7 @@ GAMES = {
         "cams_dir": "cams/ao",
         "cache": "pathdata_ao.json",
         "schema_cache": "objects_ao.json",
+        "field_types_file": "field_types_ao.json",
         "env": "ODDWORLD_DISC_AO",
         "geometry": {"cellW": 368, "cellH": 240, "worldW": 1024, "worldH": 480,
                      "winX": 256, "winY": 120, "visW": 368, "visH": 240},
@@ -759,6 +854,7 @@ GAMES = {
         "cams_dir": "cams/ae",
         "cache": "pathdata_ae.json",
         "schema_cache": "objects_ae.json",
+        "field_types_file": "field_types_ae.json",
         "env": "ODDWORLD_DISC_AE",
         "geometry": {"cellW": 368, "cellH": 240, "worldW": 375, "worldH": 260,
                      "winX": 0, "winY": 0, "visW": 375, "visH": 260},
@@ -816,7 +912,15 @@ def main():
                          "Defaults to $ODDWORLD_DISC_AO / $ODDWORLD_DISC_AE")
     ap.add_argument("--out", default=str(ROOT))
     ap.add_argument("--levels", default="", help="comma list of level shorts to limit (e.g. R2,R6)")
+    ap.add_argument("--emit-field-types", action="store_true",
+                    help="regenerate field_types_{ao,ae}.json from the schema cache "
+                         "(no disc needed) and exit")
     args = ap.parse_args()
+
+    if args.emit_field_types:
+        for gk in sorted(GAMES):
+            write_field_types(gk, Path(args.out))
+        return
 
     game = game_setup(args.game)
     discs_arg = args.disc or [p for p in os.environ.get(game["env"], "").split(os.pathsep) if p]
@@ -949,6 +1053,7 @@ def main():
         merged += [L for L in data["levels"] if L["short"] not in have]
         data["levels"] = merged
     data_file.write_text(json.dumps(data, indent=1))
+    write_field_types(args.game, out)  # schema-derived; kept in sync with each build
     print(f"\ndone -> {data_file}")
 
 if __name__ == "__main__":

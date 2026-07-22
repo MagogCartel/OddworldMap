@@ -1,0 +1,269 @@
+{
+ "AbeStart": {
+  "scale": "Scale_int"
+ },
+ "BackgroundAnimation": {
+  "is_semi_trans": "Choice_short",
+  "semi_trans_mode": "TPageAbr",
+  "sound_effect": "BgAnimSounds"
+ },
+ "Bat": {
+  "scale": "Scale_short"
+ },
+ "BeeSwarmHole": {
+  "movement_type": "Path_BeeSwarmHole::MovementType",
+  "scale": "Scale_short"
+ },
+ "BellHammer": {
+  "action": "SwitchOp",
+  "direction": "XDirection_short",
+  "scale": "Scale_short"
+ },
+ "BirdPortal": {
+  "enter_side": "PortalSide",
+  "level_destination": "LevelIds",
+  "portal_type": "PortalType",
+  "scale": "Scale_short"
+ },
+ "BirdPortalExit": {
+  "exit_direction": "PortalSide",
+  "scale": "Scale_short"
+ },
+ "BoomMachine": {
+  "nozzle_side": "Path_BoomMachine::NozzleSide",
+  "scale": "Scale_short"
+ },
+ "ChimeLock": {
+  "scale": "Scale_short"
+ },
+ "ContinuePoint": {
+  "abe_spawn_direction": "Path_ContinuePoint::spawnDirection",
+  "elum_restarts": "Choice_short"
+ },
+ "Door": {
+  "abe_direction_on_exit": "XDirection_short",
+  "door_closed": "Choice_short",
+  "level": "LevelIds",
+  "scale": "Scale_short",
+  "start_state": "DoorStates"
+ },
+ "DoorFlame": {
+  "colour": "Path_DoorFlame::Colour",
+  "scale": "Path_DoorFlame::Scale"
+ },
+ "Dove": {
+  "pixel_perfect": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "Edge": {
+  "can_grab": "Choice_short",
+  "grab_direction": "Path_Edge::GrabDirection"
+ },
+ "ElectricWall": {
+  "scale": "Scale_short",
+  "start_state": "ElectricWallStartState"
+ },
+ "ElumPathTrans": {
+  "level": "LevelIds"
+ },
+ "EnemyStopper": {
+  "stop_direction": "Path_EnemyStopper::StopDirection"
+ },
+ "FallingItem": {
+  "reset_switch_id_after_use": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "FlintLockFire": {
+  "scale": "Scale_short"
+ },
+ "FootSwitch": {
+  "action": "SwitchOp",
+  "scale": "Scale_short",
+  "triggered_by": "FootSwitchTriggerBy"
+ },
+ "Hoist": {
+  "grab_direction": "Path_Hoist::GrabDirection",
+  "hoist_type": "Path_Hoist::Type"
+ },
+ "Honey": {
+  "scale": "Scale_int"
+ },
+ "HoneySack": {
+  "scale": "Scale_short"
+ },
+ "InvisibleSwitch": {
+  "action": "SwitchOp",
+  "scale": "InvisibleSwitchScale",
+  "set_off_alarm": "Choice_short"
+ },
+ "LiftMover": {
+  "move_direction": "Path_LiftMover::YDirection"
+ },
+ "LiftMudokon": {
+  "give_password": "Choice_short",
+  "scale": "Scale_short",
+  "start_direction": "Path_LiftMudokon::Direction"
+ },
+ "LiftPoint": {
+  "ignore_lift_mover": "Choice_short",
+  "lift_point_stop_type": "LiftPointStopType",
+  "scale": "Scale_short",
+  "start_point": "Choice_short"
+ },
+ "LightEffect": {
+  "direction": "XDirection_short",
+  "type": "Path_LightEffect::Type"
+ },
+ "MeatSack": {
+  "meat_fall_direction": "XDirection_short",
+  "scale": "Scale_short"
+ },
+ "MeatSaw": {
+  "scale": "Scale_short",
+  "start_state": "Path_MeatSaw::StartState",
+  "type": "Path_MeatSaw::Type"
+ },
+ "Mine": {
+  "persist_offscreen": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "MotionDetector": {
+  "draw_flare": "Choice_short",
+  "initial_move_direction": "Path_MotionDetector::InitialMoveDirection",
+  "scale": "Scale_short"
+ },
+ "Mudokon": {
+  "deaf": "Choice_short",
+  "job": "Path_Mudokon::MudJobs",
+  "scale": "Scale_short",
+  "start_direction": "XDirection_short"
+ },
+ "MudokonPathTrans": {
+  "level": "LevelIds"
+ },
+ "MusicTrigger": {
+  "music_type": "MusicTriggerMusicType",
+  "triggered_by": "TriggeredBy"
+ },
+ "Paramite": {
+  "delete_when_far_away": "Choice_short",
+  "enter_from_web": "Choice_short",
+  "hiss_before_attack": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "PathTransition": {
+  "level": "LevelIds",
+  "next_path_scale": "Scale_short"
+ },
+ "PullRingRope": {
+  "action": "SwitchOp",
+  "off_sound": "PullRingSwitchSound",
+  "on_sound": "PullRingSwitchSound",
+  "scale": "Scale_short",
+  "sound_direction": "PullRingSoundDirection"
+ },
+ "Pulley": {
+  "scale": "Scale_int"
+ },
+ "RingMudokon": {
+  "abe_must_face_mudokon": "Path_RingMudokon::MustFaceMud",
+  "action": "SwitchOp",
+  "give_password": "Choice_short",
+  "give_ring_without_password": "Choice_short",
+  "scale": "Scale_short",
+  "start_direction": "XDirection_short"
+ },
+ "RockSack": {
+  "rock_fall_direction": "XDirection_short",
+  "scale": "Scale_short"
+ },
+ "RollingBall": {
+  "roll_direction": "XDirection_short",
+  "scale": "Scale_short"
+ },
+ "RollingBallStopper": {
+  "direction": "XDirection_short",
+  "scale": "Scale_short"
+ },
+ "Scrab": {
+  "patrol_type": "ScrabPatrolType",
+  "roar_randomly": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "SecurityClaw": {
+  "scale": "Scale_short"
+ },
+ "SecurityDoor": {
+  "scale": "Scale_short"
+ },
+ "SecurityOrb": {
+  "scale": "Scale_short"
+ },
+ "ShadowZone": {
+  "scale": "ShadowZoneScale"
+ },
+ "Slig": {
+  "chase_abe_when_spotted": "Choice_short",
+  "scale": "Scale_short",
+  "shoot_possessed_sligs": "Path_Slig::ShootPossessedSligs",
+  "start_direction": "XDirection_short",
+  "start_state": "Path_Slig::StartState",
+  "stay_awake": "Choice_short"
+ },
+ "SligSpawner": {
+  "chase_abe_when_spotted": "Choice_short",
+  "scale": "Scale_short",
+  "shoot_possessed_sligs": "Path_Slig::ShootPossessedSligs",
+  "start_direction": "XDirection_short",
+  "start_state": "Path_Slig::StartState",
+  "stay_awake": "Choice_short"
+ },
+ "SlingMudokon": {
+  "dont_whistle_password": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "Slog": {
+  "asleep": "Choice_short",
+  "scale": "Scale_short",
+  "start_direction": "XDirection_short"
+ },
+ "SlogHut": {
+  "scale": "Scale_short"
+ },
+ "SlogSpawner": {
+  "scale": "Scale_short",
+  "start_direction": "StartDirection"
+ },
+ "Switch": {
+  "action": "SwitchOp",
+  "off_sound": "LeverSoundType",
+  "on_sound": "LeverSoundType",
+  "scale": "Scale_short",
+  "sound_direction": "LeverSoundDirection"
+ },
+ "TimedMine": {
+  "scale": "Scale_short"
+ },
+ "TrapDoor": {
+  "direction": "XDirection_short",
+  "scale": "Scale_short",
+  "self_closing": "Choice_short",
+  "start_state": "Path_TrapDoor::StartState"
+ },
+ "UXB": {
+  "scale": "Scale_short",
+  "start_state": "UXBStartState"
+ },
+ "WellExpress": {
+  "emit_leaves": "Choice_short",
+  "on_level": "LevelIds"
+ },
+ "WellLocal": {
+  "emit_leaves": "Choice_short"
+ },
+ "ZBall": {
+  "scale": "Scale_short",
+  "speed": "Path_ZBall::Speed",
+  "start_position": "Path_ZBall::StartPos"
+ }
+}
