@@ -50,6 +50,11 @@ test("sanitizeSettings: a wrong-typed value keeps its default", () => {
   assert.equal(sanitizeSettings('{"rememberView":0}').rememberView, true);
 });
 
+test("sanitizeSettings: showRawValues defaults off and round-trips", () => {
+  assert.equal(sanitizeSettings(null).showRawValues, false);
+  assert.equal(sanitizeSettings('{"showRawValues":true}').showRawValues, true);
+});
+
 test("sanitizeView: absent or unreadable snapshot yields null", () => {
   assert.equal(sanitizeView(null), null);
   assert.equal(sanitizeView("{not json"), null);

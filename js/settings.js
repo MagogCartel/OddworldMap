@@ -19,6 +19,7 @@ export const SETTINGS_DEFAULTS = {
   fullNames: false,
   screenList: true,
   cacheImages: false,
+  showRawValues: false,
 };
 // fieldPrefs (not a boolean; added by sanitizeSettings) — which object fields
 // to show: mode "default" (the notable ones) or "more" (per-game, per-type
@@ -112,11 +113,16 @@ export function persistSettings() {
   store.set(SETTINGS_KEY, JSON.stringify(getSettings()));
 }
 
-// the field prefs for one game's objects: the mode plus that game's live
-// per-type picks (created on demand, so mutations land in the stored object)
+// the field-display policy for one game's objects: the mode plus that game's
+// live per-type picks (created on demand, so mutations land in the stored
+// object), plus the global raw-values flag folded in for the display callers
 export function fieldPrefsFor(gameId) {
-  const p = getSettings().fieldPrefs;
-  return { mode: p.mode, byType: (p.byType[gameId] ??= {}) };
+  const s = getSettings();
+  return {
+    mode: s.fieldPrefs.mode,
+    byType: (s.fieldPrefs.byType[gameId] ??= {}),
+    raw: s.showRawValues,
+  };
 }
 
 // the persisted display/filter snapshot, or null when off/absent/corrupt
@@ -206,6 +212,10 @@ export function initSettings() {
   });
 
   bind("sScreenList", "screenList", () => {});
+
+  bind("sRawValues", "showRawValues", () =>
+    window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "rawValues" } })),
+  );
 
   // fieldPrefs isn't a boolean setting, so it gets a custom binding: the
   // checkbox flips mode between "default" and "more"

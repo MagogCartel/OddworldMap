@@ -184,6 +184,13 @@ searchInput.addEventListener("input", () => {
   searchTimer = setTimeout(() => runSearch(searchInput.value), 160);
 });
 
+// the raw-values toggle changes how result rows render their field values;
+// re-render an active search so open rows update
+window.addEventListener("settings-changed", (e) => {
+  if (e.detail?.key === "rawValues" && searchInput.value.trim().length >= 2)
+    runSearch(searchInput.value);
+});
+
 // keyboard: "/" focuses search, Esc clears, arrows walk results, Enter jumps
 let activeHit = -1;
 function visibleHits() {

@@ -16,10 +16,12 @@ const panel = $("camPanel"),
   body = $("camPanelBody");
 
 let listedPath = null; // the path the open panel was built from
+let lastOpen = null; // args of the current open, so a settings change can rebuild it
 
 function closeCamPanel() {
   panel.hidden = true;
   listedPath = null;
+  lastOpen = null;
   setHighlight(null);
 }
 
@@ -70,6 +72,7 @@ export function openCamPanel(x, y, focus = null) {
   }
   if (!n) body.innerHTML = `<div class="cp-none">no objects on this screen</div>`;
   listedPath = path;
+  lastOpen = { x, y, focus };
   panel.hidden = false;
   body.querySelector(".active")?.scrollIntoView({ block: "nearest" }); // after unhide: needs layout
 }
@@ -80,6 +83,13 @@ $("camPanelClose").onclick = closeCamPanel;
 // yank the list away mid-browse
 window.addEventListener("selection-changed", () => {
   if (!panel.hidden && state.path !== listedPath) closeCamPanel();
+});
+
+// the raw-values toggle changes how listed field values render; rebuild the open
+// panel so it doesn't sit stale behind the settings dialog
+window.addEventListener("settings-changed", (e) => {
+  if (e.detail?.key === "rawValues" && !panel.hidden && lastOpen)
+    openCamPanel(lastOpen.x, lastOpen.y, lastOpen.focus);
 });
 
 window.addEventListener("keydown", (e) => {

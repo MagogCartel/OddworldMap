@@ -103,7 +103,8 @@ export function visibleFields(typeName, prefs) {
 }
 
 // [key, displayValue] pairs for a TLV: the semantic nav fields (extra) always,
-// then the raw fields the policy admits, prettified.
+// then the raw fields the policy admits — prettified, or left as ints when
+// prefs.raw is set (a formatting choice; zero-hiding still applies).
 export function fieldEntries(t, prefs) {
   const out = [];
   for (const [k, v] of Object.entries(t.extra || {})) if (v !== null && v !== "") out.push([k, v]);
@@ -112,7 +113,7 @@ export function fieldEntries(t, prefs) {
     for (const [k, v] of Object.entries(t.fields)) {
       if (show !== "all" && !show.has(k)) continue;
       if (v === 0 && HIDE_WHEN_ZERO.has(k)) continue;
-      out.push([k, prettify(t.name, k, v)]);
+      out.push([k, prefs && prefs.raw ? v : prettify(t.name, k, v)]);
     }
   return out;
 }

@@ -93,6 +93,22 @@ test("fieldEntries: default surfaces notable fields, prettified; nav extra alway
   assert.ok(!("door_closed" in de)); // a raw Door field: not default-visible
 });
 
+test("fieldEntries: raw mode shows the underlying ints, not the prettified text", () => {
+  const slig = { name: "Slig", extra: {}, fields: { start_state: 1, scale: 0 } };
+  const raw = Object.fromEntries(fieldEntries(slig, { mode: "all", raw: true }));
+  assert.equal(raw.start_state, 1); // not "patrol"
+  assert.equal(raw.scale, 0); // not "full"
+  const pretty = Object.fromEntries(fieldEntries(slig, { mode: "all" }));
+  assert.equal(pretty.start_state, "patrol"); // raw:false / absent keeps prettifying
+  assert.equal(pretty.scale, "full");
+
+  // raw is a value-formatting choice, not a visibility one: zero-hiding still applies
+  const slog = { name: "Slog", extra: {}, fields: { asleep: 1, anger_switch_id: 0 } };
+  const rawSlog = Object.fromEntries(fieldEntries(slog, { mode: "default", raw: true }));
+  assert.equal(rawSlog.asleep, 1); // not true
+  assert.ok(!("anger_switch_id" in rawSlog)); // still hidden at 0
+});
+
 test("fieldEntries: a shared field name is prettified by the owning type only", () => {
   const door = { name: "Door", extra: {}, fields: { start_state: 1 } };
   assert.equal(Object.fromEntries(fieldEntries(door, { mode: "all" })).start_state, 1); // raw
