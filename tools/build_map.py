@@ -325,9 +325,7 @@ def load_cache(game):
 # ------------------------------------------------- object field schema
 
 # types whose full disc field set is extracted raw into `fields`, matched by
-# name (per-game type ids differ). Gameplay objects only — pure scenery (hoists,
-# edges, zones, bounds, effects) and cosmetic pickups are left out to keep the
-# data lean; a name absent here just gets no `fields`.
+# name (per-game type ids differ).
 GAMEPLAY_FIELD_TYPES = {
     # creatures + spawners
     "Mudokon", "SlingMudokon", "RingMudokon", "LiftMudokon", "TorturedMudokon", "MudokonPathTrans",
@@ -347,7 +345,14 @@ GAMEPLAY_FIELD_TYPES = {
     "RollingBall", "RollingRock", "ZBall", "Drill", "LaughingGas", "ExplosionSet", "BrewMachine", "Water",
     # info / interactables
     "LCDStatusBoard", "LCDScreen", "LCD", "MovieStone", "DemoPlaybackStone", "HintFly",
-    "ContinuePoint", "AbeStart", "ElumStart",
+    "ContinuePoint", "ContinueZone", "AbeStart", "ElumStart",
+    # scenery / helpers / pickups
+    "LightEffect", "ShadowZone", "Hoist", "Edge", "StatusLight", "BackgroundAnimation", "ParamiteWebLine",
+    "SligBoundLeft", "SligBoundRight", "EnemyStopper", "SligPersist", "MovingBombStopper", "RollingBallStopper",
+    "LiftPoint", "LiftMover", "Pulley", "SoftLanding", "FlintLockFire",
+    "MusicTrigger", "TimerTrigger", "Alarm", "ResetPath", "ResetSwitchRange", "Preloader", "LevelLoader",
+    "RingCancel", "Null", "ElumPathTrans", "DoorBlocker", "SecurityClaw", "MotionDetector", "ColourfulMeter",
+    "RockSack", "MeatSack", "HoneySack", "Honey", "BoneBag", "Dove",
 }
 
 _SKIP_TYPES = {"s8", "s16", "s32", "s64", "u8", "u16", "u32", "u64", "int", "short", "char",
@@ -389,6 +394,16 @@ _VALUE_TYPES = {"Choice_short", "Choice_int", "Scale_short", "Scale_int"}
 _FIELD_TYPE_OVERRIDES = {
     # a boolean declared as a direction instead of choice
     ("AE", "SligSpawner", "chase_abe_when_spotted"): "Choice_short",
+}
+
+# layouts the schema parser can't derive from the relive_api CTOR alone. An empty
+# layout marks a genuinely field-less type so it still retires its raw fallback.
+_SCHEMA_LAYOUT_OVERRIDES = {
+    # ContinueZone's only member is named field_10_zone_number but sits at payload
+    # word 0 — Path_TLV is 0x18 wide, so the name's 0x10 lands in the rect, not the
+    # payload, and the parser skips it.
+    ("AO", 2): [[0, "zone_number"]],
+    ("AO", 109): [],  # RingCancel — EMPTY_CTOR, no payload fields
 }
 
 def _derive_label(enumerator):
@@ -576,7 +591,11 @@ def load_object_schema(game_key, game):
         raw = parse_object_schema(game_key)
         cache.parent.mkdir(exist_ok=True)
         cache.write_text(json.dumps(raw, indent=1))
-    return {int(k): v for k, v in raw.items()}
+    schema = {int(k): v for k, v in raw.items()}
+    for (gk, tid), layout in _SCHEMA_LAYOUT_OVERRIDES.items():
+        if gk == game_key:
+            schema[tid] = layout
+    return schema
 
 def write_field_types(game_key, out):
     """the viewer's field->game-type sidecar for one game: {object: {field: type}}
@@ -758,16 +777,16 @@ def tlv_extra_ae(t, blob, pos, length, level_short):
 
 def object_fields(schema, t, blob, pos, length, header_len):
     """the complete raw field set for a gameplay object, every field read as an
-    s16 at its schema word (values fit s16 in practice, even nominal s32 ids)"""
+    s16 at its schema word (values fit s16 in practice, even nominal s32 ids). A
+    schema'd type always yields a dict — empty for the field-less ones — so the
+    caller can retire its raw fallback; a type with no schema entry returns None
+    and keeps that fallback."""
     layout = schema.get(t)
-    if not layout:
+    if layout is None:
         return None
-    navail = (length - header_len) // 2
-    if navail <= 0:
-        return None
-    words = struct.unpack_from(f"<{navail}h", blob, pos + header_len)
-    fields = {name: words[w] for w, name, *_ in layout if 0 <= w < navail}
-    return fields or None
+    navail = max((length - header_len) // 2, 0)
+    words = struct.unpack_from(f"<{navail}h", blob, pos + header_len) if navail else ()
+    return {name: words[w] for w, name, *_ in layout if 0 <= w < navail}
 
 def walk_obj_region(blob, obj_off, region_end, game, level_short):
     """linear walk of the packed TLV region with resync on garbage"""
@@ -788,7 +807,9 @@ def walk_obj_region(blob, obj_off, region_end, game, level_short):
             extra = payload(t, blob, pos, length, level_short)
             fields = object_fields(schema, t, blob, pos, length, fmt["header_len"]) \
                 if name in GAMEPLAY_FIELD_TYPES else None
-            if fields:  # the raw archive supersedes the placeholder raw dump
+            # a schema'd gameplay type owns its fields; the archive (empty for the
+            # field-less ones) supersedes the raw dump, so none falls back to raw=
+            if fields is not None:
                 extra = {k: v for k, v in extra.items() if k != "raw"}
             tlv = {"t": t, "name": name, "x1": x1, "y1": y1, "x2": x2, "y2": y2, "extra": extra}
             if fields:

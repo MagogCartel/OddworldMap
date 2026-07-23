@@ -265,6 +265,35 @@ test("gameplay objects carry the field archive; Door hubs are distinct words", (
   }
 });
 
+// every gameplay region type is decoded — nothing falls back to a raw= dump.
+// ContinueZone is the pin for the below-base layout override (its zone_number is
+// named field_10 but lives at payload word 0).
+test("no TLV in the shipped data carries a raw fallback", () => {
+  for (const [file, id] of [
+    ["map_data_ao.json", "AO"],
+    ["map_data_ae.json", "AE"],
+  ]) {
+    const data = load(file);
+    let zones = 0;
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs) {
+          assert.ok(
+            !("raw" in (t.extra || {})),
+            `${id} ${L.short} P${P.id} ${t.name} (${t.x1},${t.y1}) still raw`,
+          );
+          if (t.name === "ContinueZone") {
+            zones++;
+            assert.ok(
+              Number.isInteger(t.fields?.zone_number),
+              `${id} ContinueZone lacks zone_number`,
+            );
+          }
+        }
+    if (id === "AO") assert.ok(zones > 0, "AO ContinueZones present");
+  }
+});
+
 // the shipped data contains exactly three genuinely self-referencing paired
 // objects. Dangling destinations (e.g. AE MI P11) must not be flagged, and
 // neither must 0-target doors whose camera merely holds them (SV P6, BR P21
