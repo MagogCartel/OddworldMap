@@ -14,6 +14,7 @@ Supports both games:
 --disc defaults to $ODDWORLD_DISC_AO (AO) / $ODDWORLD_DISC_AE (AE, os.pathsep-separated).
 """
 import argparse
+import gzip
 import json
 import os
 import re
@@ -1054,6 +1055,39 @@ def ensure_tools():
                     str(HERE / "cam2rgba.cpp"), str(HERE / "PSXMDECDecoder.cpp"),
                     "-o", str(CAM2RGBA)], check=True)
 
+def print_build_summary(game_key, built, data_file, all_levels, cam_stats):
+    """report card for the finished build: geometry counts, object-field
+    coverage, the raw= health line, and the data file's on-disk + gzip size.
+    `built` is the levels built this run — a subset build merges into a larger
+    file, whose full level count is reported alongside."""
+    paths = sum(len(L["paths"]) for L in built)
+    lines = sum(len(P["lines"]) for L in built for P in L["paths"])
+    tlvs = [t for L in built for P in L["paths"] for t in P["tlvs"]]
+    types = {t["name"] for t in tlvs}
+    with_fields = sum(1 for t in tlvs if "fields" in t)
+    raw = {}
+    for t in tlvs:
+        if "raw" in t.get("extra", {}):
+            raw[t["name"]] = raw.get(t["name"], 0) + 1
+    blob = data_file.read_bytes()
+    cams = cam_stats["reused"] + cam_stats["decoded"] + cam_stats["failed"]
+
+    def row(k, v):
+        print(f"  {k:<10} {v}")
+    print(f"\n=== {game_key} build summary ===")
+    scope = f" of {len(all_levels)} in the file" if len(built) != len(all_levels) else ""
+    row("levels", f"{len(built)} built{scope}")
+    row("paths", paths)
+    row("cameras", f"{cams}  ({cam_stats['decoded']} decoded, {cam_stats['reused']} reused"
+        + (f", {cam_stats['failed']} missing/failed" if cam_stats["failed"] else "") + ")")
+    row("collision", f"{lines} lines")
+    row("objects", f"{len(tlvs)} TLVs across {len(types)} types")
+    if tlvs:
+        row("fields", f"{with_fields} carry an archive ({100 * with_fields // len(tlvs)}% of objects)")
+    row("raw=", f"{sum(raw.values())} undecoded across {len(raw)} types {raw} — will fail the invariant test"
+        if raw else "0 (every object decoded)")
+    row("data file", f"{data_file.name}  {len(blob) / 1e6:.1f} MB raw / {len(gzip.compress(blob)) // 1024} KB gzip")
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--game", default="AO", choices=sorted(GAMES),
@@ -1091,6 +1125,7 @@ def main():
     level_short = game["level_short"]
 
     data = {"id": args.game, "game": game["title"], "geometry": game["geometry"], "levels": []}
+    cam_stats = {"reused": 0, "decoded": 0, "failed": 0}
     for lid, short, display in game["levels"]:
         if only and short not in only:
             continue
@@ -1167,7 +1202,16 @@ def main():
                     continue
                 png_rel = f"{game['cams_dir']}/{short}/{nm}.png"
                 png_path = out / png_rel
-                ok = png_path.exists() or decode_cam(lvl, nm, png_path, tmpdir, game["fg1_bitmask"])
+                if png_path.exists():
+                    cam_stats["reused"] += 1
+                    ok = True
+                else:
+                    # AE names three dev-cut cells with no .CAM and nothing linking
+                    # to them (FDP08C13, FDP10C14, BRP08C10), so a "failed" count of
+                    # 3 is expected for AE; decode_cam's warning tells a missing file
+                    # from a genuine decode failure.
+                    ok = decode_cam(lvl, nm, png_path, tmpdir, game["fg1_bitmask"])
+                    cam_stats["decoded" if ok else "failed"] += 1
                 entry = {"cell": i, "name": nm, "png": png_rel if ok else None}
                 if (out / f"{game['cams_dir']}/{short}/{nm}_fg.png").exists():
                     entry["fg"] = f"{game['cams_dir']}/{short}/{nm}_fg.png"
@@ -1196,6 +1240,7 @@ def main():
             data["levels"].append(level_entry)
 
     # subset builds merge into existing data instead of clobbering other levels
+    built_this_run = data["levels"]
     data_file = out / game["data_file"]
     if only and data_file.exists():
         old = json.loads(data_file.read_text())
@@ -1208,6 +1253,7 @@ def main():
     write_field_types(args.game, out)  # decomp-derived sidecars, kept in sync each build
     write_enum_labels(args.game, out)
     print(f"\ndone -> {data_file}")
+    print_build_summary(args.game, built_this_run, data_file, data["levels"], cam_stats)
 
 if __name__ == "__main__":
     main()
