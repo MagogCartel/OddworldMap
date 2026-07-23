@@ -327,5 +327,9 @@
  "XDirection_int": {
   "0": "left",
   "1": "right"
+ },
+ "XDirection_short": {
+  "0": "left",
+  "1": "right"
  }
 }

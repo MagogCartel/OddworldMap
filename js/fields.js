@@ -53,7 +53,7 @@ const HIDE_WHEN_ZERO = new Set([
 // the field's game type; a hand entry here wins over the generated enum labels.
 const CHOICE = { 0: false, 1: true };
 const SCALE = { 0: "full", 1: "half" };
-const TRANSFORM = {
+export const TRANSFORM = {
   Choice_short: CHOICE,
   Choice_int: CHOICE,
   Scale_short: SCALE,

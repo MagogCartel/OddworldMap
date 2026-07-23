@@ -284,7 +284,7 @@
   "start_direction": "XDirection_short"
  },
  "SligSpawner": {
-  "chase_abe_when_spotted": "XDirection_short",
+  "chase_abe_when_spotted": "Choice_short",
   "scale": "Scale_short",
   "shoot_possessed_sligs": "Path_Slig::ShootPossessedSligs",
   "start_direction": "XDirection_short",

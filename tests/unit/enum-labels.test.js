@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { TRANSFORM } from "../../js/fields.js";
 
 const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
 const AO = load("enum_labels_ao.json");
@@ -28,8 +29,12 @@ test("enum labels: the same type can carry different values per game", () => {
 
 test("enum labels: the viewer-owned value-types are not generated", () => {
   for (const el of [AO, AE])
-    for (const t of ["Choice_short", "Choice_int", "Scale_short", "Scale_int", "XDirection_short"])
+    for (const t of Object.keys(TRANSFORM))
       assert.ok(!(t in el), `${t} must be left to the viewer, not generated`);
+});
+
+test("enum labels: direction enums are generated, not viewer-owned", () => {
+  for (const el of [AO, AE]) assert.deepEqual(el["XDirection_short"], { 0: "left", 1: "right" });
 });
 
 test("enum labels: labels are lowercased to match the viewer's style", () => {
@@ -66,15 +71,9 @@ test("enum labels: comments never fabricate enumerators", () => {
   assert.deepEqual(AO["Path_Slig::ShootPossessedSligs"], { 0: "no", 1: "yes", 2: "yes" });
 });
 
-test("enum labels: every type a field is typed as has labels, bar value-types", () => {
-  const valueTypes = new Set([
-    "Choice_short",
-    "Choice_int",
-    "Scale_short",
-    "Scale_int",
-    "XDirection_short",
-    "YDirection_short",
-  ]);
+// the invariant users see: every typed field resolves to readable text, either
+// through the viewer's own value-type transforms or the generated labels
+test("enum labels: every field type resolves through TRANSFORM or the labels", () => {
   for (const [game, el, ftFile] of [
     ["AO", AO, "field_types_ao.json"],
     ["AE", AE, "field_types_ae.json"],
@@ -82,6 +81,6 @@ test("enum labels: every type a field is typed as has labels, bar value-types", 
     const used = new Set();
     for (const obj of Object.values(load(ftFile))) for (const t of Object.values(obj)) used.add(t);
     for (const t of used)
-      if (!valueTypes.has(t)) assert.ok(t in el, `${game}: field type ${t} has no label`);
+      assert.ok(t in TRANSFORM || t in el, `${game}: field type ${t} resolves to nothing`);
   }
 });

@@ -240,5 +240,9 @@
  "UXBStartState": {
   "0": "on",
   "1": "off"
+ },
+ "XDirection_short": {
+  "0": "left",
+  "1": "right"
  }
 }

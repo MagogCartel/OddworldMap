@@ -1,10 +1,10 @@
 {
  "entries": [
   {
-   "date": "2026-07-22",
+   "date": "2026-07-23",
    "tag": "improved",
    "title": "Object fields read in plain language",
-   "detail": "Object fields now read as words instead of raw numbers, taken from the labels the developers wrote in the game's own code: on/off fields as true/false, a door's state (open, closed, hub door closed), an enemy spawner's start state read like a Slig's (patrol, sleeping, listening to glukkon), and dozens more per game. See them via \"Show more object fields\" or search; \"Show raw field values\" turns it all back to the numbers."
+   "detail": "Object fields now read as words instead of raw numbers, taken straight from the labels the developers wrote in the game's own code: on/off fields as true/false, a door's state (open, closed, hub door closed), an enemy spawner's start state read like a Slig's (patrol, sleeping, listening to glukkon), which way a hoist is grabbed, and dozens more per game. See them via \"Show more object fields\" or search; \"Show raw field values\" turns it all back to the numbers."
   },
   {
    "date": "2026-07-22",

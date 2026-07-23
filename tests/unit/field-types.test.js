@@ -45,6 +45,13 @@ test("field types: value-type fields key by their shared C type", () => {
   assert.equal(AE.Mudokon.emotion, "Mud_TLV_Emotion");
 });
 
+test("field types: decomp quirks are overridden at emission", () => {
+  // upstream declares this boolean as a direction (copy-paste from the member
+  // below it); left/right would be nonsense, so the emit corrects it to Choice
+  assert.equal(AE.SligSpawner.chase_abe_when_spotted, "Choice_short");
+  assert.equal(AO.SligSpawner.chase_abe_when_spotted, "Choice_short"); // AO declares it right
+});
+
 test("field types: every entry names a real field the object carries in map_data", () => {
   for (const [game, ft, dataFile] of [
     ["AO", AO, "map_data_ao.json"],

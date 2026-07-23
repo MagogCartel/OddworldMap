@@ -378,10 +378,18 @@ def _relive_headers(game_key):
             paths.append(p)
     return paths
 
-# the viewer owns these value-type transforms (bool, full/half, left/right) and
-# keeps them uniform across games, so the label generator leaves them out
-_VALUE_TYPES = {"Choice_short", "Choice_int", "Scale_short", "Scale_int",
-                "XDirection_short", "YDirection_short"}
+# the viewer owns these value-type transforms (bool, full/half) and keeps them
+# uniform across games, so the label generator leaves them out; direction enums
+# are generated like any other (left/right comes from the decomp's enumerators)
+_VALUE_TYPES = {"Choice_short", "Choice_int", "Scale_short", "Scale_int"}
+
+# decomp quirks corrected when emitting field_types (the schema cache stays
+# faithful to the source): a field whose declared type contradicts its meaning
+# gets the type it behaves as, keyed (game, object, field)
+_FIELD_TYPE_OVERRIDES = {
+    # a boolean declared as a direction instead of choice
+    ("AE", "SligSpawner", "chase_abe_when_spotted"): "Choice_short",
+}
 
 def _derive_label(enumerator):
     """a readable label from an enumerator name: drop the value suffix and the
@@ -582,6 +590,11 @@ def write_field_types(game_key, out):
         typed = {r[1]: r[2] for r in rows if len(r) > 2}
         if name and typed:
             ft[name] = {k: typed[k] for k in sorted(typed)}
+    for (gk, obj, fld), ty in _FIELD_TYPE_OVERRIDES.items():
+        if gk == game_key:
+            if fld not in ft.get(obj, {}):
+                raise RuntimeError(f"stale field-type override: {gk} {obj}.{fld}")
+            ft[obj][fld] = ty
     dst = out / game["field_types_file"]
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text(json.dumps({k: ft[k] for k in sorted(ft)}, indent=1))
