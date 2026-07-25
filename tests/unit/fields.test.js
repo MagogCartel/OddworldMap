@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import {
   visibleFields,
   prettify,
@@ -8,6 +9,9 @@ import {
   defaultVisible,
   setFieldTypes,
   setEnumLabels,
+  GLOBAL_DEFAULT,
+  DEFAULT_BY_TYPE,
+  HIDE_WHEN_ZERO,
 } from "../../js/fields.js";
 
 // prettify resolves a field's game type (field_types sidecar), then its label —
@@ -26,7 +30,9 @@ setFieldTypes({
       emotion: "Mud_TLV_Emotion",
       deaf: "Choice_short",
     },
-    Door: { start_state: "DoorStates" }, // typed, but no label below -> stays raw
+    Door: { start_state: "DoorStates", door_type: "DoorTypes" }, // start_state typed but no label below -> stays raw
+    MeatSaw: { start_state: "Path_MeatSaw::StartState", type: "Path_MeatSaw::Type" },
+    Edge: { can_grab: "Choice_short" },
   },
 });
 setEnumLabels({
@@ -45,12 +51,15 @@ test("visibleFields: default is the type's default set, 'all' is everything", ()
   assert.equal(visibleFields("Slig", { mode: "all" }), "all");
 });
 
-test("defaultVisible: type-scoped fields join the global defaults only for their type", () => {
-  assert.ok(
-    defaultVisible("Slig").has("start_state") && defaultVisible("Slig").has("shoot_on_sight_delay"),
-  );
-  assert.ok(!defaultVisible("Door").has("start_state")); // Door's start_state is a different thing
+test("defaultVisible: globals apply everywhere, type-scoped fields only for their type", () => {
+  assert.ok(defaultVisible("Slig").has("start_state") && defaultVisible("Slig").has("switch_id"));
+  // start_state is global — a door's lock state shows by default too (it still
+  // renders as DoorStates, not Slig's text; that collision-safety is tested below)
+  assert.ok(defaultVisible("Door").has("start_state"));
+  assert.ok(defaultVisible("Door").has("door_type")); // a curated per-type addition
+  assert.ok(defaultVisible("MeatSaw").has("speed") && defaultVisible("MeatSaw").has("start_state"));
   assert.ok(defaultVisible("Mudokon").has("state") && !defaultVisible("Slig").has("state"));
+  assert.ok(!defaultVisible("Edge").has("can_grab")); // ubiquitous + low-value, picker-only
 });
 
 test("visibleFields: 'more' uses per-type picks, else the type defaults", () => {
@@ -204,4 +213,58 @@ test("fieldEntries: a wired object's switch_id/action are default-visible from f
   assert.ok(
     !("switch_id" in Object.fromEntries(fieldEntries(unwired, { mode: "default", game: "G" }))),
   ); // 0 hidden
+});
+
+// The curated default tables are hand-maintained field names; the coexistence
+// design (a field a type doesn't carry is silently skipped) means a typo or an
+// upstream rename orphans an entry with no error, no wrong render, no failing
+// test — the field just vanishes from defaults. Pin every name against the
+// shipped data.
+const loadData = (name) =>
+  JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
+const realFields = (dataFile) => {
+  const byType = {}; // type name -> Set of field keys seen on it in map_data
+  for (const L of loadData(dataFile).levels)
+    for (const P of L.paths)
+      for (const t of P.tlvs)
+        if (t.fields) for (const k of Object.keys(t.fields)) (byType[t.name] ??= new Set()).add(k);
+  return byType;
+};
+const AO_FIELDS = realFields("map_data_ao.json");
+const AE_FIELDS = realFields("map_data_ae.json");
+const carriedByType = (type, field) => AO_FIELDS[type]?.has(field) || AE_FIELDS[type]?.has(field);
+const carriedSomewhere = (field) =>
+  [AO_FIELDS, AE_FIELDS].some((g) => Object.values(g).some((s) => s.has(field)));
+
+test("DEFAULT_BY_TYPE: every curated field is real on its type in at least one game", () => {
+  for (const [type, fields] of Object.entries(DEFAULT_BY_TYPE))
+    for (const f of fields)
+      assert.ok(
+        carriedByType(type, f),
+        `${type}.${f} is a default but no shipped ${type} carries it (typo or upstream rename?)`,
+      );
+});
+
+test("GLOBAL_DEFAULT / HIDE_WHEN_ZERO: every field name is carried by some shipped type", () => {
+  for (const set of [GLOBAL_DEFAULT, HIDE_WHEN_ZERO])
+    for (const f of set)
+      assert.ok(carriedSomewhere(f), `${f} is in a default table but no shipped object carries it`);
+});
+
+// a global earns its place by being shared across unrelated types; one a single
+// type or creature family carries reads as a global rule it isn't
+test("GLOBAL_DEFAULT: every field is carried widely, not by one type or family", () => {
+  for (const f of GLOBAL_DEFAULT) {
+    const types = new Set(
+      [AO_FIELDS, AE_FIELDS].flatMap((g) =>
+        Object.entries(g)
+          .filter(([, keys]) => keys.has(f))
+          .map(([type]) => type),
+      ),
+    );
+    assert.ok(
+      types.size >= 5,
+      `${f} is a global default but only ${types.size} shipped type(s) carry it — scope it in DEFAULT_BY_TYPE`,
+    );
+  }
 });

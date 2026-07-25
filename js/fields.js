@@ -7,27 +7,58 @@
 //
 // Leaf module: no DOM/state imports, importable in bare Node for tests.
 
-// shown by default for any type that carries them: identity + notable signals
-const GLOBAL_DEFAULT = new Set([
-  "job",
-  "emotion",
-  "shoot_on_sight_delay", // 0 = shoots on sight, no "FREEZE!" warning
-  "asleep",
-  "deaf", // ignores Abe's speech, so no gamespeak
-  "blind", // can't see, so doesn't automatically stop near Abe
+// shown by default for any type that carries them: the few signals that dozens
+// of unrelated types across every group share. A field only one type or one
+// creature family carries belongs in DEFAULT_BY_TYPE instead.
+export const GLOBAL_DEFAULT = new Set([
+  "start_state", // AI state / door lock / hazard on-off — resolved per owning type
   "switch_id", // the switch a door/hazard/etc. is wired to
   "action",
-  "rescue_switch_id",
-  "angry_switch_id",
-  "anger_switch_id",
 ]);
 
-// some field names are shared by types that mean different things by them
-// (start_state is a Slig AI state but a Door lock state), so their default
-// visibility and enum are scoped to the owning type, not global
-const DEFAULT_BY_TYPE = {
-  Mudokon: ["state"],
-  Slig: ["start_state"],
+// per-type notable fields on top of the globals: the state/identity/direction/
+// count that describes how the object behaves. Keyed by type name; a field the
+// game's copy of the type doesn't carry is simply skipped, so AO-only and
+// AE-only fields coexist here (a Mudokon has job in AO, state in AE).
+export const DEFAULT_BY_TYPE = {
+  // creatures / enemies
+  BeeSwarmHole: ["movement_type"],
+  CrawlingSlig: ["respawn_on_death", "state"],
+  Fleech: ["asleep", "hanging"],
+  Glukkon: ["glukkon_type"],
+  Mudokon: ["angry_switch_id", "blind", "deaf", "emotion", "job", "rescue_switch_id", "state"],
+  Paramite: ["enter_from_web", "entrance_type"],
+  Scrab: ["patrol_type"],
+  Slig: ["chase_abe_when_spotted", "shoot_on_sight_delay"],
+  SligGetPants: ["chase_abe_when_spotted", "shoot_on_sight_delay"],
+  SligSpawner: ["chase_abe_when_spotted", "shoot_on_sight_delay"],
+  Slog: ["anger_switch_id", "asleep"],
+  // doors & travel
+  BirdPortal: ["portal_type"],
+  Door: ["door_type"],
+  LevelLoader: ["destination_level"],
+  SlamDoor: ["start_shut"],
+  TrapDoor: ["self_closing"],
+  // hazards
+  GasEmitter: ["colour"],
+  MeatSaw: ["speed", "type"],
+  RollingBall: ["roll_direction"],
+  RollingBallStopper: ["direction"],
+  // switches
+  FootSwitch: ["triggered_by"],
+  InvisibleSwitch: ["set_off_alarm"],
+  // lifts & mechanisms
+  Hoist: ["hoist_type"],
+  LiftMover: ["move_direction"],
+  LiftPoint: ["lift_point_stop_type"],
+  ZBall: ["start_position"],
+  // info & tomb
+  LCDStatusBoard: ["number_of_mudokons", "zulag_number"],
+  SlapLock: ["give_invisibility_power_up"],
+  // sacks
+  BoneBag: ["bone_amount"],
+  MeatSack: ["amount_of_meat"],
+  RockSack: ["rock_amount"],
 };
 
 // the default-visible field set for a type
@@ -39,7 +70,7 @@ export function defaultVisible(typeName) {
 // fields whose 0 means "absent" (no switch wired, flag not set) — hide it. But
 // never hide a meaningful 0: shoot_on_sight_delay=0 (shoots on sight) and
 // asleep=0 (awake) are real state.
-const HIDE_WHEN_ZERO = new Set([
+export const HIDE_WHEN_ZERO = new Set([
   "switch_id",
   "rescue_switch_id",
   "angry_switch_id",

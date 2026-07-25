@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-25",
+   "tag": "improved",
+   "title": "Objects show more at a glance",
+   "detail": "Hovering an object now surfaces the fields that matter for how it behaves, without turning anything on. A door shows whether it starts open or locked, an electric wall or trap door whether it starts on, a bird portal who it's for, a Glukkon or Crawling Slig its type and state, a MeatSaw its speed. \"Show more object fields\" still reveals everything else and lets you pick per type."
+  },
+  {
    "date": "2026-07-24",
    "tag": "improved",
    "title": "Background-plane objects stand out",
