@@ -5,6 +5,7 @@ import { CACHE_MAX_IMAGES, CONN_COLORS, FLASH_MS, LINE_COLORS, catOf } from "./c
 import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
 import { computeConnections } from "./model.js";
+import { onBackgroundPlane } from "./fields.js";
 
 // canvas colors shared with the stylesheet, read once from the tokens
 const COLOR = {
@@ -261,8 +262,8 @@ export function draw() {
       y1 = dY(t.y1);
     const w = Math.max(dX(t.x2) - x1, 10),
       h = Math.max(dY(t.y2) - y1, 10);
-    // half scale = background plane: dim + dash
-    const bg = t.fields?.scale === 1;
+    // background plane: dim + dash
+    const bg = onBackgroundPlane(state.data.id, t);
     if (bg) {
       ctx.globalAlpha = 0.5;
       ctx.setLineDash([8 / cam.z, 6 / cam.z]);

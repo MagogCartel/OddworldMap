@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-25",
+   "tag": "fixed",
+   "title": "Background objects are cued by the right plane",
+   "detail": "The dimmed dashed outline that marks the background plane read a raw value that doesn't mean the same thing for every object, so a few kinds were cued backwards: foreground invisible switches were dashed while background ones weren't, and half-scale door flames were missed. Each object's own scale meaning now decides it."
+  },
+  {
+   "date": "2026-07-25",
    "tag": "new",
    "title": "Hover a field name to learn what it means",
    "detail": "Field names in the screen list and the Fields panel can now carry a plain-English definition and their full list of possible values. Hover a name shown with a dotted underline to read it. This starts small (only a few fields are described so far) and will grow over time."

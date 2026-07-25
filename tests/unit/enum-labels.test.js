@@ -84,3 +84,24 @@ test("enum labels: every field type resolves through TRANSFORM or the labels", (
       assert.ok(t in TRANSFORM || t in el, `${game}: field type ${t} resolves to nothing`);
   }
 });
+
+// the background-plane cue reads an object's plane off its scale label, and the
+// labels carry the decomp's own enumerator names — an upstream rename would flip
+// the cue with nothing to catch it. Pin the word the cue looks for.
+test("enum labels: every enum a scale field carries names its half plane", () => {
+  for (const [game, el, ftFile] of [
+    ["AO", AO, "field_types_ao.json"],
+    ["AE", AE, "field_types_ae.json"],
+  ]) {
+    const scaleTypes = new Set();
+    for (const obj of Object.values(load(ftFile)))
+      for (const [field, t] of Object.entries(obj))
+        if (field === "scale" && !(t in TRANSFORM)) scaleTypes.add(t);
+    assert.ok(scaleTypes.size, `${game}: no per-object scale enum found at all`);
+    for (const t of scaleTypes)
+      assert.ok(
+        Object.values(el[t]).some((label) => /^half\b/.test(label)),
+        `${game}: ${t} labels no half plane`,
+      );
+  }
+});

@@ -7,6 +7,7 @@ import {
   resolve,
   fieldEntries,
   fieldHelp,
+  onBackgroundPlane,
   defaultVisible,
   setFieldTypes,
   setEnumLabels,
@@ -35,6 +36,8 @@ setFieldTypes({
     Door: { start_state: "DoorStates", door_type: "DoorTypes" }, // start_state typed but no label below -> stays raw
     MeatSaw: { start_state: "Path_MeatSaw::StartState", type: "Path_MeatSaw::Type" },
     Edge: { can_grab: "Choice_short" },
+    InvisibleSwitch: { scale: "InvisibleSwitchScale" }, // scale, but not the plane enum (1 = full)
+    DoorFlame: { scale: "Path_DoorFlame::Scale" },
   },
 });
 setEnumLabels({
@@ -43,6 +46,8 @@ setEnumLabels({
     "Path_Mudokon::MudJobs": { 0: "stand scrub", 1: "sit scrub", 2: "sit chant" },
     Mud_State: { 0: "chisle", 4: "health ring giver" },
     Mud_TLV_Emotion: { 2: "sad" },
+    InvisibleSwitchScale: { 0: "half", 1: "full", 2: "any" }, // inverted vs the plain plane
+    "Path_DoorFlame::Scale": { 0: "full", 1: "half", 2: "half (ignore)" },
     // DoorStates deliberately absent: a typed field with no label renders raw
   },
 });
@@ -215,6 +220,27 @@ test("fieldEntries: a wired object's switch_id/action are default-visible from f
   assert.ok(
     !("switch_id" in Object.fromEntries(fieldEntries(unwired, { mode: "default", game: "G" }))),
   ); // 0 hidden
+});
+
+test("onBackgroundPlane: background is where the scale resolves to half, inversion respected", () => {
+  // Scale_short: 1 = half = background, 0 = full
+  assert.ok(onBackgroundPlane("G", { name: "Slig", fields: { scale: 1 } }));
+  assert.ok(!onBackgroundPlane("G", { name: "Slig", fields: { scale: 0 } }));
+  // InvisibleSwitch's enum inverts it (1 = full): the half (0) is background,
+  // the full (1) is not — the reported bug both ways
+  assert.ok(onBackgroundPlane("G", { name: "InvisibleSwitch", fields: { scale: 0 } }));
+  assert.ok(!onBackgroundPlane("G", { name: "InvisibleSwitch", fields: { scale: 1 } }));
+  // a value that spans the planes ("any", ShadowZone's "both") is not background
+  assert.ok(!onBackgroundPlane("G", { name: "InvisibleSwitch", fields: { scale: 2 } }));
+  // a qualified half is still half: DoorFlame's 1 and 2 both draw at half scale
+  assert.ok(onBackgroundPlane("G", { name: "DoorFlame", fields: { scale: 1 } }));
+  assert.ok(onBackgroundPlane("G", { name: "DoorFlame", fields: { scale: 2 } }));
+  assert.ok(!onBackgroundPlane("G", { name: "DoorFlame", fields: { scale: 0 } }));
+  // a bare-int scale (no enum, e.g. wells/Teleporter) follows the plain convention
+  assert.ok(onBackgroundPlane("G", { name: "WellExpress", fields: { scale: 1 } }));
+  assert.ok(!onBackgroundPlane("G", { name: "WellExpress", fields: { scale: 0 } }));
+  // no scale field at all is never background
+  assert.ok(!onBackgroundPlane("G", { name: "MusicTrigger", fields: {} }));
 });
 
 // The curated default tables are hand-maintained field names; the coexistence

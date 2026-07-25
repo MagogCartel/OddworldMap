@@ -134,6 +134,19 @@ export const fieldHelp = (game, type, key) => {
   return prose;
 };
 
+// whether an object sits on the half-scale background plane. scale's raw value
+// doesn't mean one plane across types: most read 0 = full / 1 = half, but the
+// per-object scale enums differ and some invert it (InvisibleSwitch/GlukkonSwitch
+// read 1 = full), so resolve it through the field's game type; a bare-int scale
+// the schema left untyped follows the plain 1 = half.
+export function onBackgroundPlane(game, t) {
+  const scale = t.fields?.scale;
+  if (scale == null) return false;
+  const type = FIELD_TYPES[game]?.[t.name]?.scale;
+  const label = type && resolve(TRANSFORM[type] ?? ENUM_LABELS[game]?.[type], scale);
+  return label ? /^half\b/.test(label) : scale === 1;
+}
+
 // the field keys to display for a type, given the user's prefs — the "all"
 // sentinel or a Set. The one indirection point for the display policy:
 //   "all"   -> every field
