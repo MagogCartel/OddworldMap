@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-25",
+   "tag": "new",
+   "title": "Hover a field name to learn what it means",
+   "detail": "Field names in the screen list and the Fields panel can now carry a plain-English definition and their full list of possible values. Hover a name shown with a dotted underline to read it. This starts small (only a few fields are described so far) and will grow over time."
+  },
+  {
+   "date": "2026-07-25",
    "tag": "improved",
    "title": "Objects show more at a glance",
    "detail": "Hovering an object now surfaces the fields that matter for how it behaves, without turning anything on. A door shows whether it starts open or locked, an electric wall or trap door whether it starts on, a bird portal who it's for, a Glukkon or Crawling Slig its type and state, a MeatSaw its speed. \"Show more object fields\" still reveals everything else and lets you pick per type."

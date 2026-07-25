@@ -6,6 +6,7 @@ import {
   prettify,
   resolve,
   fieldEntries,
+  fieldHelp,
   defaultVisible,
   setFieldTypes,
   setEnumLabels,
@@ -13,6 +14,7 @@ import {
   DEFAULT_BY_TYPE,
   HIDE_WHEN_ZERO,
 } from "../../js/fields.js";
+import { setGlossary } from "../../js/glossary.js";
 
 // prettify resolves a field's game type (field_types sidecar), then its label —
 // a hand value-type transform, else the generated enum labels (enum_labels
@@ -267,4 +269,27 @@ test("GLOBAL_DEFAULT: every field is carried widely, not by one type or family",
       `${f} is a global default but only ${types.size} shipped type(s) carry it — scope it in DEFAULT_BY_TYPE`,
     );
   }
+});
+
+test("fieldHelp: glossary prose plus the field's value list, null when uncurated", () => {
+  setGlossary({
+    byField: { scale: "which plane" },
+    byGameType: { "Path_Slig::StartState": "slig ai state" },
+    byType: {},
+  });
+  // group prose + the enum's full value list (keyed by the field's game type)
+  assert.equal(
+    fieldHelp("G", "Slig", "start_state"),
+    "slig ai state\nValues: 0 = listening, 1 = patrol, 2 = sleeping",
+  );
+  assert.equal(
+    fieldHelp("G", "SligSpawner", "start_state"),
+    "slig ai state\nValues: 0 = listening, 1 = patrol, 2 = sleeping",
+  ); // group shared
+  // global prose + a Choice/Scale value list
+  assert.equal(fieldHelp("G", "Slig", "scale"), "which plane\nValues: 0 = full, 1 = half");
+  // no curated prose -> null (even though the field is typed)
+  assert.equal(fieldHelp("G", "Door", "start_state"), null);
+  assert.equal(fieldHelp("G", "Slog", "asleep"), null);
+  setGlossary(null); // leave module state clean for any later importer
 });

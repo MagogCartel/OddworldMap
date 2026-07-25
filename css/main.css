@@ -458,6 +458,12 @@ body.fullnames .btnrow button {
   color: var(--dim);
   font-weight: 400;
 }
+/* a field with a glossary definition: hover for meaning + values */
+.gloss {
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+  cursor: help;
+}
 #camPanelClose {
   background: none;
   border: 0;

@@ -4,7 +4,7 @@
 
 import { $ } from "./dom.js";
 import { state } from "./state.js";
-import { defaultVisible } from "./fields.js";
+import { defaultVisible, fieldHelp } from "./fields.js";
 import { getSettings, fieldPrefsFor, persistSettings } from "./settings.js";
 import { toggleMenu } from "./interaction.js";
 
@@ -79,7 +79,16 @@ function renderType({ name, fields }) {
       recount();
     };
     boxes.push([cb, f]);
-    label.append(cb, document.createTextNode(" " + f));
+    const help = fieldHelp(state.data.id, name, f);
+    if (help) {
+      const gloss = document.createElement("span");
+      gloss.className = "gloss";
+      gloss.title = help;
+      gloss.textContent = f;
+      label.append(cb, document.createTextNode(" "), gloss);
+    } else {
+      label.append(cb, document.createTextNode(" " + f));
+    }
     grid.append(label);
   }
 

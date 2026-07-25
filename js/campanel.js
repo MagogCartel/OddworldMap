@@ -2,7 +2,8 @@
 // pointer lists everything on it. Hover doesn't exist on touch devices, so
 // this panel is also the mobile way to inspect a screen's objects.
 
-import { esc, extrasText } from "./util.js";
+import { esc } from "./util.js";
+import { fieldEntries, fieldHelp } from "./fields.js";
 import { CATS, catOf } from "./config.js";
 import { $ } from "./dom.js";
 import { state, dX, dY } from "./state.js";
@@ -62,8 +63,16 @@ export function openCamPanel(x, y, focus = null) {
       const b = document.createElement("button");
       b.className = "cp-row";
       if (t === focus) b.classList.add("active");
-      const ex = extrasText(t, " ", fieldPrefsFor(state.data.id));
-      b.innerHTML = esc(t.name) + (ex ? ` <span class="e">${esc(ex)}</span>` : "");
+      const ex = fieldEntries(t, fieldPrefsFor(state.data.id))
+        .map(([k, v]) => {
+          const help = fieldHelp(state.data.id, t.name, k);
+          const kv = esc(`${k}=${v}`);
+          return help
+            ? `<span class="e gloss" title="${esc(help)}">${kv}</span>`
+            : `<span class="e">${kv}</span>`;
+        })
+        .join(" ");
+      b.innerHTML = esc(t.name) + (ex ? " " + ex : "");
       b.onclick = () => jumpToTlv(state.data, state.lvl, state.path, t);
       b.onmouseenter = () => setHighlight(t);
       b.onmouseleave = () => setHighlight(null);

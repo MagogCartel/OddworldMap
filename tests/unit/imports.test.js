@@ -13,6 +13,7 @@ test("pure modules import in bare Node", async () => {
     "model",
     "settings",
     "searchquery",
+    "glossary",
   ]) {
     const m = await import(`../../js/${mod}.js`);
     assert.ok(Object.keys(m).length > 0, `${mod}.js has exports`);

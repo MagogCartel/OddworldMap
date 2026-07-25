@@ -7,6 +7,8 @@
 //
 // Leaf module: no DOM/state imports, importable in bare Node for tests.
 
+import { glossaryProse } from "./glossary.js";
+
 // shown by default for any type that carries them: the few signals that dozens
 // of unrelated types across every group share. A field only one type or one
 // creature family carries belongs in DEFAULT_BY_TYPE instead.
@@ -112,6 +114,24 @@ export const resolve = (entry, value) =>
 export const prettify = (game, type, key, value) => {
   const t = FIELD_TYPES[game]?.[type]?.[key];
   return resolve(TRANSFORM[t] ?? ENUM_LABELS[game]?.[t], value) ?? value;
+};
+
+// a "what is this field" for the tooltip: the curated glossary prose plus the
+// field's full value list where it's an enum/Choice/Scale. null when no prose
+// is curated — the display affordance means "there's an explanation here".
+export const fieldHelp = (game, type, key) => {
+  const t = FIELD_TYPES[game]?.[type]?.[key];
+  const prose = glossaryProse(type, key, t);
+  if (!prose) return null;
+  const map = TRANSFORM[t] ?? ENUM_LABELS[game]?.[t];
+  if (map && typeof map === "object") {
+    const vals = Object.entries(map)
+      .sort((a, b) => a[0] - b[0])
+      .map(([v, label]) => `${v} = ${label}`)
+      .join(", ");
+    if (vals) return `${prose}\nValues: ${vals}`;
+  }
+  return prose;
 };
 
 // the field keys to display for a type, given the user's prefs — the "all"

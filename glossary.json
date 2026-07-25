@@ -1,0 +1,11 @@
+{
+ "byField": {
+  "scale": "Which plane the object sits on: foreground, or the half-scale background."
+ },
+ "byGameType": {
+  "Path_Slig::StartState": "The Slig's initial AI behaviour before it notices Abe."
+ },
+ "byType": {
+  "Mudokon.state": "What this Mudokon is doing when the level starts."
+ }
+}
