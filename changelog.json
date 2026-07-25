@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-25",
+   "tag": "improved",
+   "title": "Most object fields now say what they mean",
+   "detail": "The hover definitions cover nearly everything an object shows by default: what a switch number wires together, where a hoist carries Abe, what a lever's action does to its switch, a Mudokon's work and mood, a Slig's start state and how long it waits before shooting, a Scrab's patrol style, and whether a door, trap door, electric wall or saw starts on. Hover any field name with a dotted underline to read its meaning and every value it can take. A handful whose meaning isn't settled yet still have none."
+  },
+  {
+   "date": "2026-07-25",
    "tag": "fixed",
    "title": "Background objects are cued by the right plane",
    "detail": "The dimmed dashed outline that marks the background plane read a raw value that doesn't mean the same thing for every object, so a few kinds were cued backwards: foreground invisible switches were dashed while background ones weren't, and half-scale door flames were missed. Each object's own scale meaning now decides it."
