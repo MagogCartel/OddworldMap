@@ -28,3 +28,4 @@ jobs:
           python-version: "3.12"
       - run: python3 -m compileall -q tools/
       - run: pipx run ruff==0.16.0 check tools/
+      - run: python3 -m unittest discover -s tools/tests
