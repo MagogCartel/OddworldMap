@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "A route link cut short is refused instead of being drawn wrong",
+   "detail": "Chat apps and forums sometimes shorten a long URL. A shared route that lost its tail could still be read as a complete one. Route links now carry their waypoint count, so a shortened one is recognised as damaged and dropped rather than half-believed."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "Shared links open the same on any screen",
    "detail": "A link carried the top-left corner of the window it was copied from, so opening it on a narrower screen (a phone, a smaller window, an embed in a forum post) slid the view sideways. At a common zoom the drift was more than a whole camera screen, enough to leave what was being pointed at off the edge entirely. Links now carry the middle of the view, and whatever window opens one works out its own corner."
   },

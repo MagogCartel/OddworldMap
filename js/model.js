@@ -216,23 +216,31 @@ export const focusZoom = (cw, ch) =>
     FOCUS_ZOOM_MAX,
   );
 
-// ---- permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=x1,y1;…] ----
+// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=x,y;…;nCOUNT] -
 // cx/cy is the view's center, not the corner the renderer works in, so a link
 // lands on the same spot whatever the size of the window it opens in. Trailing
 // segments are matched by shape, not position, and unknown ones are ignored.
 export function formatHash(gameId, levelShort, pathId, view, obj, route) {
   let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(view.x)}/${Math.round(view.y)}/${view.z.toFixed(2)}`;
   if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
-  if (route?.length)
-    h += `/route=${route.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`).join(";")}`;
+  if (route?.length) {
+    const pairs = route.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`);
+    h += `/route=${pairs.join(";")};n${route.length}`;
+  }
   return h;
 }
 
-// route waypoints from a "route=" payload: all-or-nothing, so a truncated URL
-// yields no route rather than a silently shortened one
+// route waypoints from a "route=" payload, "x,y;…;x,y;nCOUNT": all-or-nothing,
+// a count that disagrees drops the route rather than plotting a quietly wrong
+// last leg. The count trails the waypoints, the only position from which it
+// catches a URL cut inside the last pair, where what survives still reads as a
+// well-formed one; it wears the "n" so that a truncated x can't pass for it,
+// and ends on a digit because autolinkers eat trailing punctuation.
 function parseRoute(payload) {
   const pairs = payload.split(";");
-  if (!payload || pairs.length > MAX_ROUTE_PTS) return null;
+  const tail = /^n(\d+)$/.exec(pairs.pop());
+  const count = tail ? +tail[1] : -1;
+  if (count < 1 || count > MAX_ROUTE_PTS || count !== pairs.length) return null;
   const pts = [];
   for (const pair of pairs) {
     const m = /^(-?\d+),(-?\d+)$/.exec(pair);

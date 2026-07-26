@@ -622,7 +622,7 @@ test("permalinks can carry a route of draw-space waypoints, rounded like the vie
     { x: -30, y: 40 },
   ];
   const h = formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }, null, route);
-  assert.equal(h, "#AO/R2/1/177/55/2.23/route=10,22;-30,40");
+  assert.equal(h, "#AO/R2/1/177/55/2.23/route=10,22;-30,40;n2");
   assert.deepEqual(parseHash(h).route, [
     { x: 10, y: 22 },
     { x: -30, y: 40 },
@@ -633,14 +633,14 @@ test("permalinks can carry a route of draw-space waypoints, rounded like the vie
 test("object and route segments coexist, matched by shape in either order", () => {
   const obj = { name: "Door", x1: 8746, y1: 1232 };
   const h = formatHash("AO", "R1", 18, { x: 0, y: 0, z: 1 }, obj, [{ x: 1, y: 2 }]);
-  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=1,2");
+  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=1,2;n1");
   assert.deepEqual(parseHash(h).obj, obj);
   assert.deepEqual(parseHash(h).route, [{ x: 1, y: 2 }]);
-  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=1,2/Door@8746,1232");
+  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=1,2;n1/Door@8746,1232");
   assert.deepEqual(swapped.obj, obj);
   assert.deepEqual(swapped.route, [{ x: 1, y: 2 }]);
   // an unknown segment in between bothers neither
-  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=1,2");
+  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=1,2;n1");
   assert.equal(padded.obj, null);
   assert.deepEqual(padded.route, [{ x: 1, y: 2 }]);
 });
@@ -648,11 +648,38 @@ test("object and route segments coexist, matched by shape in either order", () =
 test("route segment is all-or-nothing: any malformed pair drops the whole route", () => {
   const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`).route;
   assert.equal(at("route="), null);
-  assert.equal(at("route=1,2;junk"), null);
-  assert.equal(at("route=1.5,2"), null);
-  assert.equal(at("route=1,2;;3,4"), null);
-  assert.deepEqual(at("route=1,2"), [{ x: 1, y: 2 }]);
+  assert.equal(at("route=1,2;junk;n2"), null);
+  assert.equal(at("route=1.5,2;n1"), null);
+  assert.equal(at("route=1,2;;3,4;n3"), null);
+  assert.deepEqual(at("route=1,2;n1"), [{ x: 1, y: 2 }]);
   const pairs = (n) => Array.from({ length: n }, (_, i) => `${i},${i}`).join(";");
-  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS)}`).length, MAX_ROUTE_PTS);
-  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS + 1)}`), null);
+  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS)};n${MAX_ROUTE_PTS}`).length, MAX_ROUTE_PTS);
+  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS + 1)};n${MAX_ROUTE_PTS + 1}`), null);
+});
+
+test("the route's waypoint count must agree with the waypoints", () => {
+  const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`).route;
+  assert.equal(at("route=1,2;3,4"), null); // no count at all
+  assert.equal(at("route=1,2;3,4;n3"), null); // claims more than it carries
+  assert.equal(at("route=1,2;3,4;n1"), null); // claims fewer
+  assert.equal(at("route=n0"), null); // a count with nothing to count
+  assert.equal(at("route=1,2;3,4;2"), null); // a bare count is not the count
+  assert.deepEqual(at("route=1,2;3,4;n2"), [
+    { x: 1, y: 2 },
+    { x: 3, y: 4 },
+  ]);
+});
+
+// a link cut short by a chat client can still read as a well-formed route:
+// "…;405,578" truncated to "…;405,57" is a valid pair, and "…;129,586" cut to
+// "…;12" arrives after exactly twelve pairs. The count and its "n" reject both.
+test("no prefix of a route link parses as a shorter or altered route", () => {
+  const route =
+    "620,411;563,472;602,585;522,578;505,681;398,688;350,680;256,676;182,676;110,684;61,684;60,578;129,586;222,583;294,583;405,578"
+      .split(";")
+      .map((p) => ({ x: +p.split(",")[0], y: +p.split(",")[1] }));
+  const full = formatHash("AO", "R6", 6, { x: -120, y: 226, z: 1.29 }, null, route);
+  assert.deepEqual(parseHash(full).route, route);
+  for (let cut = full.indexOf("route=") + 6; cut < full.length; cut++)
+    assert.equal(parseHash(full.slice(0, cut)).route, null, `prefix of length ${cut} parsed`);
 });
