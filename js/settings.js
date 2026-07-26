@@ -108,7 +108,7 @@ export function getSettings() {
   return settings;
 }
 
-// persist the live settings object after an external mutation
+// persist the live settings object after a mutation
 export function persistSettings() {
   store.set(SETTINGS_KEY, JSON.stringify(getSettings()));
 }
@@ -195,7 +195,7 @@ export function initSettings() {
     cb.checked = s[key];
     cb.onchange = () => {
       s[key] = cb.checked;
-      store.set(SETTINGS_KEY, JSON.stringify(s));
+      persistSettings();
       apply(cb.checked);
     };
   };
@@ -224,7 +224,7 @@ export function initSettings() {
   showMore.checked = s.fieldPrefs.mode === "more";
   showMore.onchange = () => {
     s.fieldPrefs.mode = showMore.checked ? "more" : "default";
-    store.set(SETTINGS_KEY, JSON.stringify(s));
+    persistSettings();
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "fieldPrefs" } }));
   };
 
