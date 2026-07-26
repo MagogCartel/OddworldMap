@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "Object links keep their marker",
+   "detail": "A link to a specific object matched its name exactly, so one that had passed through anything that lowercases URLs opened the right view and then quietly dropped the marker. Names now match whatever their capitals, as the game and level codes always have. And when the object really isn't there (a hand-typed link, or one aimed at something a data rebuild has moved) the map still goes to the spot the link named, rings it, and says which object it expected."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "Links still work when sharing rewrites them",
    "detail": "Some apps rewrite the part of a URL after the # when you share it, leaving %2F where every slash used to be. A link that came through one of those opened the default view instead of the place it named. The rewriting is now undone before the link is read."
   },

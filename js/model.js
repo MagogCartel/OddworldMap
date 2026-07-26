@@ -250,6 +250,14 @@ function parseRoute(payload) {
   return pts;
 }
 
+// the TLV a permalink's object segment names, identified by name and origin
+// rather than by a list position a rebuild can reorder. Names compare
+// case-insensitively, as the game and level codes do.
+export const findTlv = (tlvs, obj) =>
+  tlvs.find(
+    (t) => t.x1 === obj.x1 && t.y1 === obj.y1 && t.name.toLowerCase() === obj.name.toLowerCase(),
+  ) || null;
+
 // the viewer escapes nothing — every delimiter it writes is legal in a fragment
 // bare — but share widgets and mail clients percent-encode one anyway. A stray
 // % that isn't an escape leaves the fragment as it found it.

@@ -3,7 +3,7 @@
 
 import { clamp } from "./util.js";
 import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
-import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
+import { $, cv, gameBtns, levelBtns, pathBtns, toast } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, setGeometry, dX, dY } from "./state.js";
 import { draw, flashAt } from "./render.js";
 import {
@@ -11,6 +11,7 @@ import {
   camCenter,
   centerCam,
   computeEntryPaths,
+  findTlv,
   focusZoom,
   formatHash,
   parseHash,
@@ -258,15 +259,12 @@ export function applyHash() {
   applyingHash = false;
   if (p.obj) {
     // a link to a specific object: center it and hold a marker on it
-    const t = state.path.tlvs.find(
-      (x) => x.name === p.obj.name && x.x1 === p.obj.x1 && x.y1 === p.obj.y1,
-    );
-    if (t) {
-      const fx = (dX(t.x1) + dX(t.x2)) / 2,
-        fy = (dY(t.y1) + dY(t.y2)) / 2;
-      centerOn(fx, fy, null); // the object outranks the link's own center
-      flashAt(fx, fy, true);
-    }
+    const t = findTlv(state.path.tlvs, p.obj);
+    const fx = t ? (dX(t.x1) + dX(t.x2)) / 2 : (p.view?.x ?? dX(p.obj.x1)),
+      fy = t ? (dY(t.y1) + dY(t.y2)) / 2 : (p.view?.y ?? dY(p.obj.y1));
+    centerOn(fx, fy, null); // re-derives the focus zoom for this viewport
+    flashAt(fx, fy, true);
+    if (!t) toast(`no ${p.obj.name} at that spot`);
   }
   state.route = p.route; // the hash is the source of truth: absent means no route
   window.dispatchEvent(new CustomEvent("route-changed"));

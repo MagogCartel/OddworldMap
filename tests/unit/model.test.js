@@ -8,6 +8,7 @@ import {
   computeConnections,
   computeEntryPaths,
   destOf,
+  findTlv,
   focusZoom,
   formatHash,
   isLoopback,
@@ -614,6 +615,15 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     route: null,
   });
   assert.ok(Number.isNaN(parseHash("#AO/R2/junk").path));
+});
+
+test("a permalinked object is found by name and origin, whatever its capitals", () => {
+  const tlvs = [at(tlv("Door"), 100, 200), at(tlv("Mudokon"), 479, 1735)];
+  const find = (name, x1, y1) => findTlv(tlvs, { name, x1, y1 });
+  assert.equal(find("Mudokon", 479, 1735), tlvs[1]);
+  assert.equal(find("mudokon", 479, 1735), tlvs[1]); // a link put through a lowercaser
+  assert.equal(find("Mudokon", 479, 1736), null); // the object moved in a rebuild
+  assert.equal(find("Door", 479, 1735), null); // something else stands there now
 });
 
 test("a percent-encoded fragment is read the same as a bare one", () => {
