@@ -1,7 +1,7 @@
 // Pointer input on the map (mouse, touch, pen), hover inspection, and the menu toggle.
 
 import { esc, extrasText, formatDist, segDist } from "./util.js";
-import { KEY_PAN_PX, KEY_ZOOM_STEP, TOAST_MS, catOf, LINE_COLORS, LINE_NAMES } from "./config.js";
+import { KEY_PAN_PX, KEY_ZOOM_STEP, catOf, LINE_COLORS, LINE_NAMES } from "./config.js";
 import {
   $,
   cv,
@@ -12,7 +12,7 @@ import {
   copyLinkBtn,
   openSiteBtn,
   narrowMQ,
-  toastEl,
+  toast,
 } from "./dom.js";
 import { state, GEO, dX, dY, wX, wY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
@@ -235,14 +235,6 @@ openSiteBtn.href = fullSiteUrl();
 openSiteBtn.onpointerdown = openSiteBtn.onclick = () => {
   openSiteBtn.href = fullSiteUrl();
 };
-
-let toastTimer = null;
-function toast(msg) {
-  toastEl.textContent = msg;
-  toastEl.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toastEl.classList.remove("show"), TOAST_MS);
-}
 
 cv.addEventListener(
   "wheel",

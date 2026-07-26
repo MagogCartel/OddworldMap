@@ -1,5 +1,7 @@
 // Cached references to the static DOM and browser-environment handles.
 
+import { TOAST_MS } from "./config.js";
+
 export const $ = (id) => document.getElementById(id);
 
 export const narrowMQ = window.matchMedia("(max-width: 720px)"); // keep in sync with the CSS breakpoint
@@ -23,4 +25,13 @@ export const filterBox = $("filterBox");
 export const searchInput = $("searchInput"),
   searchResults = $("searchResults"),
   scopeBar = $("scopeBar");
-export const toastEl = $("toast");
+// transient notice at the bottom of the map; it lives with the DOM handles so
+// that any module can raise one without closing an import cycle
+const toastEl = $("toast");
+let toastTimer = null;
+export function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), TOAST_MS);
+}
