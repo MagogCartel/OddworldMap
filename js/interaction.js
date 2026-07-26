@@ -12,7 +12,6 @@ import {
   copyLinkBtn,
   openSiteBtn,
   narrowMQ,
-  cssVar,
   toastEl,
 } from "./dom.js";
 import { state, GEO, dX, dY, wX, wY } from "./state.js";
@@ -26,8 +25,6 @@ import { openCamPanel } from "./campanel.js";
 import { addRoutePoint, undoRoutePoint } from "./route.js";
 import { trapDialogKeys } from "./dialog.js";
 import { HAMBURGER_SVG, CLOSE_SVG, LINK_SVG, EXTERNAL_SVG } from "./icons.js";
-
-const TIP_MAX_W = parseFloat(cssVar("--tip-max-w"));
 
 let hoverTlvs = [],
   mouse = { x: 0, y: 0 };
@@ -332,6 +329,12 @@ function followableDest(t) {
 }
 
 // ---- hover inspection ----------------------------------------------------
+let tipHtml = "",
+  tipSpaceW = 0,
+  tipSpaceH = 0,
+  tipW = 0,
+  tipH = 0;
+
 function updateHover() {
   if (!state.path) return;
   const w = worldAtMouse();
@@ -368,10 +371,7 @@ function updateHover() {
   setConnFocus(state.show.conn ? (hoverTlvs.find((t) => destOf(t)) ?? null) : null);
   if (hoverTlvs.length || hoverLines.length) {
     tip.style.display = "block";
-    const px = Math.min(mouse.x + 16, cv.clientWidth - (TIP_MAX_W + 10));
-    tip.style.left = px + "px";
-    tip.style.top = mouse.y + 16 + "px";
-    tip.innerHTML =
+    const html =
       hoverTlvs
         .slice(0, 8)
         .map((t) => {
@@ -404,6 +404,19 @@ function updateHover() {
         )
         .join("<hr>") +
       (hoverTlvs.length > 8 ? `<div class="e">+${hoverTlvs.length - 8} more…</div>` : "");
+    if (html !== tipHtml || tipSpaceW !== cv.clientWidth || tipSpaceH !== cv.clientHeight) {
+      tip.innerHTML = html;
+      tipHtml = html;
+      tipSpaceW = cv.clientWidth;
+      tipSpaceH = cv.clientHeight;
+      tip.style.left = "0px"; // the width it wraps to given the whole canvas to grow into
+      tipW = tip.offsetWidth;
+      tipH = tip.offsetHeight;
+    }
+    const below = mouse.y + 16;
+    tip.style.left = Math.max(6, Math.min(mouse.x + 16, cv.clientWidth - tipW - 10)) + "px";
+    tip.style.top =
+      (below + tipH > cv.clientHeight ? Math.max(6, mouse.y - tipH - 12) : below) + "px";
     if (!panning)
       cv.style.cursor = modeCursor() || (hoverTlvs.some((t) => followableDest(t)) ? "pointer" : "");
   } else {

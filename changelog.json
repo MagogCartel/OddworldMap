@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "Object tooltips stay on screen near the edges",
+   "detail": "Hovering an object low on the map cut the tooltip off at the bottom of the window, with no way to scroll it back into view. It now flips above the pointer when there is no room below. Near the right edge it stays beside what it describes instead of jumping left, and on a narrow phone screen it no longer starts off the left edge."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "The marker on a shared object link settles down",
    "detail": "Opening a link to a specific object rings it with a pulsing marker that holds until you have seen it. On a page nobody touched it held forever, redrawing the map every frame (a quiet battery drain on a tab left open, phones especially). Moving the pointer now counts as seeing it, and the marker settles by itself after half a minute either way."
   },

@@ -320,6 +320,8 @@ body.fullnames .btnrow button {
   padding: 8px 10px;
   font-size: 12px;
   max-width: var(--tip-max-w);
+  max-height: calc(100% - 12px);
+  overflow: hidden;
   display: none;
   z-index: 5;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
