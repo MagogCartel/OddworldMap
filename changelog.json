@@ -15,8 +15,8 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
-   "title": "A route link cut short is refused instead of being drawn wrong",
-   "detail": "Chat apps and forums sometimes shorten a long URL. A shared route that lost its tail could still be read as a complete one. Route links now carry their waypoint count, so a shortened one is recognised as damaged and dropped rather than half-believed."
+   "title": "Route links survive being shortened",
+   "detail": "Chat apps and forums sometimes shorten a long URL, and a route that lost its tail could still be read as a complete one, drawn a leg or two short with no sign anything was missing. A shortened route link is now recognised: it opens with the waypoints that did arrive and says how many didn't (\"route link cut short: 13 of 16 waypoints\")."
   },
   {
    "date": "2026-07-26",

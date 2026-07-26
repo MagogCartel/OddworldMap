@@ -569,6 +569,7 @@ test("parseHash round-trips a formatted hash (against the rounded values)", () =
     view: { x: 177, y: 55, z: 2.23 },
     obj: null,
     route: null,
+    routeLost: 0,
   });
 });
 
@@ -596,6 +597,7 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     view: null,
     obj: null,
     route: null,
+    routeLost: 0,
   });
   assert.deepEqual(parseHash("#AO"), {
     game: "AO",
@@ -604,6 +606,7 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     view: null,
     obj: null,
     route: null,
+    routeLost: 0,
   });
   // x/y without z: the view is ignored as a whole
   assert.deepEqual(parseHash("#AO/R2/1/10/20"), {
@@ -613,6 +616,7 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     view: null,
     obj: null,
     route: null,
+    routeLost: 0,
   });
   assert.ok(Number.isNaN(parseHash("#AO/R2/junk").path));
 });
@@ -627,7 +631,7 @@ test("a permalinked object is found by name and origin, whatever its capitals", 
 });
 
 test("a percent-encoded fragment is read the same as a bare one", () => {
-  const h = "#AO/R6/6/-329/568/1.60/Mudokon@479,1735/route=620,411;563,472;n2";
+  const h = "#AO/R6/6/-329/568/1.60/Mudokon@479,1735/route=n2;620,411;563,472;end";
   assert.deepEqual(parseHash("#" + encodeURIComponent(h.slice(1))), parseHash(h));
   // a stray % that isn't an escape must not throw the whole link away
   assert.deepEqual(parseHash("#AO/R2/1/10/20/1.00/100%").view, { x: 10, y: 20, z: 1 });
@@ -639,25 +643,26 @@ test("permalinks can carry a route of draw-space waypoints, rounded like the vie
     { x: -30, y: 40 },
   ];
   const h = formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }, null, route);
-  assert.equal(h, "#AO/R2/1/177/55/2.23/route=10,22;-30,40;n2");
+  assert.equal(h, "#AO/R2/1/177/55/2.23/route=n2;10,22;-30,40;end");
   assert.deepEqual(parseHash(h).route, [
     { x: 10, y: 22 },
     { x: -30, y: 40 },
   ]);
+  assert.equal(parseHash(h).routeLost, 0);
   assert.equal(formatHash("AO", "R2", 1, { x: 0, y: 0, z: 1 }, null, []), "#AO/R2/1/0/0/1.00");
 });
 
 test("object and route segments coexist, matched by shape in either order", () => {
   const obj = { name: "Door", x1: 8746, y1: 1232 };
   const h = formatHash("AO", "R1", 18, { x: 0, y: 0, z: 1 }, obj, [{ x: 1, y: 2 }]);
-  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=1,2;n1");
+  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=n1;1,2;end");
   assert.deepEqual(parseHash(h).obj, obj);
   assert.deepEqual(parseHash(h).route, [{ x: 1, y: 2 }]);
-  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=1,2;n1/Door@8746,1232");
+  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=n1;1,2;end/Door@8746,1232");
   assert.deepEqual(swapped.obj, obj);
   assert.deepEqual(swapped.route, [{ x: 1, y: 2 }]);
   // an unknown segment in between bothers neither
-  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=1,2;n1");
+  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=n1;1,2;end");
   assert.equal(padded.obj, null);
   assert.deepEqual(padded.route, [{ x: 1, y: 2 }]);
 });
@@ -665,38 +670,70 @@ test("object and route segments coexist, matched by shape in either order", () =
 test("route segment is all-or-nothing: any malformed pair drops the whole route", () => {
   const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`).route;
   assert.equal(at("route="), null);
-  assert.equal(at("route=1,2;junk;n2"), null);
-  assert.equal(at("route=1.5,2;n1"), null);
-  assert.equal(at("route=1,2;;3,4;n3"), null);
-  assert.deepEqual(at("route=1,2;n1"), [{ x: 1, y: 2 }]);
+  assert.equal(at("route=n2;1,2;junk;end"), null);
+  assert.equal(at("route=n1;1.5,2;end"), null);
+  assert.equal(at("route=n3;1,2;;3,4;end"), null);
+  assert.equal(at("route=1,2;3,4;end"), null); // nothing leading the pairs
+  assert.equal(at("route=2;1,2;3,4;end"), null); // a bare number is not the count
+  assert.equal(at("route=n0;end"), null); // a count with nothing to count
+  assert.deepEqual(at("route=n1;1,2;end"), [{ x: 1, y: 2 }]);
   const pairs = (n) => Array.from({ length: n }, (_, i) => `${i},${i}`).join(";");
-  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS)};n${MAX_ROUTE_PTS}`).length, MAX_ROUTE_PTS);
-  assert.equal(at(`route=${pairs(MAX_ROUTE_PTS + 1)};n${MAX_ROUTE_PTS + 1}`), null);
+  assert.equal(at(`route=n${MAX_ROUTE_PTS};${pairs(MAX_ROUTE_PTS)};end`).length, MAX_ROUTE_PTS);
+  assert.equal(at(`route=n${MAX_ROUTE_PTS + 1};${pairs(MAX_ROUTE_PTS + 1)};end`), null);
 });
 
-test("the route's waypoint count must agree with the waypoints", () => {
-  const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`).route;
-  assert.equal(at("route=1,2;3,4"), null); // no count at all
-  assert.equal(at("route=1,2;3,4;n3"), null); // claims more than it carries
-  assert.equal(at("route=1,2;3,4;n1"), null); // claims fewer
-  assert.equal(at("route=n0"), null); // a count with nothing to count
-  assert.equal(at("route=1,2;3,4;2"), null); // a bare count is not the count
-  assert.deepEqual(at("route=1,2;3,4;n2"), [
+test("a route link cut short keeps the waypoints that arrived and counts the rest", () => {
+  const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`);
+  const three = "route=n3;1,2;3,4;5,6";
+  // only the marker lost: every pair before it is whole
+  assert.deepEqual(at(`${three};en`).route, [
+    { x: 1, y: 2 },
+    { x: 3, y: 4 },
+    { x: 5, y: 6 },
+  ]);
+  assert.equal(at(`${three};en`).routeLost, 0);
+  // a cut inside the last pair leaves one that still reads as legal: unread
+  assert.deepEqual(at(three).route, [
     { x: 1, y: 2 },
     { x: 3, y: 4 },
   ]);
+  assert.equal(at(three).routeLost, 1);
+  assert.deepEqual(at("route=n9;1,2;3,4;5,").route, [
+    { x: 1, y: 2 },
+    { x: 3, y: 4 },
+  ]);
+  assert.equal(at("route=n9;1,2;3,4;5,").routeLost, 7);
+  // the marker vouches for the count, so one that disagrees is a hand edit
+  assert.equal(at("route=n2;1,2;3,4;5,6;end").route, null);
+  assert.equal(at("route=n4;1,2;3,4;5,6;end").route, null);
+  // more pairs than the count claims, marker or not
+  assert.equal(at("route=n1;1,2;3,4;5,6").route, null);
+  // cut down to the head alone: a smaller count with nothing under it
+  assert.equal(at("route=n1").route, null);
+  assert.equal(at("route=n1").routeLost, 0);
 });
 
 // a link cut short by a chat client can still read as a well-formed route:
 // "…;405,578" truncated to "…;405,57" is a valid pair, and "…;129,586" cut to
-// "…;12" arrives after exactly twelve pairs. The count and its "n" reject both.
-test("no prefix of a route link parses as a shorter or altered route", () => {
+// "…;12" arrives after exactly twelve pairs. What the reader is shown must
+// therefore be a leading stretch of what the sender plotted, never a leg they
+// never clicked, and the tally must square with the count the link leads with.
+test("every prefix of a route link parses as a prefix of the route, or as none", () => {
   const route =
     "620,411;563,472;602,585;522,578;505,681;398,688;350,680;256,676;182,676;110,684;61,684;60,578;129,586;222,583;294,583;405,578"
       .split(";")
       .map((p) => ({ x: +p.split(",")[0], y: +p.split(",")[1] }));
   const full = formatHash("AO", "R6", 6, { x: -120, y: 226, z: 1.29 }, null, route);
   assert.deepEqual(parseHash(full).route, route);
-  for (let cut = full.indexOf("route=") + 6; cut < full.length; cut++)
-    assert.equal(parseHash(full.slice(0, cut)).route, null, `prefix of length ${cut} parsed`);
+  assert.equal(parseHash(full).routeLost, 0);
+  for (let cut = full.indexOf("route=") + 6; cut < full.length; cut++) {
+    const { route: got, routeLost: lost } = parseHash(full.slice(0, cut));
+    const where = `prefix of length ${cut}`;
+    if (!got) {
+      assert.equal(lost, 0, `${where} claims losses with nothing to show`);
+      continue;
+    }
+    assert.deepEqual(got, route.slice(0, got.length), `${where} altered the route`);
+    assert.equal(got.length + lost, route.length, `${where} miscounted what it lost`);
+  }
 });

@@ -267,6 +267,8 @@ export function applyHash() {
     if (!t) toast(`no ${p.obj.name} at that spot`);
   }
   state.route = p.route; // the hash is the source of truth: absent means no route
+  if (p.routeLost)
+    toast(`route link cut short: ${p.route.length} of ${p.route.length + p.routeLost} waypoints`);
   window.dispatchEvent(new CustomEvent("route-changed"));
   draw();
   return true;

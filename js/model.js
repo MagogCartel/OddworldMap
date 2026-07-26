@@ -216,7 +216,7 @@ export const focusZoom = (cw, ch) =>
     FOCUS_ZOOM_MAX,
   );
 
-// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=x,y;…;nCOUNT] -
+// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=nCOUNT;x,y;…;end] -
 // cx/cy is the view's center, not the corner the renderer works in, so a link
 // lands on the same spot whatever the size of the window it opens in. Trailing
 // segments are matched by shape, not position, and unknown ones are ignored.
@@ -225,29 +225,35 @@ export function formatHash(gameId, levelShort, pathId, view, obj, route) {
   if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
   if (route?.length) {
     const pairs = route.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`);
-    h += `/route=${pairs.join(";")};n${route.length}`;
+    h += `/route=n${route.length};${pairs.join(";")};end`;
   }
   return h;
 }
 
-// route waypoints from a "route=" payload, "x,y;…;x,y;nCOUNT": all-or-nothing,
-// a count that disagrees drops the route rather than plotting a quietly wrong
-// last leg. The count trails the waypoints, the only position from which it
-// catches a URL cut inside the last pair, where what survives still reads as a
-// well-formed one; it wears the "n" so that a truncated x can't pass for it,
-// and ends on a digit because autolinkers eat trailing punctuation.
+// waypoints from a "route=" payload, "nCOUNT;x,y;…;x,y;end", as the survivors
+// plus how many of the count never arrived: a URL shortened in transit keeps
+// the legs that made it rather than losing the route whole. The count leads so
+// that it outlives the cut; only the trailing marker can prove the payload
+// complete, a cut inside the final pair still reading as a well-formed one.
+// Both tokens end on a letter or digit, past what autolinkers eat off a URL,
+// and the count wears the "n" so that a pair cannot pass for it.
 function parseRoute(payload) {
-  const pairs = payload.split(";");
-  const tail = /^n(\d+)$/.exec(pairs.pop());
-  const count = tail ? +tail[1] : -1;
-  if (count < 1 || count > MAX_ROUTE_PTS || count !== pairs.length) return null;
+  const tokens = payload.split(";");
+  const head = /^n(\d+)$/.exec(tokens[0]);
+  const total = head ? +head[1] : 0;
+  if (total < 1 || total > MAX_ROUTE_PTS) return null;
+  const pairs = tokens.slice(1);
+  // the tail goes unread unless it is the marker: a cut leaves either a
+  // shortened marker (all pairs arrived) or a pair that may still look whole
+  const complete = pairs.pop() === "end";
+  if (complete ? pairs.length !== total : pairs.length > total) return null;
   const pts = [];
   for (const pair of pairs) {
     const m = /^(-?\d+),(-?\d+)$/.exec(pair);
     if (!m) return null;
     pts.push({ x: +m[1], y: +m[2] });
   }
-  return pts;
+  return pts.length ? { pts, lost: total - pts.length } : null;
 }
 
 // the TLV a permalink's object segment names, identified by name and origin
@@ -277,8 +283,9 @@ const finiteView = (x, y, z) =>
 
 // null for an empty hash; view is the center point plus zoom, null unless all
 // three read; obj names a TLV to highlight, identified by name and origin;
-// route is a list of draw-space waypoints. game/level/path may still come back
-// empty or NaN — the caller resolves those against the data.
+// route is a list of draw-space waypoints, routeLost how many of them a
+// shortened URL never delivered. game/level/path may still come back empty or
+// NaN — the caller resolves those against the data.
 export function parseHash(hash) {
   const h = decodeFragment(hash.replace(/^#/, ""));
   if (!h) return null;
@@ -286,12 +293,14 @@ export function parseHash(hash) {
   const segs = parts.slice(6);
   const om = segs.map((s) => /^(\w+)@(-?\d+),(-?\d+)$/.exec(s)).find(Boolean);
   const rt = segs.find((s) => s.startsWith("route="));
+  const route = rt ? parseRoute(rt.slice(6)) : null;
   return {
     game: parts[0].toUpperCase(),
     level: (parts[1] || "").toUpperCase(),
     path: +parts[2],
     view: parts.length >= 6 ? finiteView(+parts[3], +parts[4], +parts[5]) : null,
     obj: om ? { name: om[1], x1: +om[2], y1: +om[3] } : null,
-    route: rt ? parseRoute(rt.slice(6)) : null,
+    route: route ? route.pts : null,
+    routeLost: route ? route.lost : 0,
   };
 }
