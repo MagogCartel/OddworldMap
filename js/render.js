@@ -11,7 +11,7 @@ import {
 } from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
-import { computeConnections } from "./model.js";
+import { camCenter, centerCam, computeConnections } from "./model.js";
 import { onBackgroundPlane } from "./fields.js";
 
 // canvas colors shared with the stylesheet, read once from the tokens
@@ -146,9 +146,22 @@ export function scheduleDraw() {
   });
 }
 
+// the camera holds a corner, so a viewport that changes size would slide the view;
+// the middle is held instead, the spot a permalink names
+let viewW = 0,
+  viewH = 0;
+
 export function resize() {
-  cv.width = cv.clientWidth * devicePixelRatio;
-  cv.height = cv.clientHeight * devicePixelRatio;
+  const w = cv.clientWidth,
+    h = cv.clientHeight;
+  if (w && h) {
+    if (viewW && (w !== viewW || h !== viewH))
+      Object.assign(state.cam, centerCam(camCenter(state.cam, viewW, viewH), w, h));
+    viewW = w;
+    viewH = h;
+  }
+  cv.width = w * devicePixelRatio;
+  cv.height = h * devicePixelRatio;
   draw();
 }
 window.addEventListener("resize", resize); // catches devicePixelRatio changes, which leave the map box untouched

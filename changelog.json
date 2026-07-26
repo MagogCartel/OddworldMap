@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "The view holds still when the window changes size",
+   "detail": "Resizing the window, rotating a phone, or opening and closing the sidebar used to slide the map sideways, because the view was pinned by its top-left corner: whatever you were looking at drifted off, and on a narrow window the sidebar alone could push it out of sight. The middle of the view now stays where it is."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "Object links keep their marker",
    "detail": "A link to a specific object matched its name exactly, so one that had passed through anything that lowercases URLs opened the right view and then quietly dropped the marker. Names now match whatever their capitals, as the game and level codes always have. And when the object really isn't there (a hand-typed link, or one aimed at something a data rebuild has moved) the map still goes to the spot the link named, rings it, and says which object it expected."
   },
