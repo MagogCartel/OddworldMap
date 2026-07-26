@@ -13,12 +13,22 @@ const HIT_CAP = 1500,
 let searchTimer = null;
 let searchScope = "all"; // all | game | level | path (relative to the current selection)
 
+// one cache per representation: the blob varies only with the raw flag (a TLV's
+// game is fixed), so a WeakMap key needs no invalidation as datasets come and go
+const searchTextCache = { raw: new WeakMap(), pretty: new WeakMap() };
+
 // search matches the full field set regardless of the user's display prefs, so
 // any field is findable even when it isn't shown by default. The game keys each
 // value transform by the field's per-game type; raw follows the display setting
 // so a query matches whichever representation the user sees (raw ints or words).
 function tlvSearchText(t, game, raw) {
-  return (t.name + " " + extrasText(t, " ", { mode: "all", game, raw })).toLowerCase();
+  const cache = raw ? searchTextCache.raw : searchTextCache.pretty;
+  let s = cache.get(t);
+  if (s === undefined) {
+    s = (t.name + " " + extrasText(t, " ", { mode: "all", game, raw })).toLowerCase();
+    cache.set(t, s);
+  }
+  return s;
 }
 
 function scopeAccepts(h) {
