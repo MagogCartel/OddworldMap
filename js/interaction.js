@@ -78,8 +78,8 @@ cv.addEventListener("pointerdown", (e) => {
   mouse.y = p.y;
   if (pointers.size === 1) {
     if (state.show.ruler) {
-      const w = worldAtMouse();
-      state.ruler = { x1: w.x, y1: w.y, x2: w.x, y2: w.y };
+      const pt = drawAtMouse();
+      state.ruler = { x1: pt.x, y1: pt.y, x2: pt.x, y2: pt.y };
       measuring = true;
       draw();
       return;
@@ -117,9 +117,9 @@ cv.addEventListener("pointermove", (e) => {
   mouse.x = p.x;
   mouse.y = p.y;
   if (measuring && state.ruler) {
-    const w = worldAtMouse();
-    state.ruler.x2 = w.x;
-    state.ruler.y2 = w.y;
+    const pt = drawAtMouse();
+    state.ruler.x2 = pt.x;
+    state.ruler.y2 = pt.y;
   }
   if (panning) {
     if (
@@ -175,7 +175,7 @@ cv.addEventListener("pointerleave", () => {
 cv.addEventListener("click", () => {
   if (panMoved || state.show.ruler) return;
   if (state.show.route) {
-    addRoutePoint(worldAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
+    addRoutePoint(drawAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
     return;
   }
   updateHover(); // taps arrive without a preceding hover move
@@ -187,8 +187,8 @@ cv.addEventListener("click", () => {
     }
   }
   if (!getSettings().screenList) return;
-  const w = worldAtMouse(); // nothing to follow: list the screen's objects
-  openCamPanel(w.x, w.y, hoverTlvs[0] ?? null);
+  const pt = drawAtMouse(); // nothing to follow: list the screen's objects
+  openCamPanel(pt.x, pt.y, hoverTlvs[0] ?? null);
 });
 
 // right-click (long-press on touch) copies a permalink to the object under
@@ -256,7 +256,8 @@ cv.addEventListener(
   { passive: false },
 );
 
-function worldAtMouse() {
+// draw space, not world units; wX/wY convert where world units are wanted
+function drawAtMouse() {
   return { x: state.cam.x + mouse.x / state.cam.z, y: state.cam.y + mouse.y / state.cam.z };
 }
 
@@ -337,12 +338,12 @@ let tipHtml = "",
 
 function updateHover() {
   if (!state.path) return;
-  const w = worldAtMouse();
+  const pt = drawAtMouse();
   let hoverLines = [];
   if (state.show.coll) {
     const tol = 6 / state.cam.z;
     hoverLines = state.path.lines
-      .filter(([x1, y1, x2, y2]) => segDist(w.x, w.y, dX(x1), dY(y1), dX(x2), dY(y2)) <= tol)
+      .filter(([x1, y1, x2, y2]) => segDist(pt.x, pt.y, dX(x1), dY(y1), dX(x2), dY(y2)) <= tol)
       .slice(0, 4);
   }
   hoverTlvs = state.path.tlvs.filter((t) => {
@@ -352,7 +353,7 @@ function updateHover() {
       y1 = dY(t.y1);
     const x2 = Math.max(dX(t.x2), x1 + 10),
       y2 = Math.max(dY(t.y2), y1 + 10);
-    return w.x >= x1 - 4 && w.x <= x2 + 4 && w.y >= y1 - 4 && w.y <= y2 + 4;
+    return pt.x >= x1 - 4 && pt.x <= x2 + 4 && pt.y >= y1 - 4 && pt.y <= y2 + 4;
   });
   // partner preview: hovering a linked object outlines its counterpart when
   // the destination resolves within the current path
@@ -423,5 +424,5 @@ function updateHover() {
     tip.style.display = "none";
     if (!panning) cv.style.cursor = modeCursor();
   }
-  hud.textContent = `world x ${Math.round(wX(w.x))}  y ${Math.round(wY(w.y))}  ·  zoom ${state.cam.z.toFixed(2)}`;
+  hud.textContent = `world x ${Math.round(wX(pt.x))}  y ${Math.round(wY(pt.y))}  ·  zoom ${state.cam.z.toFixed(2)}`;
 }
