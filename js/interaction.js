@@ -155,6 +155,13 @@ function endPointer(e) {
 cv.addEventListener("pointerup", endPointer);
 cv.addEventListener("pointercancel", endPointer);
 
+// measurements don't outlive their path
+window.addEventListener("selection-changed", () => {
+  if (!state.ruler) return;
+  state.ruler = null;
+  scheduleDraw();
+});
+
 // the armed measuring tool owns the cursor; hover writes must not overwrite it
 const modeCursor = () => (state.show.ruler || state.show.route ? "crosshair" : "");
 

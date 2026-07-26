@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-26",
+   "tag": "fixed",
+   "title": "Measurements no longer linger after you move on",
+   "detail": "A line drawn with the ruler stayed on screen when you switched path with [ and ], followed a door or changed game, sitting over the new screens measuring nothing, and after a game switch reading the wrong distance outright. It now clears whenever you move somewhere else."
+  },
+  {
    "date": "2026-07-25",
    "tag": "improved",
    "title": "Most object fields now say what they mean",
