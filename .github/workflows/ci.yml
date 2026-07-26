@@ -18,3 +18,13 @@ jobs:
       - run: npm run format:check
       - run: npm run lint
       - run: npm test
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python3 -m compileall -q tools/
+      - run: pipx run ruff==0.16.0 check tools/

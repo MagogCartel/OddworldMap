@@ -1,0 +1,8 @@
+# The builder is linted for defects, not style: ruff's own default selection
+# includes formatting and modernization rules that fight the deliberate
+# compactness of the parsers (one-line ifs, `re.S`), and nothing formats Python
+# here. This set is undefined names, unused imports, f-string mistakes and
+# syntax errors. Widening it is a deliberate change; the version is pinned in
+# ci.yml because a release can add rules to any of these.
+[lint]
+select = ["E4", "E9", "F"]
