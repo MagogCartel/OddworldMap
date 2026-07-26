@@ -196,21 +196,32 @@ export function zoomAt(cam, factor, px, py) {
   return { x: cam.x + px / cam.z - px / z, y: cam.y + py / cam.z - py / z, z };
 }
 
-// the view for jumping to a point: centered on it, a few screens across
-export function focusView(fx, fy, cw, ch) {
-  const z = clamp(
+// a camera and the point at the middle of its viewport, both ways.
+export const camCenter = (cam, cw, ch) => ({
+  x: cam.x + cw / (2 * cam.z),
+  y: cam.y + ch / (2 * cam.z),
+  z: cam.z,
+});
+export const centerCam = (v, cw, ch) => ({
+  x: v.x - cw / (2 * v.z),
+  y: v.y - ch / (2 * v.z),
+  z: v.z,
+});
+
+// zoom for jumping to a point: a few screens across, within the focus clamp
+export const focusZoom = (cw, ch) =>
+  clamp(
     Math.min(cw / (FOCUS_SCREENS * CELL_W), ch / (FOCUS_SCREENS * CELL_H)),
     FOCUS_ZOOM_MIN,
     FOCUS_ZOOM_MAX,
   );
-  return { x: fx - cw / (2 * z), y: fy - ch / (2 * z), z };
-}
 
-// ---- permalinks: #GAME/LEVEL/PATH/x/y/zoom[/Name@x1,y1][/route=x1,y1;…] ----
-// Trailing segments are matched by shape, not position, and unknown ones are
-// ignored, so old viewers tolerate new segments and vice versa.
-export function formatHash(gameId, levelShort, pathId, cam, obj, route) {
-  let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(cam.x)}/${Math.round(cam.y)}/${cam.z.toFixed(2)}`;
+// ---- permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=x1,y1;…] ----
+// cx/cy is the view's center, not the corner the renderer works in, so a link
+// lands on the same spot whatever the size of the window it opens in. Trailing
+// segments are matched by shape, not position, and unknown ones are ignored.
+export function formatHash(gameId, levelShort, pathId, view, obj, route) {
+  let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(view.x)}/${Math.round(view.y)}/${view.z.toFixed(2)}`;
   if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
   if (route?.length)
     h += `/route=${route.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`).join(";")}`;
@@ -231,10 +242,15 @@ function parseRoute(payload) {
   return pts;
 }
 
-// null for an empty hash; view is null unless x/y/z are all present; obj names
-// a TLV to highlight, identified by name and origin; route is a list of
-// draw-space waypoints. Numbers may come back NaN — the caller resolves and
-// validates against the data.
+// the view is all-or-nothing: an incomplete or unreadable trio yields none at
+// all, so the caller fits the path rather than centering on a NaN
+const finiteView = (x, y, z) =>
+  Number.isFinite(x) && Number.isFinite(y) && Number.isFinite(z) && z > 0 ? { x, y, z } : null;
+
+// null for an empty hash; view is the center point plus zoom, null unless all
+// three read; obj names a TLV to highlight, identified by name and origin;
+// route is a list of draw-space waypoints. game/level/path may still come back
+// empty or NaN — the caller resolves those against the data.
 export function parseHash(hash) {
   const h = hash.replace(/^#/, "");
   if (!h) return null;
@@ -246,8 +262,7 @@ export function parseHash(hash) {
     game: parts[0].toUpperCase(),
     level: (parts[1] || "").toUpperCase(),
     path: +parts[2],
-    view:
-      parts[3] != null && parts.length >= 6 ? { x: +parts[3], y: +parts[4], z: +parts[5] } : null,
+    view: parts.length >= 6 ? finiteView(+parts[3], +parts[4], +parts[5]) : null,
     obj: om ? { name: om[1], x1: +om[2], y1: +om[3] } : null,
     route: rt ? parseRoute(rt.slice(6)) : null,
   };

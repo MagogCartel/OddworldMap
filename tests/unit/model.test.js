@@ -2,11 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   camCell,
+  camCenter,
   cellAt,
+  centerCam,
   computeConnections,
   computeEntryPaths,
   destOf,
-  focusView,
+  focusZoom,
   formatHash,
   isLoopback,
   parseHash,
@@ -507,16 +509,17 @@ test("zoomAt keeps the world point under the anchor fixed", () => {
   assert.ok(Math.abs(cam.y + py / cam.z - (out.y + py / out.z)) < 1e-9);
 });
 
-test("focusView centers the point and clamps the focus zoom", () => {
+test("the focus zoom fits a few screens and clamps at both ends", () => {
   setGeometry(SYNTH_GEOMETRY); // 100x50 cells; FOCUS_SCREENS 2.6 -> fit bounds 260x130
-  // large canvas: zoom clamps at FOCUS_ZOOM_MAX
-  assert.deepEqual(focusView(500, 300, 520, 260), {
-    x: 500 - 520 / 3.2,
-    y: 300 - 260 / 3.2,
-    z: 1.6,
+  assert.equal(focusZoom(520, 260), 1.6); // large canvas: clamps at FOCUS_ZOOM_MAX
+  assert.equal(focusZoom(130, 65), 0.5); // small canvas: clamps at FOCUS_ZOOM_MIN
+  assert.equal(focusZoom(260, 130), 1); // in between: exactly FOCUS_SCREENS across
+  // a jump to a point puts it at the middle of the canvas whichever zoom won
+  assert.deepEqual(centerCam({ x: 500, y: 300, z: focusZoom(130, 65) }, 130, 65), {
+    x: 370,
+    y: 235,
+    z: 0.5,
   });
-  // small canvas: clamps at FOCUS_ZOOM_MIN, still centered
-  assert.deepEqual(focusView(500, 300, 130, 65), { x: 370, y: 235, z: 0.5 });
   setGeometry(AO_GEOMETRY);
 });
 
@@ -525,8 +528,35 @@ test("zoomAt clamps to the manual zoom range", () => {
   assert.equal(zoomAt({ x: 0, y: 0, z: 0.05 }, 0.001, 0, 0).z, ZOOM_MIN);
 });
 
+test("camCenter and centerCam invert each other", () => {
+  const cam = { x: 100, y: 200, z: 1.25 };
+  assert.deepEqual(camCenter(cam, 800, 600), { x: 420, y: 440, z: 1.25 });
+  assert.deepEqual(centerCam(camCenter(cam, 800, 600), 800, 600), cam);
+});
+
+test("a permalinked center survives a change of viewport, a corner would not", () => {
+  const desktop = [1512, 900],
+    phone = [390, 700];
+  const cam = { x: 0, y: 0, z: 1.29 }; // whatever the sender was looking at
+  const link = formatHash("AO", "R2", 1, camCenter(cam, ...desktop));
+  assert.equal(link, "#AO/R2/1/586/349/1.29"); // the middle of the sender's window
+  // holding that center costs the recipient a different corner, by half the
+  // difference in window size — more than a 368-unit cell horizontally, which
+  // is what a link carrying the corner would misplace them by instead
+  const got = centerCam(parseHash(link).view, ...phone);
+  assert.equal(Math.round(got.x - cam.x), 435);
+  assert.equal(Math.round(got.y - cam.y), 78);
+});
+
 test("formatHash rounds coordinates and fixes zoom to two decimals", () => {
   assert.equal(formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }), "#AO/R2/1/177/55/2.23");
+});
+
+test("an unreadable or non-positive zoom drops the whole view", () => {
+  assert.equal(parseHash("#AO/R2/1/10/20/junk").view, null);
+  assert.equal(parseHash("#AO/R2/1/10/junk/1.00").view, null);
+  assert.equal(parseHash("#AO/R2/1/10/20/0").view, null);
+  assert.deepEqual(parseHash("#AO/R2/1/10/20/0.50").view, { x: 10, y: 20, z: 0.5 });
 });
 
 test("parseHash round-trips a formatted hash (against the rounded values)", () => {

@@ -8,8 +8,10 @@ import { state, GEO, CELL_W, CELL_H, setGeometry, dX, dY } from "./state.js";
 import { draw, flashAt } from "./render.js";
 import {
   camCell,
+  camCenter,
+  centerCam,
   computeEntryPaths,
-  focusView,
+  focusZoom,
   formatHash,
   parseHash,
   resolveTarget,
@@ -139,10 +141,27 @@ function fitView() {
   attempt();
 }
 
+// put (fx, fy) at the middle of the viewport, at zoom z or the focus zoom when
+// z is null. Waits on layout like fitView: the corner comes from the canvas size
+function centerOn(fx, fy, z) {
+  const token = ++camToken; // cancel any fit still waiting on layout
+  const attempt = () => {
+    if (token !== camToken) return;
+    const cw = cv.clientWidth,
+      ch = cv.clientHeight;
+    if (!cw || !ch) {
+      requestAnimationFrame(attempt);
+      return;
+    }
+    Object.assign(state.cam, centerCam({ x: fx, y: fy, z: z ?? focusZoom(cw, ch) }, cw, ch));
+    draw();
+  };
+  attempt();
+}
+
 // center on (fx, fy) zoomed to a few screens across, flash the spot
 function focusOn(fx, fy) {
-  Object.assign(state.cam, focusView(fx, fy, cv.clientWidth, cv.clientHeight));
-  camToken++; // cancel any fit still waiting on layout
+  centerOn(fx, fy, null);
   flashAt(fx, fy);
   scheduleHash(true);
 }
@@ -152,7 +171,7 @@ function focusOn(fx, fy) {
 export function objectHash(t) {
   const fx = (dX(t.x1) + dX(t.x2)) / 2,
     fy = (dY(t.y1) + dY(t.y2)) / 2;
-  const v = focusView(fx, fy, cv.clientWidth, cv.clientHeight);
+  const v = { x: fx, y: fy, z: focusZoom(cv.clientWidth, cv.clientHeight) };
   return formatHash(state.data.id, state.lvl.short, state.path.id, v, t, state.route);
 }
 
@@ -201,7 +220,8 @@ const inEmbed = () => document.body.classList.contains("embed");
 // permalink to the current view (what the address bar shows once the
 // debounced hash write lands)
 export function viewHash() {
-  return formatHash(state.data.id, state.lvl.short, state.path.id, state.cam, null, state.route);
+  const v = camCenter(state.cam, cv.clientWidth, cv.clientHeight);
+  return formatHash(state.data.id, state.lvl.short, state.path.id, v, null, state.route);
 }
 
 export function scheduleHash(push) {
@@ -234,12 +254,7 @@ export function applyHash() {
     applyingHash = false;
     return false;
   }
-  if (p.view) {
-    state.cam.x = p.view.x;
-    state.cam.y = p.view.y;
-    state.cam.z = clamp(p.view.z, ZOOM_MIN, ZOOM_MAX);
-    camToken++; // cancel any fit still waiting on layout
-  }
+  if (p.view) centerOn(p.view.x, p.view.y, clamp(p.view.z, ZOOM_MIN, ZOOM_MAX));
   applyingHash = false;
   if (p.obj) {
     // a link to a specific object: center it and hold a marker on it
@@ -249,10 +264,7 @@ export function applyHash() {
     if (t) {
       const fx = (dX(t.x1) + dX(t.x2)) / 2,
         fy = (dY(t.y1) + dY(t.y2)) / 2;
-      // recenter for this viewport: the link's x/y/z were focusView on the
-      // copier's screen and only serve as the fallback when the object is gone
-      Object.assign(state.cam, focusView(fx, fy, cv.clientWidth, cv.clientHeight));
-      camToken++;
+      centerOn(fx, fy, null); // the object outranks the link's own center
       flashAt(fx, fy, true);
     }
   }

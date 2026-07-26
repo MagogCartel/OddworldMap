@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "Shared links open the same on any screen",
+   "detail": "A link carried the top-left corner of the window it was copied from, so opening it on a narrower screen (a phone, a smaller window, an embed in a forum post) slid the view sideways. At a common zoom the drift was more than a whole camera screen, enough to leave what was being pointed at off the edge entirely. Links now carry the middle of the view, and whatever window opens one works out its own corner."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "\"Export view as PNG\" saves the file in every browser",
    "detail": "The export could end with nothing saved and no error, depending on the browser: the image was thrown away the moment the download was handed over, which Firefox and Safari take as a cancelled transfer. It is now kept until the browser has actually taken it, however long a save dialog sits open."
   },
