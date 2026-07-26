@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "\"Export view as PNG\" saves the file in every browser",
+   "detail": "The export could end with nothing saved and no error, depending on the browser: the image was thrown away the moment the download was handed over, which Firefox and Safari take as a cancelled transfer. It is now kept until the browser has actually taken it, however long a save dialog sits open."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "Object tooltips stay on screen near the edges",
    "detail": "Hovering an object low on the map cut the tooltip off at the bottom of the window, with no way to scroll it back into view. It now flips above the pointer when there is no room below. Near the right edge it stays beside what it describes instead of jumping left, and on a narrow phone screen it no longer starts off the left edge."
   },

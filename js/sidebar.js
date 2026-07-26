@@ -94,14 +94,19 @@ $("tReset").onclick = () => {
   draw();
 };
 
+// a permission prompt can defer the blob's read indefinitely, so the URL lives
+// until the next export replaces it
+let exportUrl = null;
+
 $("exportBtn").onclick = () => {
   cv.toBlob((blob) => {
     if (!blob) return;
+    if (exportUrl) URL.revokeObjectURL(exportUrl);
+    exportUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
+    a.href = exportUrl;
     a.download = `oddworld-${state.data.id.toLowerCase()}${state.lvl ? "-" + state.lvl.short : ""}${state.path ? "-P" + state.path.id : ""}.png`;
     a.click();
-    URL.revokeObjectURL(a.href);
   }, "image/png");
 };
 
