@@ -616,6 +616,13 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
   assert.ok(Number.isNaN(parseHash("#AO/R2/junk").path));
 });
 
+test("a percent-encoded fragment is read the same as a bare one", () => {
+  const h = "#AO/R6/6/-329/568/1.60/Mudokon@479,1735/route=620,411;563,472;n2";
+  assert.deepEqual(parseHash("#" + encodeURIComponent(h.slice(1))), parseHash(h));
+  // a stray % that isn't an escape must not throw the whole link away
+  assert.deepEqual(parseHash("#AO/R2/1/10/20/1.00/100%").view, { x: 10, y: 20, z: 1 });
+});
+
 test("permalinks can carry a route of draw-space waypoints, rounded like the view", () => {
   const route = [
     { x: 10.4, y: 21.6 },

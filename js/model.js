@@ -250,6 +250,18 @@ function parseRoute(payload) {
   return pts;
 }
 
+// the viewer escapes nothing — every delimiter it writes is legal in a fragment
+// bare — but share widgets and mail clients percent-encode one anyway. A stray
+// % that isn't an escape leaves the fragment as it found it.
+function decodeFragment(h) {
+  if (!h.includes("%")) return h;
+  try {
+    return decodeURIComponent(h);
+  } catch {
+    return h;
+  }
+}
+
 // the view is all-or-nothing: an incomplete or unreadable trio yields none at
 // all, so the caller fits the path rather than centering on a NaN
 const finiteView = (x, y, z) =>
@@ -260,7 +272,7 @@ const finiteView = (x, y, z) =>
 // route is a list of draw-space waypoints. game/level/path may still come back
 // empty or NaN — the caller resolves those against the data.
 export function parseHash(hash) {
-  const h = hash.replace(/^#/, "");
+  const h = decodeFragment(hash.replace(/^#/, ""));
   if (!h) return null;
   const parts = h.split("/");
   const segs = parts.slice(6);
