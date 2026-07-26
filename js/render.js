@@ -1,7 +1,14 @@
 // Canvas rendering: cameras, overlays, markers, and the image caches.
 
 import { formatDist } from "./util.js";
-import { CACHE_MAX_IMAGES, CONN_COLORS, FLASH_MS, LINE_COLORS, catOf } from "./config.js";
+import {
+  CACHE_MAX_IMAGES,
+  CONN_COLORS,
+  FLASH_HOLD_MAX_MS,
+  FLASH_MS,
+  LINE_COLORS,
+  catOf,
+} from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
 import { computeConnections } from "./model.js";
@@ -63,10 +70,11 @@ window.addEventListener("selection-changed", () => {
 
 // follow-destination highlight: a fading ring at (x, y) in draw space. A held
 // flash (object permalink) pulses at full strength until the normal timeout
-// has passed AND the user has interacted.
+// has passed AND the user has interacted, or the hold cap runs out.
 let flash = null; // {x, y, t0, hold}
 let flashInteracted = false;
-for (const ev of ["pointerdown", "wheel", "keydown"])
+let flashRaf = null;
+for (const ev of ["pointerdown", "pointermove", "wheel", "keydown"])
   window.addEventListener(
     ev,
     () => {
@@ -78,13 +86,15 @@ for (const ev of ["pointerdown", "wheel", "keydown"])
 export function flashAt(x, y, hold = false) {
   flash = { x, y, t0: performance.now(), hold };
   flashInteracted = false;
+  cancelAnimationFrame(flashRaf);
   animateFlash();
 }
 
 function animateFlash() {
   if (!flash) return;
   if (flash.hold) {
-    if (performance.now() - flash.t0 > FLASH_MS && flashInteracted) {
+    const el = performance.now() - flash.t0;
+    if ((el > FLASH_MS && flashInteracted) || el > FLASH_HOLD_MAX_MS) {
       flash.hold = false;
       flash.t0 = performance.now(); // released: fade out from here
     }
@@ -94,7 +104,7 @@ function animateFlash() {
     return;
   }
   draw();
-  requestAnimationFrame(animateFlash);
+  flashRaf = requestAnimationFrame(animateFlash);
 }
 
 // connection edges, computed lazily and keyed by path object identity —

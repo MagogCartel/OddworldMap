@@ -3,6 +3,12 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "title": "The marker on a shared object link settles down",
+   "detail": "Opening a link to a specific object rings it with a pulsing marker that holds until you have seen it. On a page nobody touched it held forever, redrawing the map every frame (a quiet battery drain on a tab left open, phones especially). Moving the pointer now counts as seeing it, and the marker settles by itself after half a minute either way."
+  },
+  {
+   "date": "2026-07-26",
+   "tag": "fixed",
    "title": "Measurements no longer linger after you move on",
    "detail": "A line drawn with the ruler stayed on screen when you switched path with [ and ], followed a door or changed game, sitting over the new screens measuring nothing, and after a game switch reading the wrong distance outright. It now clears whenever you move somewhere else."
   },
