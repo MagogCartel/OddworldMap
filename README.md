@@ -42,6 +42,8 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - A double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
   - Colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
   - Hovering an object spotlights just its own arrows
+- **Object labels (zoomed)**: names each object beside its marker, from about half zoom in
+- **Dim backgrounds**: fades the camera artwork to a third of its brightness, so markers and overlays stand out against it
 
 ### Measuring and routes
 
@@ -62,6 +64,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - add **`?embed=1`** to the URL for a view made for iframes on wikis and forums: the map fills the frame, fully interactive (hover, follow, the screen-list panel), with the sidebar starting closed but reachable through the menu button
   - a corner button opens the full site at the exact view
   - Combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`
+- **Export view as PNG** (the button under the Display toggles) saves what the canvas is showing — the visible area at the current zoom, with every overlay, marker and plotted route that is on — as `oddworld-ao-R1-P15.png`; zoom out until the area you want fits before exporting
 
 ### Settings
 
