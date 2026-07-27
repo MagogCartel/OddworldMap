@@ -6,6 +6,8 @@ Browse it at **[oddworldmap.com](https://oddworldmap.com/)** — or serve the re
 
 ![The viewer on Stock Yards in Oddysee, inspecting a travel bird portal](screenshot.png)
 
+One grid cell = one in-game camera: the viewer lays the games' camera screens out edge to edge on their real world grid and translates every object and collision coordinate to match, so markers land on the artwork.
+
 ## Controls
 
 - **AO / AE** buttons switch between the two games
@@ -13,7 +15,7 @@ Browse it at **[oddworldmap.com](https://oddworldmap.com/)** — or serve the re
 - **hover** any object for decoded details
   - door destinations (level/path/door#), switch IDs, path-transition targets, continue-point zones, Mudokon state (Oddysee job / Exoddus work state + mood), and enemy behaviour (a Slig's start state and how it attacks — `shoot_on_sight_delay=0` means it shoots the instant it sees Abe, no "FREEZE!" warning; whether a Slog starts asleep and the switch that angers it)
   - Each object type surfaces its own notable fields too — a door's lock state, a trap door's or electric wall's on/off, a bird portal's type, a Glukkon's or Crawling Slig's type/state
-  - Turn on "Show more object fields" in Settings to pick which of the game's stored fields each object type shows (search always covers them all)
+  - Settings → "Show more object fields" picks which of the game's stored fields each object type shows; search covers them all either way
   - In the screen list and the Fields picker, a field name with a dotted underline carries a hover definition — what it means and its possible values — curated in [glossary.json](glossary.json)
 - **click** a door, path transition, travel portal, express well, teleporter or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
   - while hovering one, its partner — the object you'd come out of — gets a dashed outline whenever the pair sits on the current path
@@ -24,43 +26,54 @@ Browse it at **[oddworldmap.com](https://oddworldmap.com/)** — or serve the re
   - On phones the panel opens as a bottom sheet with the map staying visible above it; switch "List a screen's objects on click" off in Settings if you'd rather those clicks did nothing
 - level and path buttons top-left; object category filters with counts below — hover a path button for its area name: a curated community name from [annotations.json](annotations.json) where one is defined (a deliberate override), otherwise the in-game name (Rupture Farms Return's Zulag 1–4, Exoddus ender areas)
 - **reset** in the Display and Objects headers puts that section back to its defaults
+- **search** (`/` to focus) matches object names and decoded fields across both games — try `mudokon`, `lcdstatusboard` or `switch_id=70`
+  - Combine terms: a space means all must match (`Mudokon state=chisle` finds only chiselling Mudokons), a comma or the word `or` means any (`Slig, Slog`)
+  - Results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit
+  - a scope bar narrows the search to the current game/level/path
+- on touch devices one finger pans and two fingers pinch-zoom the map; the page itself pinch-zooms too, and while it is zoomed two fingers on the map zoom the page back out instead; the sidebar collapses behind a menu button on narrow screens
+- **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it
+
+### Overlays
+
 - **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
-- **Background-plane objects**: objects placed on the half-scale background plane are drawn dimmed with a dashed outline — the same "dashed = background" cue the collision lines use — so foreground and background objects are tellable apart when reading a route
+- **Background-plane objects**: objects placed on the half-scale background plane are drawn dimmed with a dashed outline, so foreground and background objects are tellable apart when reading a route
 - **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
   - A double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
   - Colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
   - Hovering an object spotlights just its own arrows
-- the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view) always reflects the current view, including any plotted route
-  - copy it to share an exact location, and it opens on that spot whatever the size of the window it lands in; the browser back button retraces follows
-  - The chain button in the top-right corner copies the same link, for phones and installed-app mode where there may be no address bar
-- add **`?embed=1`** to the URL for a view made for iframes on wikis and forums: the map fills the frame, fully interactive (hover, follow, the screen-list panel), with the sidebar starting closed but reachable through the menu button
-  - a corner button opens the full site at the exact view
-  - Combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`
-- **right-click** an object to copy a direct link to it — opening that link centers the object and holds a marker on it until you've had a chance to look and interact
-- **search** (`/` to focus) matches object names and decoded fields across both games — try `mudokon`, `lcdstatusboard` or `switch_id=70`
-  - Combine terms: a space means all must match (`Mudokon state=chisle` finds only chiselling Mudokons), a comma or the word `or` means any (`Slig, Slog`)
-  - Results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit
-  - a scope bar narrows the search to the current game/level/path
-- **Ruler**: enable (or press **`m`**), then drag to measure — Δx × Δy, length in true world units and 25-unit grid squares (an Oddysee unit is one PS1 screen pixel; Exoddus artwork slightly squeezes its 375×260-unit screens, and measurements account for that)
+
+### Measuring and routes
+
+- **Ruler**: enable (or press **`m`**), then drag to measure — Δx × Δy, length in true world units and 25-unit grid squares (an Oddysee unit is one PS1 screen pixel; Exoddus screens are scaled artwork, and measurements account for that)
   - hovering a collision line shows its type and length the same way
   - moving on (switching path, following a door, changing game) clears the measurement
 - **Route planner**: arm it (or press **`r`**), then click waypoints to plot a route — every leg is labelled with its length, and a bar at the top totals the distance in the same units
   - **Backspace** (or the bar's undo button) removes the last waypoint; clear starts over, and the browser back button brings a cleared route back
   - The route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports; switching paths clears it
-  - Should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing, rather than inventing a last leg
-- on touch devices one finger pans and two fingers pinch-zoom the map; the page itself pinch-zooms too, and while it is zoomed two fingers on the map zoom the page back out instead — so a zoom taken to read a panel is never stranded when the panel closes; the sidebar collapses behind a menu button on narrow screens
-- **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it
-- **Settings**: the gear button at the top of the sidebar
-  - by default the Display toggles and Objects filters are remembered across visits; turn off "Remember display & object filters" to start from the defaults every time
-  - "Remember last location" (off by default) reopens the map where you left off when the URL carries no permalink — a shared link always wins
-  - "Show full names" expands the game, level and path buttons into a list labelled with their full names ("MI (Necrum Mines)")
-  - "List a screen's objects on click" (on by default) opens the screen-inventory panel when a click/tap finds nothing to follow
-  - "Show more object fields" (off by default) reveals a "Fields" panel in the sidebar where you pick, per object type, which of its fields show in tooltips and the screen list (the notable ones pre-checked) — a ⚙ next to an object in a screen's list opens that type's row in the panel; with it off, only the notable fields show and the panel stays hidden
-  - "Show raw field values" (off by default) shows field values as the raw numbers the game stores (1/0, 15, …) instead of the translated text (left/right, patrol, true/false) — for custom-level builders and dev-minded readers; search matches whichever representation you're viewing — the raw numbers with this on, the translated text with it off
-  - "Cache screen artwork on this device" (off by default) keeps visited screens stored locally — up to ~150 MB — so the next visit doesn't re-download them; switching it off frees the storage
+  - Should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing
 
-One grid cell = one in-game camera. Each camera occupies a 1024×480-unit cell in the game's world grid, but the visible screen is a 368×240-unit window centered at (cell·1024+440, cell·480+240) — world units map 1:1 to PS1 screen pixels. The viewer lays the visible windows out edge to edge and translates all object/collision coordinates accordingly, so markers land on the artwork.
+### Sharing and embedding
+
+- the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view) always reflects the current view, including any plotted route
+  - copy it to share an exact location, and it opens on that spot whatever the size of the window it lands in; the browser back button retraces follows
+  - The chain button in the top-right corner copies the same link, for phones and installed-app mode where there may be no address bar
+- **right-click** an object to copy a direct link to it — opening that link centers the object and holds a marker on it until you interact
+- add **`?embed=1`** to the URL for a view made for iframes on wikis and forums: the map fills the frame, fully interactive (hover, follow, the screen-list panel), with the sidebar starting closed but reachable through the menu button
+  - a corner button opens the full site at the exact view
+  - Combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`
+
+### Settings
+
+The gear button at the top of the sidebar:
+
+- "Remember display & object filters" (on by default) keeps the Display toggles and Objects filters across visits; turn it off to start from the defaults every time
+- "Remember last location" (off by default) reopens the map where you left off when the URL carries no permalink — a shared link always wins
+- "Show full names" expands the game, level and path buttons into a list labelled with their full names ("MI (Necrum Mines)")
+- "List a screen's objects on click" (on by default) opens the screen-inventory panel when a click/tap finds nothing to follow
+- "Show more object fields" (off by default) reveals a "Fields" panel in the sidebar where you pick, per object type, which of its fields show in tooltips and the screen list (the notable ones pre-checked) — a ⚙ next to an object in a screen's list opens that type's row in the panel; with it off, only the notable fields show and the panel stays hidden
+- "Show raw field values" (off by default) shows field values as the raw numbers the game stores (1/0, 15, …) instead of the translated text (left/right, patrol, true/false); search matches whichever representation you're viewing
+- "Cache screen artwork on this device" (off by default) keeps visited screens stored locally — up to ~150 MB — so the next visit doesn't re-download them; switching it off frees the storage
 
 ## Rebuilding from a disc image
 
@@ -90,14 +103,14 @@ If a rebuild changes any committed cam PNG, bump `CACHE_NAME` in [sw.js](sw.js) 
   - Level/path tables and the AE type enum are parsed from the [alive_reversing](https://github.com/AliveTeam/alive_reversing) decompilation into `tools/data/` caches.
 - **Camera backgrounds** are MDEC-compressed: 12 strips per screen, each a `u16 length` + standard PS1 BS v3 bitstream decoding to 32×240, assembled into 384×240 and written as PNG (368 visible columns + 16 columns of macroblock padding, cropped by the viewer).
   - The decoder (`tools/cam2rgba.cpp`) is built on `PSXMDECDecoder` from the [alive_reversing](https://github.com/AliveTeam/alive_reversing) project, patched for bounds-safe decoding of camera strip streams.
-- The viewer is dependency-free vanilla JS with no build step: [index.html](index.html) plus [css/main.css](css/main.css) and the ES modules under [js/](js/) ([js/main.js](js/main.js) boots the app); `map_data_ao.json` / `map_data_ae.json` carry the level/path/TLV/collision data.
-  - An optional service worker ([sw.js](sw.js), off by default — Settings → "Cache screen artwork on this device") keeps visited screen artwork cached on-device, so repeat visits render instantly instead of re-downloading it.
-  - `npm run lint` (ESLint) and `npm test` (`node --test` unit tests for the DOM-free logic) cover the viewer, and the builder is byte-compiled, linted with [ruff](https://docs.astral.sh/ruff/) and unit-tested with `python3 -m unittest discover -s tools/tests` (stdlib only, no disc image needed); CI runs all of it.
-  - [annotations.json](annotations.json) is hand-curated (never generated): names and notes the discs don't provide — community names for the ~160 paths the games leave nameless, and notes for levels the map doesn't render (AO's `S1` main-menu level).
-  - A curated name deliberately overrides the in-game one where both exist, but must keep the in-game label visible within it ("Zulag 2 — Lobby", never a full erasure — the tests enforce this); the extracted map data itself is never altered.
-  - The in-app What's New panel reads [changelog.json](changelog.json) (hand-curated, newest-first); [tools/changelog.py](tools/changelog.py) drafts candidate entries from the git log (dropping internal churn and printing each commit as context) to be curated in, but never writes the file itself.
+- **The viewer** is dependency-free vanilla JS with no build step: [index.html](index.html) plus [css/main.css](css/main.css) and the ES modules under [js/](js/) ([js/main.js](js/main.js) boots the app); `map_data_ao.json` / `map_data_ae.json` carry the level/path/TLV/collision data.
+  - **Artwork cache**: an optional service worker ([sw.js](sw.js), off by default — Settings → "Cache screen artwork on this device") keeps visited screen artwork cached on-device, so repeat visits render instantly instead of re-downloading it.
+  - **Checks**: `npm run lint` (ESLint) and `npm test` (`node --test` unit tests for the DOM-free logic) cover the viewer, and the builder is byte-compiled, linted with [ruff](https://docs.astral.sh/ruff/) and unit-tested with `python3 -m unittest discover -s tools/tests` (stdlib only, no disc image needed); CI runs all of it.
+  - **Curated names**: [annotations.json](annotations.json) is hand-curated (never generated) — names and notes the discs don't provide: community names for the ~160 paths the games leave nameless, and notes for levels the map doesn't render (AO's `S1` main-menu level).
+  - **The override rule**: a curated name deliberately overrides the in-game one where both exist, but must keep the in-game label visible within it ("Zulag 2 — Lobby", never a full erasure — the tests enforce this); the extracted map data itself is never altered.
+  - **Changelog**: the in-app What's New panel reads [changelog.json](changelog.json) (hand-curated, newest-first); [tools/changelog.py](tools/changelog.py) drafts candidate entries from the git log (dropping internal churn and printing each commit as context) to be curated in, but never writes the file itself.
 
-Structure layouts (TLV types, path tables, collision records) come from the alive_reversing decompilation (commit `c1ba4c6c8` for AO, current sources for AE), which matches the PS1 data formats. AO cameras occupy 1024×480-unit world cells showing a 368×240 window (1:1 world:pixel); AE cameras are 375×260-unit cells displayed scaled.
+Structure layouts (TLV types, path tables, collision records) come from the alive_reversing decompilation (commit `c1ba4c6c8` for AO, current sources for AE), which matches the PS1 data formats. AO cameras occupy 1024×480-unit world cells showing a 368×240 window centered at (cell·1024+440, cell·480+240), world units mapping 1:1 to PS1 screen pixels; AE cameras are 375×260-unit cells displayed scaled.
 
 ## Credits & licensing
 
