@@ -369,24 +369,70 @@ body.fullnames .btnrow button {
   padding: 2px 14px 8px;
   font-size: 11px;
 }
-#toast {
+/* toasts: bottom-anchored and reversed, so the newest sits where a
+   lone toast would and the older ones ride above it */
+#toastStack {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: 44px;
-  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.toast {
+  position: relative;
+  overflow: hidden;
+  max-width: min(90%, 420px);
   background: rgba(18, 20, 24, 0.92);
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--text);
   font-size: 12px;
   padding: 6px 12px;
+  text-align: center;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-  z-index: 6;
+  transform: translateY(6px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
-#toast.show {
+.toast.show {
   opacity: 1;
+  transform: none;
+}
+/* countdown: drains over the toast's lifetime, which JS hands down as --toast-ms */
+.toast-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0.55;
+  transform-origin: left center;
+  animation: toast-drain var(--toast-ms) linear forwards;
+}
+@keyframes toast-drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+/* the queue depth belongs above the stack; order beats DOM position under column-reverse */
+.toast-more {
+  order: 1;
+  background: rgba(18, 20, 24, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  color: var(--dim);
+  font-size: 11px;
+  padding: 1px 8px;
 }
 /* route-planner readout: the running total plus the touch undo/clear.
    Top-center: the one edge spot no other overlay claims at any width */
@@ -923,8 +969,12 @@ kbd {
   #settingsOverlay,
   #settings,
   #shortcutsOverlay,
-  #shortcuts {
+  #shortcuts,
+  .toast {
     transition: none;
+  }
+  .toast-bar {
+    display: none;
   }
 }
 

@@ -3,7 +3,8 @@
 
 import { clamp } from "./util.js";
 import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
-import { $, cv, gameBtns, levelBtns, pathBtns, toast } from "./dom.js";
+import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
+import { toast } from "./toast.js";
 import { state, GEO, CELL_W, CELL_H, setGeometry, dX, dY } from "./state.js";
 import { draw, flashAt } from "./render.js";
 import {

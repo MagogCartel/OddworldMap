@@ -2,18 +2,8 @@
 
 import { esc, extrasText, formatDist, segDist } from "./util.js";
 import { KEY_PAN_PX, KEY_ZOOM_STEP, catOf, LINE_COLORS, LINE_NAMES } from "./config.js";
-import {
-  $,
-  cv,
-  tip,
-  hud,
-  menuBtn,
-  scrim,
-  copyLinkBtn,
-  openSiteBtn,
-  narrowMQ,
-  toast,
-} from "./dom.js";
+import { $, cv, tip, hud, menuBtn, scrim, copyLinkBtn, openSiteBtn, narrowMQ } from "./dom.js";
+import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
 import { destOf, isLoopback, resolveTarget, zoomAt } from "./model.js";

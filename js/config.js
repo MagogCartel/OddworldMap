@@ -7,7 +7,9 @@ export const FOCUS_ZOOM_MIN = 0.5, FOCUS_ZOOM_MAX = 1.6; // zoom clamp when jump
 export const FOCUS_SCREENS = 2.6;                        // jump target: ~this many screens across
 export const FLASH_MS = 1600;                            // follow-destination highlight duration
 export const FLASH_HOLD_MAX_MS = 30000;                  // held highlight's cap when no interaction comes
-export const TOAST_MS = 1500;                            // transient notice duration
+export const TOAST_MS = 3000;                            // toast lifetime, and its countdown bar's drain
+export const TOAST_OUT_MS = 150;                         // fade before a spent toast leaves the stack
+export const TOAST_MAX = 3;                              // toasts on screen at once; the rest wait behind a "+N more" badge
 export const CACHE_MAX_IMAGES = 500;                     // cam bitmaps kept before eviction (~70 KB compressed each)
 export const KEY_PAN_PX = 75, KEY_ZOOM_STEP = 1.25;      // keyboard pan step (screen px) / zoom factor per press
 export const GRID_UNIT = 25;                             // world units per in-game grid square
