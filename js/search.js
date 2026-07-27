@@ -7,6 +7,7 @@ import { searchInput, searchResults, scopeBar } from "./dom.js";
 import { state } from "./state.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
+import { toggleMenu } from "./interaction.js";
 
 const HIT_CAP = 1500,
   GROUP_MAX = 8;
@@ -239,6 +240,7 @@ function setActiveHit(i) {
 window.addEventListener("keydown", (e) => {
   if (e.key === "/" && document.activeElement !== searchInput) {
     e.preventDefault();
+    toggleMenu(true);
     searchInput.focus();
     searchInput.select();
     return;

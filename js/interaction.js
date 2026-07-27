@@ -9,7 +9,18 @@ import {
   LINE_COLORS,
   LINE_NAMES,
 } from "./config.js";
-import { $, cv, tip, hud, menuBtn, scrim, copyLinkBtn, openSiteBtn, narrowMQ } from "./dom.js";
+import {
+  $,
+  cv,
+  tip,
+  hud,
+  sidebar,
+  menuBtn,
+  scrim,
+  copyLinkBtn,
+  openSiteBtn,
+  narrowMQ,
+} from "./dom.js";
 import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
@@ -30,12 +41,14 @@ let measuring = false;
 
 // ---- menu --------------------------------------------------------------
 const isNarrow = () => narrowMQ.matches;
-function syncMenuIcon() {
+function syncMenu() {
   const open = document.body.classList.contains("menu-open");
   menuBtn.innerHTML = open ? CLOSE_SVG : HAMBURGER_SVG;
   const label = open ? "Close menu" : "Open menu";
   menuBtn.title = label;
   menuBtn.setAttribute("aria-label", label);
+  if (!open && sidebar.contains(document.activeElement)) menuBtn.focus();
+  sidebar.inert = !open; // sliding it off-screen leaves its controls focusable
 }
 document.body.classList.toggle("menu-open", !isNarrow()); // set before first paint: open on wide, out of the way on narrow
 export function toggleMenu(open) {
@@ -43,9 +56,9 @@ export function toggleMenu(open) {
     "menu-open",
     open ?? !document.body.classList.contains("menu-open"),
   );
-  syncMenuIcon();
+  syncMenu();
 }
-syncMenuIcon();
+syncMenu();
 menuBtn.onclick = () => toggleMenu();
 scrim.onclick = () => toggleMenu(false);
 window.addEventListener("selection-changed", (e) => {

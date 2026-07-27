@@ -3,6 +3,12 @@
   {
    "date": "2026-07-27",
    "tag": "fixed",
+   "title": "Tab skips the closed sidebar",
+   "detail": "With the sidebar collapsed, the Tab key still travelled through every one of its buttons (some fifty of them) before reaching the map. It now goes straight past, and closing the sidebar leaves Tab where it left off, on the menu button."
+  },
+  {
+   "date": "2026-07-27",
+   "tag": "fixed",
    "title": "A failed PNG export says so",
    "detail": "\"Export view as PNG\" can fail when the browser won't encode a picture. It used to do nothing at all, no file and no reason given. It now says the export failed."
   },
