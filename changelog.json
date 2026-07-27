@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-27",
+   "tag": "fixed",
+   "title": "A failed PNG export says so",
+   "detail": "\"Export view as PNG\" can fail when the browser won't encode a picture. It used to do nothing at all, no file and no reason given. It now says the export failed."
+  },
+  {
+   "date": "2026-07-27",
    "tag": "improved",
    "title": "Toasts stack instead of talking over each other",
    "detail": "The little messages (toasts) at the bottom of the map had one place to stand, so when a link had two things to say (for example that the object it named isn't there, and that the route it carried arrived short) the second wiped the first out on the spot. They now stack, up to three at a time with the rest counted on a badge above, each with a bar draining to show how long it has left. They also linger a little longer than they used to."

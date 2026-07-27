@@ -2,6 +2,7 @@
 
 import { CATS, catOf } from "./config.js";
 import { $, cv, filterBox } from "./dom.js";
+import { toast } from "./toast.js";
 import { state } from "./state.js";
 import { draw } from "./render.js";
 import { getViewSnapshot, viewChanged } from "./settings.js";
@@ -100,7 +101,10 @@ let exportUrl = null;
 
 $("exportBtn").onclick = () => {
   cv.toBlob((blob) => {
-    if (!blob) return;
+    if (!blob) {
+      toast("export failed");
+      return;
+    }
     if (exportUrl) URL.revokeObjectURL(exportUrl);
     exportUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
