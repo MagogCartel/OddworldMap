@@ -1,7 +1,14 @@
 // Pointer input on the map (mouse, touch, pen), hover inspection, and the menu toggle.
 
 import { esc, extrasText, formatDist, segDist } from "./util.js";
-import { KEY_PAN_PX, KEY_ZOOM_STEP, catOf, LINE_COLORS, LINE_NAMES } from "./config.js";
+import {
+  KEY_PAN_PX,
+  KEY_ZOOM_STEP,
+  PAGE_ZOOM_MIN,
+  catOf,
+  LINE_COLORS,
+  LINE_NAMES,
+} from "./config.js";
 import { $, cv, tip, hud, menuBtn, scrim, copyLinkBtn, openSiteBtn, narrowMQ } from "./dom.js";
 import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY } from "./state.js";
@@ -45,6 +52,21 @@ window.addEventListener("selection-changed", (e) => {
   if (isNarrow() && !e.detail.fromHash) toggleMenu(false); // reveal the map after picking
 });
 
+// ---- page zoom -----------------------------------------------------------
+// #cv's touch-action: none would swallow the pinch that ends a page zoom, so while
+// one is in effect the canvas hands two-finger gestures over instead of zooming the map.
+const vv = window.visualViewport;
+let pageZoomed = false;
+function syncPageZoom() {
+  pageZoomed = vv.scale > PAGE_ZOOM_MIN;
+  document.body.classList.toggle("page-zoomed", pageZoomed);
+}
+if (vv) {
+  vv.addEventListener("resize", syncPageZoom);
+  vv.addEventListener("scroll", syncPageZoom);
+  syncPageZoom(); // a reload can come back at the scale it left
+}
+
 // ---- pointers: one pointer pans (or measures), two pinch-zoom, click follows ----
 // touch-action: none on #cv keeps the browser's own pan/zoom gestures off the map
 let panning = false,
@@ -60,7 +82,9 @@ cv.addEventListener("pointerdown", (e) => {
   const p = ptrXY(e);
   pointers.set(e.pointerId, p);
   try {
-    cv.setPointerCapture(e.pointerId);
+    // capture would hold a touch pinch back from the browser; a mouse drag
+    // released off the canvas needs it to end at all
+    if (!pageZoomed || e.pointerType !== "touch") cv.setPointerCapture(e.pointerId);
   } catch {
     /* pointer already lifted */
   }
@@ -94,6 +118,10 @@ cv.addEventListener("pointermove", (e) => {
   if (pointers.size === 2) {
     const [a, b] = pointers.values();
     const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    if (pageZoomed) {
+      pinchDist = dist; // the zoom can end mid-pinch; the map would jump if it resumed from a stale baseline
+      return;
+    }
     if (dist && pinchDist)
       // coincident fingers make the factor 0 or Infinity; skip those frames
       Object.assign(

@@ -33,6 +33,7 @@ body {
     "Segoe UI",
     sans-serif;
   display: flex;
+  touch-action: manipulation;
 }
 #sidebar {
   width: var(--sidebar-w);
@@ -310,6 +311,9 @@ body.fullnames .btnrow button {
 }
 #cv.panning {
   cursor: grabbing;
+}
+body.page-zoomed #cv {
+  touch-action: pinch-zoom;
 }
 #tip {
   position: absolute;
