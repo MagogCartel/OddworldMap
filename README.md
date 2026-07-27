@@ -14,21 +14,21 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom; **`[` / `]`** step through the level's paths, **`g` / `c` / `f` / `a`** flip the grid, collision lines, foreground masks and connection arrows, and **`r`** / **`m`** arm the route planner and the ruler — press **`?`** for the full shortcut list
 - **hover** any object for decoded details
   - door destinations (level/path/door#), switch IDs, path-transition targets, continue-point zones, Mudokon state (Oddysee job / Exoddus work state + mood), and enemy behaviour (a Slig's start state and how it attacks — `shoot_on_sight_delay=0` means it shoots the instant it sees Abe, no "FREEZE!" warning; whether a Slog starts asleep and the switch that angers it)
-  - Each object type surfaces its own notable fields too — a door's lock state, a trap door's or electric wall's on/off, a bird portal's type, a Glukkon's or Crawling Slig's type/state
+  - each object type surfaces its own notable fields too — a door's lock state, a trap door's or electric wall's on/off, a bird portal's type, a Glukkon's or Crawling Slig's type/state
   - Settings → "Show more object fields" picks which of the game's stored fields each object type shows; search covers them all either way
-  - In the screen list and the Fields picker, a field name with a dotted underline carries a hover definition — what it means and its possible values — curated in [glossary.json](glossary.json)
+  - in the screen list and the Fields picker, a field name with a dotted underline carries a hover definition — what it means and its possible values — curated in [glossary.json](glossary.json)
 - **click** a door, path transition, travel portal, express well, teleporter or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
   - while hovering one, its partner — the object you'd come out of — gets a dashed outline whenever the pair sits on the current path
-  - The rare transition pointing at a level outside the map (Oddysee's main-menu level) says so in its tooltip instead of offering a follow
+  - the rare transition pointing at a level outside the map (Oddysee's main-menu level) says so in its tooltip instead of offering a follow
 - **click/tap** anywhere else on a screen to list everything on it, grouped by category
   - hover a row to outline that object on the map, click it to jump there
-  - Tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object
-  - On phones the panel opens as a bottom sheet with the map staying visible above it; switch "List a screen's objects on click" off in Settings if you'd rather those clicks did nothing
+  - tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object
+  - on phones the panel opens as a bottom sheet with the map staying visible above it; switch "List a screen's objects on click" off in Settings if you'd rather those clicks did nothing
 - level and path buttons top-left; object category filters with counts below — hover a path button for its area name: a curated community name from [annotations.json](annotations.json) where one is defined (a deliberate override), otherwise the in-game name (Rupture Farms Return's Zulag 1–4, Exoddus ender areas)
 - **reset** in the Display and Objects headers puts that section back to its defaults
 - **search** (`/` to focus) matches object names and decoded fields across both games — try `mudokon`, `lcdstatusboard` or `switch_id=70`
-  - Combine terms: a space means all must match (`Mudokon state=chisle` finds only chiselling Mudokons), a comma or the word `or` means any (`Slig, Slog`)
-  - Results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit
+  - combine terms: a space means all must match (`Mudokon state=chisle` finds only chiselling Mudokons), a comma or the word `or` means any (`Slig, Slog`)
+  - results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit
   - a scope bar narrows the search to the current game/level/path
 - on touch devices one finger pans and two fingers pinch-zoom the map; the page itself pinch-zooms too, and while it is zoomed two fingers on the map zoom the page back out instead; the sidebar collapses behind a menu button on narrow screens
 - **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it
@@ -39,9 +39,9 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **Background-plane objects**: objects placed on the half-scale background plane are drawn dimmed with a dashed outline, so foreground and background objects are tellable apart when reading a route
 - **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
-  - A double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
-  - Colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
-  - Hovering an object spotlights just its own arrows
+  - a double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
+  - colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
+  - hovering an object spotlights just its own arrows
 - **Object labels (zoomed)**: names each object beside its marker, from about half zoom in
 - **Dim backgrounds**: fades the camera artwork to a third of its brightness, so markers and overlays stand out against it
 
@@ -52,18 +52,18 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - moving on (switching path, following a door, changing game) clears the measurement
 - **Route planner**: arm it (or press **`r`**), then click waypoints to plot a route — every leg is labelled with its length, and a bar at the top totals the distance in the same units
   - **Backspace** (or the bar's undo button) removes the last waypoint; clear starts over, and the browser back button brings a cleared route back
-  - The route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports; switching paths clears it
-  - Should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing
+  - the route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports; switching paths clears it
+  - should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing
 
 ### Sharing and embedding
 
 - the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view) always reflects the current view, including any plotted route
   - copy it to share an exact location, and it opens on that spot whatever the size of the window it lands in; the browser back button retraces follows
-  - The chain button in the top-right corner copies the same link, for phones and installed-app mode where there may be no address bar
+  - the chain button in the top-right corner copies the same link, for phones and installed-app mode where there may be no address bar
 - **right-click** an object to copy a direct link to it — opening that link centers the object and holds a marker on it until you interact
 - add **`?embed=1`** to the URL for a view made for iframes on wikis and forums: the map fills the frame, fully interactive (hover, follow, the screen-list panel), with the sidebar starting closed but reachable through the menu button
   - a corner button opens the full site at the exact view
-  - Combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`
+  - combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`
 - **Export view as PNG** (the button under the Display toggles) saves what the canvas is showing — the visible area at the current zoom, with every overlay, marker and plotted route that is on — as `oddworld-ao-R1-P15.png`; zoom out until the area you want fits before exporting
 
 ### Settings
