@@ -53,27 +53,39 @@ function pairTargets(t) {
   return [target, altTarget];
 }
 
-// the path a destination names, or null where the data has no such path
-export const pathIn = (data, lv, pa) =>
-  data.levels.find((l) => l.short === lv)?.paths.find((p) => p.id === pa) || null;
+// the level a destination names, or null where the data has no such level
+const levelIn = (data, lv) => data?.levels.find((l) => l.short === lv) || null;
 
-// whether a destination's named partner is there to be found. A level field the
-// designers never set reads as the first level while path and camera keep the
-// values that were right for a link inside the source's own level, so a
-// cross-level triple needs its partner to corroborate it. Within a level the
-// stated camera stands on its own — resolveTarget is camera-bounded and misses
-// pairings that are merely unnumbered. A link naming no partner has nothing to
-// check and is trusted wherever it points.
-export function destTrusted(d, lvl = state.lvl, data = state.data, geo = GEO) {
-  if (!d || !d.target) return true;
-  const P = pathIn(data, d.lv, d.pa);
-  if (!P) return false;
-  return d.lv === lvl.short || resolveTarget(d, P, geo) != null;
+// the path a destination names, or null where the data has no such path
+export const pathIn = (data, lv, pa) => levelIn(data, lv)?.paths.find((p) => p.id === pa) || null;
+
+// the address a side the designers never pointed anywhere keeps, every field as
+// it was born: a real screen holding whatever placeholder answers to it, so only
+// the shape of the address gives it away
+const unedited = (d, data) =>
+  d.pa === 1 && d.ca === 1 && d.target.value === 0 && levelIn(data, d.lv)?.id === 1;
+
+// the object a destination pairs with, or null where nothing answers to it
+function targetAt(d, lvl = state.lvl, data = state.data, geo = GEO, path = null) {
+  if (!d || !d.target) return null;
+  if (d.lv !== lvl.short && unedited(d, data)) return null;
+  const P = path && d.lv === lvl.short && d.pa === path.id ? path : pathIn(data, d.lv, d.pa);
+  return P ? resolveTarget(d, P, geo) : null;
 }
 
-// where a door/portal/well leads: prefers a destination that differs from the
-// current level+path unless it names a paired target object
-export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO) {
+// whether a destination's named partner is there to be found. Asked across
+// levels only: within one, resolveTarget is camera-bounded and misses pairings
+// that are merely unnumbered, so an unresolved partner is no evidence. A link
+// naming no partner has nothing to check and is trusted wherever it points.
+export function destTrusted(d, lvl = state.lvl, data = state.data, geo = GEO) {
+  if (!d || !d.target) return true;
+  if (!pathIn(data, d.lv, d.pa)) return false;
+  return d.lv === lvl.short || targetAt(d, lvl, data, geo) != null;
+}
+
+// where a door/portal/well leads: prefers a destination that lands on a partner
+// object, then one that differs from the current level+path
+export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO, data = state.data) {
   const e = t.extra || {};
   // hand stones show other cameras rather than transitioning; follow the first
   // view. AO stones carry full level/path/camera triples; AE ones bare camera
@@ -91,10 +103,17 @@ export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO) {
   const mk = (lv, pa, ca, tgt) => (lv != null && pa != null ? { lv, pa, ca, target: tgt } : null);
   const a = mk(e.to_level, e.to_path, e.to_cam, target);
   const b = mk(e.alt_level, e.alt_path, e.alt_cam, altTarget);
-  // a destination is only skippable when it goes nowhere: an untargeted one
-  // pointing at the current path, or a well's bounce-back naming the well's
-  // own camera (its switch-off state) — a door pair or a well ride to another
-  // camera of the same path is a real transition and wins as primary
+  // the state the game honours is the one that lands on another object, and it
+  // wins whichever side it sits on and whatever camera it names
+  const lands = (d) => {
+    if (!d || !lvl) return false;
+    const g = targetAt(d, lvl, data, geo, path);
+    return g != null && g !== t;
+  };
+  // failing that, a destination goes nowhere when it is untargeted and points
+  // at the current path, or is a well's bounce-back naming the well's own
+  // camera — a door pair or a well ride to another camera of the same path is
+  // a real transition
   const bounce = (d) =>
     lvl &&
     path &&
@@ -104,6 +123,8 @@ export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO) {
       ? camCell(path, d.ca) != null && camCell(path, d.ca) === tlvCell(t, path, geo)
       : d.target == null);
   const differs = (d) => d && !bounce(d);
+  if (lands(a)) return a;
+  if (lands(b)) return b;
   if (differs(a)) return a;
   if (differs(b)) return b;
   const d = a || b;
@@ -162,9 +183,9 @@ export function resolveTarget(d, path, geo) {
 // a paired object (door, teleporter) whose destination names its own camera and
 // resolves back to the object itself; a dangling destination whose path-wide
 // fallback merely lands on it doesn't count
-export function isLoopback(t, lvl = state.lvl, path = state.path, geo = GEO) {
+export function isLoopback(t, lvl = state.lvl, path = state.path, geo = GEO, data = state.data) {
   if (!lvl || !path) return false;
-  const d = destOf(t, lvl, path, geo);
+  const d = destOf(t, lvl, path, geo, data);
   return !!(
     d &&
     d.lv === lvl.short &&
@@ -195,8 +216,8 @@ export function computeConnections(
   const partner = new Map();
   for (const t of path.tlvs) {
     if ((t.extra || {}).view1_cam != null) continue;
-    const d = destOf(t, lvl, path, geo);
-    if (!d || !destTrusted(d, lvl, data, geo) || isLoopback(t, lvl, path, geo)) continue;
+    const d = destOf(t, lvl, path, geo, data);
+    if (!d || !destTrusted(d, lvl, data, geo) || isLoopback(t, lvl, path, geo, data)) continue;
     if (d.lv !== lvl.short || d.pa !== path.id) {
       stubs.push({ src: t, label: `${d.lv} P${d.pa}` });
       continue;

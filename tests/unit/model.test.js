@@ -21,7 +21,11 @@ import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../js/config.js";
 import { setGeometry } from "../../js/state.js";
 import { AO_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
 
-const HERE = [{ short: "R1" }, { id: 15 }]; // current level/path stubs
+// current level/path, with the dataset destOf looks a destination's partner up
+// in; the path holds no objects, so only destinations naming another path of
+// the dataset can land on one
+const HERE_PATH = path(15, [], [{ cell: 0, name: "XXP15C01" }], 1, 1);
+const HERE = [{ short: "R1" }, HERE_PATH, SYNTH_GEOMETRY, dataset([level("R1", HERE_PATH)])];
 
 // a TLV moved to world position (x, y); SYNTH_GEOMETRY cells are 400x200 units
 const at = (t, x, y) => ({ ...t, x1: x, y1: y, x2: x + 10, y2: y + 10 });
@@ -29,6 +33,17 @@ const at = (t, x, y) => ({ ...t, x1: x, y1: y, x2: x + 10, y2: y + 10 });
 test("destOf: primary destination wins when it leads elsewhere", () => {
   const t = tlv("Door", { to_level: "R2", to_path: 1, to_cam: 3 });
   assert.deepEqual(destOf(t, ...HERE), { lv: "R2", pa: 1, ca: 3, target: null });
+});
+
+// state.data is null until boot, so the default is reachable
+test("destOf: with no dataset a destination answers, it just corroborates nothing", () => {
+  const t = tlv("Door", { to_level: "R2", to_path: 1, to_cam: 3, "target_door#": 4 });
+  assert.deepEqual(destOf(t, { short: "R1" }, HERE_PATH, SYNTH_GEOMETRY), {
+    lv: "R2",
+    pa: 1,
+    ca: 3,
+    target: { name: "Door", field: "door#", value: 4 },
+  });
 });
 
 test("destOf: self destination falls through to the alternate", () => {
@@ -120,6 +135,35 @@ test("destOf: a launcher well (every state bounces) keeps no pairing", () => {
     target: null,
   });
   assert.equal(isLoopback(launcher, { short: "R1" }, P, SYNTH_GEOMETRY), false);
+});
+
+test("destOf: an unpointed state yields to the one that names a partner", () => {
+  // the unpointed side finds a placeholder answering as readily as a real partner
+  const well = at(
+    tlv("WellExpress", {
+      to_level: "MI",
+      to_path: 1,
+      to_cam: 1,
+      alt_level: "R1",
+      alt_path: 15,
+      alt_cam: 1,
+      "well#": 6,
+      "target_well#": 0,
+      "alt_target_well#": 1,
+    }),
+    50,
+    20,
+  );
+  const partner = at(tlv("WellExpress", { "well#": 1 }), 60, 20); // the same screen
+  const P = path(15, [well, partner], [{ cell: 0, name: "XXP15C01" }]);
+  const mines = {
+    ...level("MI", path(1, [tlv("WellExpress", { "well#": 0 })], [{ cell: 0, name: "XXP01C01" }])),
+    id: 1,
+  };
+  assert.deepEqual(
+    destOf(well, { short: "R1" }, P, SYNTH_GEOMETRY, dataset([level("R1", P), mines])),
+    { lv: "R1", pa: 15, ca: 1, target: { field: "well#", value: 1 } },
+  );
 });
 
 test("destOf: a cross-path well ride carries its arrival well id", () => {
@@ -363,8 +407,9 @@ test("isLoopback: paired doors and cross-path/same-cam neighbors are not loopbac
     120,
   );
   const P = path(15, [a, b, c, e, f, g], cams, 2, 1);
+  const D = dataset([level("R1", P)]);
   for (const t of [a, b, c, e, f, g])
-    assert.equal(isLoopback(t, { short: "R1" }, P, SYNTH_GEOMETRY), false);
+    assert.equal(isLoopback(t, { short: "R1" }, P, SYNTH_GEOMETRY, D), false);
 });
 
 // a two-camera destination path holding one door, for the trust tests
@@ -393,6 +438,20 @@ test("destTrusted: a cross-level partner must be at the destination", () => {
   assert.equal(destTrusted(d, HOME, trustData(3), SYNTH_GEOMETRY), false);
   const gone = { ...d, pa: 9 }; // a path the game never shipped
   assert.equal(destTrusted(gone, HOME, trustData(7), SYNTH_GEOMETRY), false);
+});
+
+test("destTrusted: the address an unpointed side keeps corroborates nothing", () => {
+  // a placeholder well sits at that address and answers to it
+  const opener = (id, short) => ({
+    ...level(short, path(1, [tlv("WellExpress", { "well#": 0 })], [{ cell: 0, name: "XXP01C01" }])),
+    id,
+  });
+  const data = dataset([level("R1", path(15, [])), opener(1, "MI"), opener(2, "R2")]);
+  const to = (lv) => ({ lv, pa: 1, ca: 1, target: { field: "well#", value: 0 } });
+  assert.equal(destTrusted(to("MI"), HOME, data, SYNTH_GEOMETRY), false);
+  // the same numbers are evidence once a field was set: Monsaic Lines rides to
+  // Paramonia's first screen with an arrival well of 0
+  assert.equal(destTrusted(to("R2"), HOME, data, SYNTH_GEOMETRY), true);
 });
 
 test("destTrusted: within a level the stated camera stands on its own", () => {

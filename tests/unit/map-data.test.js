@@ -106,7 +106,7 @@ test("the shipped data's dead and genuine off-level links are told apart", () =>
   const ae = load("map_data_ae.json");
   const sv6 = pathIn(ae, "SV", 6);
   const door = sv6.tlvs.find((t) => t.name === "Door" && t.x1 === 825 && t.y1 === 600);
-  const dead = destOf(door, { short: "SV" }, sv6, ae.geometry);
+  const dead = destOf(door, { short: "SV" }, sv6, ae.geometry, ae);
   assert.deepEqual(dead, {
     lv: "MI",
     pa: 6,
@@ -122,9 +122,97 @@ test("the shipped data's dead and genuine off-level links are told apart", () =>
   ].map(([short, id]) => {
     const P = pathIn(ao, short, id);
     const t = P.tlvs.find((x) => x.name === "PathTransition" && x.extra.to_level === "S1");
-    return destTrusted(destOf(t, { short }, P, ao.geometry), { short }, ao, ao.geometry);
+    return destTrusted(destOf(t, { short }, P, ao.geometry, ao), { short }, ao, ao.geometry);
   });
   assert.deepEqual(menu, [true, true]);
+});
+
+// the follows that leave their level, pinned whole: what remains is the games'
+// level graph, and links the designers never pointed anywhere used to crowd it
+// with express wells riding to the Mines' opening screen from all over Exoddus
+test("cross-level follows in the shipped data are exactly the level graph", () => {
+  const found = {};
+  for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
+    const data = load(file);
+    const seen = new Set();
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs) {
+          const d = destOf(t, L, P, data.geometry, data);
+          if (
+            d &&
+            d.lv !== L.short &&
+            destTrusted(d, L, data, data.geometry) &&
+            pathIn(data, d.lv, d.pa)
+          )
+            seen.add(`${L.short} P${P.id} -> ${d.lv} P${d.pa}`);
+        }
+    found[data.id] = [...seen].sort();
+  }
+  assert.deepEqual(found, {
+    AO: [
+      "D1 P9 -> D2 P1",
+      "D2 P10 -> D7 P11",
+      "D7 P11 -> D2 P10",
+      "D7 P11 -> L1 P5",
+      "E1 P4 -> L1 P1",
+      "E1 P6 -> R1 P20",
+      "E2 P2 -> R2 P19",
+      "F1 P9 -> F2 P1",
+      "F2 P8 -> F4 P9",
+      "F4 P9 -> F2 P8",
+      "F4 P9 -> L1 P5",
+      "L1 P6 -> D1 P1",
+      "L1 P6 -> E2 P4",
+      "L1 P6 -> F1 P1",
+      "R1 P20 -> E1 P6",
+      "R2 P11 -> R6 P6",
+      "R6 P6 -> R2 P11",
+    ],
+    AE: [
+      "BA P16 -> FD P2",
+      "BR P25 -> BM P1",
+      "BW P1 -> FD P4",
+      "BW P12 -> FD P2",
+      "FD P3 -> BA P1",
+      "FD P4 -> BW P1",
+      "FD P5 -> BR P16",
+      "MI P6 -> NE P2",
+      "NE P5 -> PV P1",
+      "NE P5 -> SV P6",
+      "PV P13 -> NE P5",
+      "SV P11 -> NE P5",
+    ],
+  });
+});
+
+// the three express wells behind that rule: one with a live side to prefer, one
+// with none, and a genuine ride to another level's first screen
+test("the shipped data's express wells take the side the game uses", () => {
+  const ae = load("map_data_ae.json");
+  const ba2 = pathIn(ae, "BA", 2);
+  const hub = ba2.tlvs.find((t) => t.x1 === 454 && t.y1 === 310);
+  // the Barracks hub well: its unpointed side reads as the Mines' first screen,
+  // its live side names well 1, four tiles away in the same room
+  assert.deepEqual(destOf(hub, { short: "BA" }, ba2, ae.geometry, ae), {
+    lv: "BA",
+    pa: 2,
+    ca: 1,
+    target: { field: "well#", value: 1 },
+  });
+
+  const ne3 = pathIn(ae, "NE", 3);
+  const both = ne3.tlvs.find((t) => t.x1 === 518 && t.y1 === 850);
+  const dead = destOf(both, { short: "NE" }, ne3, ae.geometry, ae);
+  assert.deepEqual(dead, { lv: "MI", pa: 1, ca: 1, target: { field: "well#", value: 0 } });
+  assert.equal(destTrusted(dead, { short: "NE" }, ae, ae.geometry), false);
+
+  const ao = load("map_data_ao.json");
+  const l1p6 = pathIn(ao, "L1", 6);
+  const ride = l1p6.tlvs.find((t) => t.x1 === 2418 && t.y1 === 309);
+  const far = destOf(ride, { short: "L1" }, l1p6, ao.geometry, ao);
+  assert.deepEqual(far, { lv: "F1", pa: 1, ca: 1, target: { field: "well#", value: 0 } });
+  assert.equal(destTrusted(far, { short: "L1" }, ao, ao.geometry), true);
 });
 
 // destinations may dangle, but their level fields must be decoded shorts —
@@ -415,7 +503,7 @@ test("loopbacks in the shipped data are exactly the three known ones", () => {
     for (const L of data.levels)
       for (const P of L.paths)
         for (const t of P.tlvs)
-          if (isLoopback(t, L, P, geometry))
+          if (isLoopback(t, L, P, geometry, data))
             found.push(`${data.id} ${L.short} P${P.id} ${t.name} (${t.x1},${t.y1})`);
   }
   assert.deepEqual(found, [

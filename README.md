@@ -21,6 +21,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - while hovering one, its partner — the object you'd come out of — gets a dashed outline whenever the pair sits on the current path
   - the rare transition pointing at a level outside the map (Oddysee's main-menu level) says so in its tooltip, along with a note on what is out there, instead of offering a follow
   - a destination is only believed where the object it pairs with is really there: Exoddus stores a level of 1 on links that were never pointed anywhere, which reads as Necrum Mines, so those name no destination and offer no follow — their stored fields still show, raw as the game left them
+  - an express well has a destination for each state of the switch it answers to, and the map follows whichever of the two leads somewhere
 - **click/tap** anywhere else on a screen to list everything on it, grouped by category
   - hover a row to outline that object on the map, click it to jump there
   - tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object
