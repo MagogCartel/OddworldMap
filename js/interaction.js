@@ -24,7 +24,7 @@ import {
 import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
-import { destOf, isLoopback, resolveTarget, zoomAt } from "./model.js";
+import { destOf, destTrusted, isLoopback, pathIn, resolveTarget, zoomAt } from "./model.js";
 import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
 import { levelInfo } from "./annotations.js";
 import { toggleShow } from "./sidebar.js";
@@ -348,14 +348,19 @@ trapDialogKeys(
   closeShortcuts,
 );
 
+// where an object may be said to lead: destOf's answer, less the links whose
+// named partner isn't at the destination to receive them
+const shownDest = (t) => {
+  const d = destOf(t);
+  return d && destTrusted(d) ? d : null;
+};
+
 // a destination is followable only when its level AND path are on the map:
 // a couple of transitions point at levels the viewer doesn't render (AO's S1
-// menu), and one-way doors carry placeholder returns to paths that don't
-// exist (AE's "P0" doors — the door shuts behind Abe, the return is junk)
+// menu), and those name no partner to check
 function followableDest(t) {
-  const d = destOf(t);
-  const L = d && state.data.levels.find((l) => l.short === d.lv);
-  return L && L.paths.some((p) => p.id === d.pa) ? d : null;
+  const d = shownDest(t);
+  return d && pathIn(state.data, d.lv, d.pa) ? d : null;
 }
 
 // ---- hover inspection ----------------------------------------------------
@@ -398,7 +403,7 @@ function updateHover() {
   }
   setHighlight(partner);
   // arrows overlay: spotlight the hovered object's own edges
-  setConnFocus(state.show.conn ? (hoverTlvs.find((t) => destOf(t)) ?? null) : null);
+  setConnFocus(state.show.conn ? (hoverTlvs.find((t) => shownDest(t)) ?? null) : null);
   if (hoverTlvs.length || hoverLines.length) {
     tip.style.display = "block";
     const html =
@@ -406,7 +411,7 @@ function updateHover() {
         .slice(0, 8)
         .map((t) => {
           const ex = extrasText(t, "  ", fieldPrefsFor(state.data.id));
-          const d = destOf(t);
+          const d = shownDest(t);
           let follow = "";
           if (d && isLoopback(t)) {
             follow = `<br><span class="f loop">⟳ loops back to itself</span>`;

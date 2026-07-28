@@ -1,7 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { camCell, computeEntryPaths, isLoopback } from "../../js/model.js";
+import {
+  camCell,
+  computeEntryPaths,
+  destOf,
+  destTrusted,
+  isLoopback,
+  pathIn,
+} from "../../js/model.js";
 import { AO_GEOMETRY, AE_GEOMETRY } from "./fixtures.js";
 
 // Schema sanity over the shipped data: the invariants the viewer relies on.
@@ -47,6 +54,78 @@ for (const [file, id, geometry] of [
     assert.ok(Object.keys(computeEntryPaths(data)).length > 0, "entry paths found");
   });
 }
+
+// the paths the games arrive at from elsewhere, pinned whole: the set is only as
+// good as the destinations behind it, and a link whose partner is absent used to
+// badge paths the game never arrives at and paths that don't exist at all
+test("entry paths in the shipped data are exactly the reachable ones", () => {
+  const found = {};
+  for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
+    const data = load(file);
+    const entries = computeEntryPaths(data);
+    found[data.id] = Object.fromEntries(
+      Object.keys(entries)
+        .sort()
+        .map((k) => [k, [...entries[k]].sort((a, b) => a - b)]),
+    );
+  }
+  assert.deepEqual(found, {
+    AO: {
+      D1: [1],
+      D2: [1, 10],
+      D7: [11],
+      E1: [6],
+      E2: [4],
+      F1: [1],
+      F2: [1, 8],
+      F4: [9],
+      L1: [1, 5],
+      R1: [15, 20],
+      R2: [11, 19],
+      R6: [6],
+    },
+    AE: {
+      BA: [1],
+      BM: [1],
+      BR: [16],
+      BW: [1, 4],
+      FD: [1, 2, 4],
+      MI: [1, 2],
+      NE: [2, 5],
+      PV: [1],
+      SV: [6],
+    },
+  });
+});
+
+// the two sides of the destination check, on the objects that motivated it:
+// the Mudanchee Vaults door whose unset level field reads as Necrum Mines,
+// where no door answers to its number, and the transitions to the main-menu
+// level, which name no partner and so are believed off the map
+test("the shipped data's dead and genuine off-level links are told apart", () => {
+  const ae = load("map_data_ae.json");
+  const sv6 = pathIn(ae, "SV", 6);
+  const door = sv6.tlvs.find((t) => t.name === "Door" && t.x1 === 825 && t.y1 === 600);
+  const dead = destOf(door, { short: "SV" }, sv6, ae.geometry);
+  assert.deepEqual(dead, {
+    lv: "MI",
+    pa: 6,
+    ca: 24,
+    target: { name: "Door", field: "door#", value: 2 },
+  });
+  assert.equal(destTrusted(dead, { short: "SV" }, ae, ae.geometry), false);
+
+  const ao = load("map_data_ao.json");
+  const menu = [
+    ["R1", 19],
+    ["L1", 1],
+  ].map(([short, id]) => {
+    const P = pathIn(ao, short, id);
+    const t = P.tlvs.find((x) => x.name === "PathTransition" && x.extra.to_level === "S1");
+    return destTrusted(destOf(t, { short }, P, ao.geometry), { short }, ao, ao.geometry);
+  });
+  assert.deepEqual(menu, [true, true]);
+});
 
 // destinations may dangle, but their level fields must be decoded shorts —
 // a raw numeric id means the builder's id map missed a level (the AE ender

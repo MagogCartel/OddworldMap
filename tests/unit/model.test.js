@@ -8,6 +8,7 @@ import {
   computeConnections,
   computeEntryPaths,
   destOf,
+  destTrusted,
   findTlv,
   focusZoom,
   formatHash,
@@ -366,6 +367,53 @@ test("isLoopback: paired doors and cross-path/same-cam neighbors are not loopbac
     assert.equal(isLoopback(t, { short: "R1" }, P, SYNTH_GEOMETRY), false);
 });
 
+// a two-camera destination path holding one door, for the trust tests
+const AWAY = (doorNo) =>
+  path(
+    1,
+    [at(tlv("Door", { "door#": doorNo }), 450, 20)],
+    [
+      { cell: 0, name: "R2P01C01" },
+      { cell: 1, name: "R2P01C02" },
+    ],
+    2,
+    1,
+  );
+const trustData = (doorNo) => dataset([level("R1", path(15, [])), level("R2", AWAY(doorNo))]);
+const HOME = { short: "R1" };
+
+test("destTrusted: a link naming no partner is trusted wherever it points", () => {
+  const d = { lv: "S1", pa: 1, ca: null, target: null };
+  assert.equal(destTrusted(d, HOME, trustData(1), SYNTH_GEOMETRY), true);
+});
+
+test("destTrusted: a cross-level partner must be at the destination", () => {
+  const d = { lv: "R2", pa: 1, ca: 2, target: { name: "Door", field: "door#", value: 7 } };
+  assert.equal(destTrusted(d, HOME, trustData(7), SYNTH_GEOMETRY), true);
+  assert.equal(destTrusted(d, HOME, trustData(3), SYNTH_GEOMETRY), false);
+  const gone = { ...d, pa: 9 }; // a path the game never shipped
+  assert.equal(destTrusted(gone, HOME, trustData(7), SYNTH_GEOMETRY), false);
+});
+
+test("destTrusted: within a level the stated camera stands on its own", () => {
+  // resolveTarget is camera-bounded, so an unresolved partner is no evidence
+  const d = { lv: "R1", pa: 15, ca: 2, target: { name: "Door", field: "door#", value: 7 } };
+  assert.equal(destTrusted(d, HOME, trustData(1), SYNTH_GEOMETRY), true);
+  const gone = { ...d, pa: 9 };
+  assert.equal(destTrusted(gone, HOME, trustData(1), SYNTH_GEOMETRY), false);
+});
+
+test("computeEntryPaths: a dead destination marks no arrival", () => {
+  const phantom = (extra) => level("R1", path(15, [tlv("Door", extra)]));
+  const away = (doorNo) => level("R2", AWAY(doorNo));
+  const entries = (extra, doorNo) => computeEntryPaths(dataset([phantom(extra), away(doorNo)]));
+  const link = { to_level: "R2", to_path: 1, to_cam: 2, "door#": 1, "target_door#": 7 };
+  assert.deepEqual([...entries(link, 7).R2], [1]);
+  assert.deepEqual(entries(link, 3), {}); // the partner isn't there
+  assert.deepEqual(entries({ ...link, to_path: 9 }, 7), {}); // nor is the path
+  assert.deepEqual(entries({ to_level: "S1", to_path: 1 }, 7), {}); // nor the level
+});
+
 test("computeEntryPaths: cross-level links and AbeStart mark entries", () => {
   const data = dataset([
     level(
@@ -392,6 +440,8 @@ const CONN_CAMS = [
   { cell: 1, name: "XXP15C02" },
 ];
 const R1 = { short: "R1" };
+const conn = (P, ...elsewhere) =>
+  computeConnections(R1, P, SYNTH_GEOMETRY, dataset([level("R1", P), ...elsewhere]));
 
 test("computeConnections: a mutual door pair consolidates to one two-way edge", () => {
   const a = at(
@@ -405,7 +455,7 @@ test("computeConnections: a mutual door pair consolidates to one two-way edge", 
     20,
   );
   const P = path(15, [a, b, tlv("Slig")], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: a, dst: b, twoWay: true }]);
+  assert.deepEqual(conn(P), [{ src: a, dst: b, twoWay: true }]);
 });
 
 test("computeConnections: asymmetric chains stay directed", () => {
@@ -422,7 +472,7 @@ test("computeConnections: asymmetric chains stay directed", () => {
   );
   const c = at(tlv("Door", { "door#": 3 }), 60, 120); // no destination of its own
   const P = path(15, [a, b, c], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [
+  assert.deepEqual(conn(P), [
     { src: a, dst: b, twoWay: false },
     { src: b, dst: c, twoWay: false },
   ]);
@@ -452,7 +502,7 @@ test("computeConnections: mutual well pair by well# consolidates", () => {
     20,
   );
   const P = path(15, [a, b], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: a, dst: b, twoWay: true }]);
+  assert.deepEqual(conn(P), [{ src: a, dst: b, twoWay: true }]);
 });
 
 test("computeConnections: loopbacks, views and self-resolvers yield nothing", () => {
@@ -469,23 +519,36 @@ test("computeConnections: loopbacks, views and self-resolvers yield nothing", ()
     20,
   );
   const P = path(15, [loop, stone, selfR], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), []);
+  assert.deepEqual(conn(P), []);
 });
 
 test("computeConnections: off-path destinations become labelled stubs", () => {
   const door = at(tlv("Door", { to_level: "R2", to_path: 1, to_cam: 3 }), 50, 20);
   const P = path(15, [door], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: door, label: "R2 P1" }]);
+  assert.deepEqual(conn(P, level("R2", path(1, []))), [{ src: door, label: "R2 P1" }]);
+});
+
+test("computeConnections: a cross-level destination without its partner draws nothing", () => {
+  const door = at(
+    tlv("Door", { to_level: "R2", to_path: 1, to_cam: 3, "door#": 1, "target_door#": 2 }),
+    50,
+    20,
+  );
+  const P = path(15, [door], CONN_CAMS, 2, 1);
+  const away = (doorNo) =>
+    path(1, [tlv("Door", { "door#": doorNo })], [{ cell: 0, name: "R2P01C03" }]);
+  assert.deepEqual(conn(P, level("R2", away(9))), []);
+  assert.deepEqual(conn(P, level("R2", away(2))), [{ src: door, label: "R2 P1" }]);
 });
 
 test("computeConnections: an untargeted same-path destination points at its camera", () => {
   const door = at(tlv("Door", { to_level: "R1", to_path: 15, to_cam: 2 }), 50, 20);
   const P = path(15, [door], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), [{ src: door, cell: 1 }]);
+  assert.deepEqual(conn(P), [{ src: door, cell: 1 }]);
   // the same destination naming a camera missing from the grid: nothing to draw
   const dangling = at(tlv("Door", { to_level: "R1", to_path: 15, to_cam: 9 }), 50, 20);
   const P2 = path(15, [dangling], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P2, SYNTH_GEOMETRY), []);
+  assert.deepEqual(conn(P2), []);
 });
 
 test("computeConnections: launcher wells don't arrow at their own camera", () => {
@@ -497,7 +560,7 @@ test("computeConnections: launcher wells don't arrow at their own camera", () =>
     20,
   );
   const P = path(15, [launcher], CONN_CAMS, 2, 1);
-  assert.deepEqual(computeConnections(R1, P, SYNTH_GEOMETRY), []);
+  assert.deepEqual(conn(P), []);
 });
 
 test("zoomAt keeps the world point under the anchor fixed", () => {

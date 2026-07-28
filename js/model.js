@@ -13,20 +13,62 @@ import {
 } from "./config.js";
 import { GEO, state, CELL_W, CELL_H } from "./state.js";
 
-export function computeEntryPaths(data) {
+export function computeEntryPaths(data, geo = data.geometry) {
   const entries = {};
-  const add = (lv, pa) => {
-    if (lv != null && pa != null) (entries[lv] ??= new Set()).add(pa);
-  };
+  const add = (lv, pa) => (entries[lv] ??= new Set()).add(pa);
   for (const L of data.levels)
     for (const P of L.paths)
       for (const t of P.tlvs) {
         const e = t.extra || {};
-        if (e.to_level && e.to_level !== L.short) add(e.to_level, e.to_path);
-        if (e.alt_level && e.alt_level !== L.short) add(e.alt_level, e.alt_path);
+        const [target, altTarget] = pairTargets(t);
+        // a dead destination must not badge a real path
+        const arrival = (lv, pa, ca, tgt) => {
+          if (!lv || lv === L.short || !pathIn(data, lv, pa)) return;
+          if (destTrusted({ lv, pa, ca, target: tgt }, L, data, geo)) add(lv, pa);
+        };
+        arrival(e.to_level, e.to_path, e.to_cam, target);
+        arrival(e.alt_level, e.alt_path, e.alt_cam, altTarget);
         if (t.name === "AbeStart") add(L.short, P.id); // game start / re-entry
       }
   return entries;
+}
+
+// the paired object each of a TLV's two destinations lands on, or null where a
+// destination names none. Pair number 0 is a number like any other (the
+// placeholder ~250 doors and teleporters share — the engine's arrival hunt finds
+// the 0-numbered partner). Express wells name the well each ride lands on;
+// either well type answers to the id (and the games name local wells
+// differently), so that target carries no name
+function pairTargets(t) {
+  const e = t.extra || {};
+  let target = null,
+    altTarget = null;
+  if (e["target_door#"] != null)
+    target = { name: "Door", field: "door#", value: e["target_door#"] };
+  else if (e["target_tp#"] != null)
+    target = { name: "Teleporter", field: "tp#", value: e["target_tp#"] };
+  else if (t.name === "BirdPortal" && e.portal === "travel") target = { name: "BirdPortalExit" };
+  if (e["target_well#"] != null) target = { field: "well#", value: e["target_well#"] };
+  if (e["alt_target_well#"] != null) altTarget = { field: "well#", value: e["alt_target_well#"] };
+  return [target, altTarget];
+}
+
+// the path a destination names, or null where the data has no such path
+export const pathIn = (data, lv, pa) =>
+  data.levels.find((l) => l.short === lv)?.paths.find((p) => p.id === pa) || null;
+
+// whether a destination's named partner is there to be found. A level field the
+// designers never set reads as the first level while path and camera keep the
+// values that were right for a link inside the source's own level, so a
+// cross-level triple needs its partner to corroborate it. Within a level the
+// stated camera stands on its own — resolveTarget is camera-bounded and misses
+// pairings that are merely unnumbered. A link naming no partner has nothing to
+// check and is trusted wherever it points.
+export function destTrusted(d, lvl = state.lvl, data = state.data, geo = GEO) {
+  if (!d || !d.target) return true;
+  const P = pathIn(data, d.lv, d.pa);
+  if (!P) return false;
+  return d.lv === lvl.short || resolveTarget(d, P, geo) != null;
 }
 
 // where a door/portal/well leads: prefers a destination that differs from the
@@ -44,21 +86,8 @@ export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO) {
       ? { lv: lvl.short, pa: path.id, ca: e.view1_cam, target: null }
       : null;
   }
-  // paired objects land on their counterpart within the destination camera;
-  // 0 is a pair number like any other (the placeholder ~250 doors and
-  // teleporters share — the engine's arrival hunt finds the 0-numbered partner)
-  let target = null;
-  let altTarget = null;
-  if (e["target_door#"] != null)
-    target = { name: "Door", field: "door#", value: e["target_door#"] };
-  else if (e["target_tp#"] != null)
-    target = { name: "Teleporter", field: "tp#", value: e["target_tp#"] };
-  else if (t.name === "BirdPortal" && e.portal === "travel") target = { name: "BirdPortalExit" };
-  // express wells name the well each ride lands on; either well type answers
-  // to the id (and the games name local wells differently), so the target
-  // carries no name
-  if (e["target_well#"] != null) target = { field: "well#", value: e["target_well#"] };
-  if (e["alt_target_well#"] != null) altTarget = { field: "well#", value: e["alt_target_well#"] };
+  // paired objects land on their counterpart within the destination camera
+  const [target, altTarget] = pairTargets(t);
   const mk = (lv, pa, ca, tgt) => (lv != null && pa != null ? { lv, pa, ca, target: tgt } : null);
   const a = mk(e.to_level, e.to_path, e.to_cam, target);
   const b = mk(e.alt_level, e.alt_path, e.alt_cam, altTarget);
@@ -149,19 +178,25 @@ export function isLoopback(t, lvl = state.lvl, path = state.path, geo = GEO) {
 //   {src, dst, twoWay} — resolved same-path pair (dst is the partner TLV)
 //   {src, cell}        — same-path destination without a resolvable partner
 //   {src, label}       — off-path destination, labelled "LV Pn"
-// Hand-stone views (sights, not transitions) and loopbacks are skipped; a
-// destination that resolves back to its own source (dangling camera plus the
-// path-wide fallback) or names a camera missing from the grid yields nothing,
-// and neither does one pointing at the source's own camera — launcher wells
-// and bounce-backs exit within their screen and must not read as arrows.
-export function computeConnections(lvl = state.lvl, path = state.path, geo = GEO) {
+// Hand-stone views (sights, not transitions), untrusted destinations and
+// loopbacks are skipped; a destination that resolves back to its own source
+// (dangling camera plus the path-wide fallback) or names a camera missing from
+// the grid yields nothing, and neither does one pointing at the source's own
+// camera — launcher wells and bounce-backs exit within their screen and must
+// not read as arrows.
+export function computeConnections(
+  lvl = state.lvl,
+  path = state.path,
+  geo = GEO,
+  data = state.data,
+) {
   const edges = [];
   const stubs = [];
   const partner = new Map();
   for (const t of path.tlvs) {
     if ((t.extra || {}).view1_cam != null) continue;
     const d = destOf(t, lvl, path, geo);
-    if (!d || isLoopback(t, lvl, path, geo)) continue;
+    if (!d || !destTrusted(d, lvl, data, geo) || isLoopback(t, lvl, path, geo)) continue;
     if (d.lv !== lvl.short || d.pa !== path.id) {
       stubs.push({ src: t, label: `${d.lv} P${d.pa}` });
       continue;

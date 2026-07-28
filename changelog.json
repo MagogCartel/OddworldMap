@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-28",
+   "tag": "fixed",
+   "title": "Links that were never pointed anywhere stop claiming Necrum Mines",
+   "detail": "Fifty-five doors, teleporters, express wells and bird portals in Exoddus named a destination the game never gave them. A link the designers left unpointed stores a level of 1, which reads as Necrum Mines, while its path and screen numbers stay the ones that were right inside its own level - so a door in the Mudanchee Vaults offered to take you to the Mines, and clicking it did. The map now believes a destination in another level only when the door, teleporter, well or portal it pairs with is actually there: those links offer no follow, name no destination and draw no arrow, while the fields the game stores for them stay on show. Four paths in the Mines - the revisited boiler room, tunnel 1's secret area and two demo areas - also lose the \"entry point\" badge they wore on the strength of a dead link alone, and the two Brewery bird portals aimed at the Mines' first screen stop offering the trip."
+  },
+  {
+   "date": "2026-07-28",
    "tag": "improved",
    "title": "Full names on the buttons read as names",
    "detail": "With \"Show full names\" on, every button wrapped its name in brackets, which reads as an aside rather than as the label it is, and a path whose name carries brackets of its own ([Demo] Annex 8: Slogs Attack) came out with two sets nested. The name now follows the short code after a dash instead."

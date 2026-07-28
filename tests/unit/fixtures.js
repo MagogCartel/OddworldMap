@@ -47,4 +47,4 @@ export const tlv = (name, extra = null) => ({
 });
 export const path = (id, tlvs, cams = [], w = 1, h = 1) => ({ id, w, h, cams, tlvs, lines: [] });
 export const level = (short, ...paths) => ({ short, name: short, paths });
-export const dataset = (levels) => ({ id: "XX", levels });
+export const dataset = (levels, geometry = SYNTH_GEOMETRY) => ({ id: "XX", levels, geometry });
