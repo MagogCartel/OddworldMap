@@ -11,6 +11,9 @@ import {
 
 const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
 
+// a note is prose among labels: it opens capitalized and closes punctuated
+const SENTENCE = /^[A-Z].*[.!?]$/;
+
 test("sanitizeAnnotations: tolerates a missing or garbage file", () => {
   assert.deepEqual(sanitizeAnnotations(null), {});
   assert.deepEqual(sanitizeAnnotations("nonsense"), {});
@@ -115,6 +118,7 @@ test("annotations.json entries all point at live targets", () => {
       );
       for (const k of keys)
         assert.ok(v[k] && v[k] === v[k].trim(), `${game} ${short}.${k} is a trimmed string`);
+      if (v.note) assert.match(v.note, SENTENCE, `${game} ${short}: note reads as a sentence`);
     }
 
     for (const [short, byId] of Object.entries(g.paths ?? {})) {
@@ -137,6 +141,8 @@ test("annotations.json entries all point at live targets", () => {
             typeof e[k] === "string" && e[k] && e[k] === e[k].trim(),
             `${game} ${short} P${id}.${k} is a trimmed string`,
           );
+        if (e.note)
+          assert.match(e.note, SENTENCE, `${game} ${short} P${id}: note reads as a sentence`);
         // an override may refine a disc name, never erase it: the authentic
         // label must stay visible inside the curated one ("Zulag 2 — Lobby")
         if (e.name && P.name)

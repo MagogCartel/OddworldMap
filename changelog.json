@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-28",
+   "tag": "new",
+   "title": "Thirteen Exoddus paths say what is odd about them",
+   "detail": "A path can now carry a note as well as a name, a short remark about that place. The first batch is thirteen: the Brewery's zulag 13, which almost every board in it misprints as 14 (a developer slip corrected for the Japanese release) and the arch out of zulag 11, which repeats the mistake; nine screens furnished with a level's worth of borrowed artwork, eight of them secret areas, from the Slig Barracks hidden in the Necrum jungle to the railway depot tucked inside a Paramite trial; the Mines' escape route, which is the boiler room you already crossed, screen for screen; and FeeCo's terminal 3, the one terminal the game never numbers."
+  },
+  {
+   "date": "2026-07-28",
    "tag": "improved",
    "title": "Links that leave the map say what is out there",
    "detail": "Two objects in Oddysee, one in Rupture Farms and one in Monsaic Lines, point at a level the map doesn't draw. Hovering either already told you its name and that it isn't on the map; it now also says what it is: the main menu, where the game's title-screen demos return when they finish, which is why those two links exist at all."

@@ -79,7 +79,10 @@
     "3": "Boiler Room",
     "4": "Tunnels 3-5",
     "5": "Tunnel 6",
-    "6": "Boiler Room Revisited",
+    "6": {
+     "name": "Boiler Room Revisited",
+     "note": "Pixel-identical to the boiler room in P3 across all fifteen screens: the same rooms, restocked for the escape."
+    },
     "7": "Tunnel 1: Secret Area",
     "8": "[Demo] Tunnel 1: Mudokons",
     "9": "[Demo] Tunnel 2: Flying Slig",
@@ -89,25 +92,40 @@
    },
    "NE": {
     "1": "Path to the Vaults",
-    "2": "The Jungles of Necrum",
+    "2": {
+     "name": "The Jungles of Necrum",
+     "note": "The secret area in the jungle is built from Slig Barracks artwork, which the game does not reach for another four levels."
+    },
     "3": "Necrum Vaults",
     "4": "Path to the Vaults III",
-    "5": "Necrum Vaults Hub",
+    "5": {
+     "name": "Necrum Vaults Hub",
+     "note": "Its secret area is dressed as the Slig Barracks, status board and all."
+    },
     "6": "Path to the Vaults II",
     "7": "[Demo] Path to the Vaults II: Fleeches"
    },
    "SV": {
     "1": "Trial 6",
-    "2": "Trial 1",
+    "2": {
+     "name": "Trial 1",
+     "note": "The trial's secret area is furnished as a corner of SoulStorm Brewery, with four Mudokons among the bone drills and two brewery status boards on the wall."
+    },
     "3": "Trial 3",
     "4": "Trial 5",
     "5": "Trial 2",
     "6": "Mudanchee Vaults",
     "7": "Mudanchee Vaults Hub",
-    "8": "Trial 4",
+    "8": {
+     "name": "Trial 4",
+     "note": "A brewery room hidden in the vault: three Mudokons behind an electric fence, in SoulStorm Brewery's artwork rather than the vault's."
+    },
     "9": "Mudanchee Vault Ender: Scrab Nest",
     "10": "Mudanchee Vault Ender: Scrab Nest II",
-    "11": "Mudanchee Vault Ender: Vault Exit",
+    "11": {
+     "name": "Mudanchee Vault Ender: Vault Exit",
+     "note": "Both screens are Necrum Mines artwork, so the vault lets you out into scenery from where the game began."
+    },
     "12": "[Demo] Trial 5: Scrab and Fleeches",
     "13": "[Demo] Mudanchee Vaults: Invisibility",
     "14": "[Demo] Mudanchee Vault Ender: Scrab Nest"
@@ -126,13 +144,25 @@
     "11": "Trial 2",
     "12": "Trial 3",
     "13": "Mudomo Vault Ender: Paramite Nest",
-    "14": "Trial 4: Secret Area",
-    "15": "Trial 3: Secret Area"
+    "14": {
+     "name": "Trial 4: Secret Area",
+     "note": "Dressed as FeeCo Depot, two of its status boards included: a railway depot two levels away, tucked inside a Paramite trial."
+    },
+    "15": {
+     "name": "Trial 3: Secret Area",
+     "note": "Borrowed scenery from SoulStorm Brewery: three Mudokons among five bone drills."
+    }
    },
    "FD": {
-    "1": "Terminal 1",
+    "1": {
+     "name": "Terminal 1",
+     "note": "The secret area here is SoulStorm Brewery artwork, and one of the terminal's three status boards is a brewery board rather than a FeeCo one."
+    },
     "2": "Main Lobby",
-    "3": "Terminal 3: Slig Barracks",
+    "3": {
+     "name": "Terminal 3: Slig Barracks",
+     "note": "The only terminal the artwork never numbers. Terminals 1, 2, 4 and 5 are each signed somewhere, so this one is 3 by elimination."
+    },
     "4": "Terminal 4: Bonewerkz",
     "5": "Terminal 5: SoulStorm Brewery",
     "6": "[Demo] Terminal 1: Farts-a-poppin'",
@@ -165,7 +195,10 @@
     "2": "Annexes 3-6",
     "3": "Annex 7",
     "4": "Annex 8",
-    "7": "Annex 1",
+    "7": {
+     "name": "Annex 1",
+     "note": "One of the annex's secret areas teleports you into SoulStorm Brewery artwork, a whole level away from Bonewerkz."
+    },
     "9": "Executive Office",
     "11": "[Demo] Annex 8: Slogs Attack",
     "12": "Bonewerkz Ender: Executive Office II",
@@ -181,7 +214,10 @@
     "6": "Zulag 7",
     "7": "[Demo] Zulag 1",
     "8": "[Demo] Zulag 2",
-    "9": "Zulag 11",
+    "9": {
+     "name": "Zulag 11",
+     "note": "The arch over the exit door reads ZULAG 14 while the status board in the same room reads 11: the same signage slip as zulag 13."
+    },
     "10": "Zulag 10",
     "11": "Zulag 12",
     "12": "Zulag 3",
@@ -192,7 +228,10 @@
     "17": "Zulag 9",
     "18": "Zulag 4",
     "19": "Zulag 4: Tear X-Tractor",
-    "20": "Zulag 13",
+    "20": {
+     "name": "Zulag 13",
+     "note": "The status boards through this stretch misprint the zulag as 14, a developer error corrected for the Japanese Abe '99 release."
+    },
     "21": "Zulag 9: Fleech Ledge",
     "23": "Hub 1",
     "24": "Hub 2",
