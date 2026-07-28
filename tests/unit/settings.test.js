@@ -77,10 +77,10 @@ test("sanitizeView: unknown keys and wrong-typed values are dropped", () => {
   assert.deepEqual(v, { show: { grid: false }, cats: { mud: false } });
 });
 
-test("displayLabel: code alone by default, code (name) in full-names mode", () => {
+test("displayLabel: code alone by default, code — name in full-names mode", () => {
   assert.equal(displayLabel("MI", "Necrum Mines", false), "MI");
-  assert.equal(displayLabel("MI", "Necrum Mines", true), "MI (Necrum Mines)");
-  assert.equal(displayLabel("AO", "Oddworld: Abe's Oddysee", true), "AO (Abe's Oddysee)");
+  assert.equal(displayLabel("MI", "Necrum Mines", true), "MI — Necrum Mines");
+  assert.equal(displayLabel("AO", "Oddworld: Abe's Oddysee", true), "AO — Abe's Oddysee");
   assert.equal(displayLabel("P1", "", true), "P1"); // most paths carry no name
   assert.equal(displayLabel("P1", undefined, true), "P1");
 });

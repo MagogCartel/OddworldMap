@@ -139,11 +139,11 @@ export function viewChanged() {
   store.set(VIEW_KEY, JSON.stringify({ show: state.show, cats }));
 }
 
-// a selector-button label: the short code alone, or "code (full name)" in
-// full-names mode ("Oddworld: " is dropped so games read "AO (Abe's Oddysee)")
+// a selector-button label: the short code alone, or "code — full name" in
+// full-names mode ("Oddworld: " is dropped so games read "AO — Abe's Oddysee")
 export function displayLabel(code, fullName, on) {
   const name = (fullName || "").replace(/^Oddworld:\s*/, "");
-  return on && name ? `${code} (${name})` : code;
+  return on && name ? `${code} — ${name}` : code;
 }
 
 // a candidate "#GAME/LEVEL/…" permalink string, or null; whether its level and

@@ -73,7 +73,7 @@ The gear button at the top of the sidebar:
 
 - "Remember display & object filters" (on by default) keeps the Display toggles and Objects filters across visits; turn it off to start from the defaults every time
 - "Remember last location" (off by default) reopens the map where you left off when the URL carries no permalink — a shared link always wins
-- "Show full names" expands the game, level and path buttons into a list labelled with their full names ("MI (Necrum Mines)")
+- "Show full names" expands the game, level and path buttons into a list labelled with their full names ("MI — Necrum Mines")
 - "List a screen's objects on click" (on by default) opens the screen-inventory panel when a click/tap finds nothing to follow
 - "Show more object fields" (off by default) reveals a "Fields" panel in the sidebar where you pick, per object type, which of its fields show in tooltips and the screen list (the notable ones pre-checked) — a ⚙ next to an object in a screen's list opens that type's row in the panel; with it off, only the notable fields show and the panel stays hidden
 - "Show raw field values" (off by default) shows field values as the raw numbers the game stores (1/0, 15, …) instead of the translated text (left/right, patrol, true/false); search matches whichever representation you're viewing
