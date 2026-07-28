@@ -5,6 +5,7 @@ import {
   sanitizeAnnotations,
   setAnnotations,
   pathDisplayName,
+  pathNote,
   levelInfo,
 } from "../../js/annotations.js";
 
@@ -25,22 +26,42 @@ test("sanitizeAnnotations: copies only known sections with expected types", () =
         R9: { note: "no name: dropped" },
         R8: { name: "  untrimmed  " },
       },
-      paths: { R1: { 15: "Free-Fire Zone", 16: "", 17: 3 }, L1: "not an object" },
+      paths: {
+        R1: {
+          15: "Free-Fire Zone",
+          16: "",
+          17: 3,
+          18: { name: "Packaging", note: "the conveyors run here", junk: 1 },
+          19: { note: "no curated name: the disc name keeps it" },
+          20: {},
+        },
+        L1: "not an object",
+      },
       future: { anything: true },
     },
   });
   assert.deepEqual(s, {
     AO: {
       levels: { S1: { name: "Main Menu", note: "menu level" } },
-      paths: { R1: { 15: "Free-Fire Zone" } },
+      paths: {
+        R1: {
+          15: { name: "Free-Fire Zone" },
+          18: { name: "Packaging", note: "the conveyors run here" },
+          19: { note: "no curated name: the disc name keeps it" },
+        },
+      },
     },
   });
 });
 
 test("pathDisplayName: a curated name overrides, the disc name shows otherwise", () => {
-  setAnnotations({ AO: { paths: { R1: { 15: "Curated" } } } });
+  setAnnotations({
+    AO: { paths: { R1: { 15: "Curated", 17: { name: "Curated" }, 18: { note: "a note" } } } },
+  });
   assert.equal(pathDisplayName("AO", "R1", { id: 15, name: "Disc Name" }), "Curated");
   assert.equal(pathDisplayName("AO", "R1", { id: 15 }), "Curated"); // numeric id vs string key
+  assert.equal(pathDisplayName("AO", "R1", { id: 17, name: "Disc Name" }), "Curated"); // object form
+  assert.equal(pathDisplayName("AO", "R1", { id: 18, name: "Disc Name" }), "Disc Name"); // note only
   assert.equal(pathDisplayName("AO", "R1", { id: 16, name: "Disc Name" }), "Disc Name");
   assert.equal(pathDisplayName("AO", "R1", { id: 16 }), null);
   assert.equal(pathDisplayName("AO", "R2", { id: 15 }), null);
@@ -48,6 +69,19 @@ test("pathDisplayName: a curated name overrides, the disc name shows otherwise",
   setAnnotations(null);
   assert.equal(pathDisplayName("AO", "R1", { id: 15, name: "Disc Name" }), "Disc Name");
   assert.equal(pathDisplayName("AO", "R1", { id: 15 }), null);
+});
+
+test("pathNote: hit, miss, and a name-only entry", () => {
+  setAnnotations({
+    AO: { paths: { R1: { 15: { name: "Curated", note: "worth knowing" }, 16: "Curated" } } },
+  });
+  assert.equal(pathNote("AO", "R1", { id: 15 }), "worth knowing");
+  assert.equal(pathNote("AO", "R1", { id: 16 }), null);
+  assert.equal(pathNote("AO", "R1", { id: 17 }), null);
+  assert.equal(pathNote("AO", "R2", { id: 15 }), null);
+  assert.equal(pathNote("AE", "R1", { id: 15 }), null);
+  setAnnotations(null);
+  assert.equal(pathNote("AO", "R1", { id: 15 }), null);
 });
 
 test("levelInfo: hit, miss, and unloaded game", () => {
@@ -86,20 +120,29 @@ test("annotations.json entries all point at live targets", () => {
     for (const [short, byId] of Object.entries(g.paths ?? {})) {
       const L = levels.get(short);
       assert.ok(L, `${game} ${short}: path annotations need an on-map level`);
-      for (const [id, name] of Object.entries(byId)) {
+      for (const [id, v] of Object.entries(byId)) {
         assert.match(id, /^(0|[1-9]\d*)$/, `${game} ${short} P${id}: canonical id key`);
         const P = L.paths.find((p) => p.id === +id);
         assert.ok(P, `${game} ${short} P${id}: path exists`);
+        // a bare string is the name; the object form adds a note, and either
+        // half may stand alone (a note need not wait for a name)
+        const e = typeof v === "string" ? { name: v } : v;
+        const keys = Object.keys(e);
         assert.ok(
-          typeof name === "string" && name && name === name.trim(),
-          `${game} ${short} P${id}: trimmed non-empty name`,
+          keys.length && keys.every((k) => ["name", "note"].includes(k)),
+          `${game} ${short} P${id}: known keys`,
         );
+        for (const k of keys)
+          assert.ok(
+            typeof e[k] === "string" && e[k] && e[k] === e[k].trim(),
+            `${game} ${short} P${id}.${k} is a trimmed string`,
+          );
         // an override may refine a disc name, never erase it: the authentic
         // label must stay visible inside the curated one ("Zulag 2 — Lobby")
-        if (P.name)
+        if (e.name && P.name)
           assert.ok(
-            name.includes(P.name),
-            `${game} ${short} P${id}: override "${name}" keeps the disc name "${P.name}"`,
+            e.name.includes(P.name),
+            `${game} ${short} P${id}: override "${e.name}" keeps the disc name "${P.name}"`,
           );
       }
     }

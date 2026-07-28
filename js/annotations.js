@@ -24,9 +24,12 @@ export function sanitizeAnnotations(raw) {
     }
     for (const [short, byId] of Object.entries(g.paths || {})) {
       if (!byId || typeof byId !== "object") continue;
-      for (const [id, name] of Object.entries(byId)) {
-        const n = cleanString(name);
-        if (n) (paths[short] ??= {})[id] = n;
+      for (const [id, v] of Object.entries(byId)) {
+        const src = typeof v === "string" ? { name: v } : v;
+        const name = cleanString(src?.name),
+          note = cleanString(src?.note);
+        if (!name && !note) continue;
+        (paths[short] ??= {})[id] = { ...(name && { name }), ...(note && { note }) };
       }
     }
     out[game] = { levels, paths };
@@ -40,7 +43,12 @@ export function setAnnotations(raw) {
 
 // display name for a path: the curated override, else the disc name, else null
 export function pathDisplayName(gameId, levelShort, path) {
-  return ann[gameId]?.paths?.[levelShort]?.[String(path.id)] || path.name || null;
+  return ann[gameId]?.paths?.[levelShort]?.[String(path.id)]?.name || path.name || null;
+}
+
+// a curiosity about a path that its name can't carry, or null
+export function pathNote(gameId, levelShort, path) {
+  return ann[gameId]?.paths?.[levelShort]?.[String(path.id)]?.note ?? null;
 }
 
 // {name, note?} for a level the map doesn't render, or null
