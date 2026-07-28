@@ -3,6 +3,12 @@
   {
    "date": "2026-07-28",
    "tag": "new",
+   "title": "Every Exoddus area now has a name",
+   "detail": "The rest of Exoddus follows the Brewery: all eighty-six paths across the Mines, Necrum, both vaults, FeeCo Depot, the Slig Barracks, Bonewerkz and the final boiler room now say where you are. Where the game paints the answer on the wall, that is what you get: the mine's numbered tunnels, the barracks' blocks, FeeCo's numbered terminals, each read off the boards and arches in the artwork. Where it paints nothing, as in the two vaults, the name comes from matching each path's contents against a walkthrough, so the vault trials are numbered the way players number them. Eighteen more paths turn out to be demo copies you can never walk to, marked [Demo], sixteen of them under the names the game gives those demos."
+  },
+  {
+   "date": "2026-07-28",
+   "tag": "new",
    "title": "The Brewery's zulags have names",
    "detail": "Exoddus names none of the twenty-eight paths in SoulStorm Brewery, so the map could only number them. Each now says which zulag it is, read off the \"employees this zulag\" boards on the walls and checked against the doors each hub opens. Seven of the paths turn out to be copies of a zulag that the game only ever plays back as a demo, unreachable however you play; those are marked [Demo], four of them under the names the game gives those demos. One board is not to be trusted: most of Zulag 13's read 14, a known developer slip, so the map calls it 13."
   },

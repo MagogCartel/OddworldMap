@@ -73,6 +73,105 @@
  "AE": {
   "levels": {},
   "paths": {
+   "MI": {
+    "1": "Tunnel 1",
+    "2": "Tunnel 2",
+    "3": "Boiler Room",
+    "4": "Tunnels 3-5",
+    "5": "Tunnel 6",
+    "6": "Boiler Room Revisited",
+    "7": "Tunnel 1: Secret Area",
+    "8": "[Demo] Tunnel 1: Mudokons",
+    "9": "[Demo] Tunnel 2: Flying Slig",
+    "10": "Tunnel 7",
+    "11": "[Demo] Tunnel 5: Blind Mudokons",
+    "12": "[Demo] Tunnel 6: Minecar"
+   },
+   "NE": {
+    "1": "Path to the Vaults",
+    "2": "The Jungles of Necrum",
+    "3": "Necrum Vaults",
+    "4": "Path to the Vaults III",
+    "5": "Necrum Vaults Hub",
+    "6": "Path to the Vaults II",
+    "7": "[Demo] Path to the Vaults II: Fleeches"
+   },
+   "SV": {
+    "1": "Trial 6",
+    "2": "Trial 1",
+    "3": "Trial 3",
+    "4": "Trial 5",
+    "5": "Trial 2",
+    "6": "Mudanchee Vaults",
+    "7": "Mudanchee Vaults Hub",
+    "8": "Trial 4",
+    "9": "Mudanchee Vault Ender: Scrab Nest",
+    "10": "Mudanchee Vault Ender: Scrab Nest II",
+    "11": "Mudanchee Vault Ender: Vault Exit",
+    "12": "[Demo] Trial 5: Scrab and Fleeches",
+    "13": "[Demo] Mudanchee Vaults: Invisibility",
+    "14": "[Demo] Mudanchee Vault Ender: Scrab Nest"
+   },
+   "PV": {
+    "1": "Mudomo Vaults",
+    "2": "[Demo] Mudomo Vaults: Paramite Chase",
+    "3": "Trial 4",
+    "4": "Trial 5",
+    "5": "Trial 6",
+    "6": "[Demo] Mudomo Vaults II: Paramites Talk",
+    "7": "Mudomo Vaults II",
+    "8": "Mudomo Vaults Hub",
+    "9": "Trial 1",
+    "10": "Mudomo Vaults III",
+    "11": "Trial 2",
+    "12": "Trial 3",
+    "13": "Mudomo Vault Ender: Paramite Nest",
+    "14": "Trial 4: Secret Area",
+    "15": "Trial 3: Secret Area"
+   },
+   "FD": {
+    "1": "Terminal 1",
+    "2": "Main Lobby",
+    "3": "Terminal 3: Slig Barracks",
+    "4": "Terminal 4: Bonewerkz",
+    "5": "Terminal 5: SoulStorm Brewery",
+    "6": "[Demo] Terminal 1: Farts-a-poppin'",
+    "7": "Terminal 2",
+    "8": "[Demo] Terminal 4: Bonewerkz",
+    "9": "Path to the Terminals",
+    "10": "Terminal 5: Storage",
+    "11": "FeeCo Depot Ender: Executive Office",
+    "12": "[Demo] Terminal 2: Flying Sligs 2",
+    "13": "[Demo] FeeCo Depot Ender: Baggage Claim",
+    "14": "FeeCo Depot Ender: Executive Office II"
+   },
+   "BA": {
+    "1": "Block 0 Parade Grounds",
+    "2": "Slig Barracks Hub",
+    "3": "[Demo] Block 2 Worker Camps: Shrykull",
+    "4": "[Demo] Block 3 Slig Bunks: Crawling Sligs",
+    "5": "Block 2 Worker Camps",
+    "7": "Block 3 Slig Bunks",
+    "9": "Block 4 Trophy Room",
+    "10": "Block 1 Rifle Range",
+    "11": "Barracks Ender: Dripik's War Room",
+    "13": "Block 0 Parade Grounds: Exit",
+    "14": "Block 4 Bombing Range",
+    "15": "Block 3 Slig Bunks: Suites",
+    "16": "Barracks Ender: Dripik's War Room II"
+   },
+   "BW": {
+    "1": "Entrance and Annex 2",
+    "2": "Annexes 3-6",
+    "3": "Annex 7",
+    "4": "Annex 8",
+    "7": "Annex 1",
+    "9": "Executive Office",
+    "11": "[Demo] Annex 8: Slogs Attack",
+    "12": "Bonewerkz Ender: Executive Office II",
+    "13": "[Demo] Bonewerkz Ender: Glukkon",
+    "14": "Bonewerkz Ender: Executive Office Approach"
+   },
    "BR": {
     "1": "Zulag 1",
     "2": "Zulag 2",
@@ -102,6 +201,9 @@
     "27": "[Demo] Zulag 12: Tortured Mudokons",
     "28": "[Demo] Zulag 4: Greeters Go Boom",
     "29": "[Demo] Zulag 13"
+   },
+   "BM": {
+    "1": "Main Boiler Room"
    }
   }
  }
