@@ -19,7 +19,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - in the screen list and the Fields picker, a field name with a dotted underline carries a hover definition — what it means and its possible values — curated in [glossary.json](glossary.json)
 - **click** a door, path transition, travel portal, express well, teleporter or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
   - while hovering one, its partner — the object you'd come out of — gets a dashed outline whenever the pair sits on the current path
-  - the rare transition pointing at a level outside the map (Oddysee's main-menu level) says so in its tooltip instead of offering a follow
+  - the rare transition pointing at a level outside the map (Oddysee's main-menu level) says so in its tooltip, along with a note on what is out there, instead of offering a follow
 - **click/tap** anywhere else on a screen to list everything on it, grouped by category
   - hover a row to outline that object on the map, click it to jump there
   - tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object

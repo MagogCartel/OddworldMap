@@ -3,7 +3,7 @@
   "levels": {
    "S1": {
     "name": "Main Menu",
-    "note": "the menu level (LevelIds::eMenu_0); the attract demos in R1 P19 and L1 P1 return to it, hence the two PathTransitions pointing here"
+    "note": "The game's main menu. The attract-mode demos return to it when they finish, which is why anything points here at all."
    }
   },
   "paths": {

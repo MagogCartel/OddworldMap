@@ -406,7 +406,9 @@ function updateHover() {
             follow = `<br><span class="f loop">⟳ loops back to itself</span>`;
           } else if (d && !followableDest(t)) {
             const info = levelInfo(state.data.id, d.lv);
-            follow = `<br><span class="f loop">→ leads to ${esc(`${d.lv} P${d.pa}`)}${info ? ` (${esc(info.name)})` : ""} — not on the map</span>`;
+            follow =
+              `<br><span class="f loop">→ leads to ${esc(`${d.lv} P${d.pa}`)}${info ? ` (${esc(info.name)})` : ""} — not on the map</span>` +
+              (info?.note ? `<br><span class="e">${esc(info.note)}</span>` : "");
           } else if (d) {
             follow = `<br><span class="f">➜ click to follow to ${esc(`${d.lv} P${d.pa}${d.ca != null ? " C" + d.ca : ""}`)}</span>`;
           }
