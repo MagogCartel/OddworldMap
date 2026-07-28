@@ -72,6 +72,37 @@
  },
  "AE": {
   "levels": {},
-  "paths": {}
+  "paths": {
+   "BR": {
+    "1": "Zulag 1",
+    "2": "Zulag 2",
+    "3": "Zulag 8",
+    "4": "Zulag 14",
+    "5": "Zulag 6",
+    "6": "Zulag 7",
+    "7": "[Demo] Zulag 1",
+    "8": "[Demo] Zulag 2",
+    "9": "Zulag 11",
+    "10": "Zulag 10",
+    "11": "Zulag 12",
+    "12": "Zulag 3",
+    "13": "[Demo] Zulag 6: Angry Mudokons",
+    "14": "Zulag 5",
+    "15": "Zulag 13: Final Secret Area",
+    "16": "Brewery Terminal",
+    "17": "Zulag 9",
+    "18": "Zulag 4",
+    "19": "Zulag 4: Tear X-Tractor",
+    "20": "Zulag 13",
+    "21": "Zulag 9: Fleech Ledge",
+    "23": "Hub 1",
+    "24": "Hub 2",
+    "25": "Hub 3",
+    "26": "[Demo] Zulag 10: Sligs",
+    "27": "[Demo] Zulag 12: Tortured Mudokons",
+    "28": "[Demo] Zulag 4: Greeters Go Boom",
+    "29": "[Demo] Zulag 13"
+   }
+  }
  }
 }

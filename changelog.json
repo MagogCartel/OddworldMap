@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-28",
+   "tag": "new",
+   "title": "The Brewery's zulags have names",
+   "detail": "Exoddus names none of the twenty-eight paths in SoulStorm Brewery, so the map could only number them. Each now says which zulag it is, read off the \"employees this zulag\" boards on the walls and checked against the doors each hub opens. Seven of the paths turn out to be copies of a zulag that the game only ever plays back as a demo, unreachable however you play; those are marked [Demo], four of them under the names the game gives those demos. One board is not to be trusted: most of Zulag 13's read 14, a known developer slip, so the map calls it 13."
+  },
+  {
+   "date": "2026-07-28",
    "tag": "fixed",
    "title": "Portals that go nowhere stop naming a destination",
    "detail": "In Exoddus, the bird portals that don't travel anywhere (the ones Mudokons fly up through, and the ones that grant Shrykull) nearly all claimed to lead to Necrum Mines P1 C1, and offered a link there. The levels do store a destination for them, but the game never reads it: such a portal closes where it stands and never moves Abe, so the stored value is scratch, usually the untouched default that points at the first screen of the first level. All 118 of them now show no destination at all. Genuine travel portals are unchanged."
