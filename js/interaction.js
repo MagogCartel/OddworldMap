@@ -30,6 +30,7 @@ import { levelInfo } from "./annotations.js";
 import { toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
+import { syncPlace, togglePlace } from "./place.js";
 import { addRoutePoint, undoRoutePoint } from "./route.js";
 import { trapDialogKeys } from "./dialog.js";
 import { HAMBURGER_SVG, CLOSE_SVG, LINK_SVG, EXTERNAL_SVG } from "./icons.js";
@@ -57,6 +58,7 @@ export function toggleMenu(open) {
     open ?? !document.body.classList.contains("menu-open"),
   );
   syncMenu();
+  syncPlace();
 }
 syncMenu();
 menuBtn.onclick = () => toggleMenu();
@@ -303,6 +305,10 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Backspace" && state.route) {
     undoRoutePoint();
     e.preventDefault(); // Backspace must not fall through to history-back
+    return;
+  }
+  if (e.key === "i") {
+    togglePlace();
     return;
   }
   if (e.key === "?") {

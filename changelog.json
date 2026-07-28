@@ -3,8 +3,8 @@
   {
    "date": "2026-07-28",
    "tag": "new",
-   "title": "Thirteen Exoddus paths say what is odd about them",
-   "detail": "A path can now carry a note as well as a name, a short remark about that place. The first batch is thirteen: the Brewery's zulag 13, which almost every board in it misprints as 14 (a developer slip corrected for the Japanese release) and the arch out of zulag 11, which repeats the mistake; nine screens furnished with a level's worth of borrowed artwork, eight of them secret areas, from the Slig Barracks hidden in the Necrum jungle to the railway depot tucked inside a Paramite trial; the Mines' escape route, which is the boiler room you already crossed, screen for screen; and FeeCo's terminal 3, the one terminal the game never numbers."
+   "title": "The map says where you are, and what is odd about it",
+   "detail": "A chip in the map's top-left corner now names the level and path you are looking at, wherever you arrived from. Click it, or press i, and it tells you the level's full name, whether the game ever arrives at this path from another level, and, on the paths that have something odd about them, a short remark on what that is. Thirteen Exoddus paths carry one so far, each marked by a dot on the chip. There is the Brewery's zulag 13, which almost every board in it misprints as 14 (a developer slip corrected for the Japanese release), and the arch out of zulag 11 that repeats the mistake. There are nine screens furnished with another level's artwork, eight of them secret areas, from the Slig Barracks hidden in the Necrum jungle to the railway depot tucked inside a Paramite trial. And there is the Mines' escape route, the boiler room you already crossed screen for screen, and FeeCo's terminal 3, the one terminal the game never numbers."
   },
   {
    "date": "2026-07-28",

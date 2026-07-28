@@ -152,6 +152,18 @@
         aria-label="Open in Oddworld Map"
         title="Open in Oddworld Map"
       ></a>
+      <button
+        id="placeBtn"
+        type="button"
+        hidden
+        title="Path details"
+        aria-expanded="false"
+        aria-controls="placePanel"
+      >
+        <span id="placeCode"></span><span id="placeName"></span
+        ><span id="placeDot" aria-hidden="true"></span>
+      </button>
+      <div id="placePanel" hidden aria-live="polite"></div>
       <div id="tip"></div>
       <div id="camPanel" hidden>
         <div class="cp-head">
@@ -196,6 +208,10 @@
           <div class="sc-row">
             <span class="sc-keys"><kbd>[</kbd><kbd>]</kbd></span
             >previous / next path
+          </div>
+          <div class="sc-row">
+            <span class="sc-keys"><kbd>i</kbd></span
+            >where you are — level, path and its note
           </div>
           <div class="sc-row">
             <span class="sc-keys"><kbd>g</kbd></span
