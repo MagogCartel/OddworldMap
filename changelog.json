@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-28",
+   "tag": "fixed",
+   "title": "Portals that go nowhere stop naming a destination",
+   "detail": "In Exoddus, the bird portals that don't travel anywhere (the ones Mudokons fly up through, and the ones that grant Shrykull) nearly all claimed to lead to Necrum Mines P1 C1, and offered a link there. The levels do store a destination for them, but the game never reads it: such a portal closes where it stands and never moves Abe, so the stored value is scratch, usually the untouched default that points at the first screen of the first level. All 118 of them now show no destination at all. Genuine travel portals are unchanged."
+  },
+  {
    "date": "2026-07-27",
    "tag": "fixed",
    "title": "Tab skips the closed sidebar",

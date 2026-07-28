@@ -294,6 +294,32 @@ test("no TLV in the shipped data carries a raw fallback", () => {
   }
 });
 
+// a worker/shrykull portal dies where it stands, so its destination words are
+// dead data — and they are near-universally the unedited 1/1/1 default, which
+// would otherwise read as "every rescue portal leads to Necrum Mines P1 C1"
+test("only travel BirdPortals carry a destination", () => {
+  for (const [file, id] of [
+    ["map_data_ao.json", "AO"],
+    ["map_data_ae.json", "AE"],
+  ]) {
+    const data = load(file);
+    let travel = 0;
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs) {
+          if (t.name !== "BirdPortal") continue;
+          const where = `${id} ${L.short} P${P.id} (${t.x1},${t.y1})`;
+          if (t.extra.portal === "travel") {
+            travel++;
+            assert.ok(t.extra.to_level != null, `${where}: travel portal lacks a destination`);
+          } else {
+            assert.equal(t.extra.to_level, undefined, `${where}: ${t.extra.portal} portal`);
+          }
+        }
+    assert.ok(travel > 0, `${id}: no travel portals`);
+  }
+});
+
 // the shipped data contains exactly three genuinely self-referencing paired
 // objects. Dangling destinations (e.g. AE MI P11) must not be flagged, and
 // neither must 0-target doors whose camera merely holds them (SV P6, BR P21

@@ -184,9 +184,8 @@ test("destOf: travel BirdPortals pair with the exit in the destination camera", 
     ca: 3,
     target: { name: "BirdPortalExit" },
   });
-  // rescue/shrykull portals record a destination but don't traverse: no pairing
-  const rescue = tlv("BirdPortal", { portal: "rescue", to_level: "MI", to_path: 1, to_cam: 1 });
-  assert.deepEqual(destOf(rescue, ...HERE), { lv: "MI", pa: 1, ca: 1, target: null });
+  // rescue/shrykull portals don't traverse, so they carry no destination at all
+  assert.equal(destOf(tlv("BirdPortal", { portal: "rescue" }), ...HERE), null);
 });
 
 test("resolveTarget: name-only targets match only inside the stated camera", () => {

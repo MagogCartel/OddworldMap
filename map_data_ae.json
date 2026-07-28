@@ -1173,10 +1173,7 @@
        "x2": 3574,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -1199,10 +1196,7 @@
        "x2": 3574,
        "y2": 884,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -2898,10 +2892,7 @@
        "x2": 949,
        "y2": 1404,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -3018,10 +3009,7 @@
        "x2": 1350,
        "y2": 1360,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -3395,10 +3383,7 @@
        "x2": 1725,
        "y2": 1504,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -3822,10 +3807,7 @@
        "x2": 2474,
        "y2": 1504,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -4531,10 +4513,7 @@
        "x2": 3519,
        "y2": 1363,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -4818,10 +4797,7 @@
        "x2": 3924,
        "y2": 1504,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -6704,10 +6680,7 @@
        "x2": 449,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -7572,10 +7545,7 @@
        "x2": 2383,
        "y2": 1164,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -8016,10 +7986,7 @@
        "x2": 3689,
        "y2": 1463,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -12445,10 +12412,7 @@
        "x2": 2349,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -12686,10 +12650,7 @@
        "x2": 3324,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -13536,10 +13497,7 @@
        "x2": 3449,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -13992,10 +13950,7 @@
        "x2": 2599,
        "y2": 1144,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -14528,10 +14483,7 @@
        "x2": 1824,
        "y2": 1504,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -17193,10 +17145,7 @@
        "x2": 2174,
        "y2": 2804,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -17610,10 +17559,7 @@
        "x2": 3149,
        "y2": 3064,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -17880,10 +17826,7 @@
        "x2": 3324,
        "y2": 3324,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -19548,10 +19491,7 @@
        "x2": 4049,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -20074,10 +20014,7 @@
        "x2": 2024,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -20298,10 +20235,7 @@
        "x2": 3224,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -21367,10 +21301,7 @@
        "x2": 3324,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -24804,10 +24735,7 @@
        "x2": 450,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -25254,10 +25182,7 @@
        "x2": 1424,
        "y2": 884,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -25945,10 +25870,7 @@
        "x2": 1324,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -25971,10 +25893,7 @@
        "x2": 1324,
        "y2": 364,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -27039,10 +26958,7 @@
        "x2": 225,
        "y2": 840,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -27431,10 +27347,7 @@
        "x2": 600,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -27867,10 +27780,7 @@
        "x2": 1349,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -28585,10 +28495,7 @@
        "x2": 2394,
        "y2": 843,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -28872,10 +28779,7 @@
        "x2": 2799,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -29645,10 +29549,7 @@
        "x2": 883,
        "y2": 644,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -29965,10 +29866,7 @@
        "x2": 2189,
        "y2": 943,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -31627,10 +31525,7 @@
        "x2": 524,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -33615,10 +33510,7 @@
        "x2": 474,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -34038,10 +33930,7 @@
        "x2": 524,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -34308,10 +34197,7 @@
        "x2": 699,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -35000,10 +34886,7 @@
        "x2": 3674,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -35232,10 +35115,7 @@
        "x2": 1649,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -35442,10 +35322,7 @@
        "x2": 2849,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -36505,10 +36382,7 @@
        "x2": 2949,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -39838,10 +39712,7 @@
        "x2": 1924,
        "y2": 1784,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -42409,10 +42280,7 @@
        "x2": 4025,
        "y2": 1245,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 0,
-        "to_cam": 0
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -44648,10 +44516,7 @@
        "x2": 2324,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "NE",
-        "to_path": 5,
-        "to_cam": 5
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -71120,10 +70985,7 @@
        "x2": 596,
        "y2": 451,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -73410,10 +73272,7 @@
        "x2": 1274,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -77151,10 +77010,7 @@
        "x2": 124,
        "y2": 1144,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -90238,10 +90094,7 @@
        "x2": 1100,
        "y2": 1244,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -92612,10 +92465,7 @@
        "x2": 1351,
        "y2": 1244,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -97140,10 +96990,7 @@
        "x2": 574,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -101426,10 +101273,7 @@
        "x2": 2949,
        "y2": 924,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -102755,10 +102599,7 @@
        "x2": 1574,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -110508,10 +110349,7 @@
        "x2": 3675,
        "y2": 482,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -111838,10 +111676,7 @@
        "x2": 699,
        "y2": 1144,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -114683,10 +114518,7 @@
        "x2": 1999,
        "y2": 884,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -115129,10 +114961,7 @@
        "x2": 1075,
        "y2": 1240,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -129952,10 +129781,7 @@
        "x2": 449,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -135662,10 +135488,7 @@
        "x2": 499,
        "y2": 204,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -140931,10 +140754,7 @@
        "x2": 874,
        "y2": 724,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -142249,10 +142069,7 @@
        "x2": 3799,
        "y2": 1244,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -144213,10 +144030,7 @@
        "x2": 3349,
        "y2": 2303,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -150803,10 +150617,7 @@
        "x2": 1074,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -152291,10 +152102,7 @@
        "x2": 1024,
        "y2": 424,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -159125,10 +158933,7 @@
        "x2": 50,
        "y2": 460,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -159803,10 +159608,7 @@
        "x2": 1725,
        "y2": 482,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -160323,10 +160125,7 @@
        "x2": 525,
        "y2": 1502,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -160932,10 +160731,7 @@
        "x2": 1224,
        "y2": 1502,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -162826,10 +162622,7 @@
        "x2": 150,
        "y2": 200,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -163166,10 +162959,7 @@
        "x2": 650,
        "y2": 200,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -163639,10 +163429,7 @@
        "x2": 99,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -164095,10 +163882,7 @@
        "x2": 700,
        "y2": 720,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -164766,10 +164550,7 @@
        "x2": 599,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -171507,10 +171288,7 @@
        "x2": 699,
        "y2": 204,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -172727,10 +172505,7 @@
        "x2": 2495,
        "y2": 64,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -172796,10 +172571,7 @@
        "x2": 2496,
        "y2": 200,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -172978,10 +172750,7 @@
        "x2": 1993,
        "y2": 380,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -174077,10 +173846,7 @@
        "x2": 1024,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -176869,10 +176635,7 @@
        "x2": 2724,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -181208,10 +180971,7 @@
        "x2": 1099,
        "y2": 463,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -181650,10 +181410,7 @@
        "x2": 824,
        "y2": 1244,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -182810,10 +182567,7 @@
        "x2": 2700,
        "y2": 1125,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -186982,10 +186736,7 @@
        "x2": 1050,
        "y2": 460,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -191935,10 +191686,7 @@
        "x2": 924,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -193123,10 +192871,7 @@
        "x2": 2449,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -194296,10 +194041,7 @@
        "x2": 3299,
        "y2": 1244,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -195771,10 +195513,7 @@
        "x2": 449,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -199811,10 +199550,7 @@
        "x2": 1824,
        "y2": 1504,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -200877,10 +200613,7 @@
        "x2": 1399,
        "y2": 624,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -201396,10 +201129,7 @@
        "x2": 1024,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -203671,10 +203401,7 @@
        "x2": 2075,
        "y2": 1420,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 1,
@@ -203897,10 +203624,7 @@
        "x2": 2123,
        "y2": 1761,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -203989,10 +203713,7 @@
        "x2": 2124,
        "y2": 1660,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -207618,10 +207339,7 @@
        "x2": 1799,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -209156,10 +208874,7 @@
        "x2": 2450,
        "y2": 1245,
        "extra": {
-        "portal": "rescue",
-        "to_level": "BR",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -211643,10 +211358,7 @@
        "x2": 2049,
        "y2": 344,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -213688,10 +213400,7 @@
        "x2": 3275,
        "y2": 1240,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -214119,10 +213828,7 @@
        "x2": 2375,
        "y2": 1501,
        "extra": {
-        "portal": "rescue",
-        "to_level": "BR",
-        "to_path": 10,
-        "to_cam": 18
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -215578,10 +215284,7 @@
        "x2": 449,
        "y2": 984,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -217146,10 +216849,7 @@
        "x2": 424,
        "y2": 484,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -219119,10 +218819,7 @@
        "x2": 649,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -220066,10 +219763,7 @@
        "x2": 424,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -223072,10 +222766,7 @@
        "x2": 2099,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -225616,10 +225307,7 @@
        "x2": 1774,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -227694,10 +227382,7 @@
        "x2": 1375,
        "y2": 1502,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -228830,10 +228515,7 @@
        "x2": 449,
        "y2": 2024,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -230640,10 +230322,7 @@
        "x2": 974,
        "y2": 444,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -231677,10 +231356,7 @@
        "x2": 1949,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -233668,10 +233344,7 @@
        "x2": 449,
        "y2": 724,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -235771,10 +235444,7 @@
        "x2": 2699,
        "y2": 884,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -237243,10 +236913,7 @@
        "x2": 450,
        "y2": 464,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -240848,10 +240515,7 @@
        "x2": 924,
        "y2": 344,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -242242,10 +241906,7 @@
        "x2": 1025,
        "y2": 980,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -242547,10 +242208,7 @@
        "x2": 74,
        "y2": 204,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 0,
@@ -243977,10 +243635,7 @@
        "x2": 599,
        "y2": 444,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
@@ -245094,10 +244749,7 @@
        "x2": 2699,
        "y2": 104,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -247588,10 +247240,7 @@
        "x2": 1299,
        "y2": 984,
        "extra": {
-        "portal": "shrykull",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "shrykull"
        },
        "fields": {
         "enter_side": 0,
@@ -248987,10 +248636,7 @@
        "x2": 699,
        "y2": 1384,
        "extra": {
-        "portal": "rescue",
-        "to_level": "MI",
-        "to_path": 1,
-        "to_cam": 1
+        "portal": "rescue"
        },
        "fields": {
         "enter_side": 1,
