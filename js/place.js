@@ -7,7 +7,7 @@ import { $ } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
 import { pathDisplayName, pathNote } from "./annotations.js";
-import { demoLabel, isDemoPath } from "./demo.js";
+import { isDemoPath } from "./demo.js";
 
 const btn = $("placeBtn"),
   panel = $("placePanel"),
@@ -20,7 +20,7 @@ let shown = null; // the path the open panel describes; a re-selection must not 
 // into it while it is visible — so every fill follows the unhide
 function fill() {
   const { data, lvl, path } = state;
-  const name = demoLabel(path, pathDisplayName(data.id, lvl.short, path)),
+  const name = pathDisplayName(data.id, lvl.short, path),
     note = pathNote(data.id, lvl.short, path);
   panel.innerHTML =
     `<div class="pl-game">${esc(data.game)}</div>` +
@@ -66,7 +66,7 @@ window.addEventListener("selection-changed", () => {
     return;
   }
   codeEl.textContent = `${lvl.short} P${path.id}`;
-  nameEl.textContent = demoLabel(path, pathDisplayName(data.id, lvl.short, path)) || "";
+  nameEl.textContent = pathDisplayName(data.id, lvl.short, path) || "";
   btn.classList.toggle("hasnote", !!pathNote(data.id, lvl.short, path));
   btn.hidden = false;
   syncPlace();

@@ -15,12 +15,6 @@ export function isDemoPath(P) {
   return d;
 }
 
-// a label says which class the path is in, because the chip and the buttons have
-// no room for the sentence the place panel gets
-export function demoLabel(P, name) {
-  return isDemoPath(P) ? `[Demo] ${name || ""}`.trimEnd() : name;
-}
-
 // the path in hand is always listed: a hidden path arrived at is revealed for the
 // session rather than stranding the visitor on a screen no button names
 export function pathVisible(P) {

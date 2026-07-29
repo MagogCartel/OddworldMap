@@ -84,11 +84,11 @@
      "note": "Pixel-identical to the boiler room in P3 across all fifteen screens: the same rooms, restocked for the escape."
     },
     "7": "Tunnel 1: Secret Area",
-    "8": "Tunnel 1: Mudokons",
-    "9": "Tunnel 2: Flying Slig",
+    "8": "[Demo] Tunnel 1: Mudokons",
+    "9": "[Demo] Tunnel 2: Flying Slig",
     "10": "Tunnel 7",
-    "11": "Tunnel 5: Blind Mudokons",
-    "12": "Tunnel 6: Minecar"
+    "11": "[Demo] Tunnel 5: Blind Mudokons",
+    "12": "[Demo] Tunnel 6: Minecar"
    },
    "NE": {
     "1": "Path to the Vaults",
@@ -103,7 +103,7 @@
      "note": "Its secret area is dressed as the Slig Barracks, status board and all."
     },
     "6": "Path to the Vaults II",
-    "7": "Path to the Vaults II: Fleeches"
+    "7": "[Demo] Path to the Vaults II: Fleeches"
    },
    "SV": {
     "1": "Trial 6",
@@ -126,17 +126,17 @@
      "name": "Vault Exit",
      "note": "Both screens are Necrum Mines artwork, so the vault lets you out into scenery from where the game began."
     },
-    "12": "Trial 5: Scrab and Fleeches",
-    "13": "Mudanchee Vaults: Invisibility",
-    "14": "Scrab Nest"
+    "12": "[Demo] Trial 5: Scrab and Fleeches",
+    "13": "[Demo] Mudanchee Vaults: Invisibility",
+    "14": "[Demo] Scrab Nest"
    },
    "PV": {
     "1": "Mudomo Vaults",
-    "2": "Mudomo Vaults: Paramite Chase",
+    "2": "[Demo] Mudomo Vaults: Paramite Chase",
     "3": "Trial 4",
     "4": "Trial 5",
     "5": "Trial 6",
-    "6": "Mudomo Vaults II: Paramites Talk",
+    "6": "[Demo] Mudomo Vaults II: Paramites Talk",
     "7": "Mudomo Vaults II",
     "8": "Mudomo Vaults Hub",
     "9": "Trial 1",
@@ -165,21 +165,21 @@
     },
     "4": "Terminal 4: Bonewerkz",
     "5": "Terminal 5: SoulStorm Brewery",
-    "6": "Terminal 1: Farts-a-poppin'",
+    "6": "[Demo] Terminal 1: Farts-a-poppin'",
     "7": "Terminal 2",
-    "8": "Terminal 4: Bonewerkz",
+    "8": "[Demo] Terminal 4: Bonewerkz",
     "9": "Path to the Terminals",
     "10": "Terminal 5: Storage",
     "11": "Executive Office",
-    "12": "Terminal 2: Flying Sligs 2",
-    "13": "Baggage Claim",
+    "12": "[Demo] Terminal 2: Flying Sligs 2",
+    "13": "[Demo] Baggage Claim",
     "14": "Executive Office II"
    },
    "BA": {
     "1": "Block 0 Parade Grounds",
     "2": "Slig Barracks Hub",
-    "3": "Block 2 Worker Camps: Shrykull",
-    "4": "Block 3 Slig Bunks: Crawling Sligs",
+    "3": "[Demo] Block 2 Worker Camps: Shrykull",
+    "4": "[Demo] Block 3 Slig Bunks: Crawling Sligs",
     "5": "Block 2 Worker Camps",
     "7": "Block 3 Slig Bunks",
     "9": "Block 4 Trophy Room",
@@ -200,9 +200,9 @@
      "note": "One of the annex's secret areas teleports you into SoulStorm Brewery artwork, a whole level away from Bonewerkz."
     },
     "9": "Executive Office",
-    "11": "Annex 8: Slogs Attack",
+    "11": "[Demo] Annex 8: Slogs Attack",
     "12": "Executive Office II",
-    "13": "Glukkon",
+    "13": "[Demo] Glukkon",
     "14": "Executive Office Approach"
    },
    "BR": {
@@ -212,8 +212,8 @@
     "4": "Zulag 14",
     "5": "Zulag 6",
     "6": "Zulag 7",
-    "7": "Zulag 1",
-    "8": "Zulag 2",
+    "7": "[Demo] Zulag 1",
+    "8": "[Demo] Zulag 2",
     "9": {
      "name": "Zulag 11",
      "note": "The arch over the exit door reads ZULAG 14 while the status board in the same room reads 11: the same signage slip as zulag 13."
@@ -221,7 +221,7 @@
     "10": "Zulag 10",
     "11": "Zulag 12",
     "12": "Zulag 3",
-    "13": "Zulag 6: Angry Mudokons",
+    "13": "[Demo] Zulag 6: Angry Mudokons",
     "14": "Zulag 5",
     "15": "Zulag 13: Final Secret Area",
     "16": "Brewery Terminal",
@@ -236,10 +236,10 @@
     "23": "Hub 1",
     "24": "Hub 2",
     "25": "Hub 3",
-    "26": "Zulag 10: Sligs",
-    "27": "Zulag 12: Tortured Mudokons",
-    "28": "Zulag 4: Greeters Go Boom",
-    "29": "Zulag 13"
+    "26": "[Demo] Zulag 10: Sligs",
+    "27": "[Demo] Zulag 12: Tortured Mudokons",
+    "28": "[Demo] Zulag 4: Greeters Go Boom",
+    "29": "[Demo] Zulag 13"
    },
    "BM": {
     "1": "Main Boiler Room"

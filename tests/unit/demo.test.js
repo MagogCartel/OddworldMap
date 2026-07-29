@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { demoLabel, isDemoPath, pathVisible, revealPath } from "../../js/demo.js";
+import { isDemoPath, pathVisible, revealPath } from "../../js/demo.js";
 import { getSettings } from "../../js/settings.js";
 import { path, tlv } from "./fixtures.js";
 
@@ -26,13 +26,6 @@ test("isDemoPath: a DemoSpawnPoint marks the path, and only that", () => {
   assert.equal(isDemoPath(path(1, [])), false);
   const p = demoPath(1);
   assert.equal(isDemoPath(p), isDemoPath(p)); // memoized per path
-});
-
-test("demoLabel: the marker leads a demo path's name and stands alone without one", () => {
-  assert.equal(demoLabel(demoPath(1), "Scrab Nest"), "[Demo] Scrab Nest");
-  assert.equal(demoLabel(demoPath(1), null), "[Demo]");
-  assert.equal(demoLabel(playPath(1), "Scrab Nest"), "Scrab Nest");
-  assert.equal(demoLabel(playPath(1), null), null);
 });
 
 test("pathVisible: gameplay paths always, demo paths only when asked", () => {
