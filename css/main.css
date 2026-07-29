@@ -1023,6 +1023,16 @@ body.shortcuts-open #shortcuts {
   color: var(--dim);
   margin-bottom: 8px;
 }
+.st-def {
+  flex: none;
+  margin-left: auto;
+  color: var(--dim);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.st-def:empty {
+  display: none;
+}
 .st-desc {
   color: var(--dim);
   font-size: 12px;

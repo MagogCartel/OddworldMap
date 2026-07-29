@@ -72,7 +72,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 ### Settings
 
-The gear button at the top of the sidebar, in three groups:
+The gear button at the top of the sidebar opens them, in three groups. A setting you have changed from its default says so on its row, so "off by default" reads apart from "I turned this off".
 
 - **Saved on this device**
   - "Remember display & object filters" (on by default) keeps the Display toggles and Objects filters across visits; turn it off to start from the defaults every time

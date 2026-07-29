@@ -167,6 +167,17 @@ export function clearStoredLocation() {
   store.remove(LOC_KEY);
 }
 
+// a row whose value isn't the default says so
+function markDefault(cb, dflt) {
+  let mark = cb.parentElement.querySelector(".st-def");
+  if (!mark) {
+    mark = document.createElement("span");
+    mark.className = "st-def";
+    cb.parentElement.append(mark);
+  }
+  mark.textContent = cb.checked === dflt ? "" : dflt ? "on by default" : "off by default";
+}
+
 export function initSettings() {
   const s = getSettings();
   const $ = (id) => document.getElementById(id);
@@ -194,9 +205,11 @@ export function initSettings() {
   const bind = (id, key, apply) => {
     const cb = $(id);
     cb.checked = s[key];
+    markDefault(cb, SETTINGS_DEFAULTS[key]);
     cb.onchange = () => {
       s[key] = cb.checked;
       persistSettings();
+      markDefault(cb, SETTINGS_DEFAULTS[key]);
       apply(cb.checked);
     };
   };
@@ -223,9 +236,11 @@ export function initSettings() {
   // checkbox flips mode between "default" and "more"
   const showMore = $("sShowMore");
   showMore.checked = s.fieldPrefs.mode === "more";
+  markDefault(showMore, false);
   showMore.onchange = () => {
     s.fieldPrefs.mode = showMore.checked ? "more" : "default";
     persistSettings();
+    markDefault(showMore, false);
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "fieldPrefs" } }));
   };
 
