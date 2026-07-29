@@ -447,11 +447,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 2,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 2875,
         "exit_y": 620,
         "disabled_well_level": 1,
@@ -1083,11 +1086,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -2573,11 +2579,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 10,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -2605,11 +2614,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 10,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -4195,11 +4207,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 10,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -6064,11 +6079,14 @@
         "to_level": "MI",
         "to_path": 3,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -6096,11 +6114,14 @@
         "to_level": "MI",
         "to_path": 2,
         "to_cam": 16,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -6186,6 +6207,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 188,
         "disabled_ypos": 712,
         "enabled_xpos": 188,
@@ -7028,6 +7053,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 825,
         "disabled_ypos": 620,
         "enabled_xpos": 825,
@@ -7118,6 +7147,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 888,
         "disabled_ypos": 1234,
         "enabled_xpos": 888,
@@ -7370,6 +7403,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -7571,11 +7608,14 @@
         "to_level": "MI",
         "to_path": 2,
         "to_cam": 16,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -7905,11 +7945,14 @@
         "to_level": "MI",
         "to_path": 2,
         "to_cam": 27,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -8038,11 +8081,14 @@
         "to_level": "MI",
         "to_path": 2,
         "to_cam": 19,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -8494,6 +8540,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 3625,
         "disabled_ypos": 1880,
         "enabled_xpos": 3625,
@@ -8802,6 +8852,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 3410,
         "disabled_ypos": 2011,
         "enabled_xpos": 3410,
@@ -9995,6 +10049,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -10015,6 +10073,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -12325,11 +12387,14 @@
         "to_level": "MI",
         "to_path": 4,
         "to_cam": 22,
-        "switch_id": 1,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -12357,11 +12422,14 @@
         "to_level": "MI",
         "to_path": 4,
         "to_cam": 22,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -12544,6 +12612,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1800,
         "disabled_ypos": 700,
         "enabled_xpos": 1800,
@@ -13480,6 +13552,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 3550,
         "disabled_ypos": 980,
         "enabled_xpos": 3550,
@@ -14286,11 +14362,14 @@
         "to_level": "MI",
         "to_path": 4,
         "to_cam": 13,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -15055,11 +15134,14 @@
         "to_level": "MI",
         "to_path": 4,
         "to_cam": 12,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 716,
         "exit_y": 1995,
         "disabled_well_level": 1,
@@ -21924,6 +22006,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -24467,11 +24553,14 @@
         "to_level": "MI",
         "to_path": 7,
         "to_cam": 14,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -25153,11 +25242,14 @@
         "to_level": "MI",
         "to_path": 7,
         "to_cam": 13,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -28177,11 +28269,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 10,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -29374,6 +29469,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -29575,11 +29674,14 @@
         "to_level": "MI",
         "to_path": 9,
         "to_cam": 16,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -29785,11 +29887,14 @@
         "to_level": "MI",
         "to_path": 9,
         "to_cam": 27,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -30232,6 +30337,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 3625,
         "disabled_ypos": 1880,
         "enabled_xpos": 3625,
@@ -31837,6 +31946,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 3682,
         "disabled_ypos": 1389,
         "enabled_xpos": 3682,
@@ -32324,6 +32437,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 4292,
@@ -33423,11 +33540,14 @@
         "to_level": "MI",
         "to_path": 11,
         "to_cam": 22,
-        "switch_id": 1,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -33455,11 +33575,14 @@
         "to_level": "MI",
         "to_path": 11,
         "to_cam": 22,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -37659,6 +37782,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 550,
         "disabled_ypos": 400,
         "enabled_xpos": 550,
@@ -38322,11 +38449,14 @@
         "to_level": "NE",
         "to_path": 3,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -38516,6 +38646,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1962,
         "disabled_ypos": 845,
         "enabled_xpos": 1962,
@@ -38764,6 +38898,10 @@
         "well#": 212
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 212,
+        "animation_id": 0,
         "disabled_xpos": 2711,
         "disabled_ypos": 1385,
         "enabled_xpos": 2711,
@@ -38860,12 +38998,15 @@
         "alt_level": "NE",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 0,
         "well#": 21,
         "target_well#": 38,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 21,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -38930,12 +39071,15 @@
         "alt_level": "NE",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 0,
         "well#": 38,
         "target_well#": 38,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 38,
+        "animation_id": 0,
         "exit_x": 3036,
         "exit_y": 2100,
         "disabled_well_level": 2,
@@ -39637,12 +39781,15 @@
         "alt_level": "NE",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 0,
         "well#": 44,
         "target_well#": 212,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 44,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -40757,11 +40904,14 @@
         "to_level": "NE",
         "to_path": 2,
         "to_cam": 7,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -41093,11 +41243,14 @@
         "to_level": "NE",
         "to_path": 3,
         "to_cam": 5,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -41125,6 +41278,10 @@
         "well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 2,
+        "animation_id": 0,
         "disabled_xpos": 497,
         "disabled_ypos": 973,
         "enabled_xpos": 497,
@@ -41145,6 +41302,10 @@
         "well#": 3
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 3,
+        "animation_id": 0,
         "disabled_xpos": 472,
         "disabled_ypos": 1175,
         "enabled_xpos": 472,
@@ -41165,11 +41326,14 @@
         "to_level": "MI",
         "to_path": 1,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 430,
         "exit_y": 920,
         "disabled_well_level": 1,
@@ -41242,6 +41406,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -41640,12 +41808,15 @@
         "alt_level": "NE",
         "alt_path": 3,
         "alt_cam": 4,
-        "switch_id": 100,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 100,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 470,
         "exit_y": 1237,
         "disabled_well_level": 2,
@@ -41673,11 +41844,14 @@
         "to_level": "NE",
         "to_path": 3,
         "to_cam": 6,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 420,
         "exit_y": 920,
         "disabled_well_level": 2,
@@ -41734,6 +41908,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 103,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 1200,
         "disabled_ypos": 1180,
         "enabled_xpos": 1200,
@@ -41757,12 +41935,15 @@
         "alt_level": "NE",
         "alt_path": 3,
         "alt_cam": 4,
-        "switch_id": 103,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 103,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 1200,
         "exit_y": 1180,
         "disabled_well_level": 2,
@@ -42080,12 +42261,15 @@
         "alt_level": "FD",
         "alt_path": 1,
         "alt_cam": 1,
-        "switch_id": 15,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 15,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -43146,6 +43330,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1075,
         "disabled_ypos": 980,
         "enabled_xpos": 0,
@@ -43415,6 +43603,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1010,
         "disabled_ypos": 585,
         "enabled_xpos": 0,
@@ -44358,11 +44550,14 @@
         "to_level": "SV",
         "to_path": 6,
         "to_cam": 23,
-        "switch_id": 0,
         "well#": 201,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 201,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -44404,6 +44599,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1425,
         "disabled_ypos": 320,
         "enabled_xpos": 1425,
@@ -44424,11 +44623,14 @@
         "to_level": "NE",
         "to_path": 5,
         "to_cam": 2,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -44456,6 +44658,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 1150,
         "disabled_ypos": 440,
         "enabled_xpos": 1150,
@@ -44642,11 +44848,14 @@
         "to_level": "NE",
         "to_path": 5,
         "to_cam": 1,
-        "switch_id": 23,
         "well#": 69,
         "target_well#": 201
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 23,
+        "other_well_id": 69,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -45212,11 +45421,14 @@
         "to_level": "NE",
         "to_path": 5,
         "to_cam": 4,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -45244,11 +45456,14 @@
         "to_level": "NE",
         "to_path": 5,
         "to_cam": 4,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -45276,6 +45491,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1350,
         "disabled_ypos": 320,
         "enabled_xpos": 1350,
@@ -45520,6 +45739,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1275,
         "disabled_ypos": 1380,
         "enabled_xpos": 1275,
@@ -45540,11 +45763,14 @@
         "to_level": "NE",
         "to_path": 5,
         "to_cam": 8,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 2,
@@ -45572,6 +45798,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -45650,11 +45880,14 @@
         "to_level": "PV",
         "to_path": 1,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 101
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -49851,11 +50084,14 @@
         "to_level": "PV",
         "to_path": 1,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 101,
         "target_well#": 101
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 101,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -53682,6 +53918,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 129,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1262,
         "disabled_ypos": 1240,
         "enabled_xpos": 1312,
@@ -53960,11 +54200,14 @@
         "to_level": "PV",
         "to_path": 3,
         "to_cam": 7,
-        "switch_id": 0,
         "well#": 737,
         "target_well#": 737
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 737,
+        "animation_id": 0,
         "exit_x": 2065,
         "exit_y": 1115,
         "disabled_well_level": 3,
@@ -54256,12 +54499,15 @@
         "alt_level": "PV",
         "alt_path": 14,
         "alt_cam": 10,
-        "switch_id": 100,
         "well#": 28,
         "target_well#": 28,
         "alt_target_well#": 29
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 100,
+        "other_well_id": 28,
+        "animation_id": 0,
         "exit_x": 2511,
         "exit_y": 1300,
         "disabled_well_level": 3,
@@ -55174,12 +55420,15 @@
         "alt_level": "PV",
         "alt_path": 4,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 22,
         "target_well#": 21,
         "alt_target_well#": 22
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 22,
+        "animation_id": 0,
         "exit_x": 661,
         "exit_y": 973,
         "disabled_well_level": 3,
@@ -55207,11 +55456,14 @@
         "to_level": "PV",
         "to_path": 4,
         "to_cam": 1,
-        "switch_id": 1,
         "well#": 21,
         "target_well#": 22
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 21,
+        "animation_id": 0,
         "exit_x": 441,
         "exit_y": 842,
         "disabled_well_level": 3,
@@ -57967,11 +58219,14 @@
         "to_level": "PV",
         "to_path": 6,
         "to_cam": 7,
-        "switch_id": 180,
         "well#": 180,
         "target_well#": 181
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 180,
+        "other_well_id": 180,
+        "animation_id": 0,
         "exit_x": 1512,
         "exit_y": 967,
         "disabled_well_level": 3,
@@ -58002,12 +58257,15 @@
         "alt_level": "PV",
         "alt_path": 6,
         "alt_cam": 7,
-        "switch_id": 180,
         "well#": 181,
         "target_well#": 180,
         "alt_target_well#": 180
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 180,
+        "other_well_id": 181,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -58035,6 +58293,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1673,
         "disabled_ypos": 890,
         "enabled_xpos": 0,
@@ -58703,12 +58965,15 @@
         "alt_level": "PV",
         "alt_path": 6,
         "alt_cam": 10,
-        "switch_id": 180,
         "well#": 183,
         "target_well#": 182,
         "alt_target_well#": 182
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 180,
+        "other_well_id": 183,
+        "animation_id": 0,
         "exit_x": 2767,
         "exit_y": 869,
         "disabled_well_level": 1,
@@ -58739,12 +59004,15 @@
         "alt_level": "PV",
         "alt_path": 6,
         "alt_cam": 10,
-        "switch_id": 180,
         "well#": 182,
         "target_well#": 183,
         "alt_target_well#": 183
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 180,
+        "other_well_id": 182,
+        "animation_id": 0,
         "exit_x": 2699,
         "exit_y": 975,
         "disabled_well_level": 1,
@@ -59137,11 +59405,14 @@
         "to_level": "PV",
         "to_path": 7,
         "to_cam": 7,
-        "switch_id": 180,
         "well#": 180,
         "target_well#": 181
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 180,
+        "other_well_id": 180,
+        "animation_id": 0,
         "exit_x": 1512,
         "exit_y": 967,
         "disabled_well_level": 3,
@@ -59172,12 +59443,15 @@
         "alt_level": "PV",
         "alt_path": 7,
         "alt_cam": 7,
-        "switch_id": 180,
         "well#": 181,
         "target_well#": 180,
         "alt_target_well#": 180
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 180,
+        "other_well_id": 181,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -59205,6 +59479,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1673,
         "disabled_ypos": 890,
         "enabled_xpos": 0,
@@ -59861,11 +60139,14 @@
         "to_level": "PV",
         "to_path": 7,
         "to_cam": 10,
-        "switch_id": 180,
         "well#": 183,
         "target_well#": 182
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 180,
+        "other_well_id": 183,
+        "animation_id": 0,
         "exit_x": 2767,
         "exit_y": 869,
         "disabled_well_level": 3,
@@ -59893,11 +60174,14 @@
         "to_level": "PV",
         "to_path": 7,
         "to_cam": 10,
-        "switch_id": 180,
         "well#": 182,
         "target_well#": 183
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 180,
+        "other_well_id": 182,
+        "animation_id": 0,
         "exit_x": 2699,
         "exit_y": 975,
         "disabled_well_level": 3,
@@ -60747,12 +61031,15 @@
         "alt_level": "MI",
         "alt_path": 8,
         "alt_cam": 1,
-        "switch_id": 0,
         "well#": 112,
         "target_well#": 111,
         "alt_target_well#": 11
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 112,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -61098,11 +61385,14 @@
         "to_level": "PV",
         "to_path": 8,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 111,
         "target_well#": 112
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 111,
+        "animation_id": 0,
         "exit_x": 622,
         "exit_y": 420,
         "disabled_well_level": 3,
@@ -64993,6 +65283,10 @@
         "well#": 20
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 10,
+        "other_well_id": 20,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 632,
@@ -65274,11 +65568,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 3,
-        "switch_id": 12,
         "well#": 103,
         "target_well#": 102
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 103,
+        "animation_id": 0,
         "exit_x": 989,
         "exit_y": 547,
         "disabled_well_level": 3,
@@ -65306,11 +65603,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 3,
-        "switch_id": 12,
         "well#": 104,
         "target_well#": 105
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 104,
+        "animation_id": 0,
         "exit_x": 1000,
         "exit_y": 607,
         "disabled_well_level": 3,
@@ -65338,11 +65638,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 3,
-        "switch_id": 12,
         "well#": 105,
         "target_well#": 104
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 105,
+        "animation_id": 0,
         "exit_x": 937,
         "exit_y": 646,
         "disabled_well_level": 3,
@@ -65370,11 +65673,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 3,
-        "switch_id": 12,
         "well#": 107,
         "target_well#": 106
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 107,
+        "animation_id": 0,
         "exit_x": 869,
         "exit_y": 594,
         "disabled_well_level": 3,
@@ -65563,11 +65869,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 3,
-        "switch_id": 12,
         "well#": 102,
         "target_well#": 103
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 102,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -65598,12 +65907,15 @@
         "alt_level": "PV",
         "alt_path": 11,
         "alt_cam": 3,
-        "switch_id": 12,
         "well#": 106,
         "target_well#": 107,
         "alt_target_well#": 107
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 106,
+        "animation_id": 0,
         "exit_x": 962,
         "exit_y": 595,
         "disabled_well_level": 1,
@@ -65634,12 +65946,15 @@
         "alt_level": "PV",
         "alt_path": 11,
         "alt_cam": 3,
-        "switch_id": 12,
         "well#": 108,
         "target_well#": 109,
         "alt_target_well#": 109
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 108,
+        "animation_id": 0,
         "exit_x": 900,
         "exit_y": 571,
         "disabled_well_level": 1,
@@ -65667,11 +65982,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 3,
-        "switch_id": 12,
         "well#": 109,
         "target_well#": 108
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 12,
+        "other_well_id": 109,
+        "animation_id": 0,
         "exit_x": 784,
         "exit_y": 658,
         "disabled_well_level": 3,
@@ -65997,12 +66315,15 @@
         "alt_level": "PV",
         "alt_path": 11,
         "alt_cam": 1,
-        "switch_id": 10,
         "well#": 100,
         "target_well#": 100,
         "alt_target_well#": 101
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 10,
+        "other_well_id": 100,
+        "animation_id": 0,
         "exit_x": 1712,
         "exit_y": 650,
         "disabled_well_level": 3,
@@ -66046,11 +66367,14 @@
         "to_level": "PV",
         "to_path": 11,
         "to_cam": 1,
-        "switch_id": 10,
         "well#": 101,
         "target_well#": 100
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 10,
+        "other_well_id": 101,
+        "animation_id": 0,
         "exit_x": 1614,
         "exit_y": 700,
         "disabled_well_level": 3,
@@ -66684,6 +67008,10 @@
         "well#": 11
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 11,
+        "other_well_id": 11,
+        "animation_id": 0,
         "disabled_xpos": 1334,
         "disabled_ypos": 620,
         "enabled_xpos": 1355,
@@ -67285,11 +67613,14 @@
         "to_level": "PV",
         "to_path": 12,
         "to_cam": 8,
-        "switch_id": 1,
         "well#": 100,
         "target_well#": 100
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 100,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -67547,12 +67878,15 @@
         "alt_level": "PV",
         "alt_path": 0,
         "alt_cam": 0,
-        "switch_id": 0,
         "well#": 120,
         "target_well#": 120,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 120,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -69124,6 +69458,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 2821,
         "disabled_ypos": 600,
         "enabled_xpos": 0,
@@ -69823,6 +70161,10 @@
         "well#": 101
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 62,
+        "other_well_id": 101,
+        "animation_id": 0,
         "disabled_xpos": 4386,
         "disabled_ypos": 897,
         "enabled_xpos": 4150,
@@ -71244,11 +71586,14 @@
         "to_level": "PV",
         "to_path": 3,
         "to_cam": 7,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 737
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -71713,12 +72058,15 @@
         "alt_level": "PV",
         "alt_path": 14,
         "alt_cam": 9,
-        "switch_id": 175,
         "well#": 30,
         "target_well#": 737,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 175,
+        "other_well_id": 30,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -71840,11 +72188,14 @@
         "to_level": "PV",
         "to_path": 3,
         "to_cam": 8,
-        "switch_id": 1,
         "well#": 29,
         "target_well#": 28
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 29,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -72876,11 +73227,14 @@
         "to_level": "PV",
         "to_path": 12,
         "to_cam": 8,
-        "switch_id": 1,
         "well#": 125,
         "target_well#": 100
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 125,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 3,
@@ -74291,12 +74645,15 @@
         "alt_level": "SV",
         "alt_path": 1,
         "alt_cam": 6,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 1980,
         "exit_y": 351,
         "disabled_well_level": 4,
@@ -74554,12 +74911,15 @@
         "alt_level": "SV",
         "alt_path": 1,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 4,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 2418,
         "exit_y": 303,
         "disabled_well_level": 4,
@@ -74590,12 +74950,15 @@
         "alt_level": "SV",
         "alt_path": 1,
         "alt_cam": 7,
-        "switch_id": 1,
         "well#": 6,
         "target_well#": 6,
         "alt_target_well#": 3
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 6,
+        "animation_id": 0,
         "exit_x": 2461,
         "exit_y": 303,
         "disabled_well_level": 4,
@@ -74674,12 +75037,15 @@
         "alt_level": "SV",
         "alt_path": 1,
         "alt_cam": 6,
-        "switch_id": 1,
         "well#": 5,
         "target_well#": 1,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 5,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -74710,12 +75076,15 @@
         "alt_level": "SV",
         "alt_path": 1,
         "alt_cam": 6,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 2,
         "alt_target_well#": 5
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 2472,
         "exit_y": 422,
         "disabled_well_level": 4,
@@ -74911,12 +75280,15 @@
         "alt_level": "SV",
         "alt_path": 1,
         "alt_cam": 6,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 3,
         "alt_target_well#": 6
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 2834,
         "exit_y": 355,
         "disabled_well_level": 4,
@@ -75476,6 +75848,10 @@
         "well#": 5
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 125,
+        "other_well_id": 5,
+        "animation_id": 0,
         "disabled_xpos": 682,
         "disabled_ypos": 454,
         "enabled_xpos": 641,
@@ -75591,6 +75967,10 @@
         "well#": 6
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 6,
+        "animation_id": 0,
         "disabled_xpos": 486,
         "disabled_ypos": 347,
         "enabled_xpos": 486,
@@ -75972,6 +76352,10 @@
         "well#": 6
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 6,
+        "animation_id": 0,
         "disabled_xpos": 821,
         "disabled_ypos": 386,
         "enabled_xpos": 821,
@@ -76209,12 +76593,15 @@
         "alt_level": "SV",
         "alt_path": 2,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 11,
         "target_well#": 0,
         "alt_target_well#": 12
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 11,
+        "animation_id": 0,
         "exit_x": 535,
         "exit_y": 562,
         "disabled_well_level": 1,
@@ -76245,12 +76632,15 @@
         "alt_level": "SV",
         "alt_path": 2,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 12,
         "target_well#": 0,
         "alt_target_well#": 11
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 12,
+        "animation_id": 0,
         "exit_x": 567,
         "exit_y": 718,
         "disabled_well_level": 1,
@@ -76347,11 +76737,14 @@
         "to_level": "SV",
         "to_path": 2,
         "to_cam": 3,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -76379,11 +76772,14 @@
         "to_level": "SV",
         "to_path": 2,
         "to_cam": 3,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 916,
         "exit_y": 573,
         "disabled_well_level": 4,
@@ -76559,11 +76955,14 @@
         "to_level": "SV",
         "to_path": 2,
         "to_cam": 4,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 1390,
         "exit_y": 577,
         "disabled_well_level": 4,
@@ -76591,11 +76990,14 @@
         "to_level": "SV",
         "to_path": 2,
         "to_cam": 4,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 3
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -76980,12 +77382,15 @@
         "alt_level": "SV",
         "alt_path": 2,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 11
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -77862,12 +78267,15 @@
         "alt_level": "SV",
         "alt_path": 3,
         "alt_cam": 3,
-        "switch_id": 141,
         "well#": 10,
         "target_well#": 10,
         "alt_target_well#": 11
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 141,
+        "other_well_id": 10,
+        "animation_id": 0,
         "exit_x": 937,
         "exit_y": 351,
         "disabled_well_level": 4,
@@ -78011,12 +78419,15 @@
         "alt_level": "SV",
         "alt_path": 3,
         "alt_cam": 1,
-        "switch_id": 142,
         "well#": 7,
         "target_well#": 7,
         "alt_target_well#": 8
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 142,
+        "other_well_id": 7,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -78044,11 +78455,14 @@
         "to_level": "SV",
         "to_path": 3,
         "to_cam": 1,
-        "switch_id": 1,
         "well#": 8,
         "target_well#": 8
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 8,
+        "animation_id": 0,
         "exit_x": 536,
         "exit_y": 636,
         "disabled_well_level": 4,
@@ -78253,11 +78667,14 @@
         "to_level": "SV",
         "to_path": 3,
         "to_cam": 3,
-        "switch_id": 1,
         "well#": 6,
         "target_well#": 6
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 6,
+        "animation_id": 0,
         "exit_x": 859,
         "exit_y": 594,
         "disabled_well_level": 4,
@@ -78307,12 +78724,15 @@
         "alt_level": "SV",
         "alt_path": 3,
         "alt_cam": 3,
-        "switch_id": 1,
         "well#": 5,
         "target_well#": 5,
         "alt_target_well#": 6
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 5,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -78356,6 +78776,10 @@
         "well#": 9
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 145,
+        "other_well_id": 9,
+        "animation_id": 0,
         "disabled_xpos": 1009,
         "disabled_ypos": 715,
         "enabled_xpos": 936,
@@ -78393,11 +78817,14 @@
         "to_level": "SV",
         "to_path": 3,
         "to_cam": 3,
-        "switch_id": 1,
         "well#": 11,
         "target_well#": 11
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 11,
+        "animation_id": 0,
         "exit_x": 1209,
         "exit_y": 666,
         "disabled_well_level": 4,
@@ -78548,11 +78975,14 @@
         "to_level": "SV",
         "to_path": 3,
         "to_cam": 4,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 1163,
         "exit_y": 585,
         "disabled_well_level": 4,
@@ -78583,12 +79013,15 @@
         "alt_level": "SV",
         "alt_path": 3,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 3,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -78701,6 +79134,10 @@
         "well#": 13
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 13,
+        "animation_id": 0,
         "disabled_xpos": 1333,
         "disabled_ypos": 612,
         "enabled_xpos": 1333,
@@ -78721,6 +79158,10 @@
         "well#": 14
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 14,
+        "animation_id": 0,
         "disabled_xpos": 1434,
         "disabled_ypos": 708,
         "enabled_xpos": 1434,
@@ -78769,12 +79210,15 @@
         "alt_level": "SV",
         "alt_path": 3,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 1535,
         "exit_y": 579,
         "disabled_well_level": 1,
@@ -78805,12 +79249,15 @@
         "alt_level": "SV",
         "alt_path": 3,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -79221,6 +79668,10 @@
         "well#": 12
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 145,
+        "other_well_id": 12,
+        "animation_id": 0,
         "disabled_xpos": 986,
         "disabled_ypos": 896,
         "enabled_xpos": 962,
@@ -80106,11 +80557,14 @@
         "to_level": "SV",
         "to_path": 4,
         "to_cam": 2,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -80138,11 +80592,14 @@
         "to_level": "SV",
         "to_path": 4,
         "to_cam": 2,
-        "switch_id": 0,
         "well#": 4,
         "target_well#": 4
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 1278,
         "exit_y": 350,
         "disabled_well_level": 4,
@@ -80600,12 +81057,15 @@
         "alt_level": "SV",
         "alt_path": 4,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 2,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -80636,12 +81096,15 @@
         "alt_level": "SV",
         "alt_path": 4,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 2586,
         "exit_y": 393,
         "disabled_well_level": 4,
@@ -81556,12 +82019,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 2,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -81639,12 +82105,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 2,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -81952,12 +82421,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 0,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 537,
         "exit_y": 976,
         "disabled_well_level": 1,
@@ -82071,12 +82543,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -82150,12 +82625,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -82214,12 +82692,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 0,
         "alt_target_well#": 3
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 988,
         "exit_y": 976,
         "disabled_well_level": 1,
@@ -82378,12 +82859,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 7,
-        "switch_id": 1,
         "well#": 5,
         "target_well#": 5,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 5,
+        "animation_id": 0,
         "exit_x": 836,
         "exit_y": 1497,
         "disabled_well_level": 4,
@@ -82610,12 +83094,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 7,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 3
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 961,
         "exit_y": 1407,
         "disabled_well_level": 1,
@@ -82655,12 +83142,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 8,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 0,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 834,
         "exit_y": 1397,
         "disabled_well_level": 4,
@@ -82945,12 +83435,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 8,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -82990,12 +83483,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 7,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 0,
         "alt_target_well#": 3
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 1411,
         "exit_y": 1393,
         "disabled_well_level": 1,
@@ -83335,12 +83831,15 @@
         "alt_level": "SV",
         "alt_path": 5,
         "alt_cam": 8,
-        "switch_id": 1,
         "well#": 6,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 6,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -84288,12 +84787,15 @@
         "alt_level": "SV",
         "alt_path": 6,
         "alt_cam": 23,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -84632,6 +85134,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 221,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 1009,
@@ -85038,12 +85544,15 @@
         "alt_level": "SV",
         "alt_path": 6,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -85071,11 +85580,14 @@
         "to_level": "SV",
         "to_path": 6,
         "to_cam": 5,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 2388,
         "exit_y": 974,
         "disabled_well_level": 4,
@@ -87054,6 +87566,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 3211,
         "disabled_ypos": 1680,
         "enabled_xpos": 3211,
@@ -87221,6 +87737,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 3485,
         "disabled_ypos": 1610,
         "enabled_xpos": 3485,
@@ -87241,6 +87761,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 3661,
         "disabled_ypos": 1756,
         "enabled_xpos": 3661,
@@ -88583,12 +89107,15 @@
         "alt_level": "SV",
         "alt_path": 7,
         "alt_cam": 3,
-        "switch_id": 1,
         "well#": 5,
         "target_well#": 0,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 5,
+        "animation_id": 0,
         "exit_x": 1667,
         "exit_y": 461,
         "disabled_well_level": 4,
@@ -88919,12 +89446,15 @@
         "alt_level": "MI",
         "alt_path": 1,
         "alt_cam": 1,
-        "switch_id": 0,
         "well#": 15,
         "target_well#": 15,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 15,
+        "animation_id": 0,
         "exit_x": 690,
         "exit_y": 448,
         "disabled_well_level": 4,
@@ -89014,12 +89544,15 @@
         "alt_level": "SV",
         "alt_path": 7,
         "alt_cam": 3,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 1702,
         "exit_y": 718,
         "disabled_well_level": 1,
@@ -89151,12 +89684,15 @@
         "alt_level": "SV",
         "alt_path": 7,
         "alt_cam": 3,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 1784,
         "exit_y": 598,
         "disabled_well_level": 1,
@@ -89359,12 +89895,15 @@
         "alt_level": "SV",
         "alt_path": 7,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 0,
         "alt_target_well#": 5
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 1610,
         "exit_y": 611,
         "disabled_well_level": 1,
@@ -89824,11 +90363,14 @@
         "to_level": "SV",
         "to_path": 7,
         "to_cam": 7,
-        "switch_id": 144,
         "well#": 16,
         "target_well#": 15
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 144,
+        "other_well_id": 16,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -91279,6 +91821,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 864,
@@ -91736,6 +92282,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 512,
         "disabled_ypos": 635,
         "enabled_xpos": 461,
@@ -91991,11 +92541,14 @@
         "to_level": "SV",
         "to_path": 8,
         "to_cam": 6,
-        "switch_id": 1,
         "well#": 8,
         "target_well#": 8
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 8,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -92491,11 +93044,14 @@
         "to_level": "SV",
         "to_path": 8,
         "to_cam": 6,
-        "switch_id": 0,
         "well#": 9,
         "target_well#": 8
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 9,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -93552,6 +94108,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 1685,
@@ -94942,6 +95502,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 600,
@@ -97533,11 +98097,14 @@
         "to_level": "SV",
         "to_path": 12,
         "to_cam": 2,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -97565,11 +98132,14 @@
         "to_level": "SV",
         "to_path": 12,
         "to_cam": 2,
-        "switch_id": 0,
         "well#": 4,
         "target_well#": 4
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 1278,
         "exit_y": 350,
         "disabled_well_level": 4,
@@ -97916,12 +98486,15 @@
         "alt_level": "SV",
         "alt_path": 13,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 4,
@@ -97949,11 +98522,14 @@
         "to_level": "SV",
         "to_path": 13,
         "to_cam": 5,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 2388,
         "exit_y": 974,
         "disabled_well_level": 4,
@@ -99262,6 +99838,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 1675,
@@ -100773,11 +101353,14 @@
         "to_level": "FD",
         "to_path": 1,
         "to_cam": 9,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 4750,
         "exit_y": 1220,
         "disabled_well_level": 5,
@@ -100834,11 +101417,14 @@
         "to_level": "FD",
         "to_path": 1,
         "to_cam": 8,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 5,
@@ -103082,11 +103668,14 @@
         "to_level": "FD",
         "to_path": 2,
         "to_cam": 17,
-        "switch_id": 80,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 80,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 5,
@@ -103959,6 +104548,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 4265,
         "disabled_ypos": 2500,
         "enabled_xpos": 4265,
@@ -105011,11 +105604,14 @@
         "to_level": "FD",
         "to_path": 2,
         "to_cam": 23,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 3794,
         "exit_y": 3460,
         "disabled_well_level": 5,
@@ -107380,12 +107976,15 @@
         "alt_level": "FD",
         "alt_path": 3,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 3,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -108121,12 +108720,15 @@
         "alt_level": "FD",
         "alt_path": 3,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -108157,12 +108759,15 @@
         "alt_level": "FD",
         "alt_path": 3,
         "alt_cam": 4,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -110045,11 +110650,14 @@
         "to_level": "FD",
         "to_path": 4,
         "to_cam": 18,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 5660,
         "exit_y": 1640,
         "disabled_well_level": 5,
@@ -110407,11 +111015,14 @@
         "to_level": "FD",
         "to_path": 4,
         "to_cam": 18,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 5,
@@ -110865,11 +111476,14 @@
         "to_level": "FD",
         "to_path": 4,
         "to_cam": 19,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 4055,
         "exit_y": 1900,
         "disabled_well_level": 5,
@@ -120262,6 +120876,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 4025,
         "disabled_ypos": 2440,
         "enabled_xpos": 4025,
@@ -120489,6 +121107,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 4311,
         "disabled_ypos": 3220,
         "enabled_xpos": 4311,
@@ -123816,11 +124438,14 @@
         "to_level": "FD",
         "to_path": 11,
         "to_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 2150,
         "exit_y": 740,
         "disabled_well_level": 12,
@@ -123965,11 +124590,14 @@
         "to_level": "FD",
         "to_path": 14,
         "to_cam": 2,
-        "switch_id": 1,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 12,
@@ -123997,11 +124625,14 @@
         "to_level": "FD",
         "to_path": 11,
         "to_cam": 5,
-        "switch_id": 0,
         "well#": 2,
         "target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 1960,
         "exit_y": 1640,
         "disabled_well_level": 12,
@@ -129133,11 +129764,14 @@
         "to_level": "FD",
         "to_path": 13,
         "to_cam": 5,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 2150,
         "exit_y": 740,
         "disabled_well_level": 12,
@@ -130185,11 +130819,14 @@
         "to_level": "FD",
         "to_path": 14,
         "to_cam": 2,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 12,
@@ -132641,6 +133278,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 2364,
@@ -132884,6 +133525,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 2425,
@@ -134499,12 +135144,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 255,
         "well#": 1,
         "target_well#": 1,
         "alt_target_well#": 6
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 255,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 6,
@@ -134535,12 +135183,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 6,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 6,
+        "animation_id": 0,
         "exit_x": 450,
         "exit_y": 320,
         "disabled_well_level": 1,
@@ -134571,12 +135222,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 5,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 5,
+        "animation_id": 0,
         "exit_x": 420,
         "exit_y": 405,
         "disabled_well_level": 1,
@@ -134607,12 +135261,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 8,
         "target_well#": 0,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 8,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -134643,12 +135300,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 7,
         "target_well#": 0,
         "alt_target_well#": 3
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 7,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -134679,12 +135339,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 255,
         "well#": 2,
         "target_well#": 2,
         "alt_target_well#": 5
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 255,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 464,
         "exit_y": 454,
         "disabled_well_level": 6,
@@ -134715,12 +135378,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 255,
         "well#": 4,
         "target_well#": 4,
         "alt_target_well#": 8
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 255,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 651,
         "exit_y": 454,
         "disabled_well_level": 6,
@@ -134751,12 +135417,15 @@
         "alt_level": "BA",
         "alt_path": 2,
         "alt_cam": 1,
-        "switch_id": 255,
         "well#": 3,
         "target_well#": 3,
         "alt_target_well#": 7
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 255,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 6,
@@ -138854,6 +139523,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -138874,6 +139547,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 925,
@@ -143502,11 +144179,14 @@
         "to_level": "BA",
         "to_path": 5,
         "to_cam": 23,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 6,
@@ -143549,11 +144229,14 @@
         "to_level": "BA",
         "to_path": 5,
         "to_cam": 24,
-        "switch_id": 0,
         "well#": 2,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 2820,
         "exit_y": 1759,
         "disabled_well_level": 6,
@@ -143663,11 +144346,14 @@
         "to_level": "BA",
         "to_path": 5,
         "to_cam": 24,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 3050,
         "exit_y": 2180,
         "disabled_well_level": 6,
@@ -144056,11 +144742,14 @@
         "to_level": "BA",
         "to_path": 5,
         "to_cam": 24,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 3085,
         "exit_y": 2180,
         "disabled_well_level": 6,
@@ -148490,6 +149179,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 0,
@@ -148510,6 +149203,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 925,
@@ -155623,6 +156320,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 236,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 2112,
         "disabled_ypos": 450,
         "enabled_xpos": 2174,
@@ -156229,6 +156930,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 229,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1225,
         "disabled_ypos": 842,
         "enabled_xpos": 1294,
@@ -156593,6 +157298,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 232,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1664,
         "disabled_ypos": 980,
         "enabled_xpos": 1722,
@@ -156916,6 +157625,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 234,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 2087,
         "disabled_ypos": 940,
         "enabled_xpos": 2087,
@@ -156936,6 +157649,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 234,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 2122,
         "disabled_ypos": 881,
         "enabled_xpos": 2060,
@@ -157903,6 +158620,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 442,
@@ -159394,11 +160115,14 @@
         "to_level": "BA",
         "to_path": 14,
         "to_cam": 11,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 6,
@@ -159652,11 +160376,14 @@
         "to_level": "BA",
         "to_path": 14,
         "to_cam": 11,
-        "switch_id": 80,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 80,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 375,
         "exit_y": 1000,
         "disabled_well_level": 6,
@@ -159798,6 +160525,10 @@
         "well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 1668,
@@ -160058,6 +160789,10 @@
         "well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 212,
+        "other_well_id": 2,
+        "animation_id": 0,
         "disabled_xpos": 423,
         "disabled_ypos": 1497,
         "enabled_xpos": 487,
@@ -161064,11 +161799,14 @@
         "to_level": "BA",
         "to_path": 14,
         "to_cam": 11,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 1425,
         "exit_y": 1660,
         "disabled_well_level": 6,
@@ -167705,12 +168443,15 @@
         "alt_level": "BW",
         "alt_path": 3,
         "alt_cam": 15,
-        "switch_id": 145,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 145,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 8,
@@ -171500,12 +172241,15 @@
         "alt_level": "BW",
         "alt_path": 2,
         "alt_cam": 10,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 8,
@@ -173000,6 +173744,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 2065,
         "disabled_ypos": 620,
         "enabled_xpos": 2065,
@@ -173802,11 +174550,14 @@
         "to_level": "BW",
         "to_path": 3,
         "to_cam": 21,
-        "switch_id": 0,
         "well#": 22,
         "target_well#": 50
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 22,
+        "animation_id": 0,
         "exit_x": 964,
         "exit_y": 1139,
         "disabled_well_level": 8,
@@ -174090,11 +174841,14 @@
         "to_level": "BW",
         "to_path": 3,
         "to_cam": 22,
-        "switch_id": 1,
         "well#": 50,
         "target_well#": 22
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 50,
+        "animation_id": 0,
         "exit_x": 1998,
         "exit_y": 1179,
         "disabled_well_level": 8,
@@ -174122,6 +174876,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 1960,
         "disabled_ypos": 840,
         "enabled_xpos": 1960,
@@ -177994,6 +178752,10 @@
         "well#": 102
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 130,
+        "other_well_id": 102,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 942,
@@ -178385,12 +179147,15 @@
         "alt_level": "BW",
         "alt_path": 4,
         "alt_cam": 6,
-        "switch_id": 130,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 102
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 130,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 8,
@@ -180146,11 +180911,14 @@
         "to_level": "BW",
         "to_path": 7,
         "to_cam": 19,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 8,
@@ -180881,11 +181649,14 @@
         "to_level": "BW",
         "to_path": 7,
         "to_cam": 19,
-        "switch_id": 1,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 8,
@@ -183628,11 +184399,14 @@
         "to_level": "BW",
         "to_path": 9,
         "to_cam": 9,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 14,
@@ -185387,11 +186161,14 @@
         "to_level": "BW",
         "to_path": 12,
         "to_cam": 2,
-        "switch_id": 1,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 14,
@@ -186707,11 +187484,14 @@
         "to_level": "BW",
         "to_path": 12,
         "to_cam": 2,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 14,
@@ -187481,11 +188261,14 @@
         "to_level": "BW",
         "to_path": 13,
         "to_cam": 9,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 14,
@@ -188581,11 +189364,14 @@
         "to_level": "BW",
         "to_path": 14,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 14,
@@ -188759,11 +189545,14 @@
         "to_level": "BW",
         "to_path": 14,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 1165,
         "exit_y": 600,
         "disabled_well_level": 14,
@@ -189178,11 +189967,14 @@
         "to_level": "BW",
         "to_path": 9,
         "to_cam": 9,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 14,
@@ -200302,11 +201094,14 @@
         "to_level": "BR",
         "to_path": 5,
         "to_cam": 8,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 4012,
         "exit_y": 1123,
         "disabled_well_level": 9,
@@ -200570,11 +201365,14 @@
         "to_level": "BR",
         "to_path": 5,
         "to_cam": 5,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 4025,
         "exit_y": 1390,
         "disabled_well_level": 9,
@@ -200852,11 +201650,14 @@
         "to_level": "BR",
         "to_path": 5,
         "to_cam": 1,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -200887,12 +201688,15 @@
         "alt_level": "BR",
         "alt_path": 5,
         "alt_cam": 1,
-        "switch_id": 30,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 30,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -215167,6 +215971,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 854,
         "disabled_ypos": 533,
         "enabled_xpos": 854,
@@ -215310,6 +216118,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 1024,
@@ -215330,6 +216142,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 804,
         "disabled_ypos": 653,
         "enabled_xpos": 0,
@@ -218542,11 +219358,14 @@
         "to_level": "BR",
         "to_path": 13,
         "to_cam": 1,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -218577,12 +219396,15 @@
         "alt_level": "BR",
         "alt_path": 13,
         "alt_cam": 1,
-        "switch_id": 30,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 30,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -223341,11 +224163,14 @@
         "to_level": "BR",
         "to_path": 23,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -228124,6 +228949,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 175,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 525,
         "disabled_ypos": 1660,
         "enabled_xpos": 410,
@@ -228408,6 +229237,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 175,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 458,
         "disabled_ypos": 1669,
         "enabled_xpos": 410,
@@ -232738,12 +233571,15 @@
         "alt_level": "BR",
         "alt_path": 19,
         "alt_cam": 5,
-        "switch_id": 172,
         "well#": 3,
         "target_well#": 3,
         "alt_target_well#": 4
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 172,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -233015,12 +233851,15 @@
         "alt_level": "BR",
         "alt_path": 19,
         "alt_cam": 5,
-        "switch_id": 1,
         "well#": 4,
         "target_well#": 4,
         "alt_target_well#": 3
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 4,
+        "animation_id": 0,
         "exit_x": 2013,
         "exit_y": 975,
         "disabled_well_level": 9,
@@ -233245,12 +234084,15 @@
         "alt_level": "BR",
         "alt_path": 19,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 2,
         "target_well#": 0,
         "alt_target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 635,
         "exit_y": 1226,
         "disabled_well_level": 1,
@@ -233281,12 +234123,15 @@
         "alt_level": "BR",
         "alt_path": 19,
         "alt_cam": 1,
-        "switch_id": 1,
         "well#": 1,
         "target_well#": 0,
         "alt_target_well#": 2
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 1,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 1,
@@ -235718,6 +236563,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 116,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 423,
         "disabled_ypos": 1518,
         "enabled_xpos": 485,
@@ -237643,12 +238492,15 @@
         "alt_level": "MI",
         "alt_path": 23,
         "alt_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 0,
         "alt_target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 585,
         "exit_y": 430,
         "disabled_well_level": 9,
@@ -238323,11 +239175,14 @@
         "to_level": "BR",
         "to_path": 24,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 2
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -238355,11 +239210,14 @@
         "to_level": "BR",
         "to_path": 24,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 2,
         "target_well#": 3
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 2,
+        "animation_id": 0,
         "exit_x": 525,
         "exit_y": 565,
         "disabled_well_level": 9,
@@ -238387,11 +239245,14 @@
         "to_level": "BR",
         "to_path": 24,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 3,
         "target_well#": 1
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 3,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -239551,11 +240412,14 @@
         "to_level": "BR",
         "to_path": 25,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 1,
         "target_well#": 0
        },
        "fields": {
+        "scale": 1,
+        "switch_id": 0,
+        "other_well_id": 1,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -239583,11 +240447,14 @@
         "to_level": "BR",
         "to_path": 25,
         "to_cam": 1,
-        "switch_id": 0,
         "well#": 0,
         "target_well#": 1
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "exit_x": 0,
         "exit_y": 0,
         "disabled_well_level": 9,
@@ -242234,6 +243101,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 1,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 0,
         "disabled_ypos": 0,
         "enabled_xpos": 1024,
@@ -242254,6 +243125,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 0,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 804,
         "disabled_ypos": 653,
         "enabled_xpos": 0,
@@ -245023,6 +245898,10 @@
         "well#": 0
        },
        "fields": {
+        "scale": 0,
+        "switch_id": 116,
+        "other_well_id": 0,
+        "animation_id": 0,
         "disabled_xpos": 423,
         "disabled_ypos": 1518,
         "enabled_xpos": 485,

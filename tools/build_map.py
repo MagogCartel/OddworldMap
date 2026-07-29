@@ -400,10 +400,6 @@ _FIELD_TYPE_OVERRIDES = {
 # layouts the schema parser can't derive from the relive_api CTOR alone. An empty
 # layout marks a genuinely field-less type so it still retires its raw fallback.
 _SCHEMA_LAYOUT_OVERRIDES = {
-    # ContinueZone's only member is named field_10_zone_number but sits at payload
-    # word 0 — Path_TLV is 0x18 wide, so the name's 0x10 lands in the rect, not the
-    # payload, and the parser skips it.
-    ("AO", 2): [[0, "zone_number"]],
     ("AO", 109): [],  # RingCancel — EMPTY_CTOR, no payload fields
 }
 
@@ -544,10 +540,12 @@ def parse_object_schema(game_key):
     offset in the member name), a snake_cased name, and — where the decomp
     declares an enum/Choice/Scale rather than a bare int — its game type (see
     parse_member_types), so the viewer can key value transforms by it. Fields are
-    sequential s16, so the offset holds except where the decomp names sequential
-    members with one offset (Door's 8 hub ids are all "field_22_hubN"): a
-    non-increasing offset means the name lies, so fall back to the next word.
-    Members with no field_XX offset are positional too. Values stay raw."""
+    sequential s16, so the offset holds except where the name lies — sequential
+    members sharing one offset (Door's 8 hub ids are all "field_22_hubN"), or a
+    member of an intermediate base struct numbering from its own start and so
+    landing below the payload (Path_WellBase's four). Either way the offset fails
+    to increase, and the next word is the answer. Members with no field_XX offset
+    are positional too. Values stay raw."""
     src = (REPO / f"Source/Tools/relive_api/Tlvs{game_key}.hpp").read_text()
     base = 0x18 if game_key == "AO" else 0x10
     ctor = f"CTOR_{game_key}"
@@ -570,8 +568,6 @@ def parse_object_schema(game_key):
             off = re.match(r"field_([0-9A-Fa-f]+)_", am.group(2))
             if off:
                 word = (int(off.group(1), 16) - base) // 2
-                if word < 0:
-                    continue
                 if word <= last:
                     word = last + 1
             else:
@@ -740,7 +736,6 @@ def tlv_extra_ae(t, blob, pos, length, level_short):
             e = dict(off)
             if alt:
                 e.update({"alt_level": on["to_level"], "alt_path": on["to_path"], "alt_cam": on["to_cam"]})
-            e["switch_id"] = v[1]
             # arrival lands on the well answering to the id in the destination camera
             e["well#"] = v[2]
             if off:

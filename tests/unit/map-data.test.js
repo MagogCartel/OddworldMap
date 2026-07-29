@@ -304,6 +304,23 @@ test("destination level fields are level shorts, never raw ids", () => {
   }
 });
 
+// extra is the hand-decoded semantic bucket, fields the raw archive, and the
+// display writes both — so a name in both prints its value twice. Where the
+// archive reaches a word extra already names, extra gives it up
+test("no object names the same key in both extra and fields", () => {
+  for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
+    const data = load(file);
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs)
+          for (const k of Object.keys(t.extra || {}))
+            assert.ok(
+              !(t.fields && k in t.fields),
+              `${data.id} ${L.short} P${P.id} ${t.name}: ${k} is in both extra and fields`,
+            );
+  }
+});
+
 // the two labels game data defines, kept apart: a name is what the game calls
 // the place (AO R2's zulag save-name table), a section is which half of the
 // level a path belongs to (AE's ender-id destinations)
