@@ -1224,18 +1224,21 @@ def main():
                 "cams": cams, "tlvs": tlvs, "lines": lines,
             })
 
-        # path display names where the game defines them: AO R2's zulag
-        # membership; AE paths referenced only under their ender id (paths the
-        # base level also leads to are shared geography and stay unnamed)
-        path_names = {}
+        # the two labels the games define: a name is what the game calls the
+        # place (AO R2's zulags, from the save slots), a section which half of
+        # the level it belongs to. Paths the base level also leads to are
+        # shared geography and carry neither.
+        path_names, path_sections = {}, {}
         if args.game == "AO" and short == "R2":
             path_names = {p: f"Zulag {z}" for z, ps in AO_R2_ZULAGS.items() for p in ps}
         for eid in ender_ids:
             for p in raw_refs.get(eid, set()) - raw_refs.get(lid, set()):
-                path_names[p] = AE_LEVEL_DISPLAY.get(eid, f"level {eid}")
+                path_sections[p] = AE_LEVEL_DISPLAY.get(eid, f"level {eid}")
         for P in level_entry["paths"]:
             if P["id"] in path_names:
                 P["name"] = path_names[P["id"]]
+            if P["id"] in path_sections:
+                P["section"] = path_sections[P["id"]]
 
         if level_entry["paths"]:
             data["levels"].append(level_entry)

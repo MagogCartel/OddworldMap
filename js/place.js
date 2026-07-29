@@ -1,7 +1,7 @@
 // Where the map is: a chip in the map chrome naming the current level and path,
-// and the panel it discloses — the level's full name, whether the path is
-// arrived at from another level or one the demos alone play, and the curated
-// note the odd places carry.
+// and the panel it discloses — the level's full name, which half of it the path
+// belongs to, whether the path is arrived at from another level or one the demos
+// alone play, and the curated note the odd places carry.
 
 import { $ } from "./dom.js";
 import { esc } from "./util.js";
@@ -25,6 +25,7 @@ function fill() {
   panel.innerHTML =
     `<div class="pl-game">${esc(data.game)}</div>` +
     `<div class="pl-level">${esc(lvl.name)}</div>` +
+    (path.section ? `<div class="pl-section">${esc(path.section)}</div>` : "") +
     `<div>Path ${path.id}${name ? ` — ${esc(name)}` : ""}</div>` +
     (state.entry[lvl.short]?.has(path.id)
       ? `<div class="pl-entry">entry point — arrived at from another level</div>`

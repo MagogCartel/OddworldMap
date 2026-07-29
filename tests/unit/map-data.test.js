@@ -304,10 +304,11 @@ test("destination level fields are level shorts, never raw ids", () => {
   }
 });
 
-// path display names come from game data only: AO R2's zulag save-name table
-// and AE's ender-id destinations; every other path stays unnamed
-test("path names in the shipped data are exactly the game-defined ones", () => {
-  const expected = {
+// the two labels game data defines, kept apart: a name is what the game calls
+// the place (AO R2's zulag save-name table), a section is which half of the
+// level a path belongs to (AE's ender-id destinations)
+test("path names and sections in the shipped data are exactly the game-defined ones", () => {
+  const expectedNames = {
     "AO R2": {
       15: "Zulag 1",
       16: "Zulag 1",
@@ -328,6 +329,8 @@ test("path names in the shipped data are exactly the game-defined ones", () => {
       11: "Zulag 4",
       14: "Zulag 4",
     },
+  };
+  const expectedSections = {
     "AE SV": {
       9: "Mudanchee Vault Ender",
       10: "Mudanchee Vault Ender",
@@ -339,13 +342,20 @@ test("path names in the shipped data are exactly the game-defined ones", () => {
     "AE BA": { 11: "Barracks Ender", 16: "Barracks Ender" },
     "AE BW": { 12: "Bonewerkz Ender", 13: "Bonewerkz Ender", 14: "Bonewerkz Ender" },
   };
-  const found = {};
+  const names = {},
+    sections = {};
   for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
     const data = load(file);
     for (const L of data.levels)
-      for (const P of L.paths) if (P.name) (found[`${data.id} ${L.short}`] ??= {})[P.id] = P.name;
+      for (const P of L.paths) {
+        const at = `${data.id} ${L.short}`;
+        if (P.name) (names[at] ??= {})[P.id] = P.name;
+        if (P.section) (sections[at] ??= {})[P.id] = P.section;
+        assert.ok(!(P.name && P.section), `${at} P${P.id}: a path is named or sectioned, not both`);
+      }
   }
-  assert.deepEqual(found, expected);
+  assert.deepEqual(names, expectedNames);
+  assert.deepEqual(sections, expectedSections);
 });
 
 // every shipped hand stone is decoded: at least one view, no raw fallback,

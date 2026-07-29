@@ -120,15 +120,15 @@
      "name": "Trial 4",
      "note": "A brewery room hidden in the vault: three Mudokons behind an electric fence, in SoulStorm Brewery's artwork rather than the vault's."
     },
-    "9": "Mudanchee Vault Ender: Scrab Nest",
-    "10": "Mudanchee Vault Ender: Scrab Nest II",
+    "9": "Scrab Nest",
+    "10": "Scrab Nest II",
     "11": {
-     "name": "Mudanchee Vault Ender: Vault Exit",
+     "name": "Vault Exit",
      "note": "Both screens are Necrum Mines artwork, so the vault lets you out into scenery from where the game began."
     },
     "12": "[Demo] Trial 5: Scrab and Fleeches",
     "13": "[Demo] Mudanchee Vaults: Invisibility",
-    "14": "[Demo] Mudanchee Vault Ender: Scrab Nest"
+    "14": "[Demo] Scrab Nest"
    },
    "PV": {
     "1": "Mudomo Vaults",
@@ -143,7 +143,7 @@
     "10": "Mudomo Vaults III",
     "11": "Trial 2",
     "12": "Trial 3",
-    "13": "Mudomo Vault Ender: Paramite Nest",
+    "13": "Paramite Nest",
     "14": {
      "name": "Trial 4: Secret Area",
      "note": "Dressed as FeeCo Depot, two of its status boards included: a railway depot two levels away, tucked inside a Paramite trial."
@@ -170,10 +170,10 @@
     "8": "[Demo] Terminal 4: Bonewerkz",
     "9": "Path to the Terminals",
     "10": "Terminal 5: Storage",
-    "11": "FeeCo Depot Ender: Executive Office",
+    "11": "Executive Office",
     "12": "[Demo] Terminal 2: Flying Sligs 2",
-    "13": "[Demo] FeeCo Depot Ender: Baggage Claim",
-    "14": "FeeCo Depot Ender: Executive Office II"
+    "13": "[Demo] Baggage Claim",
+    "14": "Executive Office II"
    },
    "BA": {
     "1": "Block 0 Parade Grounds",
@@ -184,11 +184,11 @@
     "7": "Block 3 Slig Bunks",
     "9": "Block 4 Trophy Room",
     "10": "Block 1 Rifle Range",
-    "11": "Barracks Ender: Dripik's War Room",
+    "11": "Dripik's War Room",
     "13": "Block 0 Parade Grounds: Exit",
     "14": "Block 4 Bombing Range",
     "15": "Block 3 Slig Bunks: Suites",
-    "16": "Barracks Ender: Dripik's War Room II"
+    "16": "Dripik's War Room II"
    },
    "BW": {
     "1": "Entrance and Annex 2",
@@ -201,9 +201,9 @@
     },
     "9": "Executive Office",
     "11": "[Demo] Annex 8: Slogs Attack",
-    "12": "Bonewerkz Ender: Executive Office II",
-    "13": "[Demo] Bonewerkz Ender: Glukkon",
-    "14": "Bonewerkz Ender: Executive Office Approach"
+    "12": "Executive Office II",
+    "13": "[Demo] Glukkon",
+    "14": "Executive Office Approach"
    },
    "BR": {
     "1": "Zulag 1",

@@ -86,6 +86,7 @@ function buildPathButtons() {
     setLabel(b);
     b.dataset.key = String(P.id);
     const tip = [];
+    if (P.section) tip.push(P.section);
     if (name) tip.push(name);
     if (state.entry[L.short] && state.entry[L.short].has(P.id)) {
       b.classList.add("entry");

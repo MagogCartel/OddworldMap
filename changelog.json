@@ -3,6 +3,12 @@
   {
    "date": "2026-07-29",
    "tag": "improved",
+   "title": "The endgame areas get their own names",
+   "detail": "Thirteen Exoddus areas the endgame sends you back to were named after the half of the level they sit in rather than after themselves, so a room read \"Mudanchee Vault Ender: Scrab Nest\" and led with a word out of the developers' notes. They now go by their own names (Scrab Nest, Dripik's War Room, the Executive Office) while which half of the level you are in is still there to read: it sits above the path name in the panel behind the corner chip, and in the tooltip of the path button. Nothing was dropped, only untangled."
+  },
+  {
+   "date": "2026-07-29",
+   "tag": "improved",
    "title": "The settings you have changed say so",
    "detail": "A setting that is off because it ships that way looked exactly like one you switched off yourself, so there was no telling which of the eight settings you had ever touched. A setting you have changed now says on the right of its row what it was to begin with: \"off by default\" where you turned it on, \"on by default\" where you turned it off. One you have left alone says nothing, so what is written down the right-hand side is the list of what you changed."
   },
