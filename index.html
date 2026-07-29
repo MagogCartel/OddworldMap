@@ -261,62 +261,73 @@
         <div id="settingsBody">
           <!-- autocomplete=off: the script seeds .checked from stored settings, so
            form-state restoration must not flip these -->
-          <label
-            ><input type="checkbox" id="sRememberView" autocomplete="off" checked /> Remember
-            display &amp; object filters</label
-          >
-          <div class="st-desc">Keeps the Display toggles and Objects filters across visits.</div>
-          <label
-            ><input type="checkbox" id="sRememberLoc" autocomplete="off" /> Remember last
-            location</label
-          >
-          <div class="st-desc">Reopens the map where you left off. A shared link always wins.</div>
-          <label
-            ><input type="checkbox" id="sFullNames" autocomplete="off" /> Show full names</label
-          >
-          <div class="st-desc">Game, level and path buttons list their full in-game names.</div>
-          <label
-            ><input type="checkbox" id="sDemoPaths" autocomplete="off" /> Show demo paths</label
-          >
-          <div class="st-desc">
-            Exoddus stores 25 extra copies of areas that only the demos playing on its title screen
-            ever visit — there is no way to walk to any of them in the game. Hidden by default, and
-            marked [Demo] when shown; a shared link to one still opens it.
-          </div>
-          <label
-            ><input type="checkbox" id="sScreenList" autocomplete="off" checked /> List a screen's
-            objects on click</label
-          >
-          <div class="st-desc">
-            Clicking or tapping a screen (anywhere that isn't a followable object) opens a panel
-            listing everything on it.
-          </div>
-          <label
-            ><input type="checkbox" id="sShowMore" autocomplete="off" /> Show more object
-            fields</label
-          >
-          <div class="st-desc">
-            Adds a Fields panel to the sidebar for picking, per object type, which of the game's
-            stored fields (Slig shooting behaviour, patrol timings, and more) show in tooltips and
-            the screen list.
-          </div>
-          <label
-            ><input type="checkbox" id="sRawValues" autocomplete="off" /> Show raw field
-            values</label
-          >
-          <div class="st-desc">
-            Field values show as the raw numbers the game stores (1/0, ...) instead of the
-            translated text (left/right, patrol, true/false). For custom-level builders and the
-            curious; search still matches the translated text.
-          </div>
-          <label
-            ><input type="checkbox" id="sCacheImages" autocomplete="off" /> Cache screen artwork on
-            this device</label
-          >
-          <div class="st-desc">
-            Stores screens you visit (up to ~150 MB) so your next visit doesn't re-download them.
-            Turning it off removes everything stored.
-          </div>
+          <section class="st-sec">
+            <h3>Saved on this device</h3>
+            <label
+              ><input type="checkbox" id="sRememberView" autocomplete="off" checked /> Remember
+              display &amp; object filters</label
+            >
+            <div class="st-desc">Keeps the Display toggles and Objects filters across visits.</div>
+            <label
+              ><input type="checkbox" id="sRememberLoc" autocomplete="off" /> Remember last
+              location</label
+            >
+            <div class="st-desc">
+              Reopens the map where you left off. A shared link always wins.
+            </div>
+            <label
+              ><input type="checkbox" id="sCacheImages" autocomplete="off" /> Cache screen artwork
+              on this device</label
+            >
+            <div class="st-desc">
+              Stores screens you visit (up to ~150 MB) so your next visit doesn't re-download them.
+              Turning it off removes everything stored.
+            </div>
+          </section>
+          <section class="st-sec">
+            <h3>Buttons and names</h3>
+            <label
+              ><input type="checkbox" id="sFullNames" autocomplete="off" /> Show full names</label
+            >
+            <div class="st-desc">Game, level and path buttons list their full in-game names.</div>
+            <label
+              ><input type="checkbox" id="sDemoPaths" autocomplete="off" /> Show demo paths</label
+            >
+            <div class="st-desc">
+              Exoddus stores 25 extra copies of areas that only the demos playing on its title
+              screen ever visit — there is no way to walk to any of them in the game. Hidden by
+              default, and marked [Demo] when shown; a shared link to one still opens it.
+            </div>
+          </section>
+          <section class="st-sec">
+            <h3>Objects and fields</h3>
+            <label
+              ><input type="checkbox" id="sScreenList" autocomplete="off" checked /> List a screen's
+              objects on click</label
+            >
+            <div class="st-desc">
+              Clicking or tapping a screen (anywhere that isn't a followable object) opens a panel
+              listing everything on it.
+            </div>
+            <label
+              ><input type="checkbox" id="sShowMore" autocomplete="off" /> Show more object
+              fields</label
+            >
+            <div class="st-desc">
+              Adds a Fields panel to the sidebar for picking, per object type, which of the game's
+              stored fields (Slig shooting behaviour, patrol timings, and more) show in tooltips and
+              the screen list.
+            </div>
+            <label
+              ><input type="checkbox" id="sRawValues" autocomplete="off" /> Show raw field
+              values</label
+            >
+            <div class="st-desc">
+              Field values show as the raw numbers the game stores (1/0, ...) instead of the
+              translated text (left/right, patrol, true/false). For custom-level builders and the
+              curious; search still matches the translated text.
+            </div>
+          </section>
         </div>
       </aside>
     </div>
