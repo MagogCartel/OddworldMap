@@ -4,6 +4,7 @@ import { esc, extrasText } from "./util.js";
 import { fieldEntries } from "./fields.js";
 import { parseQuery, queryTerms, matchesQuery, rankFor } from "./searchquery.js";
 import { searchInput, searchResults, scopeBar } from "./dom.js";
+import { pathVisible } from "./demo.js";
 import { state } from "./state.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
@@ -134,16 +135,23 @@ function runSearch(q) {
   const terms = queryTerms(orGroups);
   const raw = getSettings().showRawValues;
   const hits = [];
+  let hidden = 0; // matches on paths the demo setting keeps out of the map
   outer: for (const G of state.games)
     for (const L of G.levels)
-      for (const P of L.paths)
+      for (const P of L.paths) {
+        const shown = pathVisible(P);
         for (const t of P.tlvs)
           if (matchesQuery(tlvSearchText(t, G.id, raw), orGroups)) {
             const h = { G, L, P, t };
             if (!scopeAccepts(h)) continue;
+            if (!shown) {
+              hidden++;
+              continue;
+            }
             hits.push(h);
             if (hits.length >= HIT_CAP) break outer;
           }
+      }
 
   // group by context: current path, then current level, then per game
   const groups = [];
@@ -192,7 +200,11 @@ function runSearch(q) {
     : searchScope === "all"
       ? "no hits"
       : `no hits in ${scopeLabel()}`;
-  more.textContent = summary + (searchScope === "all" ? "" : " — ");
+  // a hit the map won't take you to would look like a hit gone missing
+  more.textContent =
+    summary +
+    (hidden ? ` — ${hidden} hidden in demo paths` : "") +
+    (searchScope === "all" ? "" : " — ");
   if (searchScope !== "all") {
     const widen = document.createElement("span");
     widen.className = "widen";
@@ -213,11 +225,12 @@ searchInput.addEventListener("input", () => {
 });
 
 // field-display settings change what result rows show or how values render (raw
-// vs prettified, the show-more mode, per-type picks); re-render an active search
+// vs prettified, the show-more mode, per-type picks), and the demo setting which
+// paths are searched at all; re-render an active search
 window.addEventListener("settings-changed", (e) => {
   const key = e.detail?.key;
   if (
-    (key === "rawValues" || key === "fieldPrefs" || key === "fieldPicks") &&
+    (key === "rawValues" || key === "fieldPrefs" || key === "fieldPicks" || key === "demoPaths") &&
     searchInput.value.trim().length >= 2
   )
     runSearch(searchInput.value);

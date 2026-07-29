@@ -1,11 +1,13 @@
 // Where the map is: a chip in the map chrome naming the current level and path,
 // and the panel it discloses — the level's full name, whether the path is
-// arrived at from another level, and the curated note the odd places carry.
+// arrived at from another level or one the demos alone play, and the curated
+// note the odd places carry.
 
 import { $ } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
 import { pathDisplayName, pathNote } from "./annotations.js";
+import { isDemoPath } from "./demo.js";
 
 const btn = $("placeBtn"),
   panel = $("placePanel"),
@@ -26,6 +28,9 @@ function fill() {
     `<div>Path ${path.id}${name ? ` — ${esc(name)}` : ""}</div>` +
     (state.entry[lvl.short]?.has(path.id)
       ? `<div class="pl-entry">entry point — arrived at from another level</div>`
+      : "") +
+    (isDemoPath(path)
+      ? `<div class="pl-demo">demo path — the game only plays this in its title-screen demos</div>`
       : "") +
     (note ? `<div class="pl-note">${esc(note)}</div>` : "");
   shown = path;

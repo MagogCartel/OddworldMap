@@ -17,6 +17,7 @@ export const SETTINGS_DEFAULTS = {
   rememberView: true,
   rememberLoc: false,
   fullNames: false,
+  showDemoPaths: false,
   screenList: true,
   cacheImages: false,
   showRawValues: false,
@@ -233,6 +234,10 @@ export function initSettings() {
     document.body.classList.toggle("fullnames", on);
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "fullNames" } }));
   });
+
+  bind("sDemoPaths", "showDemoPaths", () =>
+    window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "demoPaths" } })),
+  );
 
   applyCacheImages(s.cacheImages); // boot: register, or sweep leftovers from a mid-session disable
   bind("sCacheImages", "cacheImages", applyCacheImages);

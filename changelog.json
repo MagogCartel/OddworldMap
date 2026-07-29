@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-29",
+   "tag": "new",
+   "title": "The areas you can never walk to are hidden",
+   "detail": "A fifth of Exoddus' path buttons led to places the game never lets you visit: 25 copies of real areas, kept on the disc for the demos that play on the title screen while nobody presses a button. They cluttered every level's buttons and every search, so the map now leaves them out. \"Show demo paths\" in Settings brings them back for the curious, and a link to one opens it either way, so a shared screen never leads nowhere and the chip in the corner of the map says what you are looking at. The map spots them the way the game does, by the spawn point each demo starts from, so nothing was marked by hand."
+  },
+  {
    "date": "2026-07-28",
    "tag": "fixed",
    "title": "Links that go nowhere stop claiming Necrum Mines",

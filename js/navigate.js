@@ -19,6 +19,7 @@ import {
   resolveTarget,
 } from "./model.js";
 import { pathDisplayName } from "./annotations.js";
+import { isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
 
 // highlight the button whose data-key matches, clear the rest
@@ -72,11 +73,12 @@ export function selectGame(G, keepView) {
   if (!keepView && G.levels.length) selectLevel(G.levels[0]);
 }
 
-function selectLevel(L) {
-  state.lvl = L;
-  markOn(levelBtns, L.short);
+const visiblePaths = (L) => L.paths.filter(pathVisible);
+
+function buildPathButtons() {
+  const L = state.lvl;
   pathBtns.innerHTML = "";
-  L.paths.forEach((P) => {
+  visiblePaths(L).forEach((P) => {
     const b = document.createElement("button");
     const name = pathDisplayName(state.data.id, L.short, P);
     b.dataset.code = "P" + P.id;
@@ -89,12 +91,27 @@ function selectLevel(L) {
       b.classList.add("entry");
       tip.push("entry point (arrived at from another level)");
     }
+    if (isDemoPath(P)) tip.push("demo path (only the title-screen demos play here)");
     if (tip.length) b.title = tip.join(" — ");
     b.onclick = () => selectPath(P);
     pathBtns.appendChild(b);
   });
-  if (L.paths.length) selectPath(L.paths[0]);
+  if (state.path) markOn(pathBtns, String(state.path.id));
 }
+
+function selectLevel(L) {
+  state.lvl = L;
+  markOn(levelBtns, L.short);
+  buildPathButtons();
+  const first = visiblePaths(L)[0] ?? L.paths[0];
+  if (first) selectPathById(first.id);
+}
+
+window.addEventListener("settings-changed", (e) => {
+  if (e.detail.key !== "demoPaths" || !state.lvl) return;
+  if (state.path) revealPath(state.path); // hiding the class must not unlist the path in hand
+  buildPathButtons();
+});
 
 function selectPath(P) {
   state.path = P;
@@ -110,6 +127,7 @@ function selectPath(P) {
 function selectPathById(id) {
   const P = state.lvl.paths.find((p) => p.id === id);
   if (!P) return false;
+  if (revealPath(P)) buildPathButtons(); // a hidden path arrives with no button of its own
   selectPath(P);
   return true;
 }
@@ -117,7 +135,7 @@ function selectPathById(id) {
 // the [ / ] shortcuts: step through the current level's paths, wrapping
 export function cyclePath(dir) {
   if (!state.lvl) return;
-  const paths = state.lvl.paths;
+  const paths = visiblePaths(state.lvl);
   selectPath(paths[(paths.indexOf(state.path) + dir + paths.length) % paths.length]);
 }
 

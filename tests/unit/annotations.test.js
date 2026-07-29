@@ -8,6 +8,7 @@ import {
   pathNote,
   levelInfo,
 } from "../../js/annotations.js";
+import { isDemoPath } from "../../js/demo.js";
 
 const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
 
@@ -153,4 +154,18 @@ test("annotations.json entries all point at live targets", () => {
       }
     }
   }
+});
+
+// the paths the map hides say so in their name, which is what an arrival reads
+test("every demo path's curated name marks it [Demo]", () => {
+  setAnnotations(load("annotations.json"));
+  for (const game of ["AO", "AE"])
+    for (const L of load(`map_data_${game.toLowerCase()}.json`).levels)
+      for (const P of L.paths)
+        if (isDemoPath(P))
+          assert.ok(
+            (pathDisplayName(game, L.short, P) || "").startsWith("[Demo] "),
+            `${game} ${L.short} P${P.id}: curated name marks the demo copy`,
+          );
+  setAnnotations(null);
 });

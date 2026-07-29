@@ -845,7 +845,8 @@ body.embed #openSiteBtn {
   color: var(--accent);
   font-weight: 600;
 }
-.pl-entry {
+.pl-entry,
+.pl-demo {
   color: var(--dim);
 }
 .pl-note {

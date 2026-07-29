@@ -9,6 +9,7 @@ import {
   isLoopback,
   pathIn,
 } from "../../js/model.js";
+import { isDemoPath } from "../../js/demo.js";
 import { AO_GEOMETRY, AE_GEOMETRY } from "./fixtures.js";
 
 // Schema sanity over the shipped data: the invariants the viewer relies on.
@@ -95,6 +96,73 @@ test("entry paths in the shipped data are exactly the reachable ones", () => {
       PV: [1],
       SV: [6],
     },
+  });
+});
+
+// the paths only the attract-mode demos play, pinned whole: a DemoSpawnPoint is
+// the viewer's whole rule for hiding one, so this set is the setting's subject.
+// The games arrive at none of them, and no link the map believes leads into one.
+test("demo paths in the shipped data are exactly the attract-mode copies", () => {
+  const found = {};
+  for (const file of ["map_data_ao.json", "map_data_ae.json"]) {
+    const data = load(file);
+    const geo = data.geometry;
+    const entries = computeEntryPaths(data);
+    const demo = [];
+    for (const L of data.levels) {
+      // hiding the class must never empty a level: a level button opens on its first path
+      assert.ok(!isDemoPath(L.paths[0]), `${data.id} ${L.short} opens on a gameplay path`);
+      for (const P of L.paths) {
+        if (isDemoPath(P)) {
+          demo.push(`${L.short} P${P.id}`);
+          assert.ok(
+            !entries[L.short]?.has(P.id),
+            `${data.id} ${L.short} P${P.id} is arrived at from another level`,
+          );
+          continue;
+        }
+        for (const t of P.tlvs) {
+          const d = destOf(t, L, P, geo, data);
+          if (!d || !destTrusted(d, L, data, geo)) continue;
+          const dst = pathIn(data, d.lv, d.pa);
+          assert.ok(
+            !dst || !isDemoPath(dst),
+            `${data.id} ${L.short} P${P.id} ${t.name} leads into demo path ${d.lv} P${d.pa}`,
+          );
+        }
+      }
+    }
+    found[data.id] = demo;
+  }
+  assert.deepEqual(found, {
+    AO: [],
+    AE: [
+      "MI P8",
+      "MI P9",
+      "MI P11",
+      "MI P12",
+      "NE P7",
+      "PV P2",
+      "PV P6",
+      "SV P12",
+      "SV P13",
+      "SV P14",
+      "FD P6",
+      "FD P8",
+      "FD P12",
+      "FD P13",
+      "BA P3",
+      "BA P4",
+      "BW P11",
+      "BW P13",
+      "BR P7",
+      "BR P8",
+      "BR P13",
+      "BR P26",
+      "BR P27",
+      "BR P28",
+      "BR P29",
+    ],
   });
 });
 
