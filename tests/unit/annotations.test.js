@@ -8,7 +8,6 @@ import {
   pathNote,
   levelInfo,
 } from "../../js/annotations.js";
-import { isDemoPath } from "../../js/demo.js";
 
 const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
 
@@ -156,16 +155,17 @@ test("annotations.json entries all point at live targets", () => {
   }
 });
 
-// the paths the map hides say so in their name, which is what an arrival reads
-test("every demo path's curated name marks it [Demo]", () => {
-  setAnnotations(load("annotations.json"));
-  for (const game of ["AO", "AE"])
-    for (const L of load(`map_data_${game.toLowerCase()}.json`).levels)
-      for (const P of L.paths)
-        if (isDemoPath(P))
-          assert.ok(
-            (pathDisplayName(game, L.short, P) || "").startsWith("[Demo] "),
-            `${game} ${L.short} P${P.id}: curated name marks the demo copy`,
-          );
-  setAnnotations(null);
+// the marker is derived from the path's own contents, so a hand-written one
+// would double it — and it names a class the curator can't see going stale
+test("no curated name writes the [Demo] marker itself", () => {
+  const ann = load("annotations.json");
+  for (const [game, g] of Object.entries(ann))
+    for (const [short, byId] of Object.entries(g.paths ?? {}))
+      for (const [id, v] of Object.entries(byId)) {
+        const name = typeof v === "string" ? v : v.name;
+        assert.ok(
+          !/\[Demo\]/i.test(name ?? ""),
+          `${game} ${short} P${id}: "${name}" writes a marker demoLabel derives`,
+        );
+      }
 });

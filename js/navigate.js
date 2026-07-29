@@ -19,7 +19,7 @@ import {
   resolveTarget,
 } from "./model.js";
 import { pathDisplayName } from "./annotations.js";
-import { isDemoPath, pathVisible, revealPath } from "./demo.js";
+import { demoLabel, isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
 
 // highlight the button whose data-key matches, clear the rest
@@ -80,7 +80,7 @@ function buildPathButtons() {
   pathBtns.innerHTML = "";
   visiblePaths(L).forEach((P) => {
     const b = document.createElement("button");
-    const name = pathDisplayName(state.data.id, L.short, P);
+    const name = demoLabel(P, pathDisplayName(state.data.id, L.short, P));
     b.dataset.code = "P" + P.id;
     b.dataset.full = name || "";
     setLabel(b);
