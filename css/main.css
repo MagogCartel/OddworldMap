@@ -20,6 +20,13 @@
   margin: 0;
   padding: 0;
 }
+/* the UA stylesheet gives controls a font of their own instead of the page's */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
 html,
 body {
   height: 100%;

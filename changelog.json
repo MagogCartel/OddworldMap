@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-30",
+   "tag": "improved",
+   "title": "The buttons and the search box use the map's own font",
+   "detail": "A browser hands buttons and text boxes a font of their own unless the page says otherwise, and this page only said so in some places. So the game, level and path buttons, the search box and its scope filters, the rows in a screen's object list and the close button on every panel were drawing in the browser's font rather than the map's. So were the export button and the route planner's undo and clear. They all match now."
+  },
+  {
+   "date": "2026-07-30",
    "tag": "new",
    "title": "The map says what it is, and where it comes from",
    "detail": "A fan project ought to say so out loud rather than leave you to guess. \"About this map\", at the foot of the sidebar, now opens a short panel. It says that this is an unofficial, fan-made map, that Oddworld and its characters and designs are Oddworld Inhabitants' trademarks, and that the project is not affiliated with, endorsed or sponsored by them. It also credits the AliveTeam / alive_reversing project, whose reverse-engineering of the disc formats is what makes any of this readable, and links the map's own source code for anyone who wants to see how it is put together."
