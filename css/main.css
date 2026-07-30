@@ -344,20 +344,24 @@ body.fullnames .btnrow button {
 body.page-zoomed #cv {
   touch-action: pinch-zoom;
 }
-#tip {
-  position: absolute;
+/* the two tooltips share a surface and differ only in how they are placed */
+#tip,
+#anchorTip {
   pointer-events: none;
+  overflow: hidden;
+  padding: 8px 10px;
+  font-size: 12px;
   background: var(--surface-float);
   border: 1px solid var(--line);
   border-radius: 6px;
-  padding: 8px 10px;
-  font-size: 12px;
+  box-shadow: var(--shadow-float);
+}
+#tip {
+  position: absolute;
+  z-index: var(--z-tip);
   max-width: var(--tip-max-w);
   max-height: calc(100% - 12px);
-  overflow: hidden;
   display: none;
-  z-index: var(--z-tip);
-  box-shadow: var(--shadow-float);
 }
 #tip .t {
   color: var(--accent);
@@ -377,28 +381,21 @@ body.page-zoomed #cv {
 #tip .f.loop {
   color: var(--dim);
 }
-/* the tooltip anchored to an element, not the cursor: fixed so no scrolling host clips it */
+/* anchored to an element, not the cursor: fixed so no scrolling host clips it */
 #anchorTip {
   position: fixed;
   z-index: var(--z-anchor-tip);
-  pointer-events: none;
   max-width: min(var(--tip-max-w), calc(100vw - 20px));
   max-height: calc(100vh - 12px);
-  overflow: hidden;
-  padding: 8px 10px;
-  font-size: 12px;
-  background: var(--surface-float);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  box-shadow: var(--shadow-float);
 }
 #anchorTip .detail {
   color: var(--dim);
   margin-top: 3px;
 }
-#hud {
+/* the map's two bottom-corner readouts, identical but for which corner */
+#hud,
+#help {
   position: absolute;
-  right: 10px;
   bottom: 8px;
   color: var(--dim);
   font-size: 11px;
@@ -406,15 +403,11 @@ body.page-zoomed #cv {
   padding: 3px 8px;
   border-radius: 5px;
 }
+#hud {
+  right: 10px;
+}
 #help {
-  position: absolute;
   left: 10px;
-  bottom: 8px;
-  color: var(--dim);
-  font-size: 11px;
-  background: rgba(var(--over-rgb), 0.7);
-  padding: 3px 8px;
-  border-radius: 5px;
 }
 .muted {
   color: var(--dim);
