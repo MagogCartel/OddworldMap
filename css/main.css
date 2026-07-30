@@ -348,6 +348,25 @@ body.page-zoomed #cv {
 #tip .f.loop {
   color: var(--dim);
 }
+/* the tooltip anchored to an element, not the cursor: fixed so no scrolling host clips it */
+#anchorTip {
+  position: fixed;
+  z-index: 22;
+  pointer-events: none;
+  max-width: min(var(--tip-max-w), calc(100vw - 20px));
+  max-height: calc(100vh - 12px);
+  overflow: hidden;
+  padding: 8px 10px;
+  font-size: 12px;
+  background: rgba(18, 20, 24, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+}
+#anchorTip .detail {
+  color: var(--dim);
+  margin-top: 3px;
+}
 #hud {
   position: absolute;
   right: 10px;
@@ -510,30 +529,11 @@ body.page-zoomed #cv {
   color: var(--dim);
   font-weight: 400;
 }
-/* a field with a glossary definition: hover or tap for meaning + values */
+/* the cue that a field name has a glossary definition; data-tip carries it */
 .gloss {
   text-decoration: underline dotted;
   text-underline-offset: 2px;
   cursor: help;
-}
-/* the definition itself: fixed to the viewport, so no scrolling host clips it */
-#glossTip {
-  position: fixed;
-  z-index: 22;
-  pointer-events: none;
-  max-width: min(var(--tip-max-w), calc(100vw - 20px));
-  max-height: calc(100vh - 12px);
-  overflow: hidden;
-  padding: 8px 10px;
-  font-size: 12px;
-  background: rgba(18, 20, 24, 0.94);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
-}
-.gt-vals {
-  color: var(--dim);
-  margin-top: 3px;
 }
 #camPanelClose {
   background: none;

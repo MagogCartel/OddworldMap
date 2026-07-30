@@ -11,7 +11,7 @@ import "./sidebar.js";
 import "./search.js";
 import { toggleMenu } from "./interaction.js";
 import { initFieldPanel } from "./fieldpanel.js";
-import "./glosstip.js";
+import "./anchortip.js";
 import "./whatsnew.js";
 
 initSettings();

@@ -1,29 +1,31 @@
-// The definition behind a .gloss field name: hover it with a mouse, tap it on
-// touch. Delegated from the document, so the surfaces that carry one can
-// rebuild their DOM freely and a new one is a class away.
+// A tooltip anchored to the element it explains: anything carrying a data-tip
+// attribute gets one, hovered with a mouse and tapped on touch. Delegated from
+// the document, so a surface can rebuild its DOM freely and a new consumer is
+// one attribute away.
 
 import { $ } from "./dom.js";
 import { clamp } from "./util.js";
 
-const el = $("glossTip");
+const el = $("anchorTip");
 let anchor = null;
 
-const glossAt = (e) => e.target.closest?.(".gloss");
+const tipAt = (e) => e.target.closest?.("[data-tip]");
 
-// first line is the definition, the rest its value list
+// an attribute carries a string and nothing else, so the line break is the
+// whole content model: a summary, then detail that reads quieter
 function show(target) {
   const text = target.dataset.tip;
   if (!text) return;
-  const [def, ...rest] = text.split("\n");
+  const [summary, ...rest] = text.split("\n");
   el.textContent = "";
-  const defEl = document.createElement("div");
-  defEl.textContent = def;
-  el.append(defEl);
+  const head = document.createElement("div");
+  head.textContent = summary;
+  el.append(head);
   if (rest.length) {
-    const vals = document.createElement("div");
-    vals.className = "gt-vals";
-    vals.textContent = rest.join("\n");
-    el.append(vals);
+    const detail = document.createElement("div");
+    detail.className = "detail";
+    detail.textContent = rest.join("\n");
+    el.append(detail);
   }
   anchor = target;
   el.hidden = false;
@@ -49,24 +51,26 @@ function hide() {
 }
 
 // a touch fires pointerover before its own tap and pointerout after it, so
-// hover has to be the mouse's alone or a tap would flash the definition away
+// hover has to be the mouse's alone or a tap would flash the tooltip away
 document.addEventListener("pointerover", (e) => {
   if (e.pointerType !== "mouse") return;
-  const g = glossAt(e);
-  if (g) show(g);
+  const t = tipAt(e);
+  if (t) show(t);
 });
+// leaving is asked of the anchor, not of the attribute: an anchor with element
+// children keeps its tooltip while the pointer crosses between them
 document.addEventListener("pointerout", (e) => {
-  if (e.pointerType === "mouse" && glossAt(e) === anchor) hide();
+  if (e.pointerType === "mouse" && anchor && !anchor.contains(e.relatedTarget)) hide();
 });
 // the tap coexists with what it activates: nothing is consumed here, so
-// whatever the span sits inside still gets the click
+// whatever the anchor sits inside still gets the click
 document.addEventListener("pointerup", (e) => {
   if (e.pointerType === "mouse") return;
-  const g = glossAt(e);
-  if (g) show(g);
+  const t = tipAt(e);
+  if (t) show(t);
 });
 document.addEventListener("pointerdown", (e) => {
-  if (!glossAt(e)) hide();
+  if (!tipAt(e)) hide();
 });
 document.addEventListener("scroll", hide, true); // scroll doesn't bubble: only capture sees a host scroll
 window.addEventListener("resize", hide);
