@@ -81,7 +81,7 @@
       <div class="btnrow" id="pathBtns"></div>
       <h2>
         Display
-        <span class="h2tools"><button id="tReset">reset</button></span>
+        <span class="h2tools"><button id="tReset" class="linkbtn">reset</button></span>
       </h2>
       <div id="toggles">
         <!-- autocomplete=off: the script mirrors .checked into state, so form-state
@@ -112,8 +112,9 @@
       <h2>
         Objects
         <span class="h2tools"
-          ><button id="fAll">all</button> · <button id="fNone">none</button> ·
-          <button id="fReset">reset</button></span
+          ><button id="fAll" class="linkbtn">all</button> ·
+          <button id="fNone" class="linkbtn">none</button> ·
+          <button id="fReset" class="linkbtn">reset</button></span
         >
       </h2>
       <div class="filters" id="filterBox"></div>
@@ -123,8 +124,8 @@
         <div class="fp-body"></div>
       </div>
       <div id="sbFooter">
-        <button id="aboutBtn" type="button">About this map</button> ·
-        <a id="feedbackLink" href="mailto:">Send feedback</a>
+        <button id="aboutBtn" type="button" class="linkbtn">About this map</button> ·
+        <a id="feedbackLink" class="linkbtn" href="mailto:">Send feedback</a>
       </div>
     </div>
     <div id="main">
@@ -179,8 +180,10 @@
       <div id="hud"></div>
       <div id="routeBar" hidden>
         <span id="routeStats" role="status"></span>
-        <button id="routeUndo" title="Remove the last waypoint (Backspace)">undo</button>
-        <button id="routeClear" title="Remove all waypoints">clear</button>
+        <button id="routeUndo" class="linkbtn" title="Remove the last waypoint (Backspace)">
+          undo
+        </button>
+        <button id="routeClear" class="linkbtn" title="Remove all waypoints">clear</button>
       </div>
       <div id="toastStack" aria-live="polite"></div>
     </div>

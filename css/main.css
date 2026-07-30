@@ -185,22 +185,26 @@ body.fullnames .btnrow button {
   color: var(--dim);
   font-size: 11px;
 }
-.h2tools {
-  float: right;
-}
-.h2tools button {
+/* a text button with no chrome: the treatment is shared, the size is not —
+   each surface sets its own, and the route bar's pair can be disabled */
+.linkbtn {
   background: none;
   border: 0;
   padding: 0;
+  color: var(--dim);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.linkbtn:not(:disabled):hover {
+  color: var(--accent);
+}
+.h2tools {
+  float: right;
+}
+.h2tools .linkbtn {
   font: inherit;
   text-transform: inherit;
   letter-spacing: inherit;
-  color: var(--dim);
-  cursor: pointer;
-  text-decoration: underline;
-}
-.h2tools button:hover {
-  color: var(--accent);
 }
 /* Fields picker: per-type collapsible checklists, one type expanded at a time */
 #fieldPanel .fp-body {
@@ -264,18 +268,9 @@ body.fullnames .btnrow button {
   gap: 10px;
   padding-top: 5px;
 }
-.fp-tools button {
-  background: none;
-  border: 0;
-  padding: 0;
+.fp-tools .linkbtn {
   font: inherit;
   font-size: 11px;
-  color: var(--dim);
-  cursor: pointer;
-  text-decoration: underline;
-}
-.fp-tools button:hover {
-  color: var(--accent);
 }
 #toggles {
   padding: 0 12px 10px;
@@ -306,21 +301,11 @@ body.fullnames .btnrow button {
   padding: 10px 14px 12px;
   border-top: 1px solid var(--line);
 }
-#sbFooter a,
-#sbFooter button {
-  background: none;
-  border: 0;
-  padding: 0;
+#sbFooter .linkbtn {
   font: inherit;
-  color: var(--dim);
   font-size: 11px;
-  text-decoration: underline;
-  cursor: pointer;
 }
-#sbFooter a:hover,
-#sbFooter a:focus-visible,
-#sbFooter button:hover,
-#sbFooter button:focus-visible {
+#sbFooter .linkbtn:focus-visible {
   color: var(--accent);
 }
 #main {
@@ -501,19 +486,10 @@ body.page-zoomed #cv {
 #routeBar[hidden] {
   display: none; /* the flex display would otherwise defeat the hidden attribute */
 }
-#routeBar button {
-  background: none;
-  border: 0;
-  padding: 0;
-  color: var(--dim);
+#routeBar .linkbtn {
   font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
 }
-#routeBar button:hover:not(:disabled) {
-  color: var(--accent);
-}
-#routeBar button:disabled {
+#routeBar .linkbtn:disabled {
   opacity: 0.4;
   text-decoration: none;
   cursor: default;

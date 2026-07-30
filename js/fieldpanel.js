@@ -96,6 +96,7 @@ function renderType({ name, fields }) {
   tools.className = "fp-tools";
   const allBtn = document.createElement("button");
   allBtn.type = "button";
+  allBtn.className = "linkbtn";
   allBtn.textContent = "all";
   allBtn.onclick = () => {
     fields.forEach((f) => shown.add(f));
@@ -105,6 +106,7 @@ function renderType({ name, fields }) {
   };
   const resetBtn = document.createElement("button");
   resetBtn.type = "button";
+  resetBtn.className = "linkbtn";
   resetBtn.textContent = "reset";
   resetBtn.onclick = () => {
     delete prefs().byType[name]; // truly back to defaults, so future default tweaks apply
