@@ -158,10 +158,10 @@ body.fullnames .btnrow button {
   align-items: center;
   gap: 7px;
   cursor: pointer;
+  user-select: none;
 }
 .filters .checkrow {
   padding: 2.5px 2px;
-  user-select: none;
   position: relative;
 }
 .filters input {
@@ -198,7 +198,8 @@ body.fullnames .btnrow button {
   text-decoration: underline;
   cursor: pointer;
 }
-.linkbtn:not(:disabled):hover {
+.linkbtn:not(:disabled):hover,
+.linkbtn:focus-visible {
   color: var(--accent);
 }
 .h2tools {
@@ -252,7 +253,6 @@ body.fullnames .btnrow button {
   padding: 1.5px 0;
   font-size: 11px;
   color: var(--text);
-  user-select: none;
 }
 .fp-fields .checkrow:not(:has(input:checked)) {
   opacity: 0.5;
@@ -299,9 +299,6 @@ body.fullnames .btnrow button {
 #sbFooter .linkbtn {
   font: inherit;
   font-size: 11px;
-}
-#sbFooter .linkbtn:focus-visible {
-  color: var(--accent);
 }
 #main {
   flex: 1;
