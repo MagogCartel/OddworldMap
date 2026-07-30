@@ -99,7 +99,7 @@ function highlight(text, terms) {
 
 function hitButton(h, terms) {
   const b = document.createElement("button");
-  b.className = "hit";
+  b.className = "rowbtn hit";
   let ex = extrasText(h.t, " ", fieldPrefsFor(h.G.id));
   // the index matches every field but the row shows only the visible ones; a
   // hit on a hidden field would look inexplicable, so append what matched
@@ -172,7 +172,7 @@ function runSearch(q) {
     if (!g.hits.length) continue;
     g.hits.sort((a, b) => rankFor(a.t.name, terms) - rankFor(b.t.name, terms));
     const head = document.createElement("div");
-    head.className = "shead";
+    head.className = "listhead shead";
     head.innerHTML = `<span>${g.label}</span><span>${g.hits.length}</span>`;
     searchResults.appendChild(head);
     g.hits.slice(0, GROUP_MAX).forEach((h) => searchResults.appendChild(hitButton(h, terms)));

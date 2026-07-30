@@ -56,12 +56,12 @@ export function openCamPanel(x, y, focus = null) {
   for (const [c, tlvs] of byCat) {
     if (!tlvs.length) continue;
     const head = document.createElement("div");
-    head.className = "cp-cat";
+    head.className = "listhead cp-cat";
     head.innerHTML = `<span class="sw" style="background:${c.color}"></span>${c.label}`;
     body.appendChild(head);
     for (const t of tlvs) {
       const b = document.createElement("button");
-      b.className = "cp-row";
+      b.className = "rowbtn cp-row";
       if (t === focus) b.classList.add("active");
       const ex = fieldEntries(t, fieldPrefsFor(state.data.id))
         .map(([k, v]) => {
