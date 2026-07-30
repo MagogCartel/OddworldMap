@@ -17,8 +17,8 @@
   --shadow-float: 0 4px 18px rgba(0, 0, 0, 0.5);
   --shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.6);
   /* stacking tiers, low to high — the order is the system */
-  --z-tip: 5;
   --z-map-overlay: 6;
+  --z-tip: 7;
   --z-scrim: 12;
   --z-drawer: 15;
   --z-map-chrome: 21;

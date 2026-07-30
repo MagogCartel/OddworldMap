@@ -3,6 +3,12 @@
   {
    "date": "2026-07-30",
    "tag": "improved",
+   "title": "Object tooltips are no longer buried",
+   "detail": "An object's tooltip is a wide box set just below and right of the pointer, so pointing anywhere near the edge of the map left it sitting beneath whatever else was on screen. The description of the very thing you were pointing at came out underneath the screen list, the panel behind the corner chip, the route planner's bar or a passing message. Tooltips now draw above all four."
+  },
+  {
+   "date": "2026-07-30",
+   "tag": "improved",
    "title": "The buttons and the search box use the map's own font",
    "detail": "A browser hands buttons and text boxes a font of their own unless the page says otherwise, and this page only said so in some places. So the game, level and path buttons, the search box and its scope filters, the rows in a screen's object list and the close button on every panel were drawing in the browser's font rather than the map's. So were the export button and the route planner's undo and clear. They all match now."
   },
