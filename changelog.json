@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-30",
+   "tag": "improved",
+   "title": "Two more Exoddus areas say what is odd about them",
+   "detail": "Necrum Mines' tunnel 2 sits right next to tunnel 1 with nothing joining them on the map, because the game carries you across in the cutscene at the brew machine rather than through any door. And the Brewery's final secret area turns out to be the one part of zulag 13 whose board prints the right number, where every other board in that zulag misprints it as 14. Fifteen Exoddus paths carry a note now."
+  },
+  {
    "date": "2026-07-29",
    "tag": "improved",
    "title": "The endgame areas get their own names",

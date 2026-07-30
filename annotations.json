@@ -75,7 +75,10 @@
   "paths": {
    "MI": {
     "1": "Tunnel 1",
-    "2": "Tunnel 2",
+    "2": {
+     "name": "Tunnel 2",
+     "note": "Nothing on the map directly joins this to Tunnel 1 next door, because the game carries you across in the cutscene at the brew machine rather than through any door."
+    },
     "3": "Boiler Room",
     "4": "Tunnels 3-5",
     "5": "Tunnel 6",
@@ -223,7 +226,10 @@
     "12": "Zulag 3",
     "13": "[Demo] Zulag 6: Angry Mudokons",
     "14": "Zulag 5",
-    "15": "Zulag 13: Final Secret Area",
+    "15": {
+     "name": "Zulag 13: Final Secret Area",
+     "note": "The one part of zulag 13 whose board prints 13: every other board in the zulag misprints it as 14."
+    },
     "16": "Brewery Terminal",
     "17": "Zulag 9",
     "18": "Zulag 4",
