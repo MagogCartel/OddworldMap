@@ -529,7 +529,8 @@ body.page-zoomed #cv {
   cursor: help;
 }
 #camPanelClose {
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 18px;
 }
 #camPanelBody {
   overflow-y: auto;
@@ -906,10 +907,12 @@ body.embed #openSiteBtn {
   background: none;
   border: 0;
   color: var(--dim);
-  font-size: 24px;
-  line-height: 1;
   padding: 0 2px;
   cursor: pointer;
+  font-size: 21px;
+  line-height: 24px;
+  position: relative;
+  top: -0.04em;
 }
 .closebtn:hover {
   color: var(--accent);
