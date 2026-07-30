@@ -10,11 +10,11 @@ const btn = $("aboutBtn"),
   closeBtn = $("aboutClose");
 
 const open = () => {
-  document.body.classList.add("about-open");
+  overlay.classList.add("open");
   closeBtn.focus();
 };
 const close = () => {
-  document.body.classList.remove("about-open");
+  overlay.classList.remove("open");
   btn.focus();
 };
 
@@ -23,4 +23,4 @@ closeBtn.onclick = close;
 overlay.onclick = (e) => {
   if (e.target === overlay) close();
 };
-trapDialogKeys(() => document.body.classList.contains("about-open"), $("about"), close);
+trapDialogKeys(() => overlay.classList.contains("open"), $("about"), close);

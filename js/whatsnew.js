@@ -88,13 +88,13 @@ async function init() {
 
   const open = () => {
     render(false);
-    document.body.classList.add("whatsnew-open");
+    overlay.classList.add("open");
     btn.classList.remove("hasnew");
     store.set(newest);
     closeBtn.focus();
   };
   const close = () => {
-    document.body.classList.remove("whatsnew-open");
+    overlay.classList.remove("open");
     btn.focus();
   };
 
@@ -106,7 +106,7 @@ async function init() {
   overlay.onclick = (e) => {
     if (e.target === overlay) close();
   };
-  trapDialogKeys(() => document.body.classList.contains("whatsnew-open"), $("whatsnew"), close);
+  trapDialogKeys(() => overlay.classList.contains("open"), $("whatsnew"), close);
 
   btn.insertAdjacentHTML("afterbegin", NEWSPAPER_SVG);
   btn.hidden = false;

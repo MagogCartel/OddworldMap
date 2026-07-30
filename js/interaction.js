@@ -333,20 +333,17 @@ window.addEventListener("keydown", (e) => {
 });
 
 // ---- shortcuts panel (the ? key) -----------------------------------------
+const shortcutsOverlay = $("shortcutsOverlay");
 function openShortcuts() {
-  document.body.classList.add("shortcuts-open");
+  shortcutsOverlay.classList.add("open");
   $("shortcutsClose").focus();
 }
-const closeShortcuts = () => document.body.classList.remove("shortcuts-open");
+const closeShortcuts = () => shortcutsOverlay.classList.remove("open");
 $("shortcutsClose").onclick = closeShortcuts;
-$("shortcutsOverlay").onclick = (e) => {
+shortcutsOverlay.onclick = (e) => {
   if (e.target === e.currentTarget) closeShortcuts();
 };
-trapDialogKeys(
-  () => document.body.classList.contains("shortcuts-open"),
-  $("shortcuts"),
-  closeShortcuts,
-);
+trapDialogKeys(() => shortcutsOverlay.classList.contains("open"), $("shortcuts"), closeShortcuts);
 
 // where an object may be said to lead: destOf's answer, less the links whose
 // named partner isn't at the destination to receive them

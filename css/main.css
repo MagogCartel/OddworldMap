@@ -558,16 +558,7 @@ body.page-zoomed #cv {
   cursor: help;
 }
 #camPanelClose {
-  background: none;
-  border: 0;
-  color: var(--dim);
   font-size: 18px;
-  line-height: 1;
-  padding: 0 2px;
-  cursor: pointer;
-}
-#camPanelClose:hover {
-  color: var(--accent);
 }
 #camPanelBody {
   overflow-y: auto;
@@ -896,10 +887,9 @@ body.embed #openSiteBtn {
   line-height: 1.55;
 }
 
-#whatsnewOverlay,
-#settingsOverlay,
-#shortcutsOverlay,
-#aboutOverlay {
+/* a dialog is .overlay > .dialog, with the module toggling .open on the
+   overlay; only a width that isn't the common one needs saying */
+.overlay {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal);
@@ -913,18 +903,13 @@ body.embed #openSiteBtn {
     opacity 0.18s ease,
     visibility 0s 0.18s;
 }
-body.whatsnew-open #whatsnewOverlay,
-body.settings-open #settingsOverlay,
-body.shortcuts-open #shortcutsOverlay,
-body.about-open #aboutOverlay {
+.overlay.open {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.18s ease;
 }
-#whatsnew,
-#settings,
-#shortcuts,
-#about {
+.dialog {
+  width: var(--dialog-w, 460px);
   max-width: 100%;
   max-height: 80vh;
   display: flex;
@@ -937,41 +922,34 @@ body.about-open #aboutOverlay {
   transform: translateY(8px);
   transition: transform 0.18s ease;
 }
-#whatsnew {
-  width: 460px;
-}
-#settings {
-  width: 460px;
-}
-#shortcuts {
-  width: 340px;
-}
-#about {
-  width: 420px;
-}
-body.whatsnew-open #whatsnew,
-body.settings-open #settings,
-body.shortcuts-open #shortcuts,
-body.about-open #about {
+.overlay.open .dialog {
   transform: none;
 }
-.wn-head {
+#shortcuts {
+  --dialog-w: 340px;
+}
+#about {
+  --dialog-w: 420px;
+}
+.dlg-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px 11px;
   border-bottom: 2px solid var(--line);
 }
-.wn-head h2 {
+.dlg-head h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+/* a newspaper masthead rather than a dialog title */
+#whatsnewTitle {
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.01em;
 }
-#whatsnewClose,
-#settingsClose,
-#shortcutsClose,
-#aboutClose {
+.closebtn {
   background: none;
   border: 0;
   color: var(--dim);
@@ -980,15 +958,15 @@ body.about-open #about {
   padding: 0 2px;
   cursor: pointer;
 }
-#whatsnewClose:hover,
-#settingsClose:hover,
-#shortcutsClose:hover,
-#aboutClose:hover {
+.closebtn:hover {
   color: var(--accent);
 }
-#whatsnewBody {
+.dlg-body {
   overflow-y: auto;
-  padding: 4px 18px 16px;
+  padding: 14px 18px 16px;
+}
+#whatsnewBody {
+  padding-top: 4px;
 }
 .wn-date {
   font-family: var(--serif);
@@ -1042,21 +1020,6 @@ body.about-open #about {
   border-color: var(--accent);
 }
 
-.st-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px 11px;
-  border-bottom: 2px solid var(--line);
-}
-.st-head h2 {
-  font-size: 15px;
-  font-weight: 600;
-}
-#settingsBody {
-  overflow-y: auto;
-  padding: 14px 18px 16px;
-}
 #settingsBody label {
   display: flex;
   align-items: center;
@@ -1094,8 +1057,7 @@ body.about-open #about {
 }
 
 #shortcutsBody {
-  overflow-y: auto;
-  padding: 12px 18px 16px;
+  padding-top: 12px;
 }
 .sc-row {
   display: flex;
@@ -1122,10 +1084,6 @@ kbd {
   line-height: 1.6;
 }
 
-#aboutBody {
-  overflow-y: auto;
-  padding: 14px 18px 16px;
-}
 #aboutBody p {
   line-height: 1.55;
 }
@@ -1145,14 +1103,8 @@ kbd {
 
 @media (prefers-reduced-motion: reduce) {
   #sidebar,
-  #whatsnewOverlay,
-  #whatsnew,
-  #settingsOverlay,
-  #settings,
-  #shortcutsOverlay,
-  #shortcuts,
-  #aboutOverlay,
-  #about,
+  .overlay,
+  .dialog,
   .toast {
     transition: none;
   }
@@ -1202,17 +1154,11 @@ kbd {
     padding-top: 6px;
     padding-bottom: 6px;
   }
-  #whatsnewOverlay,
-  #settingsOverlay,
-  #shortcutsOverlay,
-  #aboutOverlay {
+  .overlay {
     padding: 10px;
     align-items: end;
   }
-  #whatsnew,
-  #settings,
-  #shortcuts,
-  #about {
+  .dialog {
     width: 100%;
     max-height: 85vh;
   }

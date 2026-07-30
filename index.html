@@ -171,7 +171,7 @@
       <div id="camPanel" hidden>
         <div class="cp-head">
           <span id="camPanelTitle"></span>
-          <button id="camPanelClose" aria-label="Close">×</button>
+          <button id="camPanelClose" class="closebtn" aria-label="Close">×</button>
         </div>
         <div id="camPanelBody"></div>
       </div>
@@ -185,22 +185,34 @@
       <div id="toastStack" aria-live="polite"></div>
     </div>
     <div id="anchorTip" hidden></div>
-    <div id="whatsnewOverlay">
-      <aside id="whatsnew" role="dialog" aria-modal="true" aria-labelledby="whatsnewTitle">
-        <div class="wn-head">
+    <div class="overlay" id="whatsnewOverlay">
+      <aside
+        id="whatsnew"
+        class="dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="whatsnewTitle"
+      >
+        <div class="dlg-head">
           <h2 id="whatsnewTitle">What's New</h2>
-          <button id="whatsnewClose" aria-label="Close">×</button>
+          <button id="whatsnewClose" class="closebtn" aria-label="Close">×</button>
         </div>
-        <div id="whatsnewBody"></div>
+        <div class="dlg-body" id="whatsnewBody"></div>
       </aside>
     </div>
-    <div id="shortcutsOverlay">
-      <aside id="shortcuts" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
-        <div class="st-head">
+    <div class="overlay" id="shortcutsOverlay">
+      <aside
+        id="shortcuts"
+        class="dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shortcutsTitle"
+      >
+        <div class="dlg-head">
           <h2 id="shortcutsTitle">Keyboard shortcuts</h2>
-          <button id="shortcutsClose" aria-label="Close">×</button>
+          <button id="shortcutsClose" class="closebtn" aria-label="Close">×</button>
         </div>
-        <div id="shortcutsBody">
+        <div class="dlg-body" id="shortcutsBody">
           <div class="sc-row">
             <span class="sc-keys"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd></span
             >pan
@@ -256,13 +268,19 @@
         </div>
       </aside>
     </div>
-    <div id="settingsOverlay">
-      <aside id="settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-        <div class="st-head">
+    <div class="overlay" id="settingsOverlay">
+      <aside
+        id="settings"
+        class="dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settingsTitle"
+      >
+        <div class="dlg-head">
           <h2 id="settingsTitle">Settings</h2>
-          <button id="settingsClose" aria-label="Close">×</button>
+          <button id="settingsClose" class="closebtn" aria-label="Close">×</button>
         </div>
-        <div id="settingsBody">
+        <div class="dlg-body" id="settingsBody">
           <!-- autocomplete=off: the script seeds .checked from stored settings, so
            form-state restoration must not flip these -->
           <section class="st-sec">
@@ -335,13 +353,13 @@
         </div>
       </aside>
     </div>
-    <div id="aboutOverlay">
-      <aside id="about" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
-        <div class="st-head">
+    <div class="overlay" id="aboutOverlay">
+      <aside id="about" class="dialog" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <div class="dlg-head">
           <h2 id="aboutTitle">About this map</h2>
-          <button id="aboutClose" aria-label="Close">×</button>
+          <button id="aboutClose" class="closebtn" aria-label="Close">×</button>
         </div>
-        <div id="aboutBody">
+        <div class="dlg-body" id="aboutBody">
           <p class="ab-notice">
             oddworldmap.com is an unofficial, fan-made interactive map. Oddworld, Mudokons,
             Glukkons, and all related characters and designs are registered trademarks and

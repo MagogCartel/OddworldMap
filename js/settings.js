@@ -187,11 +187,11 @@ export function initSettings() {
   btn.innerHTML = GEAR_SVG;
 
   const open = () => {
-    document.body.classList.add("settings-open");
+    overlay.classList.add("open");
     closeBtn.focus();
   };
   const close = () => {
-    document.body.classList.remove("settings-open");
+    overlay.classList.remove("open");
     btn.focus();
   };
   btn.onclick = open;
@@ -199,7 +199,7 @@ export function initSettings() {
   overlay.onclick = (e) => {
     if (e.target === overlay) close();
   };
-  trapDialogKeys(() => document.body.classList.contains("settings-open"), $("settings"), close);
+  trapDialogKeys(() => overlay.classList.contains("open"), $("settings"), close);
 
   // seed each checkbox from the stored settings, then persist + apply on change
   const bind = (id, key, apply) => {
