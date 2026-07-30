@@ -1051,18 +1051,6 @@ kbd {
   color: var(--accent);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #sidebar,
-  .overlay,
-  .dialog,
-  .toast {
-    transition: none;
-  }
-  .toast-bar {
-    display: none;
-  }
-}
-
 /* narrow: the sidebar leaves the flow and slides over the map instead of shrinking it
    (the 720px breakpoint is duplicated in the script's narrowMQ) */
 @media (max-width: 720px) {
@@ -1135,5 +1123,20 @@ kbd {
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
+  }
+}
+
+/* last in the file, so it outranks the narrow drawer's transition written later
+   at the same weight */
+@media (prefers-reduced-motion: reduce) {
+  #sidebar,
+  .overlay,
+  .overlay.open, /* two classes: a lone .overlay cannot outrank it */
+  .dialog,
+  .toast {
+    transition: none;
+  }
+  .toast-bar {
+    display: none;
   }
 }

@@ -3,6 +3,12 @@
   {
    "date": "2026-07-30",
    "tag": "improved",
+   "title": "\"Reduce motion\" now stops all of the motion",
+   "detail": "If your system asks for reduced motion, the map turned off its animations, except two that slipped through. A dialog still faded in over about a fifth of a second, though it closed instantly, and on a phone the menu drawer still slid in from the side. Both now simply appear and disappear, which is what the setting asks for."
+  },
+  {
+   "date": "2026-07-30",
+   "tag": "improved",
    "title": "Object tooltips are no longer buried",
    "detail": "An object's tooltip is a wide box set just below and right of the pointer, so pointing anywhere near the edge of the map left it sitting beneath whatever else was on screen. The description of the very thing you were pointing at came out underneath the screen list, the panel behind the corner chip, the route planner's bar or a passing message. Tooltips now draw above all four."
   },
