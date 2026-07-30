@@ -13,6 +13,7 @@ import { toggleMenu } from "./interaction.js";
 import { initFieldPanel } from "./fieldpanel.js";
 import "./anchortip.js";
 import "./whatsnew.js";
+import "./about.js";
 
 initSettings();
 initFieldPanel();

@@ -11,7 +11,9 @@ export function trapDialogKeys(isOpen, panel, close) {
         close();
         e.preventDefault();
       } else if (e.key === "Tab") {
-        const items = [...panel.querySelectorAll("button, input")].filter((el) => el.offsetParent);
+        const items = [...panel.querySelectorAll("button, input, a[href]")].filter(
+          (el) => el.offsetParent,
+        );
         if (items.length) {
           e.preventDefault();
           const i = items.indexOf(document.activeElement);

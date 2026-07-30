@@ -122,7 +122,10 @@
         <h2>Fields</h2>
         <div class="fp-body"></div>
       </div>
-      <div id="sbFooter"><a id="feedbackLink" href="mailto:">Send feedback</a></div>
+      <div id="sbFooter">
+        <button id="aboutBtn" type="button">About this map</button> ·
+        <a id="feedbackLink" href="mailto:">Send feedback</a>
+      </div>
     </div>
     <div id="main">
       <noscript><div id="noscript">This interactive map requires JavaScript.</div></noscript>
@@ -329,6 +332,36 @@
               curious; search still matches the translated text.
             </div>
           </section>
+        </div>
+      </aside>
+    </div>
+    <div id="aboutOverlay">
+      <aside id="about" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <div class="st-head">
+          <h2 id="aboutTitle">About this map</h2>
+          <button id="aboutClose" aria-label="Close">×</button>
+        </div>
+        <div id="aboutBody">
+          <p class="ab-notice">
+            oddworldmap.com is an unofficial, fan-made interactive map. Oddworld, Mudokons,
+            Glukkons, and all related characters and designs are registered trademarks and
+            copyrights of Oddworld Inhabitants, Inc. This project is not affiliated with, endorsed,
+            or sponsored by Oddworld Inhabitants.
+          </p>
+          <p class="ab-meta">
+            Every screen, object and collision line is read from the game discs. Formats
+            reverse-engineered by the
+            <a href="https://github.com/AliveTeam/alive_reversing" target="_blank" rel="noopener"
+              >AliveTeam / alive_reversing</a
+            >
+            project.
+          </p>
+          <p class="ab-meta">
+            Source code:
+            <a href="https://github.com/MagogCartel/OddworldMap" target="_blank" rel="noopener"
+              >github.com/MagogCartel/OddworldMap</a
+            >
+          </p>
         </div>
       </aside>
     </div>

@@ -36,6 +36,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - a scope bar narrows the search to the current game/level/path
 - on touch devices one finger pans and two fingers pinch-zoom the map; the page itself pinch-zooms too, and while it is zoomed two fingers on the map zoom the page back out instead; the sidebar collapses behind a menu button on narrow screens
 - **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it
+- **About this map**: the link at the foot of the sidebar opens the notice that this is an unofficial fan project unaffiliated with Oddworld Inhabitants, alongside links to the map's source and to the project whose reverse-engineering the data formats come from
 
 ### Overlays
 
@@ -128,4 +129,4 @@ Structure layouts (TLV types, path tables, collision records) come from the aliv
 - Game data formats reverse-engineered by the [AliveTeam / alive_reversing](https://github.com/AliveTeam/alive_reversing) project.
 - Curated path names in [annotations.json](annotations.json) draw on Oddworld: New 'n' Tasty's official chapter names and on the [Barebones walkthrough](https://steamcommunity.com/sharedfiles/filedetails/?id=1812678216) on Steam, whose per-path titles most of the Oddysee names follow; the Exoddus names are read off the game's own signage where it has any — the zulag, tunnel, block and terminal boards and the arches over them — and elsewhere from matching each path's contents against MCJohn117Chief's [GameFAQs walkthrough](https://gamefaqs.gamespot.com/pc/198221-oddworld-abes-exoddus/faqs/74324) and the [Oddworld Wiki](https://oddworld.fandom.com/wiki/SoulStorm_Brewery_(level)), with the demo paths and each level's entry path taken from the decompilation's own tables. A curated name may refine the games' own coarse labels, but the extracted data is never altered.
 - `tools/PSXMDECDecoder.{cpp,h}` are GPL-2.0 (see file headers; originally from libbs / psxdev). The rest of the tooling and the viewer were written for this project.
-- Oddworld: Abe's Oddysee and Abe's Exoddus are © Oddworld Inhabitants. This project ships no game code and is intended for research, speedrunning and preservation; the extracted imagery remains the property of its copyright holders.
+- Oddworld: Abe's Oddysee and Abe's Exoddus are © Oddworld Inhabitants. This project ships no game code and is intended for research, speedrunning and preservation; the extracted imagery remains the property of its copyright holders. The site says as much in the app, behind the sidebar's "About this map" link.

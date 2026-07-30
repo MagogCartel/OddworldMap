@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-07-30",
+   "tag": "new",
+   "title": "The map says what it is, and where it comes from",
+   "detail": "A fan project ought to say so out loud rather than leave you to guess. \"About this map\", at the foot of the sidebar, now opens a short panel. It says that this is an unofficial, fan-made map, that Oddworld and its characters and designs are Oddworld Inhabitants' trademarks, and that the project is not affiliated with, endorsed or sponsored by them. It also credits the AliveTeam / alive_reversing project, whose reverse-engineering of the disc formats is what makes any of this readable, and links the map's own source code for anyone who wants to see how it is put together."
+  },
+  {
+   "date": "2026-07-30",
    "tag": "improved",
    "title": "Field definitions open on a tap, not just a hover",
    "detail": "A field name with a dotted underline (in the screen list, and in the Fields panel in the sidebar) explains itself: what the field means, and what each of its values stands for. That explanation used to be the browser's own hover tooltip, which a phone or a tablet never shows at all, so on touch the underline promised something it could not deliver. Tapping one now opens the definition, and the tap still does whatever it was going to do: tick the field in the panel, or jump to the object in the screen list. On a mouse it appears the moment you point at it rather than after the browser's pause, and the list of values reads as its own line under the definition."

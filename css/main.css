@@ -286,12 +286,21 @@ body.fullnames .btnrow button {
   padding: 10px 14px 12px;
   border-top: 1px solid var(--line);
 }
-#sbFooter a {
+#sbFooter a,
+#sbFooter button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
   color: var(--dim);
   font-size: 11px;
   text-decoration: underline;
+  cursor: pointer;
 }
-#sbFooter a:hover {
+#sbFooter a:hover,
+#sbFooter a:focus-visible,
+#sbFooter button:hover,
+#sbFooter button:focus-visible {
   color: var(--accent);
 }
 #main {
@@ -876,7 +885,8 @@ body.embed #openSiteBtn {
 
 #whatsnewOverlay,
 #settingsOverlay,
-#shortcutsOverlay {
+#shortcutsOverlay,
+#aboutOverlay {
   position: fixed;
   inset: 0;
   z-index: 25;
@@ -892,14 +902,16 @@ body.embed #openSiteBtn {
 }
 body.whatsnew-open #whatsnewOverlay,
 body.settings-open #settingsOverlay,
-body.shortcuts-open #shortcutsOverlay {
+body.shortcuts-open #shortcutsOverlay,
+body.about-open #aboutOverlay {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.18s ease;
 }
 #whatsnew,
 #settings,
-#shortcuts {
+#shortcuts,
+#about {
   max-width: 100%;
   max-height: 80vh;
   display: flex;
@@ -921,9 +933,13 @@ body.shortcuts-open #shortcutsOverlay {
 #shortcuts {
   width: 340px;
 }
+#about {
+  width: 420px;
+}
 body.whatsnew-open #whatsnew,
 body.settings-open #settings,
-body.shortcuts-open #shortcuts {
+body.shortcuts-open #shortcuts,
+body.about-open #about {
   transform: none;
 }
 .wn-head {
@@ -941,7 +957,8 @@ body.shortcuts-open #shortcuts {
 }
 #whatsnewClose,
 #settingsClose,
-#shortcutsClose {
+#shortcutsClose,
+#aboutClose {
   background: none;
   border: 0;
   color: var(--dim);
@@ -952,7 +969,8 @@ body.shortcuts-open #shortcuts {
 }
 #whatsnewClose:hover,
 #settingsClose:hover,
-#shortcutsClose:hover {
+#shortcutsClose:hover,
+#aboutClose:hover {
   color: var(--accent);
 }
 #whatsnewBody {
@@ -1091,6 +1109,27 @@ kbd {
   line-height: 1.6;
 }
 
+#aboutBody {
+  overflow-y: auto;
+  padding: 14px 18px 16px;
+}
+#aboutBody p {
+  line-height: 1.55;
+}
+#aboutBody p + p {
+  margin-top: 11px;
+}
+.ab-notice {
+  text-align: justify;
+}
+.ab-meta {
+  color: var(--dim);
+  font-size: 12px;
+}
+#aboutBody a {
+  color: var(--accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   #sidebar,
   #whatsnewOverlay,
@@ -1099,6 +1138,8 @@ kbd {
   #settings,
   #shortcutsOverlay,
   #shortcuts,
+  #aboutOverlay,
+  #about,
   .toast {
     transition: none;
   }
@@ -1150,13 +1191,15 @@ kbd {
   }
   #whatsnewOverlay,
   #settingsOverlay,
-  #shortcutsOverlay {
+  #shortcutsOverlay,
+  #aboutOverlay {
     padding: 10px;
     align-items: end;
   }
   #whatsnew,
   #settings,
-  #shortcuts {
+  #shortcuts,
+  #about {
     width: 100%;
     max-height: 85vh;
   }
