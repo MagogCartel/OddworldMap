@@ -16,6 +16,14 @@
   --surface-float: rgba(var(--over-rgb), 0.94);
   --shadow-float: 0 4px 18px rgba(0, 0, 0, 0.5);
   --shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.6);
+  /* stacking tiers, low to high — the order is the system */
+  --z-tip: 5;
+  --z-map-overlay: 6;
+  --z-scrim: 12;
+  --z-drawer: 15;
+  --z-map-chrome: 21;
+  --z-anchor-tip: 22;
+  --z-modal: 25;
   --sidebar-w: 250px;
   --tip-max-w: 340px;
   --serif: Georgia, "Times New Roman", serif; /* newspaper masthead in the What's New panel */
@@ -348,7 +356,7 @@ body.page-zoomed #cv {
   max-height: calc(100% - 12px);
   overflow: hidden;
   display: none;
-  z-index: 5;
+  z-index: var(--z-tip);
   box-shadow: var(--shadow-float);
 }
 #tip .t {
@@ -372,7 +380,7 @@ body.page-zoomed #cv {
 /* the tooltip anchored to an element, not the cursor: fixed so no scrolling host clips it */
 #anchorTip {
   position: fixed;
-  z-index: 22;
+  z-index: var(--z-anchor-tip);
   pointer-events: none;
   max-width: min(var(--tip-max-w), calc(100vw - 20px));
   max-height: calc(100vh - 12px);
@@ -420,7 +428,7 @@ body.page-zoomed #cv {
   left: 0;
   right: 0;
   bottom: 44px;
-  z-index: 6;
+  z-index: var(--z-map-overlay);
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
@@ -485,7 +493,7 @@ body.page-zoomed #cv {
   left: 50%;
   top: 10px;
   transform: translateX(-50%);
-  z-index: 6;
+  z-index: var(--z-map-overlay);
   display: flex;
   gap: 10px;
   align-items: center;
@@ -522,7 +530,7 @@ body.page-zoomed #cv {
   position: absolute;
   left: 10px;
   bottom: 34px;
-  z-index: 6;
+  z-index: var(--z-map-overlay);
   width: 260px;
   max-width: calc(100% - 20px);
   max-height: 60%;
@@ -737,7 +745,7 @@ body.page-zoomed #cv {
 #placeBtn {
   position: absolute;
   top: 10px;
-  z-index: 21;
+  z-index: var(--z-map-chrome);
   height: 34px;
   background: rgba(var(--over-rgb), 0.5);
   color: var(--dim);
@@ -865,7 +873,7 @@ body.embed #openSiteBtn {
   position: absolute;
   top: 52px;
   left: 54px;
-  z-index: 6;
+  z-index: var(--z-map-overlay);
   width: 300px;
   max-width: calc(100% - 64px);
   max-height: calc(100% - 100px);
@@ -901,7 +909,7 @@ body.embed #openSiteBtn {
 #aboutOverlay {
   position: fixed;
   inset: 0;
-  z-index: 25;
+  z-index: var(--z-modal);
   display: grid;
   place-items: center;
   padding: 20px;
@@ -1165,7 +1173,7 @@ kbd {
 @media (max-width: 720px) {
   #sidebar {
     position: absolute;
-    z-index: 15;
+    z-index: var(--z-drawer);
     height: 100%;
     width: 82vw;
     max-width: 320px;
@@ -1181,7 +1189,7 @@ kbd {
     display: block;
     position: absolute;
     inset: 0;
-    z-index: 12;
+    z-index: var(--z-scrim);
     background: rgba(0, 0, 0, 0.45);
   }
   #sidebar h1 {
