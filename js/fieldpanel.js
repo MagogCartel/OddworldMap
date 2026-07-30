@@ -69,6 +69,7 @@ function renderType({ name, fields }) {
   const boxes = [];
   for (const f of fields) {
     const label = document.createElement("label");
+    label.className = "checkrow";
     const cb = document.createElement("input");
     cb.type = "checkbox";
     cb.checked = shown.has(f);

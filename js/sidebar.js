@@ -16,6 +16,7 @@ const catUI = new Map(); // category -> its checkbox and count elements
 CATS.forEach((c) => {
   if (snap && c.key in snap.cats) c.on = snap.cats[c.key];
   const lab = document.createElement("label");
+  lab.className = "checkrow";
   lab.innerHTML = `<span class="sw" style="background:${c.color}"></span>
     <input type="checkbox" autocomplete="off" ${c.on ? "checked" : ""}>
     <span>${c.label}</span><span class="cnt"></span>`;

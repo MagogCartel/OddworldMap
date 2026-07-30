@@ -86,24 +86,30 @@
       <div id="toggles">
         <!-- autocomplete=off: the script mirrors .checked into state, so form-state
          restoration (which fires no change events) must not flip these -->
-        <label
+        <label class="checkrow"
           ><input type="checkbox" id="tGrid" autocomplete="off" checked /> Camera grid +
           names</label
         >
-        <label><input type="checkbox" id="tColl" autocomplete="off" /> Collision lines</label>
-        <label><input type="checkbox" id="tFg" autocomplete="off" /> Foreground masks (FG1)</label>
-        <label
+        <label class="checkrow"
+          ><input type="checkbox" id="tColl" autocomplete="off" /> Collision lines</label
+        >
+        <label class="checkrow"
+          ><input type="checkbox" id="tFg" autocomplete="off" /> Foreground masks (FG1)</label
+        >
+        <label class="checkrow"
           ><input type="checkbox" id="tConn" autocomplete="off" checked /> Connection arrows</label
         >
-        <label
+        <label class="checkrow"
           ><input type="checkbox" id="tLabels" autocomplete="off" checked /> Object labels
           (zoomed)</label
         >
-        <label><input type="checkbox" id="tDim" autocomplete="off" /> Dim backgrounds</label>
-        <label
+        <label class="checkrow"
+          ><input type="checkbox" id="tDim" autocomplete="off" /> Dim backgrounds</label
+        >
+        <label class="checkrow"
           ><input type="checkbox" id="tRuler" autocomplete="off" /> Ruler (drag to measure)</label
         >
-        <label
+        <label class="checkrow"
           ><input type="checkbox" id="tRoute" autocomplete="off" /> Route planner (click
           waypoints)</label
         >
@@ -288,19 +294,19 @@
            form-state restoration must not flip these -->
           <section class="st-sec">
             <h3>Saved on this device</h3>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sRememberView" autocomplete="off" checked /> Remember
               display &amp; object filters</label
             >
             <div class="st-desc">Keeps the Display toggles and Objects filters across visits.</div>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sRememberLoc" autocomplete="off" /> Remember last
               location</label
             >
             <div class="st-desc">
               Reopens the map where you left off. A shared link always wins.
             </div>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sCacheImages" autocomplete="off" /> Cache screen artwork
               on this device</label
             >
@@ -311,11 +317,11 @@
           </section>
           <section class="st-sec">
             <h3>Buttons and names</h3>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sFullNames" autocomplete="off" /> Show full names</label
             >
             <div class="st-desc">Game, level and path buttons list their full in-game names.</div>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sDemoPaths" autocomplete="off" /> Show demo paths</label
             >
             <div class="st-desc">
@@ -326,7 +332,7 @@
           </section>
           <section class="st-sec">
             <h3>Objects and fields</h3>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sScreenList" autocomplete="off" checked /> List a screen's
               objects on click</label
             >
@@ -334,7 +340,7 @@
               Clicking or tapping a screen (anywhere that isn't a followable object) opens a panel
               listing everything on it.
             </div>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sShowMore" autocomplete="off" /> Show more object
               fields</label
             >
@@ -343,7 +349,7 @@
               stored fields (Slig shooting behaviour, patrol timings, and more) show in tooltips and
               the screen list.
             </div>
-            <label
+            <label class="checkrow"
               ><input type="checkbox" id="sRawValues" autocomplete="off" /> Show raw field
               values</label
             >

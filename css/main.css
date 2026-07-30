@@ -152,12 +152,15 @@ body.fullnames .btnrow button {
 .filters {
   padding: 4px 12px 12px;
 }
-.filters label {
+/* a checkbox and its wording on one line, wherever one is offered */
+.checkrow {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 2.5px 2px;
   cursor: pointer;
+}
+.filters .checkrow {
+  padding: 2.5px 2px;
   user-select: none;
   position: relative;
 }
@@ -166,10 +169,10 @@ body.fullnames .btnrow button {
   opacity: 0;
   pointer-events: none;
 } /* keyboard-focusable; the swatch is the visual indicator */
-.filters label:not(:has(input:checked)) {
+.filters .checkrow:not(:has(input:checked)) {
   opacity: 0.45;
 }
-.filters label:has(input:focus-visible) {
+.filters .checkrow:has(input:focus-visible) {
   outline: 1px solid var(--accent);
   border-radius: 4px;
 }
@@ -245,17 +248,13 @@ body.fullnames .btnrow button {
 .fp-fields {
   padding: 1px 2px 7px 18px;
 }
-.fp-fields label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+.fp-fields .checkrow {
   padding: 1.5px 0;
   font-size: 11px;
   color: var(--text);
-  cursor: pointer;
   user-select: none;
 }
-.fp-fields label:not(:has(input:checked)) {
+.fp-fields .checkrow:not(:has(input:checked)) {
   opacity: 0.5;
 }
 .fp-fields input {
@@ -275,12 +274,8 @@ body.fullnames .btnrow button {
 #toggles {
   padding: 0 12px 10px;
 }
-#toggles label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+#toggles .checkrow {
   padding: 2.5px 2px;
-  cursor: pointer;
 }
 #exportBtn {
   margin: 6px 12px 2px;
@@ -978,12 +973,6 @@ body.embed #openSiteBtn {
   border-color: var(--accent);
 }
 
-#settingsBody label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  cursor: pointer;
-}
 .st-sec + .st-sec {
   margin-top: 18px;
 }
@@ -1107,8 +1096,8 @@ kbd {
     font-size: 10px;
   }
   .btnrow button,
-  #toggles label,
-  .filters label {
+  #toggles .checkrow,
+  .filters .checkrow {
     padding-top: 6px;
     padding-bottom: 6px;
   }
