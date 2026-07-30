@@ -11,6 +11,11 @@
   --map-bg-rgb: 14, 15, 18;
   --map-bg: rgb(var(--map-bg-rgb));
   --cell-empty: #1a1d22;
+  /* anything floating over the map is this one near-black, tinted by alpha */
+  --over-rgb: 18, 20, 24;
+  --surface-float: rgba(var(--over-rgb), 0.94);
+  --shadow-float: 0 4px 18px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.6);
   --sidebar-w: 250px;
   --tip-max-w: 340px;
   --serif: Georgia, "Times New Roman", serif; /* newspaper masthead in the What's New panel */
@@ -116,7 +121,7 @@ body:not(.menu-open) #sidebar {
 }
 .btnrow button.on {
   background: var(--accent);
-  color: #14161a;
+  color: var(--bg);
   border-color: var(--accent);
   font-weight: 600;
 }
@@ -126,7 +131,7 @@ body:not(.menu-open) #sidebar {
   margin-right: 3px;
 }
 .btnrow button.entry.on::before {
-  color: #14161a;
+  color: var(--bg);
 }
 /* full-names mode: the code+name labels stack as a list */
 body.fullnames .btnrow {
@@ -334,7 +339,7 @@ body.page-zoomed #cv {
 #tip {
   position: absolute;
   pointer-events: none;
-  background: rgba(18, 20, 24, 0.94);
+  background: var(--surface-float);
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 8px 10px;
@@ -344,7 +349,7 @@ body.page-zoomed #cv {
   overflow: hidden;
   display: none;
   z-index: 5;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-float);
 }
 #tip .t {
   color: var(--accent);
@@ -374,10 +379,10 @@ body.page-zoomed #cv {
   overflow: hidden;
   padding: 8px 10px;
   font-size: 12px;
-  background: rgba(18, 20, 24, 0.94);
+  background: var(--surface-float);
   border: 1px solid var(--line);
   border-radius: 6px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-float);
 }
 #anchorTip .detail {
   color: var(--dim);
@@ -389,7 +394,7 @@ body.page-zoomed #cv {
   bottom: 8px;
   color: var(--dim);
   font-size: 11px;
-  background: rgba(18, 20, 24, 0.7);
+  background: rgba(var(--over-rgb), 0.7);
   padding: 3px 8px;
   border-radius: 5px;
 }
@@ -399,7 +404,7 @@ body.page-zoomed #cv {
   bottom: 8px;
   color: var(--dim);
   font-size: 11px;
-  background: rgba(18, 20, 24, 0.7);
+  background: rgba(var(--over-rgb), 0.7);
   padding: 3px 8px;
   border-radius: 5px;
 }
@@ -426,7 +431,7 @@ body.page-zoomed #cv {
   position: relative;
   overflow: hidden;
   max-width: min(90%, 420px);
-  background: rgba(18, 20, 24, 0.92);
+  background: rgba(var(--over-rgb), 0.92);
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--text);
@@ -466,7 +471,7 @@ body.page-zoomed #cv {
 /* the queue depth belongs above the stack; order beats DOM position under column-reverse */
 .toast-more {
   order: 1;
-  background: rgba(18, 20, 24, 0.85);
+  background: rgba(var(--over-rgb), 0.85);
   border: 1px solid var(--line);
   border-radius: 100px;
   color: var(--dim);
@@ -485,7 +490,7 @@ body.page-zoomed #cv {
   gap: 10px;
   align-items: center;
   white-space: nowrap;
-  background: rgba(18, 20, 24, 0.85);
+  background: rgba(var(--over-rgb), 0.85);
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--text);
@@ -523,10 +528,10 @@ body.page-zoomed #cv {
   max-height: 60%;
   display: flex;
   flex-direction: column;
-  background: rgba(18, 20, 24, 0.94);
+  background: var(--surface-float);
   border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-float);
 }
 #camPanel[hidden] {
   display: none;
@@ -693,7 +698,7 @@ body.page-zoomed #cv {
 }
 #scopeBar button.on {
   background: var(--accent);
-  color: #14161a;
+  color: var(--bg);
   border-color: var(--accent);
   font-weight: 600;
 }
@@ -734,7 +739,7 @@ body.page-zoomed #cv {
   top: 10px;
   z-index: 21;
   height: 34px;
-  background: rgba(18, 20, 24, 0.5);
+  background: rgba(var(--over-rgb), 0.5);
   color: var(--dim);
   border: 1px solid transparent;
   border-radius: 8px;
@@ -754,7 +759,7 @@ body.page-zoomed #cv {
 #placeBtn:hover,
 #placeBtn:focus-visible {
   color: var(--text);
-  background: rgba(18, 20, 24, 0.85);
+  background: rgba(var(--over-rgb), 0.85);
   border-color: var(--accent);
   outline: none;
 }
@@ -866,10 +871,10 @@ body.embed #openSiteBtn {
   max-height: calc(100% - 100px);
   overflow-y: auto;
   padding: 8px 11px 10px;
-  background: rgba(18, 20, 24, 0.94);
+  background: var(--surface-float);
   border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-float);
   font-size: 12px;
 }
 .pl-game {
@@ -926,7 +931,7 @@ body.about-open #aboutOverlay {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-modal);
   overflow: hidden;
   transform: translateY(8px);
   transition: transform 0.18s ease;
