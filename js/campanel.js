@@ -68,7 +68,7 @@ export function openCamPanel(x, y, focus = null) {
           const help = fieldHelp(state.data.id, t.name, k);
           const kv = esc(`${k}=${v}`);
           return help
-            ? `<span class="e gloss" title="${esc(help)}">${kv}</span>`
+            ? `<span class="e gloss" data-tip="${esc(help)}">${kv}</span>`
             : `<span class="e">${kv}</span>`;
         })
         .join(" ");

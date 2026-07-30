@@ -4,7 +4,7 @@
   "chase_abe_when_spotted": "Whether the Slig gives chase when it spots Abe, instead of holding its post.",
   "scale": "Which plane the object sits on: foreground, or the half-scale background.",
   "shoot_on_sight_delay": "How long the Slig waits after spotting Abe before it shoots; 0 means it shoots on sight, with no \"FREEZE!\" warning.",
-  "switch_id": "The switch number this object is wired to — every object sharing a number acts on the same switch."
+  "switch_id": "The switch number this object is wired to. Every object sharing a number acts on the same switch."
  },
  "byGameType": {
   "DoorStates": "The door's state when the level starts.",

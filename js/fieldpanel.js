@@ -83,7 +83,7 @@ function renderType({ name, fields }) {
     if (help) {
       const gloss = document.createElement("span");
       gloss.className = "gloss";
-      gloss.title = help;
+      gloss.dataset.tip = help;
       gloss.textContent = f;
       label.append(cb, document.createTextNode(" "), gloss);
     } else {
