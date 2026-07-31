@@ -4,7 +4,7 @@
 import { TOAST_MS, TOAST_OUT_MS, TOAST_MAX } from "./config.js";
 import { toastStack } from "./dom.js";
 
-const live = []; // oldest first, matching DOM order
+const live = []; // oldest first; the DOM runs the other way (newest is prepended)
 const queued = [];
 let badge = null;
 
@@ -32,7 +32,7 @@ export function toast(msg) {
   const bar = document.createElement("i");
   bar.className = "toast-bar";
   el.append(text, bar);
-  toastStack.appendChild(el);
+  toastStack.prepend(el);
 
   const entry = { el, bar, msg, timer: null, retiring: false };
   live.push(entry);

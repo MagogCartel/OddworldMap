@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-07-31",
+   "tag": "fixed",
+   "title": "The newest toast really lands at the bottom",
+   "detail": "When several toasts stack, the newest was quietly appearing above the older ones instead of taking the bottom slot where a lone toast stands, so the reaction to what you just did moved around depending on how many messages were up. The newest now always lands at the bottom and pushes the older ones up, the way the stack was described when it shipped."
+  },
+  {
    "date": "2026-07-30",
    "tag": "improved",
    "title": "\"Reduce motion\" now stops all of the motion",
