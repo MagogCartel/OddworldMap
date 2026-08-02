@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-02",
+   "tag": "new",
+   "title": "Read only the kind of update you came for",
+   "detail": "The tags under this panel's masthead now switch each kind of update in or out of the list below: turn \"fixed\" off to read only what has been added and improved, or leave them all on for the whole story. The choice is forgotten as soon as the panel closes, so a filter set months ago can never quietly hide the news."
+  },
+  {
    "date": "2026-07-31",
    "tag": "fixed",
    "title": "The newest toast really lands at the bottom",

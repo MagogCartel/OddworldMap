@@ -8,7 +8,6 @@ import { trapDialogKeys } from "./dialog.js";
 
 const PREVIEW_N = 5; // entries shown before "see all"
 const SEEN_KEY = "owm:whatsnew:lastSeen"; // newest date the visitor has opened
-const TAGS = new Set(["new", "improved", "fixed"]);
 const MONTHS = [
   "January",
   "February",
@@ -28,6 +27,10 @@ const fmtDate = (iso) => {
   const [y, m, d] = iso.split("-").map(Number);
   return `${MONTHS[m - 1]} ${d}, ${y}`;
 };
+
+// a tag's colour is a CSS rule keyed by its name, so the name has to reach a
+// class intact; whatever a class can't carry becomes a dash
+const tagClass = (tag) => "wn-tag-" + tag.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
 // localStorage may be unavailable (private mode, blocked); never let that break the panel
 const store = {
@@ -63,31 +66,67 @@ async function init() {
   const btn = $("whatsnewBtn"),
     overlay = $("whatsnewOverlay");
   const body = $("whatsnewBody"),
+    filter = $("whatsnewFilter"),
     closeBtn = $("whatsnewClose");
   const newest = entries[0].date;
 
-  const render = (expanded) => {
-    const shown = expanded ? entries : entries.slice(0, PREVIEW_N);
+  // the feed names its own tags; sorted so the row keeps its order as it grows
+  const tags = [...new Set(entries.map((e) => e.tag).filter(Boolean))].sort();
+  const off = new Set(); // switched-off tags; an untagged entry answers to none and stays
+  let expanded = false;
+
+  const renderFilter = () => {
+    filter.innerHTML = tags
+      .map(
+        (t) =>
+          `<button type="button" class="wn-tag ${tagClass(t)} wn-chip" data-tag="${esc(t)}" aria-pressed="${!off.has(t)}">${esc(t)}</button>`,
+      )
+      .join("");
+  };
+
+  const render = () => {
+    const matching = entries.filter((e) => !e.tag || !off.has(e.tag));
+    if (!matching.length) {
+      body.innerHTML = `<div class="wn-empty">Nothing to show — turn a tag back on.</div>`;
+      return;
+    }
     let html = "",
       lastDate = null;
-    for (const e of shown) {
+    for (const e of expanded ? matching : matching.slice(0, PREVIEW_N)) {
       if (e.date !== lastDate) {
         html += `<div class="wn-date">${esc(fmtDate(e.date))}</div>`;
         lastDate = e.date;
       }
-      const tag = TAGS.has(e.tag) ? `<span class="wn-tag wn-tag-${e.tag}">${e.tag}</span>` : "";
+      const tag = e.tag ? `<span class="wn-tag ${tagClass(e.tag)}">${esc(e.tag)}</span>` : "";
       const detail = e.detail ? `<div class="wn-detail">${esc(e.detail)}</div>` : "";
       html += `<div class="wn-entry">${tag}<span class="wn-title">${esc(e.title)}</span>${detail}</div>`;
     }
-    if (!expanded && entries.length > PREVIEW_N)
-      html += `<button class="wn-more" id="whatsnewMore">See all ${entries.length} updates</button>`;
+    if (!expanded && matching.length > PREVIEW_N)
+      html += `<button class="wn-more" id="whatsnewMore">See all ${matching.length} updates</button>`;
     body.innerHTML = html;
     const more = $("whatsnewMore");
-    if (more) more.onclick = () => render(true);
+    if (more)
+      more.onclick = () => {
+        expanded = true;
+        render();
+      };
+  };
+
+  filter.onclick = (e) => {
+    const chip = e.target.closest(".wn-chip");
+    if (!chip) return;
+    const tag = chip.dataset.tag;
+    if (off.has(tag)) off.delete(tag);
+    else off.add(tag);
+    chip.setAttribute("aria-pressed", !off.has(tag)); // in place: rebuilding would drop focus
+    render();
   };
 
   const open = () => {
-    render(false);
+    off.clear();
+    expanded = false;
+    renderFilter();
+    render();
     overlay.classList.add("open");
     btn.classList.remove("hasnew");
     store.set(newest);

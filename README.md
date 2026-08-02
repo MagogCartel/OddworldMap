@@ -35,7 +35,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit
   - a scope bar narrows the search to the current game/level/path
 - on touch devices one finger pans and two fingers pinch-zoom the map; the page itself pinch-zooms too, and while it is zoomed two fingers on the map zoom the page back out instead; the sidebar collapses behind a menu button on narrow screens
-- **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it
+- **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it, and the tags under the masthead switch each kind of update (new, improved, fixed) in or out of the list — a choice the panel forgets when it closes, so a filter can never hide the news
 - **About this map**: the link at the foot of the sidebar opens the notice that this is an unofficial fan project unaffiliated with Oddworld Inhabitants, alongside links to the map's source and to the project whose reverse-engineering the data formats come from
 
 ### Overlays

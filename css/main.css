@@ -948,6 +948,36 @@ body.embed #openSiteBtn {
 .wn-tag-improved {
   color: var(--text);
 }
+/* the filter row, pinned under the masthead */
+#whatsnewFilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.wn-chip {
+  margin-bottom: 0;
+  padding: 3px 9px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.wn-chip[aria-pressed="false"] {
+  background: none;
+  color: var(--dim);
+  opacity: 0.6;
+}
+.wn-chip:hover,
+.wn-chip:focus-visible {
+  border-color: var(--accent);
+}
+.wn-empty {
+  color: var(--dim);
+  font-size: 12px;
+  padding: 6px 0;
+}
 .wn-title {
   font-weight: 600;
 }
