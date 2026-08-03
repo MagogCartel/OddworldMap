@@ -65,7 +65,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view) always reflects the current view, including any plotted route
   - copy it to share an exact location, and it opens on that spot whatever the size of the window it lands in; the browser back button retraces follows
   - the chain button in the top-right corner copies the same link, for phones and installed-app mode where there may be no address bar
-- **right-click** an object to copy a direct link to it — opening that link centers the object and holds a marker on it until you interact
+- **right-click** an object to copy a direct link to it — opening that link centers the object, holds a marker on it until you interact, and names what the marker is on at the bottom of the map
 - add **`?embed=1`** to the URL for a view made for iframes on wikis and forums: the map fills the frame, fully interactive (hover, follow, the screen-list panel), with the sidebar starting closed but reachable through the menu button
   - a corner button opens the full site at the exact view
   - combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`

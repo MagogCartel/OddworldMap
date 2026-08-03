@@ -284,7 +284,7 @@ export function applyHash() {
       fy = t ? (dY(t.y1) + dY(t.y2)) / 2 : (p.view?.y ?? dY(p.obj.y1));
     centerOn(fx, fy, null); // re-derives the focus zoom for this viewport
     flashAt(fx, fy, true);
-    if (!t) toast(`no ${p.obj.name} at that spot`);
+    toast(t ? `marker on ${t.name}` : `no ${p.obj.name} at that spot`);
   }
   state.route = p.route; // the hash is the source of truth: absent means no route
   if (p.routeLost)

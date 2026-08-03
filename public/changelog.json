@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-03",
+   "tag": "improved",
+   "title": "A link to an object says which object",
+   "detail": "Opening a link to a specific object rings it with a marker, which is easy to follow on a quiet screen and much less so on one carrying two dozen things. The name was only ever in the URL, where it can be missed easily. The map now names what the marker is on, in a message at the bottom, the way it already told you when the object turned out not to be there."
+  },
+  {
    "date": "2026-08-02",
    "tag": "new",
    "title": "Read only the kind of update you came for",
