@@ -1,9 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { TRANSFORM } from "../../js/fields.js";
+import { TRANSFORM } from "../../public/js/fields.js";
 
-const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
+const load = (name) =>
+  JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
 const AO = load("enum_labels_ao.json");
 const AE = load("enum_labels_ae.json");
 

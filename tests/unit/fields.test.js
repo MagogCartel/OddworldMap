@@ -14,8 +14,8 @@ import {
   GLOBAL_DEFAULT,
   DEFAULT_BY_TYPE,
   HIDE_WHEN_ZERO,
-} from "../../js/fields.js";
-import { setGlossary } from "../../js/glossary.js";
+} from "../../public/js/fields.js";
+import { setGlossary } from "../../public/js/glossary.js";
 
 // prettify resolves a field's game type (field_types sidecar), then its label —
 // a hand value-type transform, else the generated enum labels (enum_labels
@@ -249,7 +249,7 @@ test("onBackgroundPlane: background is where the scale resolves to half, inversi
 // test — the field just vanishes from defaults. Pin every name against the
 // shipped data.
 const loadData = (name) =>
-  JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
+  JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
 const realFields = (dataFile) => {
   const byType = {}; // type name -> Set of field keys seen on it in map_data
   for (const L of loadData(dataFile).levels)

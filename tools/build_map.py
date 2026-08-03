@@ -26,7 +26,8 @@ import zlib
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent          # tools/
-ROOT = HERE.parent                              # repo root (the static site)
+ROOT = HERE.parent                              # repo root
+SITE = ROOT / "public"                          # the served site (default --out)
 REPO = ROOT.parent / "alive_reversing"          # alive_reversing checkout (only needed to regenerate tools/data caches)
 AO_COMMIT = "c1ba4c6c812ac65992d876d68c9e2e3e85636d6f"
 CAM2RGBA = HERE / "cam2rgba"
@@ -1091,7 +1092,7 @@ def main():
     ap.add_argument("--disc", nargs="+",
                     help="raw PS1 disc image(s) (.bin, 2352-byte sectors); AE takes both discs. "
                          "Defaults to $ODDWORLD_DISC_AO / $ODDWORLD_DISC_AE")
-    ap.add_argument("--out", default=str(ROOT))
+    ap.add_argument("--out", default=str(SITE))
     ap.add_argument("--levels", default="", help="comma list of level shorts to limit (e.g. R2,R6)")
     ap.add_argument("--emit-field-data", action="store_true",
                     help="regenerate the viewer sidecars field_types_{ao,ae}.json and "

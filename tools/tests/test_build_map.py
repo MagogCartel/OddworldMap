@@ -143,7 +143,7 @@ class Sidecars(unittest.TestCase):
     def assertReproduces(self, writer, game_key, filename):
         self.assertEqual(
             self.emit(writer, game_key),
-            (bm.ROOT / filename).read_bytes(),
+            (bm.SITE / filename).read_bytes(),
             f"{filename} differs from a fresh emit — rebuild it or fix the emitter",
         )
 

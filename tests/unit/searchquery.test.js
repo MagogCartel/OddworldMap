@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseQuery, queryTerms, matchesQuery, rankFor } from "../../js/searchquery.js";
+import { parseQuery, queryTerms, matchesQuery, rankFor } from "../../public/js/searchquery.js";
 
 // A stand-in for the lowercased "name + fields" blob tlvSearchText builds.
 const MUD = "mudokon scale=0 state=chisle job=sit chant rescue_switch_id=70";

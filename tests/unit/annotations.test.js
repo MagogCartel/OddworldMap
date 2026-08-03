@@ -7,10 +7,11 @@ import {
   pathDisplayName,
   pathNote,
   levelInfo,
-} from "../../js/annotations.js";
-import { isDemoPath } from "../../js/demo.js";
+} from "../../public/js/annotations.js";
+import { isDemoPath } from "../../public/js/demo.js";
 
-const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
+const load = (name) =>
+  JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
 
 // a note is prose among labels: it opens capitalized and closes punctuated
 const SENTENCE = /^[A-Z].*[.!?]$/;

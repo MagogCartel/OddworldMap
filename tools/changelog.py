@@ -22,7 +22,7 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent          # tools/
-ROOT = HERE.parent                              # repo root (the static site)
+ROOT = HERE.parent                              # repo root
 
 # git log record: hash, short date, subject, body, separated by 0x1f, record-terminated by 0x1e
 FMT = "%H%x1f%ad%x1f%s%x1f%b%x1e"
@@ -88,7 +88,7 @@ def main():
                                      "Default: newer than the newest changelog.json date, else the last N commits.")
     ap.add_argument("--limit", type=int, default=30, help="how many recent commits to scan when --since is unset "
                                                           "and changelog.json is empty (default 30)")
-    ap.add_argument("--changelog", default=str(ROOT / "changelog.json"), help="changelog.json used for the default --since")
+    ap.add_argument("--changelog", default=str(ROOT / "public" / "changelog.json"), help="changelog.json used for the default --since")
     args = ap.parse_args()
 
     if args.since:

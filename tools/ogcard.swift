@@ -1,5 +1,5 @@
 // Renders og-image.png, the 1200×630 social card, with CoreGraphics/CoreText (macOS).
-// Run: swift tools/ogcard.swift og-image.png && oxipng -o 2 --strip safe og-image.png
+// Run: swift tools/ogcard.swift public/og-image.png && oxipng -o 2 --strip safe public/og-image.png
 import Foundation
 import CoreGraphics
 import ImageIO

@@ -8,8 +8,8 @@ import {
   destTrusted,
   isLoopback,
   pathIn,
-} from "../../js/model.js";
-import { isDemoPath } from "../../js/demo.js";
+} from "../../public/js/model.js";
+import { isDemoPath } from "../../public/js/demo.js";
 import { AO_GEOMETRY, AE_GEOMETRY } from "./fixtures.js";
 
 // Schema sanity over the shipped data: the invariants the viewer relies on.
@@ -17,7 +17,8 @@ import { AO_GEOMETRY, AE_GEOMETRY } from "./fixtures.js";
 // types are deliberately NOT asserted — the shipped data contains dangling and
 // cross-format refs, and the viewer tolerates unknown values by design.
 
-const load = (name) => JSON.parse(readFileSync(new URL(`../../${name}`, import.meta.url), "utf8"));
+const load = (name) =>
+  JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
 
 for (const [file, id, geometry] of [
   ["map_data_ao.json", "AO", AO_GEOMETRY],

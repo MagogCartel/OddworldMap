@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CATS, catOf } from "../../js/config.js";
+import { CATS, catOf } from "../../public/js/config.js";
 
 test("catOf buckets known names and falls back to meta", () => {
   assert.equal(catOf({ name: "LCDStatusBoard" }).key, "board");

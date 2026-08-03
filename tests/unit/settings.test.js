@@ -7,8 +7,8 @@ import {
   sanitizeLocationHash,
   sanitizeSettings,
   sanitizeView,
-} from "../../js/settings.js";
-import { CATS } from "../../js/config.js";
+} from "../../public/js/settings.js";
+import { CATS } from "../../public/js/config.js";
 
 // sanitizeSettings adds fieldPrefs (a non-boolean) on top of the boolean defaults
 const DEFAULTS = { ...SETTINGS_DEFAULTS, fieldPrefs: { mode: "default", byType: {} } };

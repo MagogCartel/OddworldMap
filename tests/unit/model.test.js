@@ -16,9 +16,9 @@ import {
   parseHash,
   resolveTarget,
   zoomAt,
-} from "../../js/model.js";
-import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../js/config.js";
-import { setGeometry } from "../../js/state.js";
+} from "../../public/js/model.js";
+import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../public/js/config.js";
+import { setGeometry } from "../../public/js/state.js";
 import { AO_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
 
 // current level/path, with the dataset destOf looks a destination's partner up
