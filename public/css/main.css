@@ -141,6 +141,10 @@ body:not(.menu-open) #sidebar {
 .btnrow button.entry.on::before {
   color: var(--bg);
 }
+/* opacity, not a colour: the selected button recolors its own text */
+.btnrow button .nickname {
+  opacity: 0.72;
+}
 /* full-names mode: the code+name labels stack as a list */
 body.fullnames .btnrow {
   flex-direction: column;
@@ -829,6 +833,7 @@ body.embed #openSiteBtn {
   font-weight: 600;
 }
 .pl-section,
+.pl-nickname,
 .pl-entry,
 .pl-demo {
   color: var(--dim);

@@ -5,6 +5,7 @@ import {
   sanitizeAnnotations,
   setAnnotations,
   pathDisplayName,
+  pathNickname,
   pathNote,
   levelInfo,
 } from "../../public/js/annotations.js";
@@ -15,6 +16,9 @@ const load = (name) =>
 
 // a note is prose among labels: it opens capitalized and closes punctuated
 const SENTENCE = /^[A-Z].*[.!?]$/;
+// a nickname is a label among prose: it opens capitalized and does not close punctuated
+const NICKNAME = /^[A-Z](.*[^.!?])?$/;
+const NICKNAME_MAX = 24;
 
 test("sanitizeAnnotations: tolerates a missing or garbage file", () => {
   assert.deepEqual(sanitizeAnnotations(null), {});
@@ -39,6 +43,7 @@ test("sanitizeAnnotations: copies only known sections with expected types", () =
           18: { name: "Packaging", note: "the conveyors run here", junk: 1 },
           19: { note: "no curated name: the disc name keeps it" },
           20: {},
+          21: { nickname: "The Conveyor Floor" },
         },
         L1: "not an object",
       },
@@ -53,6 +58,7 @@ test("sanitizeAnnotations: copies only known sections with expected types", () =
           15: { name: "Free-Fire Zone" },
           18: { name: "Packaging", note: "the conveyors run here" },
           19: { note: "no curated name: the disc name keeps it" },
+          21: { nickname: "The Conveyor Floor" },
         },
       },
     },
@@ -87,6 +93,31 @@ test("pathNote: hit, miss, and a name-only entry", () => {
   assert.equal(pathNote("AE", "R1", { id: 15 }), null);
   setAnnotations(null);
   assert.equal(pathNote("AO", "R1", { id: 15 }), null);
+});
+
+test("pathNickname: hit, miss, and an entry carrying nothing else", () => {
+  setAnnotations({
+    AO: {
+      paths: {
+        R1: {
+          15: { name: "Curated", nickname: "Industrial Machines" },
+          16: "Curated",
+          17: { nickname: "Tear Gas" },
+        },
+      },
+    },
+  });
+  assert.equal(pathNickname("AO", "R1", { id: 15 }), "Industrial Machines");
+  assert.equal(pathNickname("AO", "R1", { id: 16 }), null);
+  assert.equal(pathNickname("AO", "R1", { id: 17 }), "Tear Gas");
+  assert.equal(pathNickname("AO", "R1", { id: 18 }), null);
+  assert.equal(pathNickname("AO", "R2", { id: 15 }), null);
+  assert.equal(pathNickname("AE", "R1", { id: 15 }), null);
+  // a nickname never stands in for the name, whether or not there is one
+  assert.equal(pathDisplayName("AO", "R1", { id: 17 }), null);
+  assert.equal(pathDisplayName("AO", "R1", { id: 17, name: "Disc Name" }), "Disc Name");
+  setAnnotations(null);
+  assert.equal(pathNickname("AO", "R1", { id: 15 }), null);
 });
 
 test("levelInfo: hit, miss, and unloaded game", () => {
@@ -130,12 +161,12 @@ test("annotations.json entries all point at live targets", () => {
         assert.match(id, /^(0|[1-9]\d*)$/, `${game} ${short} P${id}: canonical id key`);
         const P = L.paths.find((p) => p.id === +id);
         assert.ok(P, `${game} ${short} P${id}: path exists`);
-        // a bare string is the name; the object form adds a note, and either
-        // half may stand alone (a note need not wait for a name)
+        // a bare string is the name; the object form adds a note and a
+        // nickname, and any one of the three may stand alone
         const e = typeof v === "string" ? { name: v } : v;
         const keys = Object.keys(e);
         assert.ok(
-          keys.length && keys.every((k) => ["name", "note"].includes(k)),
+          keys.length && keys.every((k) => ["name", "note", "nickname"].includes(k)),
           `${game} ${short} P${id}: known keys`,
         );
         for (const k of keys)
@@ -145,6 +176,17 @@ test("annotations.json entries all point at live targets", () => {
           );
         if (e.note)
           assert.match(e.note, SENTENCE, `${game} ${short} P${id}: note reads as a sentence`);
+        if (e.nickname) {
+          const at = `${game} ${short} P${id}`;
+          assert.match(e.nickname, NICKNAME, `${at}: nickname reads as a name, not prose`);
+          assert.ok(
+            e.nickname.length <= NICKNAME_MAX,
+            `${at}: nickname "${e.nickname}" stays label-sized`,
+          );
+          // it shows beside the name, so repeating one says nothing twice
+          assert.notEqual(e.nickname, e.name, `${at}: nickname repeats the curated name`);
+          assert.notEqual(e.nickname, P.name, `${at}: nickname repeats the disc name`);
+        }
         // an override may refine a disc name, never erase it: the authentic
         // label must stay visible inside the curated one ("Zulag 2 — Lobby")
         if (e.name && P.name)

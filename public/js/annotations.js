@@ -27,9 +27,14 @@ export function sanitizeAnnotations(raw) {
       for (const [id, v] of Object.entries(byId)) {
         const src = typeof v === "string" ? { name: v } : v;
         const name = cleanString(src?.name),
-          note = cleanString(src?.note);
-        if (!name && !note) continue;
-        (paths[short] ??= {})[id] = { ...(name && { name }), ...(note && { note }) };
+          note = cleanString(src?.note),
+          nickname = cleanString(src?.nickname);
+        if (!name && !note && !nickname) continue;
+        (paths[short] ??= {})[id] = {
+          ...(name && { name }),
+          ...(note && { note }),
+          ...(nickname && { nickname }),
+        };
       }
     }
     out[game] = { levels, paths };
@@ -49,6 +54,11 @@ export function pathDisplayName(gameId, levelShort, path) {
 // a curiosity about a path that its name can't carry, or null
 export function pathNote(gameId, levelShort, path) {
   return ann[gameId]?.paths?.[levelShort]?.[String(path.id)]?.note ?? null;
+}
+
+// what players call a path, where the map has adopted their name, or null
+export function pathNickname(gameId, levelShort, path) {
+  return ann[gameId]?.paths?.[levelShort]?.[String(path.id)]?.nickname ?? null;
 }
 
 // {name, note?} for a level the map doesn't render, or null

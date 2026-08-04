@@ -1,12 +1,13 @@
 // Where the map is: a chip in the map chrome naming the current level and path,
 // and the panel it discloses — the level's full name, which half of it the path
-// belongs to, whether the path is arrived at from another level or one the demos
-// alone play, and the curated note the odd places carry.
+// belongs to, the nickname players gave it where the map has adopted one,
+// whether the path is arrived at from another level or one the demos alone play,
+// and the curated note the odd places carry.
 
 import { $ } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
-import { pathDisplayName, pathNote } from "./annotations.js";
+import { pathDisplayName, pathNickname, pathNote } from "./annotations.js";
 import { isDemoPath } from "./demo.js";
 
 const btn = $("placeBtn"),
@@ -21,12 +22,14 @@ let shown = null; // the path the open panel describes; a re-selection must not 
 function fill() {
   const { data, lvl, path } = state;
   const name = pathDisplayName(data.id, lvl.short, path),
-    note = pathNote(data.id, lvl.short, path);
+    note = pathNote(data.id, lvl.short, path),
+    nickname = pathNickname(data.id, lvl.short, path);
   panel.innerHTML =
     `<div class="pl-game">${esc(data.game)}</div>` +
     `<div class="pl-level">${esc(lvl.name)}</div>` +
     (path.section ? `<div class="pl-section">${esc(path.section)}</div>` : "") +
     `<div>Path ${path.id}${name ? ` — ${esc(name)}` : ""}</div>` +
+    (nickname ? `<div class="pl-nickname">${esc(nickname)}</div>` : "") +
     (state.entry[lvl.short]?.has(path.id)
       ? `<div class="pl-entry">entry point — arrived at from another level</div>`
       : "") +

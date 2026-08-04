@@ -1,7 +1,7 @@
 // Selection (game/level/path), follow-to-destination, view fitting and hash permalinks.
 // Fires a "selection-changed" window event (detail.fromHash) whenever a path is picked.
 
-import { clamp } from "./util.js";
+import { clamp, esc } from "./util.js";
 import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
 import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
 import { toast } from "./toast.js";
@@ -18,7 +18,7 @@ import {
   parseHash,
   resolveTarget,
 } from "./model.js";
-import { pathDisplayName } from "./annotations.js";
+import { pathDisplayName, pathNickname } from "./annotations.js";
 import { isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
 
@@ -27,10 +27,13 @@ function markOn(box, key) {
   for (const b of box.children) b.classList.toggle("on", b.dataset.key === key);
 }
 
-// label from the code/full-name pair stashed on the button, honoring the
-// full-names setting; re-run on every button when the setting flips
+// the button's label, composed from what it carries and the full-names
+// setting; re-run on every button when the setting flips
 function setLabel(b) {
-  b.textContent = displayLabel(b.dataset.code, b.dataset.full, getSettings().fullNames);
+  const on = getSettings().fullNames;
+  const label = esc(displayLabel(b.dataset.code, b.dataset.full, on));
+  const nick = on ? b.dataset.nickname : "";
+  b.innerHTML = nick ? `${label} <span class="nickname">· ${esc(nick)}</span>` : label;
 }
 
 window.addEventListener("settings-changed", (e) => {
@@ -81,13 +84,17 @@ function buildPathButtons() {
   visiblePaths(L).forEach((P) => {
     const b = document.createElement("button");
     const name = pathDisplayName(state.data.id, L.short, P);
+    const nickname = pathNickname(state.data.id, L.short, P);
     b.dataset.code = "P" + P.id;
     b.dataset.full = name || "";
+    if (nickname) b.dataset.nickname = nickname;
     setLabel(b);
     b.dataset.key = String(P.id);
     const tip = [];
     if (P.section) tip.push(P.section);
-    if (name) tip.push(name);
+    // one pairing, one separator: the tooltip reads it the way the face does
+    const named = [name, nickname].filter(Boolean).join(" · ");
+    if (named) tip.push(named);
     if (state.entry[L.short] && state.entry[L.short].has(P.id)) {
       b.classList.add("entry");
       tip.push("entry point (arrived at from another level)");
