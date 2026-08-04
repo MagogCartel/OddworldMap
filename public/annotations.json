@@ -213,8 +213,14 @@
     "2": "Zulag 2",
     "3": "Zulag 8",
     "4": "Zulag 14",
-    "5": "Zulag 6",
-    "6": "Zulag 7",
+    "5": {
+     "name": "Zulag 6",
+     "note": "The Oddworld Wiki's name for this sector, Electrical Devices, is earned: eleven electric walls are strung across it, more than anywhere else in the brewery."
+    },
+    "6": {
+     "name": "Zulag 7",
+     "note": "Three blind Mudokons work here, the only ones in the brewery, which is why the Oddworld Wiki calls this sector the Blind Mudokon zone."
+    },
     "7": "[Demo] Zulag 1",
     "8": "[Demo] Zulag 2",
     "9": {
@@ -223,7 +229,10 @@
     },
     "10": "Zulag 10",
     "11": "Zulag 12",
-    "12": "Zulag 3",
+    "12": {
+     "name": "Zulag 3",
+     "note": "Twenty-five drills run here, more than anywhere else in the brewery, and the Oddworld Wiki calls this sector Industrial Machines."
+    },
     "13": "[Demo] Zulag 6: Angry Mudokons",
     "14": "Zulag 5",
     "15": {
@@ -232,7 +241,10 @@
     },
     "16": "Brewery Terminal",
     "17": "Zulag 9",
-    "18": "Zulag 4",
+    "18": {
+     "name": "Zulag 4",
+     "note": "The Oddworld Wiki calls this sector Tear Gas, and it carries more laughing gas than anywhere else in the brewery."
+    },
     "19": "Zulag 4: Tear X-Tractor",
     "20": {
      "name": "Zulag 13",

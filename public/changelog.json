@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-04",
+   "tag": "improved",
+   "title": "Four Brewery zulags say what the fans call them",
+   "detail": "The SoulStorm Brewery numbers its zulags and never names them, so its players did. The Oddworld Wiki gives each one a nickname, and four of those turn out to describe exactly what is in the area: zulag 3 is Industrial Machines and runs twenty-five drills, more than anywhere else in the level; zulag 6 is Electrical Devices and is strung with eleven electric walls; zulag 7 is the Blind Mudokon zone and is the only place in the brewery you will meet one; zulag 4 is Tear Gas. Each of those four now carries a note saying so, in the panel behind the chip in the corner of the map. The numbers on the buttons stay the game's own, painted on the boards in the artwork; the nicknames belong to the fans, and the note is what tells you which is which."
+  },
+  {
    "date": "2026-08-03",
    "tag": "improved",
    "title": "A link to an object says which object",
