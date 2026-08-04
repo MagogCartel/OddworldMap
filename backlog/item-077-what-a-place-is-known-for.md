@@ -1,6 +1,6 @@
 # 77. What a place is known for
 
-**Status:** open — the set is settled, the surface is not · **Effort:** small-medium (viewer + curation) · **Where:** anywhere, viewer data only · **Filed:** 2026-08-04 Brewery nickname review
+**Status:** shipped 2026-08-04 — the mechanism and the Brewery's nine; zulags 1 and 9 remain unassessed · **Effort:** small-medium (viewer + curation) · **Where:** anywhere, viewer data only · **Filed:** 2026-08-04 Brewery nickname review
 
 ## Why
 
@@ -74,3 +74,25 @@ Those three are material for [12](item-012-curated-path-names.md) rather than fo
 ## Ships with
 
 A README bullet, and a `changelog.json` entry of its own. Nothing to supersede: the entry added by *Note what the fans call four of the Brewery's zulags* was taken out again by *Stop giving note batches their own changelog entries*, which is where a batch of notes stopped earning one.
+
+## Shipped
+
+Two commits, *Let a path carry a name the map adopts* and *Adopt the wiki's names for nine Brewery zulags*.
+
+**The framing above is superseded, and *Why it is not a name* is where it went wrong.** That section reasons its way to the map writing its own verified *description* of a place, and to a borrowed nickname being untestable. What shipped is narrower and more honest: a **nickname**, the players' name for a place, adopted having verified that it fits. The wiki's names go on as written, `Industrial Machines` rather than a paraphrase of it, because paraphrasing a name into a description in order to own it is worse authorship than adopting it and saying so. And the testability argument inverts rather than fails — what the predicate checks is the *fit that licenses the adoption*, so the drill count is exactly what makes adopting the name defensible.
+
+The section's sub-argument survives untouched and is why `nickname` is a key of its own: every colon name in the Brewery marks a sub-path of a multi-path zulag, so `Zulag 10: Slig High Security` would assert a division that does not exist. Being someone else's name rather than a curated one, a nickname also stands outside the override rule, the way a `section` does.
+
+**Two of the three candidate surfaces, and the third stays with [60](item-060-search-place-names.md).** The nickname trails the path button's label as a dim aside and takes a line on the place panel. The button tooltip came along for nothing, and with full names off it is the only carrier: nine Brewery tooltips now name the nickname beside the zulag. Search was left to [60](item-060-search-place-names.md) — a Places group has to exist before a place row can be useful, and the nickname is in the file waiting for it.
+
+**The layout risk this item asked to check turned out not to exist, and character counting was the wrong instrument for finding that out.** Measured with all nine in place: the path column is 249px at a 1600px viewport and 319px at 390px with the drawer open, and no label wraps or clips at either, every button keeping a uniform height.
+
+**What the dimming carries.** A title-case aside looks like a name, so the rendering is the entire distinction: `—` only ever introduces a name, `·` only ever a nickname, and the tooltip pairs them with the same `·` so one pairing is never shown two ways. Checked by temporarily nicknaming `AO L1 P1`, one of the 17 paths with no name at all, since none of the nine lands on one: the aside steps down from the label at 10.91:1 to 6.36:1 unselected and 8.40:1 to 4.81:1 selected, the band the dim asides elsewhere already occupy. Opacity rather than a colour is what spares the selected button, which recolors its text, a rule of its own.
+
+One edge of that distinction stays latent rather than closed: a `title` tooltip cannot dim, and on a path with no name at all the tooltip would show the nickname bare — indistinguishable from a name. No shipped path exercises it (all nine sit on named zulags, so every tooltip reads `Zulag N · <nickname>`); the first nickname-only adoption must bring the `·` marker to the tooltip with it.
+
+**The claims table is the part worth keeping.** `CLAIMS` in `tests/unit/annotations.test.js` is keyed to exactly the set of nicknamed paths, so a nickname cannot be adopted unbacked and a backing cannot outlive the name it was written for. An entry is a predicate *or*, where the evidence is artwork nothing in the data can count, the reason written down — decided that way at the outset rather than later, because this is meant to be a general layer and zulag 12 was already the second kind. A presence assertion standing in for a predicate would have looked like a check and tested nothing.
+
+**Two of the nine needed care the item did not anticipate.** Slig High Security ties zulag 9 at nine Sligs, so its predicate says *no path holds more* rather than the most. And the maxima are taken over every path including the demo copies — stricter than excluding them, and it holds, because a copy never out-counts its original.
+
+**Zulags 1 and 9 are still unassessed, which is not the same as having nothing to say.** *Discipline* covers 5, 13 and 14, which were assessed and rejected. 1 and 9 are the level's two most Glukkon-heavy at 2 and 4, both the wiki's "Junior Executive Office", and nobody has yet looked at whether that fits.

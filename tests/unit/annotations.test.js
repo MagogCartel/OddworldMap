@@ -199,6 +199,61 @@ test("annotations.json entries all point at live targets", () => {
   }
 });
 
+// what licenses adopting a nickname: the fit it claims, checked against the shipped
+// data — a predicate, or the reason written down where the evidence is artwork
+
+const count = (P, type) => P.tlvs.filter((t) => t.name === type).length;
+// a tie still counts, and an absent type can't pass vacuously
+const holdsMost = (L, P, type) =>
+  count(P, type) > 0 && L.paths.every((Q) => count(Q, type) <= count(P, type));
+const holders = (L, has) =>
+  L.paths
+    .filter(has)
+    .map((P) => P.id)
+    .sort((a, b) => a - b);
+const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+// `blind` is a Choice_short, so it carries no enum_labels entry: read it raw
+const blind = (P) => P.tlvs.filter((t) => t.name === "Mudokon" && t.fields?.blind).length;
+const flying = (L) => holders(L, (P) => count(P, "FlyingSlig") > 0);
+
+const CLAIMS = {
+  // the pair is the claim, not the magnitude: two zulags carry them, two each
+  "AE BR 2": (L) => same(flying(L), [2, 9]),
+  "AE BR 9": (L) => same(flying(L), [2, 9]),
+  "AE BR 3": (L, P) => holdsMost(L, P, "SlogSpawner"),
+  "AE BR 5": (L, P) => holdsMost(L, P, "ElectricWall"),
+  "AE BR 6": (L) =>
+    same(
+      holders(L, (P) => blind(P) > 0),
+      [6],
+    ),
+  "AE BR 10": (L, P) => holdsMost(L, P, "Slig"),
+  "AE BR 11": "the artwork paints TEAR X-TRACTOR on the wall directly under the rig",
+  "AE BR 12": (L, P) => holdsMost(L, P, "Drill"),
+  "AE BR 18": (L, P) => holdsMost(L, P, "LaughingGas"),
+};
+
+// keyed to exactly the nicknamed paths: no nickname unbacked, no backing outliving its name
+test("every adopted nickname is backed by the fit it claims", () => {
+  const ann = load("annotations.json");
+  const data = { AO: load("map_data_ao.json"), AE: load("map_data_ae.json") };
+  const nicknamed = [];
+  for (const [game, g] of Object.entries(ann))
+    for (const [short, byId] of Object.entries(g.paths ?? {}))
+      for (const [id, v] of Object.entries(byId))
+        if (v?.nickname) nicknamed.push(`${game} ${short} ${id}`);
+  assert.deepEqual(nicknamed.sort(), Object.keys(CLAIMS).sort());
+
+  for (const key of nicknamed) {
+    const [game, short, id] = key.split(" ");
+    const L = data[game].levels.find((l) => l.short === short);
+    const P = L.paths.find((p) => p.id === +id);
+    const claim = CLAIMS[key];
+    if (typeof claim === "string") assert.ok(claim.trim(), `${key}: its reason is written down`);
+    else assert.ok(claim(L, P), `${key}: the fit its nickname claims no longer holds`);
+  }
+});
+
 // the paths the map hides say so in their name, which is what an arrival reads
 test("every demo path's curated name marks it [Demo]", () => {
   setAnnotations(load("annotations.json"));

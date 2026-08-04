@@ -210,28 +210,44 @@
    },
    "BR": {
     "1": "Zulag 1",
-    "2": "Zulag 2",
-    "3": "Zulag 8",
+    "2": {
+     "name": "Zulag 2",
+     "nickname": "Flying Sligs"
+    },
+    "3": {
+     "name": "Zulag 8",
+     "nickname": "Slog Warehouse"
+    },
     "4": "Zulag 14",
     "5": {
      "name": "Zulag 6",
-     "note": "The Oddworld Wiki's name for this sector, Electrical Devices, is earned: eleven electric walls are strung across it, more than anywhere else in the brewery."
+     "nickname": "Electrical Devices",
+     "note": "Eleven electric walls are strung across this zulag, more than anywhere else in the brewery."
     },
     "6": {
      "name": "Zulag 7",
-     "note": "Three blind Mudokons work here, the only ones in the brewery, which is why the Oddworld Wiki calls this sector the Blind Mudokon zone."
+     "nickname": "Blind Mudokon",
+     "note": "Three blind Mudokons work here, the only ones in the brewery."
     },
     "7": "[Demo] Zulag 1",
     "8": "[Demo] Zulag 2",
     "9": {
      "name": "Zulag 11",
+     "nickname": "Flying Sligs",
      "note": "The arch over the exit door reads ZULAG 14 while the status board in the same room reads 11: the same signage slip as zulag 13."
     },
-    "10": "Zulag 10",
-    "11": "Zulag 12",
+    "10": {
+     "name": "Zulag 10",
+     "nickname": "Slig High Security"
+    },
+    "11": {
+     "name": "Zulag 12",
+     "nickname": "Tear Extractors"
+    },
     "12": {
      "name": "Zulag 3",
-     "note": "Twenty-five drills run here, more than anywhere else in the brewery, and the Oddworld Wiki calls this sector Industrial Machines."
+     "nickname": "Industrial Machines",
+     "note": "Twenty-five drills run here, more than anywhere else in the brewery."
     },
     "13": "[Demo] Zulag 6: Angry Mudokons",
     "14": "Zulag 5",
@@ -243,7 +259,8 @@
     "17": "Zulag 9",
     "18": {
      "name": "Zulag 4",
-     "note": "The Oddworld Wiki calls this sector Tear Gas, and it carries more laughing gas than anywhere else in the brewery."
+     "nickname": "Tear Gas",
+     "note": "More laughing gas is piped through this zulag than anywhere else in the brewery."
     },
     "19": "Zulag 4: Tear X-Tractor",
     "20": {

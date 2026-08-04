@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-04",
+   "tag": "new",
+   "title": "Nine Brewery zulags carry the nickname players gave them",
+   "detail": "SoulStorm Brewery numbers its zulags and never names them, so a player who has just dodged their way through a room full of drills knows exactly where they are but might not remember which zulag it is. Its players filled the gap: the Oddworld Wiki names each zulag as a sector, and nine of those describe what is really in the area. Zulag 3, Industrial Machines, runs more drills than anywhere else in the level. Zulag 6, Electrical Devices, is strung with eleven electric walls. Zulag 7, Blind Mudokon, is worked by the only three blind Mudokons in the brewery. Zulag 12, Tear Extractors, has TEAR X-TRACTOR painted on the wall under the rig. Those nicknames now sit beside the number, in the panel behind the map's chip and in a path button's tooltip, and on the button itself with \"Show full names\" on. They read dimmed, because a nickname is the players' name for the place and not the game's. The other five carry none, at least for now: a nickname only arrives where an area has something you would recognise it by."
+  },
+  {
    "date": "2026-08-03",
    "tag": "improved",
    "title": "A link to an object says which object",
