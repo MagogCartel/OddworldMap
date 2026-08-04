@@ -69,7 +69,7 @@ Those three are material for [12](item-012-curated-path-names.md) rather than fo
 
 ## Findings
 
-**The level graph is twelve links, not thirteen.** The working notes listed thirteen inter-level crossings, one more than `tests/unit/map-data.test.js` pins. The extra one is Necrum Vaults to FeeCo Terminal 1, and it is real in the game and absent from the data: `NE P3`'s express well carries `FD P1 C1` on its unused side with well 0, and FeeCo P1 has no well in C1, its two sitting in C08 and C09 pairing with each other. The crossing happens in a cutscene, the way the Mines' P1 to P2 transition does, and FeeCo P1 has the `AbeStart` that confirms it. Twelve is the followable graph and the test is right; CLAUDE.md calling it "the games' whole level graph" is a shade strong.
+**The level graph is twelve links, not thirteen.** The working notes listed thirteen inter-level crossings, one more than `tests/unit/map-data.test.js` pins. The extra one is Necrum Vaults to FeeCo Terminal 1, and it is real in the game and absent from the data: `NE P3`'s express well carries `FD P1 C1` on its unused side with well 0, and FeeCo P1 has no well in C1, its two sitting in C08 and C09 pairing with each other. The crossing happens in a cutscene, the way the Mines' P1 to P2 transition does, and FeeCo P1 has the `AbeStart` that confirms it. Twelve is the followable graph and the test is right; CLAUDE.md called it "the games' whole level graph", which was a shade strong and now names the missing crossing instead.
 
 ## Ships with
 
