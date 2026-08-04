@@ -1,12 +1,6 @@
 {
  "entries": [
   {
-   "date": "2026-08-04",
-   "tag": "improved",
-   "title": "Four Brewery zulags say what the fans call them",
-   "detail": "The SoulStorm Brewery numbers its zulags and never names them, so its players did. The Oddworld Wiki gives each one a nickname, and four of those turn out to describe exactly what is in the area: zulag 3 is Industrial Machines and runs twenty-five drills, more than anywhere else in the level; zulag 6 is Electrical Devices and is strung with eleven electric walls; zulag 7 is the Blind Mudokon zone and is the only place in the brewery you will meet one; zulag 4 is Tear Gas. Each of those four now carries a note saying so, in the panel behind the chip in the corner of the map. The numbers on the buttons stay the game's own, painted on the boards in the artwork; the nicknames belong to the fans, and the note is what tells you which is which."
-  },
-  {
    "date": "2026-08-03",
    "tag": "improved",
    "title": "A link to an object says which object",
@@ -53,12 +47,6 @@
    "tag": "improved",
    "title": "Field definitions open on a tap, not just a hover",
    "detail": "A field name with a dotted underline (in the screen list, and in the Fields panel in the sidebar) explains itself: what the field means, and what each of its values stands for. That explanation used to be the browser's own hover tooltip, which a phone or a tablet never shows at all, so on touch the underline promised something it could not deliver. Tapping one now opens the definition, and the tap still does whatever it was going to do: tick the field in the panel, or jump to the object in the screen list. On a mouse it appears the moment you point at it rather than after the browser's pause, and the list of values reads as its own line under the definition."
-  },
-  {
-   "date": "2026-07-30",
-   "tag": "improved",
-   "title": "Two more Exoddus areas say what is odd about them",
-   "detail": "Necrum Mines' tunnel 2 sits right next to tunnel 1 with nothing joining them on the map, because the game carries you across in the cutscene at the brew machine rather than through any door. And the Brewery's final secret area turns out to be the one part of zulag 13 whose board prints the right number, where every other board in that zulag misprints it as 14. Fifteen Exoddus paths carry a note now."
   },
   {
    "date": "2026-07-29",
