@@ -109,11 +109,9 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
   - It is deliberately not `.chrome`: an embed, inside someone else's page, is where a reader can least tell whose map this is, so the unofficial-fan-project notice has to survive one — and the sidebar it opens from is present in an embed, only closed.
   - It states no licence, and that is a decision rather than an omission: the repo holds code written here, one vendored file under another author's copyright, and artwork this project cannot license at all, so a single line of terms in the app would claim all three, and the source link reaches the repository where the licence file is.
   - What keeps two dialogs from ever being open together is not a stacking tier — the sidebar's `z-index` exists only inside the narrow media query — but that an open overlay covers every other opener and `trapDialogKeys` swallows keydown in the capture phase, which is why `?` does nothing behind one.
-- `#whatsnewFilter` ([js/whatsnew.js](public/js/whatsnew.js)) is the tag row pinned under the What's New masthead, and the tags on it are the ones `changelog.json` actually carries rather than a list in the code, so a fourth tag arrives with the entry that introduces it and one word in `tests/unit/changelog.test.js`'s tag set — that gate moved from the code into the test rather than disappearing, since with no runtime whitelist left a typo'd tag would otherwise mint a phantom chip and a dim label with nothing to catch it.
-  - They sort alphabetically because every data order churns — first appearance and frequency both reshuffle the row as the feed grows.
-  - A chip and an entry's label are the same `.wn-tag wn-tag-<tag>`, so the only styling a new tag can want is a colour rule, and without one it takes the dim default.
-  - Which is why the chip's *fill* is what says on or off: the text colour is the tag's own, and `fixed` is already dim, so fading it says nothing.
-  - The filter is never stored and every open clears it — a filter left on from a past visit would hide the very updates the button's dot is announcing — and an entry carrying no tag has no chip governing it, so it shows whatever the row says.
+- `#whatsnewFilter` ([js/whatsnew.js](public/js/whatsnew.js)) builds the What's New tag row from the tags `changelog.json` actually carries rather than from a list in the code, so a new tag needs no JavaScript.
+  - Give it a colour rule or it takes the dim default, and add one word to `tests/unit/changelog.test.js`'s tag set, which is the only thing standing between a typo'd tag and a phantom chip nothing catches.
+  - The chip's *fill* is what says on or off, because the text colour belongs to the tag. Do not reach for opacity: `fixed` is already dim, so fading it says nothing.
 
 ## Format gotchas (hard-won)
 

@@ -107,6 +107,7 @@ Newest first, and a finished item is worth reading for the same reason an open o
 
 - [**77.** What a place is known for](item-077-what-a-place-is-known-for.md) — nine Brewery zulags carry the nickname players gave them, each pinned to the fit that licenses adopting it. _2026-08-04._
 - [**14.** Polish pile](item-014-polish-pile.md) — three unrelated tiny fixes that landed, and a fourth retired because the only figure sizing it is unreproducible. _2026-08-03._
+- [**78.** A tag row that filters What's New](item-078-whatsnew-tag-row.md) — built from the tags the feed carries, so a fourth needs a colour and a word in a test rather than any code. _2026-08-02._
 - [**65.** Trim what the Pages deploy publishes](item-065-trim-pages-deploy.md) — the site moved into `public/` and the deploy uploads that folder alone. _2026-08-03._
 - [**37.** Per-path notes](item-037-per-path-notes.md) — retired rather than completed: the criteria stay, the quota never existed. _2026-07-30._
 - [**21.** CSS design inheritance](item-021-css-design-inheritance.md) — tokens and shared classes, with the accidental font drift fixed *first* so the eight commits after it had a zero-diff oracle. _2026-07-30._
