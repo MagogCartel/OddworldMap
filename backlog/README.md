@@ -47,6 +47,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**12.** Curated path names](item-012-curated-path-names.md) — the remaining curation: the still-unnamed AO paths, and one AE name that stands by elimination. _Content pass, anywhere._
 - [**15.** Path buttons in game order](item-015-path-buttons-game-order.md) — a setting to sort them by in-game progression where the transition graph can derive it. _Small, anywhere._
 - [**60.** Search should know place names](item-060-search-place-names.md) — `monsaic` and `feeco` return nothing. _Small, anywhere._
+- [**77.** What a place is known for](item-077-what-a-place-is-known-for.md) — a player who knows they are next to a tear extractor cannot find out which zulag that is. _Small-medium; the set is settled, the surface is not._
 - [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — the artifact people actually want from a map site. _Medium, anywhere._
 - [**59.** Give the map an accessible surface](item-059-accessible-map-surface.md) — assistive tech sees an unlabelled graphic; the keyboard cannot inspect. _Medium, anywhere._
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._

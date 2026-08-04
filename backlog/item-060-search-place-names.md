@@ -19,6 +19,8 @@ Add a "Places" group rendered *above* the object groups in `runSearch`:
 
 Reading through `pathDisplayName` ([js/annotations.js](../public/js/annotations.js)) means the curated-name-overrides-in-game-name precedence is already handled, and every path name added under [12](item-012-curated-path-names.md) becomes searchable with no further code change. That is the reason to route through `pathDisplayName` rather than reading `P.name` directly.
 
+Whatever [77](item-077-what-a-place-is-known-for.md) settles on belongs in the same blob, and is the half of this that reaches a player who knows what a place is like but not what it is called. Measured 2026-08-04: `tear`, `x-tractor` and `high security` return nothing today, while `slig` alone returns 819 object hits — which is why the Places group has to be counted and capped apart from the objects rather than merged with them.
+
 ## Coverage — read the data, not the number below
 
 At the review this recorded AO at 41 of 73 curated and AE at **0 curated, 104 unnamed**, and concluded the feature would be "mostly a level-name search" on Exoddus. **That is no longer true and was the review's most stale figure.** Measured 2026-07-31, AE is at 114 of 117 paths curated, and no AE path carries a disc `name` at all, because [38](item-038-path-section-tag.md) moved the thirteen ender labels into `section`. Recompute from the shipped data before sizing this; [12](item-012-curated-path-names.md) holds the current counts.
