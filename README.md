@@ -84,7 +84,7 @@ The gear button at the top of the sidebar opens them, in three groups. A setting
   - "Remember last location" (off by default) reopens the map where you left off when the URL carries no permalink — a shared link always wins
   - "Cache screen artwork on this device" (off by default) keeps visited screens stored locally — up to ~150 MB — so the next visit doesn't re-download them; switching it off frees the storage
 - **Buttons and names**
-  - "Show full names" expands the game, level and path buttons into a list labelled with their full names ("MI — Necrum Mines")
+  - "Show full names" (on by default) expands the game, level and path buttons into a list labelled with their full names ("MI — Necrum Mines"); turn it off for the bare short codes
   - "Show demo paths" (off by default) adds Exoddus' 25 demo areas to the path buttons, marked `[Demo]`; they are copies of real places that only the title-screen demos visit, so the map leaves them out of the buttons and out of search results, but a shared link to one still opens it and says what it is
 - **Objects and fields**
   - "List a screen's objects on click" (on by default) opens the screen-inventory panel when a click/tap finds nothing to follow

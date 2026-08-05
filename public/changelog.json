@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-05",
+   "tag": "improved",
+   "title": "The buttons say where you are going by default",
+   "detail": "\"Show full names\" started off, so the level and path buttons opened as bare short codes and a name only arrived if you went looking for the setting. Enough of the map is named now (the temple trials, the zulags, the nicknames players gave the Brewery) that the codes were hiding the better label. Full names are now on from the first visit, and the setting is still there to go back to the codes."
+  },
+  {
    "date": "2026-08-04",
    "tag": "new",
    "title": "Nine Brewery zulags carry the nickname players gave them",

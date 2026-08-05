@@ -16,7 +16,7 @@ const LOC_KEY = "owm:lastloc";
 export const SETTINGS_DEFAULTS = {
   rememberView: true,
   rememberLoc: false,
-  fullNames: false,
+  fullNames: true,
   showDemoPaths: false,
   screenList: true,
   cacheImages: false,
