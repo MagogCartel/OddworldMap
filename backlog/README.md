@@ -26,7 +26,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
-- [34. Favicon badge](item-034-favicon-badge.md) — decided already, so only the rendering is left.
 - [15. Path buttons in game order](item-015-path-buttons-game-order.md)
 - [60. Search should know place names](item-060-search-place-names.md)
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
@@ -52,7 +51,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
-- [**34.** Favicon badge](item-034-favicon-badge.md) — the black disc behind the Mudokon head; rendered and compared already, so it only needs building. _Tiny (asset)._
 
 ## Content depth
 
@@ -96,6 +94,7 @@ Decided not now, with the reason recorded.
 
 Rejected or disproved, kept so they are not re-proposed.
 
+- [**34.** Favicon badge](item-034-favicon-badge.md) — the chin it existed to show clears the disc by one device pixel at tab size; declined after both readings were tried in a real tab.
 - [**70.** Dropping the numeric `t` and empty `extra`](item-070-drop-numeric-t.md) — rejected: a data contract, for 18 KB gzipped.
 - [**71.** Mudokon rescue census](item-071-mudokon-rescue-census.md) — premise disproved; `rescue_switch_id` is not the rescuable flag.
 - [**72.** Copy-embed-code button](item-072-copy-embed-code-button.md) — rejected, and the standing reason the map's corner gains no fourth button.
