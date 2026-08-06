@@ -1,6 +1,6 @@
 # 60. Search should know place names
 
-**Status:** open · **Effort:** small (viewer, product) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-06 · **Effort:** small (viewer, product) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -40,3 +40,15 @@ At the review this recorded AO at 41 of 73 curated and AE at **0 curated, 104 un
 ## Ships with
 
 A README search bullet update and a `changelog.json` entry, tag `new`.
+
+## Shipped
+
+[js/placesearch.js](../public/js/placesearch.js) builds one candidate per level and per path — 214 across both games — and `runSearch` renders the matches as a Places group above the object groups, `jumpToPlace` in [js/navigate.js](../public/js/navigate.js) taking a click on one (a level opens on the first path it lists).
+
+**The sketch's single blob does not work, and it fails quietly.** Matching `"<short> <name> <path label>"` as one lowercased string hands the `2` in `zulag 2` to the `R2` that every Rupture Farms Return path sits in: the query returns all eighteen, and the four the game itself calls Zulag 2 arrive buried among them — the *Verify* line's own case, inverted. A candidate therefore carries two indexes: the names by substring as sketched, and the `LV Pn` code as whole tokens (`["r2", "p1"]`) that answer a term only in full. `matchesBy` in [js/searchquery.js](../public/js/searchquery.js) is the seam, with `matchesQuery` redefined through it so the AND-within-OR semantics stay written once.
+
+A path does index its level's name, so `monsaic` returns L1 *and its paths* — but `rankPlace` leaves that name out, which is what keeps the level's own row above the five it just pulled in.
+
+**Coverage, recomputed 2026-08-06** as this asks: AO is at 41 of 73 curated with 18 more named by the disc (R2's zulags among them), AE at 114 of 117 with no disc name anywhere. Neither game is "mostly a level-name search". [77](item-077-what-a-place-is-known-for.md)'s nine nicknames and [38](item-038-path-section-tag.md)'s thirteen sections came along as predicted — `tear extractors`, `high security` and `ender` all land.
+
+**Two departures from *Watch out*.** The group *is* capped, at the object groups' own `GROUP_MAX` and behind the same "show N more": `brewery` matches 25 places and `trial` 23, which uncapped push the object results the same search is showing off the screen. It still spends nothing the objects were budgeted — separate group, separate slice, separate count. And the summary needed a second empty phrasing after all: a places-only query like `monsaic` printed "no hits" under six rows, so it now reads `no object hits` whenever places are on screen.

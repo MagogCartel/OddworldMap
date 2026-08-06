@@ -1,6 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseQuery, queryTerms, matchesQuery, rankFor } from "../../public/js/searchquery.js";
+import {
+  parseQuery,
+  queryTerms,
+  matchesBy,
+  matchesQuery,
+  rankFor,
+} from "../../public/js/searchquery.js";
 
 // A stand-in for the lowercased "name + fields" blob tlvSearchText builds.
 const MUD = "mudokon scale=0 state=chisle job=sit chant rescue_switch_id=70";
@@ -53,6 +59,15 @@ test("matchesQuery: a spaced label still matches (its words are the AND terms)",
 test("matchesQuery: OR matches when any group matches", () => {
   assert.ok(matchesQuery(MUD, parseQuery("slig, mudokon")));
   assert.ok(!matchesQuery(MUD, parseQuery("slig, scrab")));
+});
+
+test("matchesBy: the same AND/OR shape over a test that isn't one blob", () => {
+  // an index of two parts, only one of which answers a whole term
+  const has = (term) => "zulag 2".includes(term) || ["r2", "p1"].includes(term);
+  assert.ok(matchesBy(parseQuery("zulag 2"), has));
+  assert.ok(matchesBy(parseQuery("r2 p1"), has));
+  assert.ok(!matchesBy(parseQuery("r2 p3"), has));
+  assert.ok(!matchesBy(parseQuery("r"), has)); // a term inside a token is not a match
 });
 
 test("rankFor: best (lowest) name rank across the terms", () => {

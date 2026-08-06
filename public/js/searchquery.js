@@ -19,9 +19,11 @@ export function parseQuery(q) {
 // scans over them can't stall
 export const queryTerms = (groups) => [...new Set(groups.flat())];
 
+// the AND-within-OR shape over any per-term test
+export const matchesBy = (groups, has) => groups.some((g) => g.every((term) => has(term)));
+
 // text (the already-lowercased blob) matches when any group's terms all appear
-export const matchesQuery = (text, groups) =>
-  groups.some((g) => g.every((term) => text.includes(term)));
+export const matchesQuery = (text, groups) => matchesBy(groups, (term) => text.includes(term));
 
 // best (lowest) name-match rank across the terms: exact, prefix, substring, else 3
 export function rankFor(name, terms) {

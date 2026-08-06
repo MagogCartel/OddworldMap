@@ -14,6 +14,7 @@ test("pure modules import in bare Node", async () => {
     "model",
     "settings",
     "searchquery",
+    "placesearch",
     "glossary",
   ]) {
     const m = await import(`../../public/js/${mod}.js`);

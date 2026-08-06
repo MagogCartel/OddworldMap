@@ -3,11 +3,12 @@
 import { esc, extrasText } from "./util.js";
 import { fieldEntries } from "./fields.js";
 import { parseQuery, queryTerms, matchesQuery, rankFor } from "./searchquery.js";
+import { matchPlaces } from "./placesearch.js";
 import { searchInput, searchResults, scopeBar } from "./dom.js";
 import { pathVisible } from "./demo.js";
 import { state } from "./state.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
-import { jumpToTlv } from "./navigate.js";
+import { jumpToPlace, jumpToTlv } from "./navigate.js";
 import { toggleMenu } from "./interaction.js";
 
 const HIT_CAP = 1500,
@@ -38,6 +39,12 @@ function scopeAccepts(h) {
   if (searchScope === "level") return h.G === state.data && h.L === state.lvl;
   if (searchScope === "path") return h.G === state.data && h.L === state.lvl && h.P === state.path;
   return true;
+}
+
+function placeInScope(c) {
+  if (searchScope === "game") return c.G === state.data;
+  if (searchScope === "level") return c.G === state.data && c.L === state.lvl;
+  return searchScope !== "path"; // the one place in path scope is where you stand
 }
 
 function scopeLabel() {
@@ -122,6 +129,39 @@ function hitButton(h, terms) {
   return b;
 }
 
+function placeButton(c, terms) {
+  const b = document.createElement("button");
+  b.className = "rowbtn hit";
+  // the code answers whole terms only, so marking every term inside it would
+  // claim a match the query never made
+  const codeTerms = terms.filter((term) => c.tokens.includes(term));
+  const ex = [c.P && c.L.name, c.nickname, c.section].filter(Boolean).join(" · ");
+  b.innerHTML =
+    `<span class="loc">${c.G.id} · ${highlight(c.code, codeTerms)}</span>` +
+    (c.name ? ` ${highlight(c.name, terms)}` : "") +
+    (ex ? ` <span class="ex">${highlight(ex, terms)}</span>` : "");
+  b.onclick = () => jumpToPlace(c.G, c.L, c.P);
+  return b;
+}
+
+function renderGroup(label, rows, make) {
+  const head = document.createElement("div");
+  head.className = "listhead shead";
+  head.innerHTML = `<span>${label}</span><span>${rows.length}</span>`;
+  searchResults.appendChild(head);
+  rows.slice(0, GROUP_MAX).forEach((r) => searchResults.appendChild(make(r)));
+  if (rows.length <= GROUP_MAX) return;
+  const rest = rows.slice(GROUP_MAX);
+  const btn = document.createElement("button");
+  btn.className = "showmore";
+  btn.textContent = `show ${rest.length} more`;
+  btn.onclick = () => {
+    rest.forEach((r) => searchResults.insertBefore(make(r), btn));
+    btn.remove();
+  };
+  searchResults.appendChild(btn);
+}
+
 function runSearch(q) {
   searchResults.innerHTML = "";
   q = q.trim();
@@ -153,6 +193,16 @@ function runSearch(q) {
           }
       }
 
+  const places = [];
+  for (const c of matchPlaces(state.games, orGroups, terms, state.data)) {
+    if (!placeInScope(c)) continue;
+    if (c.P && !pathVisible(c.P)) {
+      hidden++;
+      continue;
+    }
+    places.push(c);
+  }
+
   // group by context: current path, then current level, then per game
   const groups = [];
   const byKey = {};
@@ -168,25 +218,12 @@ function runSearch(q) {
     else group("g" + h.G.id).hits.push(h);
   }
 
+  if (places.length) renderGroup("Places", places, (c) => placeButton(c, terms));
+
   for (const g of groups) {
     if (!g.hits.length) continue;
     g.hits.sort((a, b) => rankFor(a.t.name, terms) - rankFor(b.t.name, terms));
-    const head = document.createElement("div");
-    head.className = "listhead shead";
-    head.innerHTML = `<span>${g.label}</span><span>${g.hits.length}</span>`;
-    searchResults.appendChild(head);
-    g.hits.slice(0, GROUP_MAX).forEach((h) => searchResults.appendChild(hitButton(h, terms)));
-    if (g.hits.length > GROUP_MAX) {
-      const rest = g.hits.slice(GROUP_MAX);
-      const btn = document.createElement("button");
-      btn.className = "showmore";
-      btn.textContent = `show ${rest.length} more`;
-      btn.onclick = () => {
-        rest.forEach((h) => searchResults.insertBefore(hitButton(h, terms), btn));
-        btn.remove();
-      };
-      searchResults.appendChild(btn);
-    }
+    renderGroup(g.label, g.hits, (h) => hitButton(h, terms));
   }
 
   const more = document.createElement("div");
@@ -194,12 +231,15 @@ function runSearch(q) {
   const perGame = state.games
     .map((G) => `${G.id} ${hits.filter((h) => h.G === G).length}`)
     .join(" · ");
+  // the Places heading carries its own count, so this one stays about objects,
+  // and has to say so where places are the only thing on screen
+  const none = places.length ? "no object hits" : "no hits";
   const summary = hits.length
     ? `${hits.length}${hits.length >= HIT_CAP ? "+" : ""} hit${hits.length === 1 ? "" : "s"}` +
       (searchScope === "all" ? ` — ${perGame}` : ` in ${scopeLabel()}`)
     : searchScope === "all"
-      ? "no hits"
-      : `no hits in ${scopeLabel()}`;
+      ? none
+      : `${none} in ${scopeLabel()}`;
   // a hit the map won't take you to would look like a hit gone missing
   more.textContent =
     summary +

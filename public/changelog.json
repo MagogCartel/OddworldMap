@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-06",
+   "tag": "new",
+   "title": "Search finds places, not just what is in them",
+   "detail": "Search could find every Slig in either game but not one of the rooms they stand in, so the level and path buttons were the only way to navigate to a specific place. Typing monsaic or feeco returned nothing; zulag 2 was worse, coming back with status boards from seven levels because some boards store a zulag number. Places now come back as their own group above the objects. A level or a path answers to its name and nickname, so \"Tear X-Tractor\" finds the Brewery's zulag 4. It answers to its code too, so BR P19 goes straight there. A level's name finds what is inside it too: \"paramonia temple\" brings back the Paramonian Temple first, then its entrance, the path outside its door and its boulder trials. Clicking any of them takes you there, a level opening on the first path it lists."
+  },
+  {
    "date": "2026-08-05",
    "tag": "improved",
    "title": "The buttons say where you are going by default",

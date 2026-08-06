@@ -35,6 +35,8 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - click it (or press **`i`**) for the level's full name, which half of it the path belongs to where the game says, the nickname players gave the place where it has one, whether the path is one the game arrives at from another level or one only the title-screen demos play, and the path's note where it has one — a remark on something odd about the place, marked by a dot on the chip
 - **reset** in the Display and Objects headers puts that section back to its defaults
 - **search** (`/` to focus) matches object names and decoded fields across both games — try `mudokon`, `lcdstatusboard` or `switch_id=70`
+  - it also knows the places themselves, listed as a **Places** group above the objects: a level or path by its name (`monsaic`, `feeco`, `zulag 2`), by the nickname players gave it (`tear extractors`), by the section the game files it under (`ender`), or by its code (`R2 P1`) — clicking one takes you there, and a level opens on the first path it lists
+  - a place's level name finds what is inside it, so `paramonia temple` lists the temple and its trials; the code answers whole words only, so the `2` in `zulag 2` is not answered by the `R2` a path happens to sit in
   - combine terms: a space means all must match (`Mudokon state=chisle` finds only chiselling Mudokons), a comma or the word `or` means any (`Slig, Slog`)
   - results are grouped by context (current path, current level, then per game), rank exact name matches first, and clicking (or Enter) jumps straight to the hit
   - a scope bar narrows the search to the current game/level/path

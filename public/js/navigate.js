@@ -237,6 +237,13 @@ export function jumpToTlv(G, L, P, t) {
   focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
 }
 
+// a whole place: one path, or a level, which opens on the first path it lists
+export function jumpToPlace(G, L, P) {
+  if (state.data !== G) selectGame(G, true);
+  if (!P || state.lvl !== L) selectLevel(L);
+  if (P) selectPathById(P.id);
+}
+
 // ---- permalinks ---------------------------------------------------------
 let applyingHash = false,
   hashTimer = null;
