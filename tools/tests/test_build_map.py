@@ -168,10 +168,30 @@ class Sidecars(unittest.TestCase):
 
 
 class SchemaCaches(unittest.TestCase):
-    def test_every_layout_override_targets_a_known_type(self):
-        for (game_key, tid), _ in bm._SCHEMA_LAYOUT_OVERRIDES.items():
-            names = bm.game_setup(game_key)["tlv_names"]
-            self.assertIn(tid, names, f"{game_key} layout override for unknown type {tid}")
+    def cached_layout(self, game_key):
+        """a (tid, layout) pair the parser derives on its own, so an override of
+        it has nothing left to add. Read from the cache rather than from
+        game_setup, whose schema already carries the overrides."""
+        cache = bm.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
+        names = bm.game_setup(game_key)["tlv_names"]
+        return next((int(k), v) for k, v in json.loads(cache.read_text()).items()
+                    if int(k) in names)
+
+    def assertOverrideFails(self, game_key, tid, layout):
+        entry = {(game_key, tid): layout}
+        with mock.patch.dict(bm._SCHEMA_LAYOUT_OVERRIDES, entry), self.assertRaises(RuntimeError):
+            bm.game_setup(game_key)
+
+    def test_a_layout_override_for_an_unknown_type_fails_the_build(self):
+        self.assertOverrideFails("AO", 9999, [])
+
+    def test_a_layout_override_the_parser_derives_fails_the_build(self):
+        tid, layout = self.cached_layout("AO")
+        self.assertOverrideFails("AO", tid, layout)
+
+    def test_an_empty_override_cannot_blank_a_derived_layout(self):
+        tid, _ = self.cached_layout("AO")
+        self.assertOverrideFails("AO", tid, [])
 
     def test_cached_layouts_are_word_and_name_pairs(self):
         for game_key in ("AO", "AE"):

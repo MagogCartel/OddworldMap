@@ -61,7 +61,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — first paint waits on both games when the visitor is looking at one. _Small-medium._
 - [**54.** Stamp `sw.js`'s `CACHE_NAME` from the builder](item-054-stamp-cache-name.md) — three documents describing a manual step is a missing mechanism. _Small._
 - [**62.** Sweep for diff-justification comments](item-062-diff-justification-comments.md) — the comment convention was written after most of the code. _Small._
-- [**75.** A schema layout override can go stale unnoticed](item-075-stale-schema-layout-override.md) — its sibling table fails the build when an entry outlives its reason; this one is applied bare. _Small (builder)._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — one file carrying six unrelated concerns, none importable in isolation. _Medium._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 
@@ -103,6 +102,7 @@ Rejected or disproved, kept so they are not re-proposed.
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
 - [**60.** Search should know place names](item-060-search-place-names.md) — a Places group above the objects, and a code matched by whole words so `zulag 2` is not answered by the `R2` a path sits in. _2026-08-06._
+- [**75.** A schema layout override can go stale unnoticed](item-075-stale-schema-layout-override.md) — an entry naming a type the game lacks, or one the parser now derives, fails the build; the schema had to be resolved after the type names for the first check to be possible. _2026-08-06._
 - [**77.** What a place is known for](item-077-what-a-place-is-known-for.md) — nine Brewery zulags carry the nickname players gave them, each pinned to the fit that licenses adopting it. _2026-08-04._
 - [**14.** Polish pile](item-014-polish-pile.md) — three unrelated tiny fixes that landed, and a fourth retired because the only figure sizing it is unreproducible. _2026-08-03._
 - [**78.** A tag row that filters What's New](item-078-whatsnew-tag-row.md) — built from the tags the feed carries, so a fourth needs a colour and a word in a test rather than any code. _2026-08-02._

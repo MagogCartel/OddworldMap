@@ -591,8 +591,14 @@ def load_object_schema(game_key, game):
         cache.write_text(json.dumps(raw, indent=1))
     schema = {int(k): v for k, v in raw.items()}
     for (gk, tid), layout in _SCHEMA_LAYOUT_OVERRIDES.items():
-        if gk == game_key:
-            schema[tid] = layout
+        if gk != game_key:
+            continue
+        if tid not in game["tlv_names"]:
+            raise RuntimeError(f"stale schema layout override: {game_key} has no type {tid}")
+        # the table only supplies a layout the CTOR expressed none of, so anything derived spends it
+        if tid in schema:
+            raise RuntimeError(f"spent schema layout override: the parser derives {game_key} {game['tlv_names'][tid]}")
+        schema[tid] = layout
     return schema
 
 def write_field_types(game_key, out):
@@ -1017,7 +1023,6 @@ GAMES = {
 def game_setup(game_key):
     """resolve per-game level list, tlv names and tables (loading the cache)"""
     game = dict(GAMES[game_key])
-    game["schema"] = load_object_schema(game_key, game)
     cache = load_cache(game)
     if game_key == "AO":
         game["levels"] = AO_LEVELS
@@ -1033,6 +1038,8 @@ def game_setup(game_key):
     # id, not just the one kept per archive in the level list
     game["level_short"] = {lid: s for lid, s, _ in game["levels"]} if game_key == "AO" \
         else {int(k): v for k, v in cache["id_to_short"].items()}
+    # the layout overrides are checked against tlv_names, so the schema resolves after it
+    game["schema"] = load_object_schema(game_key, game)
     return game
 
 # ----------------------------------------------------------------------- main
