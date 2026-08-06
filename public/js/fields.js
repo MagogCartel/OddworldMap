@@ -63,7 +63,6 @@ export const DEFAULT_BY_TYPE = {
   RockSack: ["rock_amount"],
 };
 
-// the default-visible field set for a type
 export function defaultVisible(typeName) {
   const scoped = DEFAULT_BY_TYPE[typeName];
   return scoped ? new Set([...GLOBAL_DEFAULT, ...scoped]) : GLOBAL_DEFAULT;

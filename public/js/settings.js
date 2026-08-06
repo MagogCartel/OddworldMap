@@ -109,7 +109,6 @@ export function getSettings() {
   return settings;
 }
 
-// persist the live settings object after a mutation
 export function persistSettings() {
   store.set(SETTINGS_KEY, JSON.stringify(getSettings()));
 }
@@ -132,7 +131,6 @@ export function getViewSnapshot() {
   return getSettings().rememberView ? sanitizeView(store.get(VIEW_KEY)) : null;
 }
 
-// called by sidebar.js whenever a display toggle or object filter changes
 export function viewChanged() {
   if (!getSettings().rememberView) return;
   const cats = {};
@@ -153,7 +151,6 @@ export function sanitizeLocationHash(raw) {
   return typeof raw === "string" && raw.startsWith("#") && parseHash(raw) ? raw : null;
 }
 
-// called by navigate.js whenever the permalink hash is (re)written
 export function rememberLocation(hash) {
   if (getSettings().rememberLoc && sanitizeLocationHash(hash)) store.set(LOC_KEY, hash);
 }

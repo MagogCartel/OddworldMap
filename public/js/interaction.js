@@ -118,7 +118,6 @@ cv.addEventListener("pointerdown", (e) => {
     cv.classList.add("panning");
     panStart = { x: p.x, y: p.y, cx: state.cam.x, cy: state.cam.y };
   } else if (pointers.size === 2) {
-    // a second pointer turns pan/measure into a pinch
     panning = false;
     measuring = false;
     cv.classList.remove("panning");
@@ -142,7 +141,7 @@ cv.addEventListener("pointermove", (e) => {
       Object.assign(
         state.cam,
         zoomAt(state.cam, dist / pinchDist, (a.x + b.x) / 2, (a.y + b.y) / 2),
-      ); // anchor at pinch midpoint
+      );
     pinchDist = dist;
     scheduleDraw();
     return;
@@ -196,7 +195,6 @@ window.addEventListener("selection-changed", () => {
 const modeCursor = () => (state.show.ruler || state.show.route ? "crosshair" : "");
 
 cv.addEventListener("pointerleave", () => {
-  // moving off the canvas clears hover
   if (pointers.size) return; // a captured drag only leaves after release
   hoverTlvs = [];
   tip.style.display = "none";

@@ -285,7 +285,6 @@ export function draw() {
       y1 = dY(t.y1);
     const w = Math.max(dX(t.x2) - x1, 10),
       h = Math.max(dY(t.y2) - y1, 10);
-    // background plane: dim + dash
     const bg = onBackgroundPlane(state.data.id, t);
     if (bg) {
       ctx.globalAlpha = 0.5;

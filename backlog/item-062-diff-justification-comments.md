@@ -1,6 +1,6 @@
 # 62. Sweep the codebase for diff-justification comments
 
-**Status:** open · **Effort:** small (cleanup) · **Where:** anywhere · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-06 · **Effort:** small (cleanup) · **Where:** anywhere · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -23,3 +23,15 @@ Do not bundle this with any behaviour change; a comments-only diff is reviewable
 ## Ships with
 
 Nothing — internal. No changelog entry.
+
+## Shipped
+
+Every comment in `public/js/` and `public/sw.js`, `tools/build_map.py` and `tools/changelog.py` was read in context, full-line and trailing alike. Nine came out, across five files: three in `settings.js`, three in `interaction.js`, one each in `fields.js`, `navigate.js` and `render.js`.
+
+**The tell this item was filed for is not what the tree holds.** Nothing in `js/` or `tools/` narrates a move: no "extracted from", no "was previously", and the one past-tense line in the viewer (`model.js`'s stones viewing cameras the shipped path "no longer has") states a fact about the data, not about the code's history. The "without this, X would happen" shape does appear nine times, but each one annotates a line whose constraint is genuinely its own — a browser behaviour, a cache that would grow for the session, a hit that would read as missing — and none of them sits among bare peers doing equally non-obvious things.
+
+**What the tree holds instead is restatement**, and that is what the nine were: a comment naming the operation the next line performs. `// persist the live settings object after a mutation` over `persistSettings`, `// the default-visible field set for a type` over `defaultVisible`, `// highlight the button whose data-key matches` over a one-line `classList.toggle`, `// anchor at pinch midpoint` on the midpoint arithmetic itself. Two were the peer-asymmetry tell in a second form: `viewChanged` and `rememberLocation` were the only members of `settings.js`'s persistence run wearing a "called by sidebar.js" / "called by navigate.js" tag, while `getViewSnapshot`, `sanitizeLocationHash` and `clearStoredLocation` beside them say what they answer with — a tag that rots the moment a second caller appears and that the import graph already answers.
+
+**Three classes were left deliberately.** The uniform block labels inside long functions (`draw()`'s six, the builder's parse stages) restate their blocks but work as a table of contents, and cutting a consistent set costs navigation to buy nothing. A consumer named as part of a fact stays — `main.js`'s `setAnnotations(annotations); // before the path buttons build their labels` is an ordering constraint, not a cross-reference. And `tests/` is out of scope on purpose: its past-tense comments ("a link whose partner is absent used to badge paths the game never arrives at") are the specification of what a whole-set pin catches, the same idiom CLAUDE.md uses, and rewriting them present-tense would change prose without changing information.
+
+**`model.js` and `build_map.py` came out untouched**, which is the result worth recording: the two files carrying the most comment lines in the repo are the two whose comments are almost entirely format law, and the convention was already being followed where it matters most.

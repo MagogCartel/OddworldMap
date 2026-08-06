@@ -22,7 +22,6 @@ import { pathDisplayName, pathNickname } from "./annotations.js";
 import { isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
 
-// highlight the button whose data-key matches, clear the rest
 function markOn(box, key) {
   for (const b of box.children) b.classList.toggle("on", b.dataset.key === key);
 }
