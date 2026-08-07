@@ -48,11 +48,19 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
+- [**80.** Minimap inset](item-080-minimap-inset.md) — a small overview with a viewport rectangle, for the paths that outgrow the window. _Medium, anywhere._
+- [**81.** Enemy territory rendering](item-081-enemy-territory.md) — the pens enemies patrol inside, drawn as the barriers they are instead of anonymous meta boxes. _Small-medium, anywhere._
+- [**83.** Offline app shell](item-083-offline-app-shell.md) — the shell joins the opt-in artwork cache, so visited areas open with no network at all. _Small-medium, anywhere._
+- [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does: switch-id edges from levers and gates to the doors, walls and drills they drive. _Large, anywhere._
+- [**85.** Cross-path route planner](item-085-cross-path-routes.md) — a route that survives following a door, totalled per segment and overall. _Medium-large, anywhere._
+- [**86.** World graph](item-086-world-graph.md) — every path a node, every transition an edge: the metro map of each game. _Large, anywhere._
+- [**87.** By the numbers](item-087-by-the-numbers.md) — pick objects, read their counts per screen/path/level/game as you browse; planning pass first. _Medium, anywhere._
 
 ## Content depth
 
 - [**17.** Field glossary](item-017-field-glossary.md) — curating more field meanings; the fields shown by default are nearly all covered, the picker-only long tail is not. _Incremental, one JSON line each._
 - [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — a marquee's actual scrolling text, if the string tables turn out to be extractable. _Spike first, effort unknown._
+- [**82.** Type encyclopedia cards](item-082-type-encyclopedia.md) — a curated card per object type, with derived counts and a find-all link; the glossary's economics applied to types. _Incremental, anywhere._
 
 ## Code and build
 
@@ -93,6 +101,7 @@ Rejected or disproved, kept so they are not re-proposed.
 - [**71.** Mudokon rescue census](item-071-mudokon-rescue-census.md) — premise disproved; `rescue_switch_id` is not the rescuable flag.
 - [**72.** Copy-embed-code button](item-072-copy-embed-code-button.md) — rejected, and the standing reason the map's corner gains no fourth button.
 - [**73.** Repo and artwork size trajectory](item-073-repo-size-trajectory.md) — closed: the current size is the floor.
+- [**88.** Object filter presets](item-088-object-filter-presets.md) — rejected: the object filters stay one flat list; whoever wants a preset already knows what to tick.
 
 ## Finished
 
