@@ -793,11 +793,63 @@ def object_fields(schema, t, blob, pos, length, header_len):
     words = struct.unpack_from(f"<{navail}h", blob, pos + header_len) if navail else ()
     return {name: words[w] for w, name, *_ in layout if 0 <= w < navail}
 
+def tlv_header_ok(fmt, flags, length, typ):
+    """the record test both walks share. How far a record may reach is left to
+    the caller: one is reading inside a region whose end it already knows, the
+    other is deciding where that end is, and a record overrunning an advisory
+    end is real object data in dozens of AO paths."""
+    return (fmt["min_len"] <= length <= fmt["max_len"] and (typ & 0xFFFF) <= fmt["max_type"]
+            and (not (flags & ~7) if fmt["check_flags"] else True))
+
+def contiguous_objects(blob, start, fmt):
+    """object records from `start` while they stay contiguous, and where they
+    stop. Unlike the resyncing walk this refuses to skip, because what follows
+    the region is an index table whose -1 links read as plausible rects."""
+    pos, origins = start, []
+    while pos + fmt["header_len"] <= len(blob):
+        flags, _, length, typ = struct.unpack_from("<BBhI", blob, pos)
+        if not (tlv_header_ok(fmt, flags, length, typ) and pos + length <= len(blob)):
+            break
+        x, y = struct.unpack_from("<hh", blob, pos + fmt["rect_off"])
+        if x >= 0 and y >= 0:
+            origins.append((x, y))
+        pos += length
+    return pos, origins
+
+def discover_path_meta(blob, fmt, cell_w, cell_h):
+    """the table for a path the decomp leaves null, read off the chunk itself.
+    The camera-name table heads it at one 8-byte slot per cell, so the run of
+    slots is the cell count; the objects behind it pick which factorisation of
+    that count is the grid, since every one has to land inside it. Collision
+    would sit between the two and this assumes none: its records stop the walk
+    where the objects should start, and with no origins to narrow it every
+    factorisation stands, so such a path is refused rather than read."""
+    n = 0
+    while (n + 1) * 8 <= len(blob):
+        slot = blob[n * 8:(n + 1) * 8]
+        if any(slot) and not re.fullmatch(r"[A-Z0-9]{4,8}", slot.decode("latin1").strip("\0 ")):
+            break
+        n += 1
+    obj_off = n * 8
+    end, origins = contiguous_objects(blob, obj_off, fmt)
+    fits = [(w, n // w) for w in range(1, n + 1)
+            if n % w == 0 and all(x // cell_w < w and y // cell_h < n // w for x, y in origins)]
+    if len(fits) != 1:
+        raise RuntimeError(f"grid undetermined: {n} cells, {len(origins)} objects, fits {fits}")
+    W, H = fits[0]
+    # the index table behind the objects runs 4 bytes per cell on most paths, so
+    # a tail of that size corroborates the end the walk stopped at; a few chunks
+    # carry slack, which is why this reports rather than refuses
+    if len(blob) - end != n * 4:
+        print(f"    ! objects end at {end}, leaving {len(blob) - end} bytes where a "
+              f"per-cell index table would take {n * 4}")
+    return {"w_units": W * cell_w, "h_units": H * cell_h, "obj_off": obj_off,
+            "idx_off": end, "coll_off": obj_off, "coll_count": 0}
+
 def walk_obj_region(blob, obj_off, region_end, game, level_short):
     """linear walk of the packed TLV region with resync on garbage"""
     fmt = game["tlv"]
     rect_off, payload = fmt["rect_off"], fmt["extra_fn"]
-    min_len, max_len, max_type = fmt["min_len"], fmt["max_len"], fmt["max_type"]
     names, schema = game["tlv_names"], game["schema"]
     tlvs = []
     pos = obj_off
@@ -805,8 +857,7 @@ def walk_obj_region(blob, obj_off, region_end, game, level_short):
     while pos + fmt["header_len"] <= end:
         flags, unk, length, typ32 = struct.unpack_from("<BBhI", blob, pos)
         t = typ32 & 0xFFFF
-        flags_ok = not (flags & ~7) if fmt["check_flags"] else True
-        if min_len <= length <= max_len and t <= max_type and flags_ok:
+        if tlv_header_ok(fmt, flags, length, typ32):
             x1, y1, x2, y2 = struct.unpack_from("<hhhh", blob, pos + rect_off)
             name = names.get(t, f"type{t}")
             extra = payload(t, blob, pos, length, level_short)
@@ -1191,12 +1242,22 @@ def main():
         (out / game["cams_dir"] / short).mkdir(parents=True, exist_ok=True)
 
         cell_w, cell_h = game["geometry"]["worldW"], game["geometry"]["worldH"]
+        # a path the decomp tabulates nothing for reads its own grid; a path it
+        # does is never guessed at, so the two can't disagree
+        path_meta = dict(tables[short])
+        untabulated = sorted(k[1] for k in chunks if k[0] == "Path" and k[1] not in path_meta)
+        for path_id in untabulated:
+            path_meta[path_id] = discover_path_meta(chunks[("Path", path_id)], game["tlv"],
+                                                    cell_w, cell_h)
+        if untabulated:
+            print(f"  no table for {', '.join(f'P{p}' for p in untabulated)}: "
+                  "grid read from the path chunk")
         level_entry = {"id": lid, "short": short, "name": display, "paths": []}
         # paths entered under an ender id belong to the endgame revisit; raw
         # destination ids (decoded with an identity level map) reveal which
         ender_ids = [i for i, s in level_short.items() if s == short and i != lid]
         raw_refs = {}
-        for path_id, meta in sorted(tables[short].items()):
+        for path_id, meta in sorted(path_meta.items()):
             key = ("Path", path_id)
             if key not in chunks:
                 continue

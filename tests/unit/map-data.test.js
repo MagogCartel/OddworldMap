@@ -85,6 +85,7 @@ test("entry paths in the shipped data are exactly the reachable ones", () => {
       R1: [15, 20],
       R2: [11, 19],
       R6: [6],
+      S1: [1],
     },
     AE: {
       BA: [1],
@@ -170,7 +171,7 @@ test("demo paths in the shipped data are exactly the attract-mode copies", () =>
 // the two sides of the destination check, on the objects that motivated it:
 // the Mudanchee Vaults door whose unset level field reads as Necrum Mines,
 // where no door answers to its number, and the transitions to the main-menu
-// level, which name no partner and so are believed off the map
+// level, which name no partner and so are believed wherever they point
 test("the shipped data's dead and genuine off-level links are told apart", () => {
   const ae = load("map_data_ae.json");
   const sv6 = pathIn(ae, "SV", 6);
@@ -231,9 +232,11 @@ test("cross-level follows in the shipped data are exactly the level graph", () =
       "F2 P8 -> F4 P9",
       "F4 P9 -> F2 P8",
       "F4 P9 -> L1 P5",
+      "L1 P1 -> S1 P1",
       "L1 P6 -> D1 P1",
       "L1 P6 -> E2 P4",
       "L1 P6 -> F1 P1",
+      "R1 P19 -> S1 P1",
       "R1 P20 -> E1 P6",
       "R2 P11 -> R6 P6",
       "R6 P6 -> R2 P11",

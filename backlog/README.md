@@ -30,7 +30,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [17. Field glossary](item-017-field-glossary.md) — the same, and endless by nature.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
-- [7. AO menu level](item-007-ao-menu-level.md) — disc machine.
 - [5. LCD marquee text](item-005-lcd-marquee-text.md) — disc machine, and only after the spike says the strings are reachable.
 - [28. Readable units](item-028-readable-units.md), the seconds tier — disc machine, and only after a measured logic rate.
 
@@ -54,13 +53,13 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [**17.** Field glossary](item-017-field-glossary.md) — curating more field meanings; the fields shown by default are nearly all covered, the picker-only long tail is not. _Incremental, one JSON line each._
 - [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — a marquee's actual scrolling text, if the string tables turn out to be extractable. _Spike first, effort unknown._
-- [**7.** AO menu level (S1)](item-007-ao-menu-level.md) — the one completeness hole; the path tables have null metadata, so the grid needs discovering. _Small-medium, disc machine._
 
 ## Code and build
 
 - [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — first paint waits on both games when the visitor is looking at one. _Small-medium._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — one file carrying six unrelated concerns, none importable in isolation. _Medium._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
+- [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the `levels` section is empty in both games, while the tooltip clause a subset build still reaches is not. _Small._
 
 ## Moonshot
 
@@ -99,6 +98,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**7.** AO menu level (S1)](item-007-ao-menu-level.md) — the last level joins the map, its grid read off the chunk because the decomp tabulates none. _2026-08-07._
 - [**54.** Stamp `sw.js`'s `CACHE_NAME` from the builder](item-054-stamp-cache-name.md) — a content hash of the artwork, so the name moves when a PNG does and holds still when none did. _2026-08-07._
 - [**62.** Sweep for diff-justification comments](item-062-diff-justification-comments.md) — nine comments cut across five viewer modules; the tree turned out to be near-compliant, and what it holds instead of diff justifications is restatement. _2026-08-06._
 - [**60.** Search should know place names](item-060-search-place-names.md) — a Places group above the objects, and a code matched by whole words so `zulag 2` is not answered by the `R2` a path sits in. _2026-08-06._

@@ -132,6 +132,58 @@ DECOMP = bm.REPO
 needs_decomp = unittest.skipUnless(DECOMP.exists(), f"no alive_reversing checkout at {DECOMP}")
 
 
+class PathDiscovery(unittest.TestCase):
+    """the grid a path carries when the decomp tabulates none for it"""
+
+    FMT = {k: v for k, v in bm.GAMES["AO"]["tlv"].items() if k != "extra_fn"}
+    CELL_W, CELL_H = 1024, 480
+
+    def chunk(self, slots, objects, tail=b""):
+        """a path chunk: camera-name slots, then 24-byte objects at cell origins"""
+        blob = b"".join(f"AOP01C{i:02d}".encode() if named else b"\0" * 8
+                        for i, named in enumerate(slots))
+        for cx, cy in objects:
+            blob += (struct.pack("<BBhI", 0, 0, 24, 6) + b"\0" * 8
+                     + struct.pack("<hhhh", cx * self.CELL_W, cy * self.CELL_H, 0, 0))
+        return blob + tail
+
+    def discover(self, blob):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            meta = bm.discover_path_meta(blob, self.FMT, self.CELL_W, self.CELL_H)
+        return meta, out.getvalue()
+
+    def test_the_slot_run_ends_at_the_first_thing_that_is_not_a_name(self):
+        # 8 cells, an object in the far corner of a 4x2 -> only 4x2 holds it
+        meta, note = self.discover(self.chunk([1, 0, 1, 0, 0, 1, 0, 1], [(3, 1)]))
+        self.assertEqual((meta["w_units"], meta["h_units"]), (4 * 1024, 2 * 480))
+        self.assertEqual(meta["obj_off"], 64)  # the objects begin where the slots end
+        self.assertEqual(meta["coll_count"], 0)
+        self.assertIn("index table would take 32", note)  # no tail at all: reported
+
+    def test_the_region_end_is_where_the_records_stop(self):
+        blob = self.chunk([1] * 4, [(0, 0), (3, 0)], tail=b"\xff" * 16)
+        end, origins = bm.contiguous_objects(blob, 32, self.FMT)
+        self.assertEqual(end, 32 + 48)  # the -1 tail is an index table, not a record
+        self.assertEqual(origins, [(0, 0), (3 * 1024, 0)])
+        meta, note = self.discover(blob)
+        self.assertEqual(meta["idx_off"], 80)
+        self.assertEqual(note, "")  # a tail of exactly 4 bytes a cell: silent
+
+    def test_an_undetermined_grid_raises_rather_than_picking(self):
+        # 4 cells and one object at the origin fits 1x4, 2x2 and 4x1 alike
+        with self.assertRaises(RuntimeError):
+            self.discover(self.chunk([1] * 4, [(0, 0)]))
+
+    def test_one_level_is_tabulated_nothing_at_all(self):
+        """level scope is as far as this reaches without a disc: spotting a
+        partially tabulated level needs the chunks to say which path is missing"""
+        empty = {gk: {short for short, paths in bm.game_setup(gk)["tables"].items() if not paths}
+                 for gk in ("AO", "AE")}
+        self.assertEqual(empty, {"AO": {"S1"}, "AE": set()},
+                         "a table for S1 would retire the discovery")
+
+
 class CacheStamp(unittest.TestCase):
     """the artwork cache name answers to the artwork and to nothing else"""
 

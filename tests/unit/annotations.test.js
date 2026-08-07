@@ -121,10 +121,10 @@ test("pathNickname: hit, miss, and an entry carrying nothing else", () => {
 });
 
 test("levelInfo: hit, miss, and unloaded game", () => {
-  setAnnotations({ AO: { levels: { S1: { name: "Main Menu" } } } });
-  assert.deepEqual(levelInfo("AO", "S1"), { name: "Main Menu" });
+  setAnnotations({ AO: { levels: { ZZ: { name: "Somewhere Else" } } } });
+  assert.deepEqual(levelInfo("AO", "ZZ"), { name: "Somewhere Else" });
   assert.equal(levelInfo("AO", "R1"), null);
-  assert.equal(levelInfo("AE", "S1"), null);
+  assert.equal(levelInfo("AE", "ZZ"), null);
   setAnnotations(null);
 });
 

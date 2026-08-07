@@ -428,7 +428,7 @@ const trustData = (doorNo) => dataset([level("R1", path(15, [])), level("R2", AW
 const HOME = { short: "R1" };
 
 test("destTrusted: a link naming no partner is trusted wherever it points", () => {
-  const d = { lv: "S1", pa: 1, ca: null, target: null };
+  const d = { lv: "ZZ", pa: 1, ca: null, target: null };
   assert.equal(destTrusted(d, HOME, trustData(1), SYNTH_GEOMETRY), true);
 });
 
@@ -470,7 +470,7 @@ test("computeEntryPaths: a dead destination marks no arrival", () => {
   assert.deepEqual([...entries(link, 7).R2], [1]);
   assert.deepEqual(entries(link, 3), {}); // the partner isn't there
   assert.deepEqual(entries({ ...link, to_path: 9 }, 7), {}); // nor is the path
-  assert.deepEqual(entries({ to_level: "S1", to_path: 1 }, 7), {}); // nor the level
+  assert.deepEqual(entries({ to_level: "ZZ", to_path: 1 }, 7), {}); // nor the level
 });
 
 test("computeEntryPaths: cross-level links and AbeStart mark entries", () => {

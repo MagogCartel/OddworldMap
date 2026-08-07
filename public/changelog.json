@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-07",
+   "tag": "new",
+   "title": "Oddysee's main menu joins the map",
+   "detail": "Every level of both games is now on the map. Oddysee's menu level was the one hole: the game builds it from eighteen screens of its own, but the layout notes the map reads its grids from say nothing about it, so it was skipped. Its grid is now read off the level itself, and the two transitions out of Rupture Farms and Monsaic Lines that lead there (the ones the attract-mode demos take when they finish) follow like any other link instead of reporting a place the map could not show you."
+  },
+  {
    "date": "2026-08-06",
    "tag": "new",
    "title": "Search finds places, not just what is in them",

@@ -1,11 +1,6 @@
 {
  "AO": {
-  "levels": {
-   "S1": {
-    "name": "Main Menu",
-    "note": "The game's main menu. The attract-mode demos return to it when they finish, which is why anything points here at all."
-   }
-  },
+  "levels": {},
   "paths": {
    "R1": {
     "15": "Before Packaging",
@@ -67,6 +62,11 @@
    },
    "R6": {
     "6": "To the Board Room"
+   },
+   "S1": {
+    "1": {
+     "note": "The game's main menu. The attract-mode demos return here when they finish, which is why anything on the map leads here at all."
+    }
    }
   }
  },

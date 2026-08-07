@@ -351,8 +351,8 @@ const shownDest = (t) => {
 };
 
 // a destination is followable only when its level AND path are on the map:
-// a couple of transitions point at levels the viewer doesn't render (AO's S1
-// menu), and those name no partner to check
+// dozens of Exoddus one-way links name a placeholder path their level does not
+// hold, and a link naming no partner has nothing for destTrusted to check
 function followableDest(t) {
   const d = shownDest(t);
   return d && pathIn(state.data, d.lv, d.pa) ? d : null;
