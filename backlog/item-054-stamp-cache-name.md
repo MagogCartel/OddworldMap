@@ -1,6 +1,6 @@
 # 54. Stamp `sw.js`'s `CACHE_NAME` from the builder
 
-**Status:** open · **Effort:** small (builder + docs) · **Where:** builder; verifying the bump needs a rebuild · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-07 · **Effort:** small (builder + docs) · **Where:** builder; verifying the bump needs a rebuild · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -32,9 +32,17 @@ Because both games share one service worker, the stamp must cover `cams/ao` **an
 
 This is the point of the change: in the same commit, delete the "bump `CACHE_NAME`" sentence from CLAUDE.md and README.md and replace it with a note that the builder stamps it. Leaving the manual instruction in place next to the automation is worse than either alone. [43](item-043-cam-artwork-caching.md) records the obligation as the standing cost of that feature, so it wants the same edit.
 
-## Optional follow-up, own commit
+## The loop the stamp alone leaves open
 
-A CI check that `sw.js`'s stamp matches the committed `cams/` tree would close the loop for a hand-edited PNG. Only worth it if a manual PNG edit is ever plausible; today it is not, so the builder-side stamp is enough.
+A check that `sw.js`'s stamp matches the committed `cams/` tree was first dismissed here as only mattering for a hand-edited PNG, which nothing plausible does. That weighed the wrong risk. The likelier slip is a **partial commit** — artwork staged, `sw.js` not — which the per-concern staging this repo prescribes makes easy to do, and which the builder cannot catch because it has already done its part correctly. So the check landed after all: `cams_stamp` over `public/cams` against the committed line, no disc and no decomp, well under a second, in `tools/tests` with the rest.
+
+## Shipped
+
+`stamp_cache_name` hashes `public/cams` — every PNG's path and the sha1 of its bytes, sorted — and rewrites the one `CACHE_NAME` line, only when the hash moved. The name is `cams-` plus twelve hex digits, so the worker's `startsWith("cams-")` cleanup still collects the bucket it replaces and still spares the `cams-on` marker.
+
+Two guards the sketch did not ask for. The rewrite fails the build when it finds no line of that exact shape, since silently stamping nothing is the failure this item exists to kill; and a scratch `--out` holds no `sw.js`, so a verification build stamps nothing and stays side-effect-free. Hashing 2,846 files costs well under a second — the sketch budgeted seconds.
+
+Measured 2026-08-07: the committed tree stamps `cams-520477b56197`. Re-running the same build, building the other game, and a `--levels R2` subset all reproduce it and leave `sw.js` untouched; changing one byte of one PNG moves it to `cams-fa4e46304413` and restoring the byte returns it, which is the content-addressing the ordering trap needs. Unit tests cover the bytes-and-path sensitivity, the single-line rewrite and the loud failure.
 
 ## Verify
 

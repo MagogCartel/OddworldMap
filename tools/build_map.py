@@ -15,6 +15,7 @@ Supports both games:
 """
 import argparse
 import gzip
+import hashlib
 import json
 import os
 import re
@@ -1059,9 +1060,38 @@ def ensure_tools():
                     str(HERE / "cam2rgba.cpp"), str(HERE / "PSXMDECDecoder.cpp"),
                     "-o", str(CAM2RGBA)], check=True)
 
-def print_build_summary(game_key, built, data_file, all_levels, cam_stats):
+CACHE_NAME_LINE = re.compile(r'(?m)^const CACHE_NAME = "[^"]*";$')
+
+def cams_stamp(cams_dir):
+    """name the artwork cache after the artwork, so regenerating a PNG expires it
+    and a build that decodes nothing leaves every visitor's copy alone. One worker
+    serves both games, so the stamp answers to either tree."""
+    h = hashlib.sha1()
+    for rel in sorted(p.relative_to(cams_dir).as_posix() for p in cams_dir.rglob("*.png")):
+        h.update(rel.encode())
+        h.update(hashlib.sha1((cams_dir / rel).read_bytes()).digest())
+    return f"cams-{h.hexdigest()[:12]}"
+
+def require_stampable(sw_file):
+    """a worker that cannot be stamped fails before the build spends its time,
+    not after it has written everything except the line it could not find"""
+    if not CACHE_NAME_LINE.search(sw_file.read_text()):
+        sys.exit(f"{sw_file.name}: no CACHE_NAME line to stamp")
+
+def stamp_cache_name(sw_file, cams_dir):
+    name = cams_stamp(cams_dir)
+    src = sw_file.read_text()
+    new, hits = CACHE_NAME_LINE.subn(f'const CACHE_NAME = "{name}";', src, count=1)
+    if not hits:  # returning a name nothing carries would report a stamp that isn't there
+        sys.exit(f"{sw_file.name}: no CACHE_NAME line to stamp")
+    if new != src:
+        sw_file.write_text(new)
+    return name
+
+def print_build_summary(game_key, built, data_file, all_levels, cam_stats, cache_name):
     """report card for the finished build: geometry counts, object-field
-    coverage, the raw= health line, and the data file's on-disk + gzip size.
+    coverage, the raw= health line, the data file's on-disk + gzip size, and the
+    name the artwork cache now carries.
     `built` is the levels built this run — a subset build merges into a larger
     file, whose full level count is reported alongside."""
     paths = sum(len(L["paths"]) for L in built)
@@ -1091,6 +1121,8 @@ def print_build_summary(game_key, built, data_file, all_levels, cam_stats):
     row("raw=", f"{sum(raw.values())} undecoded across {len(raw)} types {raw} — will fail the invariant test"
         if raw else "0 (every object decoded)")
     row("data file", f"{data_file.name}  {len(blob) / 1e6:.1f} MB raw / {len(gzip.compress(blob)) // 1024} KB gzip")
+    if cache_name:
+        row("cam cache", cache_name)
 
 def main():
     ap = argparse.ArgumentParser()
@@ -1119,6 +1151,8 @@ def main():
 
     ensure_tools()
     out = Path(args.out)
+    if (out / "sw.js").exists():
+        require_stampable(out / "sw.js")
     (out / game["cams_dir"]).mkdir(parents=True, exist_ok=True)
     tmpdir = HERE / ".tmp"
     tmpdir.mkdir(exist_ok=True)
@@ -1259,8 +1293,11 @@ def main():
     data_file.write_text(json.dumps(data, indent=1))
     write_field_types(args.game, out)  # decomp-derived sidecars, kept in sync each build
     write_enum_labels(args.game, out)
+    sw_file = out / "sw.js"
+    # a scratch --out holds no worker, so a verification build stamps nothing
+    cache_name = stamp_cache_name(sw_file, out / "cams") if sw_file.exists() else None
     print(f"\ndone -> {data_file}")
-    print_build_summary(args.game, built_this_run, data_file, data["levels"], cam_stats)
+    print_build_summary(args.game, built_this_run, data_file, data["levels"], cam_stats, cache_name)
 
 if __name__ == "__main__":
     main()

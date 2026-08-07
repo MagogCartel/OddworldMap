@@ -112,7 +112,7 @@ export ODDWORLD_DISC_AE="$HOME/games/Exoddus (Disc 1).bin:$HOME/games/Exoddus (D
 
 The script needs Python 3.8 or newer, compiles `tools/cam2rgba` automatically on first run (needs a C++17 compiler) and requires [oxipng](https://github.com/oxipng/oxipng) — every emitted PNG is losslessly recompressed so rebuilds stay byte-identical to the committed images. Level/path table layouts are cached in [tools/data/pathdata_ao.json](tools/data/pathdata_ao.json); they only need regenerating (which requires an [alive_reversing](https://github.com/AliveTeam/alive_reversing) checkout as a sibling directory) if that cache is deleted.
 
-If a rebuild changes any committed cam PNG, bump `CACHE_NAME` in [sw.js](public/sw.js) in the same commit: visitors who opted into artwork caching serve cams cache-first from a service worker and never revalidate them, so without the bump they keep the old images indefinitely.
+A rebuild that changes any committed cam PNG also rewrites `CACHE_NAME` in [sw.js](public/sw.js), which the build summary prints — commit that line with the artwork. It is a content hash of the images, and visitors who opted into artwork caching serve cams cache-first from a service worker and never revalidate them, so it is what stops them keeping the old images indefinitely.
 
 ## How it works
 

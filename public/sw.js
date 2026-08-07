@@ -1,8 +1,9 @@
 // Service worker: persistent cache for the cam artwork only. GitHub Pages
 // re-stamps every file's HTTP validators on deploy, so without this each
-// deploy makes repeat visitors re-download all PNGs. Cam images are
-// byte-deterministic build outputs. Bump CACHE_NAME if ever regenerated.
-const CACHE_NAME = "cams-v1";
+// deploy makes repeat visitors re-download all PNGs.
+// The builder writes this line: it is a content hash of the artwork, so a
+// regenerated PNG expires the cache and an unchanged build leaves it alone.
+const CACHE_NAME = "cams-520477b56197";
 // opt-in marker bucket, created/deleted by the page. Checked per fetch:
 // unregistration can't stop a controlling worker until reload, and a
 // module flag wouldn't survive an idle-worker restart

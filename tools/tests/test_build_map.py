@@ -132,6 +132,54 @@ DECOMP = bm.REPO
 needs_decomp = unittest.skipUnless(DECOMP.exists(), f"no alive_reversing checkout at {DECOMP}")
 
 
+class CacheStamp(unittest.TestCase):
+    """the artwork cache name answers to the artwork and to nothing else"""
+
+    def worker(self, tmp, files):
+        cams = Path(tmp) / "cams"
+        for rel, data in files.items():
+            (cams / rel).parent.mkdir(parents=True, exist_ok=True)
+            (cams / rel).write_bytes(data)
+        sw = Path(tmp) / "sw.js"
+        sw.write_text('// lead\nconst CACHE_NAME = "cams-v1";\nconst ENABLED = "cams-on";\n')
+        return sw, cams
+
+    def test_bytes_and_path_both_reach_the_stamp(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            sw, cams = self.worker(tmp, {"ao/L/A.png": b"a", "ae/L/B.png": b"b"})
+            base = bm.stamp_cache_name(sw, cams)
+            self.assertEqual(base, bm.stamp_cache_name(sw, cams))
+            (cams / "ao/L/A.png").write_bytes(b"c")
+            self.assertNotEqual(base, bm.stamp_cache_name(sw, cams))
+            (cams / "ao/L/A.png").write_bytes(b"a")
+            self.assertEqual(base, bm.stamp_cache_name(sw, cams))  # content, not a counter
+            (cams / "ao/L/A.png").rename(cams / "ao/L/Z.png")
+            self.assertNotEqual(base, bm.stamp_cache_name(sw, cams))
+
+    def test_it_rewrites_the_one_line(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            sw, cams = self.worker(tmp, {"ao/L/A.png": b"a"})
+            name = bm.stamp_cache_name(sw, cams)
+            self.assertIn(f'const CACHE_NAME = "{name}";', sw.read_text())
+            self.assertIn('const ENABLED = "cams-on";', sw.read_text())
+
+    def test_a_worker_it_cannot_stamp_fails_the_build(self):
+        # both the early precondition and the write itself, which must not report
+        # a stamp it did not manage to write
+        with tempfile.TemporaryDirectory() as tmp:
+            sw, cams = self.worker(tmp, {"ao/L/A.png": b"a"})
+            sw.write_text("const CACHE_NAME = 'cams-v1';\n")  # not the shape it writes
+            with self.assertRaises(SystemExit):
+                bm.require_stampable(sw)
+            with self.assertRaises(SystemExit):
+                bm.stamp_cache_name(sw, cams)
+
+    def test_the_committed_worker_names_the_committed_artwork(self):
+        self.assertIn(f'const CACHE_NAME = "{bm.cams_stamp(bm.SITE / "cams")}";',
+                      (bm.SITE / "sw.js").read_text(),
+                      "sw.js and public/cams disagree — commit the stamped line with the artwork")
+
+
 class Sidecars(unittest.TestCase):
     """the committed sidecars must be reproducible from the sources they claim"""
 

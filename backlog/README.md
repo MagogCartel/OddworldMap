@@ -59,7 +59,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Code and build
 
 - [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — first paint waits on both games when the visitor is looking at one. _Small-medium._
-- [**54.** Stamp `sw.js`'s `CACHE_NAME` from the builder](item-054-stamp-cache-name.md) — three documents describing a manual step is a missing mechanism. _Small._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — one file carrying six unrelated concerns, none importable in isolation. _Medium._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 
@@ -100,6 +99,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**54.** Stamp `sw.js`'s `CACHE_NAME` from the builder](item-054-stamp-cache-name.md) — a content hash of the artwork, so the name moves when a PNG does and holds still when none did. _2026-08-07._
 - [**62.** Sweep for diff-justification comments](item-062-diff-justification-comments.md) — nine comments cut across five viewer modules; the tree turned out to be near-compliant, and what it holds instead of diff justifications is restatement. _2026-08-06._
 - [**60.** Search should know place names](item-060-search-place-names.md) — a Places group above the objects, and a code matched by whole words so `zulag 2` is not answered by the `R2` a path sits in. _2026-08-06._
 - [**75.** A schema layout override can go stale unnoticed](item-075-stale-schema-layout-override.md) — an entry naming a type the game lacks, or one the parser now derives, fails the build; the schema had to be resolved after the type names for the first check to be possible. _2026-08-06._
