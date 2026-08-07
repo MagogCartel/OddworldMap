@@ -143,6 +143,8 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
 ## Conventions
 
 - One concern per commit; split bundled diffs before committing.
+- Everything committed reads as its final state, written once — code comments, docs, backlog items, commit messages and the shape of history alike. A follow-up that reshapes something still unpushed folds into the commit that introduced it, message rewritten to describe only what ships, rather than landing as an add-then-amend pair; narration of rounds, actors and supersessions belongs in no committed text. The test: would it read the same if one author had written it in one sitting?
+- A fixup commit targets the commit that introduced the text it corrects and sits directly after it, so an autosquash is a pure fold — a fixup authored on top of later commits carries their lines as context and conflicts when hoisted past them. After any history rewrite, diff the old head against the new (only the intended change may appear) and dry-run the autosquash on a throwaway branch before handing the branch over.
 - Prose files (README, docs, this file) are never manually line-wrapped — let lines run long.
 - A user-facing change ships its docs in the same commit — update the relevant README.md / CLAUDE.md, and add its `changelog.json` entry. Documenting the change is part of the same concern, not a follow-up commit.
 - Changelog entries are curated, not generated: draft with `tools/changelog.py`, then rewrite into a player-facing headline + detail. The feed is a date-stamped journal of the site, not a highlights reel — any user-visible change, however small, is welcome on it; what stays out is internal work players can't perceive (refactors, tooling, CI).

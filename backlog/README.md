@@ -6,6 +6,8 @@ One id space, minted once and never reused or renumbered, numbered from `1` with
 
 An item earns a file when the gap between finding it and resolving it is long enough for the reasoning to be forgotten, or when the answer is "no". A nit fixed within the hour is a commit message, not an entry here. A review is not a filing queue either: what it finds reaches this folder after it has been triaged and never before, because a review reports everything it notices and most of that is a nit or a question whose answer already exists.
 
+Every item speaks in one voice — its author's — and describes what is, never the rounds that got it there. While the work is still unpushed, a finding that reshapes an item reweaves its text as if always known: an amendment section beside a superseded paragraph is the diff-justification rule breaking out in prose, and no item narrates a dialogue of actors trading questions and corrections. Once history is public an item may grow dated additions — a later finding under *Grown since filing*, a measurement gone stale — but they carry the same voice: name the gap, not the meeting that found it. Drift between sketch and shipped is recorded as fact ("the pairing is by id, not by nearness"), which is the *Shipped* section's whole job; where a finding came from is the **Filed:** line's.
+
 A **Status:** opens with one of the following words and qualifies itself afterwards:
 
 - `open`
