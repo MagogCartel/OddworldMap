@@ -762,25 +762,51 @@ body.embed #openSiteBtn {
   display: block;
 }
 
+/* the place chip and the buttons riding beside it: the row is the positioned
+   box (anchored clear of both corner clusters), so the chip can grow and
+   shrink without anything tracking its width; only the buttons take clicks */
+#chipRow {
+  position: absolute;
+  top: 10px;
+  left: 54px;
+  right: 98px;
+  z-index: var(--z-map-chrome);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none;
+}
+#chipRow > * {
+  pointer-events: auto;
+}
+#chipRow .iconbtn,
+#placeBtn {
+  position: static;
+}
+/* the chip does all the shrinking; a squeezed row must not thin the buttons */
+#chipRow .iconbtn {
+  flex: none;
+}
 /* the place chip: which level and path the map is showing, and the way into
    that path's details */
 #placeBtn {
-  left: 54px;
   display: flex;
   align-items: center;
   gap: 7px;
-  max-width: min(340px, calc(100% - 152px));
+  min-width: 0;
+  max-width: 340px;
   padding: 0 10px;
   color: var(--text);
   font: inherit;
   font-size: 12px;
 }
-#placeBtn[hidden] {
+#placeBtn[hidden],
+#shuffleBtn[hidden] {
   display: none;
 }
 /* the route bar owns the top row — it is wider than the center of a phone
-   screen, so the chip and its panel step down while one is up */
-#main:has(#routeBar:not([hidden])) #placeBtn {
+   screen, so the chip row and the panel step down while one is up */
+#main:has(#routeBar:not([hidden])) #chipRow {
   top: 52px;
 }
 #main:has(#routeBar:not([hidden])) #placePanel {
@@ -1132,7 +1158,7 @@ kbd {
     width: 100%;
     max-height: 85vh;
   }
-  body.menu-open #placeBtn,
+  body.menu-open #chipRow,
   body.menu-open #placePanel {
     display: none;
   }

@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-08",
+   "tag": "new",
+   "title": "A shuffle button drops you somewhere odd",
+   "detail": "Beside the place chip in the map's corner sits a new shuffle button: one press and the map takes you to a random screen; either game, any level, weighted by nothing but how many screens a place has. The chip tells you where you landed, and the browser's back button brings you home. Exoddus' demo copies stay out of the draw unless the demo-paths setting lists them."
+  },
+  {
+   "date": "2026-08-08",
    "tag": "improved",
    "title": "Measurements snap to what you aim at",
    "detail": "The ruler's ends and the route planner's waypoints now stick to the nearest object center (and to collision-line ends while those are shown) within a few screen pixels. Door-to-door distances and mine-to-ledge legs come out exact instead of eyeballed, and since the radius follows the screen rather than the world, zooming in shrinks it away whenever free placement is what you want."

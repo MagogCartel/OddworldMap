@@ -36,6 +36,15 @@ export const EXTERNAL_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="curren
   <line x1="10" y1="14" x2="21" y2="3" />
 </svg>`;
 
+// Shuffle — the somewhere-odd (random screen) button.
+export const SHUFFLE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <polyline points="16 3 21 3 21 8" />
+  <line x1="4" y1="20" x2="21" y2="3" />
+  <polyline points="21 16 21 21 16 21" />
+  <line x1="15" y1="15" x2="21" y2="21" />
+  <line x1="4" y1="4" x2="9" y2="9" />
+</svg>`;
+
 // Newspaper — the What's New button.
 export const NEWSPAPER_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <rect x="3.5" y="5" width="17" height="14" rx="1.5" />

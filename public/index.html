@@ -162,17 +162,27 @@
         aria-label="Open in Oddworld Map"
         title="Open in Oddworld Map"
       ></a>
-      <button
-        id="placeBtn"
-        type="button"
-        hidden
-        title="Path details"
-        aria-expanded="false"
-        aria-controls="placePanel"
-      >
-        <span id="placeCode"></span><span id="placeName"></span
-        ><span id="placeDot" aria-hidden="true"></span>
-      </button>
+      <div id="chipRow">
+        <button
+          id="placeBtn"
+          type="button"
+          hidden
+          title="Path details"
+          aria-expanded="false"
+          aria-controls="placePanel"
+        >
+          <span id="placeCode"></span><span id="placeName"></span
+          ><span id="placeDot" aria-hidden="true"></span>
+        </button>
+        <button
+          id="shuffleBtn"
+          class="iconbtn chrome"
+          type="button"
+          hidden
+          aria-label="Somewhere odd — jump to a random screen"
+          title="Somewhere odd — jump to a random screen"
+        ></button>
+      </div>
       <div id="placePanel" hidden aria-live="polite"></div>
       <div id="tip"></div>
       <div id="camPanel" hidden>

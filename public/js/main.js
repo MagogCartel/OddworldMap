@@ -14,6 +14,7 @@ import { initFieldPanel } from "./fieldpanel.js";
 import "./anchortip.js";
 import "./whatsnew.js";
 import "./about.js";
+import "./shuffle.js";
 
 initSettings();
 initFieldPanel();
