@@ -56,7 +56,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does: switch-id edges from levers and gates to the doors, walls and drills they drive. _Large, anywhere._
 - [**85.** Cross-path route planner](item-085-cross-path-routes.md) — a route that survives following a door, totalled per segment and overall. _Medium-large, anywhere._
 - [**86.** World graph](item-086-world-graph.md) — every path a node, every transition an edge: the metro map of each game. _Large, anywhere._
-- [**87.** By the numbers](item-087-by-the-numbers.md) — pick objects, read their counts per screen/path/level/game as you browse; planning pass first. _Medium, anywhere._
 
 ## Content depth
 
@@ -109,6 +108,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**87.** By the numbers](item-087-by-the-numbers.md) — pick object types, read their counts per screen/path/level/game as you browse; the comparisons the vision sketched stayed out, counting questions being the ones people bring. _2026-08-08._
 - [**7.** AO menu level (S1)](item-007-ao-menu-level.md) — the last level joins the map, its grid read off the chunk because the decomp tabulates none. _2026-08-07._
 - [**54.** Stamp `sw.js`'s `CACHE_NAME` from the builder](item-054-stamp-cache-name.md) — a content hash of the artwork, so the name moves when a PNG does and holds still when none did. _2026-08-07._
 - [**62.** Sweep for diff-justification comments](item-062-diff-justification-comments.md) — nine comments cut across five viewer modules; the tree turned out to be near-compliant, and what it holds instead of diff justifications is restatement. _2026-08-06._

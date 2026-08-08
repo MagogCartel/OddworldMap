@@ -69,6 +69,13 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - the route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports; switching paths clears it
   - should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing
 
+### By the numbers
+
+- the **By the numbers** button under the Objects filters opens a small panel that counts object types you pick at every granularity at a glance: the screen under the view's center, the current path, the level, the whole game
+- the numbers follow you as you browse: switch path, follow a door, even press shuffle, and the panel re-derives itself
+- counting reads the data rather than the display (a type whose category filter is off still counts, the way search still finds it) and follows the demo-paths setting, noting below the table what the hidden demo copies hold
+- click a type's name in the table to stop counting it
+
 ### Sharing and embedding
 
 - the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view) always reflects the current view, including any plotted route

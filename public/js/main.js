@@ -15,6 +15,7 @@ import "./anchortip.js";
 import "./whatsnew.js";
 import "./about.js";
 import "./shuffle.js";
+import "./numbers.js";
 
 initSettings();
 initFieldPanel();

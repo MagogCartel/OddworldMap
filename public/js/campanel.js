@@ -5,7 +5,7 @@
 import { esc } from "./util.js";
 import { fieldEntries, fieldHelp } from "./fields.js";
 import { CATS, catOf } from "./config.js";
-import { $ } from "./dom.js";
+import { $, narrowMQ } from "./dom.js";
 import { state, dX, dY } from "./state.js";
 import { cellAt } from "./model.js";
 import { setHighlight } from "./render.js";
@@ -97,8 +97,14 @@ export function openCamPanel(x, y, focus = null) {
   listedPath = path;
   lastOpen = { x, y, focus };
   panel.hidden = false;
+  window.dispatchEvent(new CustomEvent("float-opened", { detail: { id: "camPanel" } }));
   body.querySelector(".active")?.scrollIntoView({ block: "nearest" }); // after unhide: needs layout
 }
+
+// narrow screens hold one floating panel at a time — two bottom sheets stack
+window.addEventListener("float-opened", (e) => {
+  if (narrowMQ.matches && e.detail.id !== "camPanel" && !panel.hidden) closeCamPanel();
+});
 
 $("camPanelClose").onclick = closeCamPanel;
 // close when the listed path is gone; same-path re-selections (every pushed

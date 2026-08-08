@@ -281,7 +281,8 @@ body.fullnames .btnrow button {
 #toggles .checkrow {
   padding: 2.5px 2px;
 }
-#exportBtn {
+#exportBtn,
+#numbersBtn {
   margin: 6px 12px 2px;
   background: var(--panel2);
   color: var(--text);
@@ -292,7 +293,8 @@ body.fullnames .btnrow button {
   font-size: 12px;
   width: calc(100% - 24px);
 }
-#exportBtn:hover {
+#exportBtn:hover,
+#numbersBtn:hover {
   border-color: var(--accent);
 }
 #sbFooter {
@@ -529,13 +531,112 @@ body.page-zoomed #cv {
   text-underline-offset: 2px;
   cursor: help;
 }
-#camPanelClose {
+#camPanelClose,
+#numbersClose {
   font-size: 16px;
   line-height: 18px;
 }
 #camPanelBody {
   overflow-y: auto;
   padding: 2px 4px 8px;
+}
+/* By the numbers: counts of the picked object types at every granularity,
+   following the selection and the view; the screen list keeps bottom-left,
+   this keeps bottom-right, so a desktop can hold both at once */
+#numbersPanel {
+  position: absolute;
+  right: 10px;
+  bottom: 34px;
+  z-index: var(--z-map-overlay);
+  width: 300px;
+  max-width: calc(100% - 20px);
+  max-height: 60%;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-float);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow-float);
+}
+#numbersPanel[hidden] {
+  display: none;
+}
+#numbersBody {
+  flex: none;
+  padding: 8px 10px 7px;
+  font-size: 12px;
+}
+.np-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(4, auto);
+  gap: 2px 9px;
+  align-items: baseline;
+}
+.np-h {
+  color: var(--dim);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  text-align: right;
+}
+/* a row's name doubles as its remove button */
+.np-name {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--text);
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.np-name:hover,
+.np-name:focus-visible {
+  color: var(--accent);
+  text-decoration: line-through;
+  outline: none;
+}
+.np-n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.np-none,
+.np-demo {
+  color: var(--dim);
+}
+.np-demo {
+  margin-top: 6px;
+  font-size: 11px;
+}
+#numbersPick {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 8px 10px;
+  border-top: 1px solid var(--line);
+}
+#numbersPick > input {
+  width: 100%;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 5px 9px;
+  font-size: 12px;
+  outline: none;
+}
+#numbersPick > input:focus {
+  border-color: var(--accent);
+}
+#numbersTypes {
+  overflow-y: auto;
+  margin-top: 5px;
+}
+#numbersTypes .checkrow {
+  padding: 2.5px 2px;
+  font-size: 12px;
 }
 /* the small heading that divides a list, and the full-width row that acts as
    a button within one */
@@ -1170,7 +1271,8 @@ kbd {
     max-width: none;
   }
   /* the screen list becomes a bottom sheet: the upper map stays visible */
-  #camPanel {
+  #camPanel,
+  #numbersPanel {
     left: 0;
     right: 0;
     bottom: 0;

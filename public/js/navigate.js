@@ -271,6 +271,8 @@ export function scheduleHash(push) {
   clearTimeout(hashTimer);
   hashTimer = setTimeout(
     () => {
+      // every pan, zoom and selection settles through here, debounced
+      window.dispatchEvent(new CustomEvent("view-changed"));
       const h = viewHash();
       if (!inEmbed()) rememberLocation(h);
       if (h === location.hash) return;

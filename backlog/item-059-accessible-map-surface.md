@@ -36,6 +36,10 @@ Content: game, level (full name), path, its curated or in-game name if any, and 
 
 [14](item-014-polish-pile.md)'s off-screen tab stops were the third leg of this problem and have since shipped, so that part is done.
 
+## Grown since filing
+
+The By-the-numbers panel ([87](item-087-by-the-numbers.md)) brought two more: its count grid is styled spans carrying no table semantics for a screen reader, and `#numbersBtn` opens a panel without the `aria-expanded` / `aria-controls` pair `#placeBtn` models.
+
 ## Verify
 
 VoiceOver on macOS or NVDA on Windows: load the page, tab to the map, switch paths, confirm the announcement fires once per real change and reads sensibly. Then unplug the mouse and try to answer "what is on screen R1 P15 C04" using only the keyboard.

@@ -3,6 +3,12 @@
   {
    "date": "2026-08-08",
    "tag": "new",
+   "title": "Count anything, everywhere, at a glance",
+   "detail": "A new \"By the numbers\" button under the Objects filters opens a panel that counts. Pick up to six object types and read how many stand on the screen under your view, on the current path, in the level, and across the whole game. The figures re-derive themselves as you switch paths, follow doors or shuffle. Counts read the data rather than the display, so a type whose filter is off still counts, and the demo-paths setting is honoured with a note on what the hidden copies hold. Click a type's name in the table to drop it."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "new",
    "title": "A shuffle button drops you somewhere odd",
    "detail": "Beside the place chip in the map's corner sits a new shuffle button: one press and the map takes you to a random screen; either game, any level, weighted by nothing but how many screens a place has. The chip tells you where you landed, and the browser's back button brings you home. Exoddus' demo copies stay out of the draw unless the demo-paths setting lists them."
   },

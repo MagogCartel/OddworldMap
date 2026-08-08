@@ -124,6 +124,12 @@
         >
       </h2>
       <div class="filters" id="filterBox"></div>
+      <button
+        id="numbersBtn"
+        title="count picked object types at every granularity — screen, path, level, game"
+      >
+        By the numbers
+      </button>
       <!-- populated by fieldpanel.js; shown only when "Show more object fields" is on -->
       <div id="fieldPanel" hidden>
         <h2>Fields</h2>
@@ -191,6 +197,23 @@
           <button id="camPanelClose" class="closebtn" aria-label="Close">×</button>
         </div>
         <div id="camPanelBody"></div>
+      </div>
+      <div id="numbersPanel" hidden>
+        <div class="cp-head">
+          <span>By the numbers</span>
+          <button id="numbersClose" class="closebtn" aria-label="Close">×</button>
+        </div>
+        <div id="numbersBody"></div>
+        <div id="numbersPick">
+          <input
+            id="numbersFilter"
+            type="search"
+            placeholder="find an object type…"
+            autocomplete="off"
+            aria-label="Filter object types"
+          />
+          <div id="numbersTypes"></div>
+        </div>
       </div>
       <div id="help">drag / arrows = pan · wheel / ± = zoom · hover = inspect · ? = shortcuts</div>
       <div id="hud"></div>

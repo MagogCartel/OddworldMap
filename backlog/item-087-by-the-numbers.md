@@ -1,6 +1,6 @@
 # 87. By the numbers — an object-count explorer
 
-**Status:** open — needs its planning pass before anyone builds it · **Effort:** medium (viewer) · **Where:** anywhere · **Filed:** 2026-08-07 feature-ideation sweep
+**Status:** shipped 2026-08-08 · **Effort:** medium (viewer) · **Where:** anywhere · **Filed:** 2026-08-07 feature-ideation sweep
 
 ## Why
 
@@ -16,8 +16,18 @@ Not a static trivia card. Pick the object type or types you care about, then rea
 - **Selection model**: one type, a multi-type set, or whole categories too — and where the picking UI lives (the Fields picker's per-type rows are the near pattern).
 - **Granularity rows**: always show all four tiers, or let the user pick; what "screen" means while zoomed out (the camera under the view centre, or none).
 - **Counting rules**: how demo paths (respect the setting? say what's excluded?), the object-category filters, and background-plane objects figure into a count — a number must say what it covers.
-- **Phase 1 scope**: the counting core alone; ranks, sizes and superlatives stay here until it has proven itself.
+- **Scope**: the counting core alone, or the comparisons (ranks, sizes, superlatives) with it — a rank column is ink a number has to earn.
 
 ## Watch out
 
 - Counts state what the raw objects say and nothing more: a Mudokon count is TLVs named Mudokon, not "rescuable Mudokons" — [71](item-071-mudokon-rescue-census.md) closed on exactly that distinction and stays closed.
+
+## Decided
+
+A floating panel on the screen list's pattern — live-follow is the point, and it is the one surface that survives it on phones; a multi-type picker capped at six; all four tiers as fixed columns, the screen tier reading the view center and showing an em-dash when the center sits over empty margin. Counting ignores the category display filters (search's rule: filters affect display, not the data) and follows the demo-paths setting, tallying what hidden paths hold as a footnote. The counting core alone ships; the comparisons stay out.
+
+## Shipped
+
+_Count anything, everywhere, at a glance_: `js/census.js` (the DOM-free counting core, unit-tested; screens bucket by draw-space center so the panel and the screen list agree) and `js/numbers.js` (the panel, bottom-right where the screen list keeps bottom-left, so a desktop holds both; on narrow both are bottom sheets, so a `float-opened` event lets whichever opens close the other). The screen tier follows a new `view-changed` event dispatched from `scheduleHash`'s debounced timer — the one funnel every pan, zoom and selection settles through — rather than any pointer event. A row's name doubles as its remove button.
+
+The comparisons the vision sketched — ranks, sizes, "the most of anywhere" — stayed out, and no item carries them: the panel answers the counting questions people actually bring, the one superlative that mattered (the nickname evidence) is already pinned by the annotations tests, and a rank column is permanent ink for a question nobody has asked. Should demand ever show up, it keys off the same census walk, and the demo footnote already models how a qualified number should read.
