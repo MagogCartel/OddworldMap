@@ -3,6 +3,12 @@
   {
    "date": "2026-08-08",
    "tag": "improved",
+   "title": "Search can name a single screen",
+   "detail": "The Places group answered to a level or a path; now it goes one screen deeper. Type a camera code (r1 p15 c3, or a full camera name like r1p15c03 straight off the grid overlay) and the screen itself comes back as a place; clicking it centers that very camera. Screens only answer when the query names one, so searching brewery still brings back the Brewery and its paths rather than a hundred screens."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "improved",
    "title": "The corner readout counts grid squares",
    "detail": "The readout in the map's bottom-right corner has always tracked the pointer's world position. It now also says where the pointer stands within its screen, in the games' own 25-unit grid squares (the unit the ruler already speaks). Read it off the corner instead of arming the ruler to count squares."
   },

@@ -140,7 +140,7 @@ function placeButton(c, terms) {
     `<span class="loc">${c.G.id} · ${highlight(c.code, codeTerms)}</span>` +
     (c.name ? ` ${highlight(c.name, terms)}` : "") +
     (ex ? ` <span class="ex">${highlight(ex, terms)}</span>` : "");
-  b.onclick = () => jumpToPlace(c.G, c.L, c.P);
+  b.onclick = () => jumpToPlace(c.G, c.L, c.P, c.cam);
   return b;
 }
 

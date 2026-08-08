@@ -25,7 +25,11 @@ const GAMES = [
       {
         short: "R2",
         name: "Rupture Farms Return",
-        paths: [{ id: 1, name: "Zulag 2" }, { id: 4, section: "Ender Wing" }, { id: 12 }],
+        paths: [
+          { id: 1, name: "Zulag 2", cams: [{ cell: 0, name: "R2P01C05" }] },
+          { id: 4, section: "Ender Wing" },
+          { id: 12 },
+        ],
       },
     ],
   },
@@ -39,10 +43,10 @@ const ANN = {
   YY: { paths: { BR: { 2: { name: "Zulag 2", nickname: "Flying Sligs" } } } },
 };
 
-test("placeCandidates: one row per level and per path", () => {
+test("placeCandidates: one row per level, per path and per screen", () => {
   setAnnotations(ANN);
   const cands = placeCandidates(GAMES);
-  assert.equal(cands.length, 3 + 6); // 3 levels, 6 paths
+  assert.equal(cands.length, 3 + 6 + 1); // 3 levels, 6 paths, 1 screen
 
   const level = cands.find((c) => c.code === "L1");
   assert.equal(level.P, null);
@@ -60,6 +64,22 @@ test("placeCandidates: one row per level and per path", () => {
   const unnamed = cands.find((c) => c.code === "L1 P1");
   assert.equal(unnamed.name, null);
   assert.equal(unnamed.text, "monsaic lines");
+
+  // a screen carries its path's blob plus the tokens that name the camera
+  const screen = cands.find((c) => c.code === "R2 P1 C5");
+  assert.equal(screen.cam, 5);
+  assert.equal(screen.text, "rupture farms return zulag 2");
+  assert.deepEqual(screen.camTokens, ["c5", "c05", "r2p01c05"]);
+  assert.deepEqual(screen.tokens, ["r2", "p1", "c5", "c05", "r2p01c05"]);
+});
+
+test("matchPlaces: a screen answers only a query that names one", () => {
+  setAnnotations(ANN);
+  assert.deepEqual(where(run(GAMES, "r2 p1")), ["XX R2 P1"]); // no screens uninvited
+  assert.deepEqual(where(run(GAMES, "r2 p1 c5")), ["XX R2 P1 C5"]);
+  assert.deepEqual(where(run(GAMES, "zulag 2 c05")), ["XX R2 P1 C5"]);
+  assert.deepEqual(where(run(GAMES, "r2p01c05")), ["XX R2 P1 C5"]);
+  assert.deepEqual(where(run(GAMES, "c5")), ["XX R2 P1 C5"]);
 });
 
 test("matchPlaces: a level's name reaches its paths, and the level still leads", () => {
@@ -111,4 +131,12 @@ test("matchPlaces: the queries the sidebar's buttons were the only answer to", (
   // know what a place is like but not what it is called
   assert.deepEqual(hits("tear extractors"), ["AE BR P11"]);
   assert.deepEqual(hits("high security"), ["AE BR P10"]);
+
+  // a single screen, by code or by the cam name the grid overlay shows —
+  // and never as a stowaway on a bare place query
+  assert.deepEqual(hits("r1 p15 c3"), ["AO R1 P15 C3"]);
+  assert.deepEqual(hits("r1p15c03"), ["AO R1 P15 C3"]);
+  // Scrabania's P2 C1s answer too ("ba" is a substring index), ranked behind the code match
+  assert.equal(hits("ba p2 c1")[0], "AE BA P2 C1");
+  assert.ok(hits("monsaic").every((h) => !/ C\d/.test(h)));
 });

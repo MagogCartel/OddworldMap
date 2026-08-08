@@ -133,6 +133,12 @@ export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO, data = 
   return d && d.target != null && d.target.field === "well#" ? { ...d, target: null } : d;
 }
 
+// the camera id a cam name's C## suffix carries, or null
+export const camIdOf = (name) => {
+  const m = /C(\d+)$/i.exec(name || "");
+  return m ? +m[1] : null;
+};
+
 // camera id -> grid cell within a path (cam names end in C##)
 export function camCell(path, camId) {
   if (camId == null) return null;

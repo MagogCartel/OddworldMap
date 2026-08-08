@@ -1,7 +1,8 @@
-// The map's own places as search targets: a level, or one path within it.
-// No DOM, so it stays importable in bare Node.
+// The map's own places as search targets: a level, one path within it, or one
+// screen of a path. No DOM, so it stays importable in bare Node.
 
 import { pathDisplayName, pathNickname } from "./annotations.js";
+import { camIdOf } from "./model.js";
 import { matchesBy, rankFor } from "./searchquery.js";
 
 // names go into a substring blob the way an object's fields do; the LV/Pn code
@@ -22,6 +23,7 @@ function gameCandidates(G) {
       const name = pathDisplayName(G.id, L.short, P),
         nickname = pathNickname(G.id, L.short, P),
         section = P.section || null;
+      const text = [L.name, name, nickname, section].filter(Boolean).join(" ").toLowerCase();
       out.push({
         G,
         L,
@@ -30,9 +32,30 @@ function gameCandidates(G) {
         name,
         nickname,
         section,
-        text: [L.name, name, nickname, section].filter(Boolean).join(" ").toLowerCase(),
+        text,
         tokens: [L.short.toLowerCase(), "p" + P.id],
       });
+      for (const cm of P.cams || []) {
+        const cam = camIdOf(cm.name);
+        if (cam == null) continue;
+        const camTokens = [
+          ...new Set(["c" + cam, "c" + String(cam).padStart(2, "0")]),
+          cm.name.toLowerCase(),
+        ];
+        out.push({
+          G,
+          L,
+          P,
+          cam,
+          code: `${L.short} P${P.id} C${cam}`,
+          name,
+          nickname,
+          section,
+          text,
+          tokens: [L.short.toLowerCase(), "p" + P.id, ...camTokens],
+          camTokens,
+        });
+      }
     }
   }
   return out;
@@ -56,10 +79,17 @@ const rankPlace = (c, terms) =>
     ...[c.name, c.nickname, c.section, c.code].filter(Boolean).map((s) => rankFor(s, terms)),
   );
 
-// scope and the demo-path setting are the caller's, as they are for objects
+// scope and the demo-path setting are the caller's, as they are for objects.
+// A screen answers only a query that names one (c3, c03, a full cam name):
+// its blob is its path's, so a name query would otherwise drag every matching
+// path's whole screen list in
 export function matchPlaces(games, groups, terms, current) {
   return placeCandidates(games)
-    .filter((c) => matchesBy(groups, (term) => c.text.includes(term) || c.tokens.includes(term)))
+    .filter(
+      (c) =>
+        (!c.camTokens || c.camTokens.some((t) => terms.includes(t))) &&
+        matchesBy(groups, (term) => c.text.includes(term) || c.tokens.includes(term)),
+    )
     .map((c) => ({ ...c, rank: rankPlace(c, terms) }))
     .sort((a, b) => a.rank - b.rank || (b.G === current) - (a.G === current));
 }

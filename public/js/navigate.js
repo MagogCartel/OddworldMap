@@ -236,11 +236,19 @@ export function jumpToTlv(G, L, P, t) {
   focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
 }
 
-// a whole place: one path, or a level, which opens on the first path it lists
-export function jumpToPlace(G, L, P) {
+// a whole place: one path, a level (which opens on the first path it lists),
+// or one screen of a path, centered when a camera id is named
+export function jumpToPlace(G, L, P, cam) {
   if (state.data !== G) selectGame(G, true);
   if (!P || state.lvl !== L) selectLevel(L);
   if (P) selectPathById(P.id);
+  if (!P || cam == null) return;
+  const cell = camCell(state.path, cam);
+  if (cell != null)
+    focusOn(
+      ((cell % state.path.w) + 0.5) * CELL_W,
+      (Math.floor(cell / state.path.w) + 0.5) * CELL_H,
+    );
 }
 
 // ---- permalinks ---------------------------------------------------------
