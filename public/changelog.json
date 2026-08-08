@@ -3,6 +3,12 @@
   {
    "date": "2026-08-08",
    "tag": "improved",
+   "title": "Measurements snap to what you aim at",
+   "detail": "The ruler's ends and the route planner's waypoints now stick to the nearest object center (and to collision-line ends while those are shown) within a few screen pixels. Door-to-door distances and mine-to-ledge legs come out exact instead of eyeballed, and since the radius follows the screen rather than the world, zooming in shrinks it away whenever free placement is what you want."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "improved",
    "title": "Search can name a single screen",
    "detail": "The Places group answered to a level or a path; now it goes one screen deeper. Type a camera code (r1 p15 c3, or a full camera name like r1p15c03 straight off the grid overlay) and the screen itself comes back as a place; clicking it centers that very camera. Screens only answer when the query names one, so searching brewery still brings back the Brewery and its paths rather than a hundred screens."
   },

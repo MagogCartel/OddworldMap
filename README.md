@@ -59,9 +59,11 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 - the readout in the map's bottom corner follows the pointer: its world position, where it stands within its screen in grid squares, and the zoom
 - **Ruler**: enable (or press **`m`**), then drag to measure — Δx × Δy, length in true world units and 25-unit grid squares (an Oddysee unit is one PS1 screen pixel; Exoddus screens are scaled artwork, and measurements account for that)
+  - its ends snap to nearby object centers — and to collision-line ends while those are shown — so door-to-door distances come out exact; the radius is a few screen pixels, so zooming in shrinks it away
   - hovering a collision line shows its type and length the same way
   - moving on (switching path, following a door, changing game) clears the measurement
 - **Route planner**: arm it (or press **`r`**), then click waypoints to plot a route — every leg is labelled with its length, and a bar at the top totals the distance in the same units
+  - waypoints snap the way the ruler's ends do
   - **Backspace** (or the bar's undo button) removes the last waypoint; clear starts over, and the browser back button brings a cleared route back
   - the route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports; switching paths clears it
   - should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing

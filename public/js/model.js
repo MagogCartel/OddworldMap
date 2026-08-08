@@ -10,8 +10,9 @@ import {
   FOCUS_ZOOM_MAX,
   FOCUS_SCREENS,
   MAX_ROUTE_PTS,
+  catOf,
 } from "./config.js";
-import { GEO, state, CELL_W, CELL_H } from "./state.js";
+import { GEO, state, CELL_W, CELL_H, dX, dY } from "./state.js";
 
 export function computeEntryPaths(data, geo = data.geometry) {
   const entries = {};
@@ -157,6 +158,30 @@ export function cellAt(x, y, path) {
   const col = Math.floor(x / CELL_W),
     row = Math.floor(y / CELL_H);
   return col >= 0 && col < path.w && row >= 0 && row < path.h ? row * path.w + col : null;
+}
+
+// nearest snappable point within tol draw units of pt — a shown object's
+// center, or a collision-line endpoint when those are drawn — or null
+export function snapTarget(pt, path, tol, lines = false) {
+  let best = null,
+    bd = tol * tol;
+  const consider = (x, y) => {
+    const d = (x - pt.x) ** 2 + (y - pt.y) ** 2;
+    if (d <= bd) {
+      bd = d;
+      best = { x, y };
+    }
+  };
+  for (const t of path.tlvs) {
+    if (!catOf(t).on) continue;
+    consider((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
+  }
+  if (lines)
+    for (const [x1, y1, x2, y2] of path.lines) {
+      consider(dX(x1), dY(y1));
+      consider(dX(x2), dY(y2));
+    }
+  return best;
 }
 
 // the paired TLV a destination lands on: door numbers are only unique per

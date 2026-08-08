@@ -24,7 +24,15 @@ import {
 import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY, gX, gY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
-import { destOf, destTrusted, isLoopback, pathIn, resolveTarget, zoomAt } from "./model.js";
+import {
+  destOf,
+  destTrusted,
+  isLoopback,
+  pathIn,
+  resolveTarget,
+  snapTarget,
+  zoomAt,
+} from "./model.js";
 import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
 import { levelInfo } from "./annotations.js";
 import { toggleShow } from "./sidebar.js";
@@ -107,7 +115,7 @@ cv.addEventListener("pointerdown", (e) => {
   mouse.y = p.y;
   if (pointers.size === 1) {
     if (state.show.ruler) {
-      const pt = drawAtMouse();
+      const pt = snapAtMouse();
       state.ruler = { x1: pt.x, y1: pt.y, x2: pt.x, y2: pt.y };
       measuring = true;
       draw();
@@ -149,7 +157,7 @@ cv.addEventListener("pointermove", (e) => {
   mouse.x = p.x;
   mouse.y = p.y;
   if (measuring && state.ruler) {
-    const pt = drawAtMouse();
+    const pt = snapAtMouse();
     state.ruler.x2 = pt.x;
     state.ruler.y2 = pt.y;
   }
@@ -206,7 +214,7 @@ cv.addEventListener("pointerleave", () => {
 cv.addEventListener("click", () => {
   if (panMoved || state.show.ruler) return;
   if (state.show.route) {
-    addRoutePoint(drawAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
+    addRoutePoint(snapAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
     return;
   }
   updateHover(); // taps arrive without a preceding hover move
@@ -282,6 +290,13 @@ cv.addEventListener(
 // draw space, not world units; wX/wY convert where world units are wanted
 function drawAtMouse() {
   return { x: state.cam.x + mouse.x / state.cam.z, y: state.cam.y + mouse.y / state.cam.z };
+}
+
+// measuring points stick to what they are aimed at — a shown object's center,
+// or a collision endpoint while those are drawn — within a few screen pixels
+function snapAtMouse() {
+  const pt = drawAtMouse();
+  return snapTarget(pt, state.path, 8 / state.cam.z, state.show.coll) ?? pt;
 }
 
 // ---- keyboard: arrows pan, + / - zoom about the canvas center, [ / ] cycle

@@ -15,6 +15,7 @@ import {
   isLoopback,
   parseHash,
   resolveTarget,
+  snapTarget,
   zoomAt,
 } from "../../public/js/model.js";
 import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../public/js/config.js";
@@ -857,4 +858,18 @@ test("every prefix of a route link parses as a prefix of the route, or as none",
     assert.deepEqual(got, route.slice(0, got.length), `${where} altered the route`);
     assert.equal(got.length + lost, route.length, `${where} miscounted what it lost`);
   }
+});
+
+test("snapTarget: shown objects' centers and collision ends, within tolerance", () => {
+  setGeometry(AO_GEOMETRY);
+  const door = { ...tlv("Door"), x1: 256 + 100, y1: 120 + 50, x2: 256 + 110, y2: 120 + 60 };
+  const honey = { ...tlv("Honey"), x1: 256 + 200, y1: 120 + 50, x2: 256 + 210, y2: 120 + 60 };
+  const P = path(1, [door, honey]);
+  P.lines = [[256, 120, 256 + 50, 120, 0]]; // draw-space (0,0)→(50,0)
+  assert.deepEqual(snapTarget({ x: 100, y: 52 }, P, 8), { x: 105, y: 55 }); // the door's center
+  assert.equal(snapTarget({ x: 96, y: 55 }, P, 8), null); // a pixel past the radius
+  assert.equal(snapTarget({ x: 205, y: 55 }, P, 8), null); // Honey's category is off
+  assert.equal(snapTarget({ x: 2, y: 2 }, P, 8), null); // lines not drawn, ends inert
+  assert.deepEqual(snapTarget({ x: 2, y: 2 }, P, 8, true), { x: 0, y: 0 });
+  assert.deepEqual(snapTarget({ x: 48, y: 3 }, P, 8, true), { x: 50, y: 0 }); // nearer end wins
 });
