@@ -1,5 +1,7 @@
 // Shared mutable viewer state and the world-to-draw coordinate transforms.
 
+import { GRID_UNIT } from "./config.js";
+
 // Each game maps world coordinates to screen artwork differently (data.geometry):
 // AO cameras occupy 1024x480-unit world cells with a 368x240 window at +256/+120
 // (1:1 world:pixel; Map.cpp SetActiveCam + ScreenManager xpos/ypos); AE cameras
@@ -35,6 +37,11 @@ export function wY(dy) {
   const c = Math.floor(dy / CELL_H);
   return c * GEO.worldH + GEO.winY + (dy - c * CELL_H) / SY;
 }
+
+// position within its own screen, in grid squares (measured from the visible
+// window's corner, so both games read 0 at a screen's left/top edge)
+export const gX = (wx) => (wx - Math.floor(wx / GEO.worldW) * GEO.worldW - GEO.winX) / GRID_UNIT;
+export const gY = (wy) => (wy - Math.floor(wy / GEO.worldH) * GEO.worldH - GEO.winY) / GRID_UNIT;
 
 // world-unit length of a draw-space delta: draw scales world by SX/SY per axis,
 // so lengths convert directly; AO's hidden cell margins deliberately stay uncounted

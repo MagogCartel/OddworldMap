@@ -57,6 +57,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 ### Measuring and routes
 
+- the readout in the map's bottom corner follows the pointer: its world position, where it stands within its screen in grid squares, and the zoom
 - **Ruler**: enable (or press **`m`**), then drag to measure — Δx × Δy, length in true world units and 25-unit grid squares (an Oddysee unit is one PS1 screen pixel; Exoddus screens are scaled artwork, and measurements account for that)
   - hovering a collision line shows its type and length the same way
   - moving on (switching path, following a door, changing game) clears the measurement

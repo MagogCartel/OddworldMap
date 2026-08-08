@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-08",
+   "tag": "improved",
+   "title": "The corner readout counts grid squares",
+   "detail": "The readout in the map's bottom-right corner has always tracked the pointer's world position. It now also says where the pointer stands within its screen, in the games' own 25-unit grid squares (the unit the ruler already speaks). Read it off the corner instead of arming the ruler to count squares."
+  },
+  {
    "date": "2026-08-07",
    "tag": "new",
    "title": "Oddysee's main menu joins the map",

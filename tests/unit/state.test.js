@@ -6,6 +6,8 @@ import {
   dY,
   wX,
   wY,
+  gX,
+  gY,
   CELL_W,
   CELL_H,
   worldLen,
@@ -48,6 +50,18 @@ test("world<->draw round-trips inside the visible window", () => {
       close(wY(dY(wy)), wy);
     }
   }
+});
+
+test("gX/gY: position within the screen, in grid squares", () => {
+  setGeometry(AO_GEOMETRY);
+  assert.equal(gX(256), 0); // the visible window's left edge, not the cell's
+  assert.equal(gY(120), 0);
+  assert.equal(gX(256 + 25), 1);
+  close(gX(2 * 1024 + 256 + 368), 368 / 25); // window right edge, any cell
+  setGeometry(AE_GEOMETRY); // no window offset: the cell edge is the screen edge
+  assert.equal(gX(0), 0);
+  assert.equal(gX(3 * 375 + 50), 2);
+  assert.equal(gY(4 * 260 + 130), 5.2);
 });
 
 test("worldLen converts draw-space lengths to world units", () => {

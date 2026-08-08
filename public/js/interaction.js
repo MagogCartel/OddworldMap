@@ -22,7 +22,7 @@ import {
   narrowMQ,
 } from "./dom.js";
 import { toast } from "./toast.js";
-import { state, GEO, dX, dY, wX, wY } from "./state.js";
+import { state, GEO, dX, dY, wX, wY, gX, gY } from "./state.js";
 import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
 import { destOf, destTrusted, isLoopback, pathIn, resolveTarget, zoomAt } from "./model.js";
 import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
@@ -455,5 +455,7 @@ function updateHover() {
     tip.style.display = "none";
     if (!panning) cv.style.cursor = modeCursor();
   }
-  hud.textContent = `world x ${Math.round(wX(pt.x))}  y ${Math.round(wY(pt.y))}  ·  zoom ${state.cam.z.toFixed(2)}`;
+  const wx = wX(pt.x),
+    wy = wY(pt.y);
+  hud.textContent = `world x ${Math.round(wx)}  y ${Math.round(wy)}  ·  grid ${gX(wx).toFixed(1)}, ${gY(wy).toFixed(1)}  ·  zoom ${state.cam.z.toFixed(2)}`;
 }
