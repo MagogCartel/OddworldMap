@@ -14,6 +14,7 @@ import {
   formatHash,
   isLoopback,
   parseHash,
+  patrolZone,
   resolveTarget,
   snapTarget,
   zoomAt,
@@ -872,4 +873,69 @@ test("snapTarget: shown objects' centers and collision ends, within tolerance", 
   assert.equal(snapTarget({ x: 2, y: 2 }, P, 8), null); // lines not drawn, ends inert
   assert.deepEqual(snapTarget({ x: 2, y: 2 }, P, 8, true), { x: 0, y: 0 });
   assert.deepEqual(snapTarget({ x: 48, y: 3 }, P, 8, true), { x: 50, y: 0 }); // nearer end wins
+});
+
+test("patrolZone: the pen between the id-matched bound pair, window-bounded", () => {
+  setGeometry(AO_GEOMETRY);
+  const at = (name, cellX, off, fields) => ({
+    ...tlv(name),
+    x1: cellX * 1024 + 256 + off,
+    y1: 120 + 50,
+    x2: cellX * 1024 + 256 + off + 24,
+    y2: 120 + 74,
+    fields,
+  });
+  const slig = at("Slig", 1, 100, { slig_bound_persist_id: 5 });
+  const P = path(
+    1,
+    [
+      slig,
+      at("SligBoundLeft", 0, 40, { slig_id: 5 }),
+      at("SligBoundRight", 2, 200, { slig_id: 5 }),
+      at("SligBoundLeft", 1, 10, { slig_id: 9 }), // another pen's id
+      at("SligBoundRight", 4, 10, { slig_id: 5 }), // 3 cells out: past AO's window
+    ],
+    [],
+    5,
+    1,
+  );
+  assert.deepEqual(patrolZone(slig, P, AO_GEOMETRY, "AO"), { x1: 40, x2: 936, y1: 50, y2: 74 });
+  // AE's wider window lets the far bound in — and two Rights answering is no pen
+  assert.equal(patrolZone(slig, P, AO_GEOMETRY, "AE"), null);
+
+  // AE names the bound-side key like the Slig's own; spawners are penned too
+  const spawner = at("SligSpawner", 1, 100, { slig_bound_persist_id: 7 });
+  const P2 = path(
+    2,
+    [
+      spawner,
+      at("SligBoundLeft", 0, 60, { slig_bound_persist_id: 7 }),
+      at("SligBoundRight", 4, 80, { slig_bound_persist_id: 7 }),
+    ],
+    [],
+    5,
+    1,
+  );
+  assert.equal(patrolZone(spawner, P2, AO_GEOMETRY, "AO"), null); // right bound out of window
+  assert.deepEqual(patrolZone(spawner, P2, AO_GEOMETRY, "AE"), {
+    x1: 60,
+    x2: 4 * 368 + 80,
+    y1: 50,
+    y2: 74,
+  });
+
+  // no pen for the idless, the non-slig, or an inside-out pair
+  assert.equal(patrolZone(at("Slig", 1, 0, {}), P, AO_GEOMETRY, "AO"), null);
+  assert.equal(
+    patrolZone(at("Mudokon", 1, 0, { slig_bound_persist_id: 5 }), P, AO_GEOMETRY, "AO"),
+    null,
+  );
+  const P3 = path(
+    3,
+    [at("SligBoundLeft", 2, 0, { slig_id: 5 }), at("SligBoundRight", 0, 0, { slig_id: 5 }), slig],
+    [],
+    5,
+    1,
+  );
+  assert.equal(patrolZone(slig, P3, AO_GEOMETRY, "AO"), null);
 });

@@ -3,7 +3,7 @@
 // localStorage only inside the guarded store calls. initSettings() does all
 // the DOM wiring.
 
-import { CATS } from "./config.js";
+import { CATS, PENS } from "./config.js";
 import { state } from "./state.js";
 import { parseHash } from "./model.js";
 import { GEAR_SVG } from "./icons.js";
@@ -19,6 +19,7 @@ export const SETTINGS_DEFAULTS = {
   fullNames: true,
   showDemoPaths: false,
   screenList: true,
+  enemyPens: false,
   cacheImages: false,
   showRawValues: false,
 };
@@ -224,6 +225,12 @@ export function initSettings() {
   });
 
   bind("sScreenList", "screenList", () => {});
+
+  PENS.on = s.enemyPens; // boot: the gate lives in config, ahead of the first draw
+  bind("sEnemyPens", "enemyPens", (on) => {
+    PENS.on = on;
+    window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "enemyPens" } }));
+  });
 
   bind("sRawValues", "showRawValues", () =>
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "rawValues" } })),

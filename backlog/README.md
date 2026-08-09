@@ -51,7 +51,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
 - [**80.** Minimap inset](item-080-minimap-inset.md) — a small overview with a viewport rectangle, for the paths that outgrow the window. _Medium, anywhere._
-- [**81.** Enemy territory rendering](item-081-enemy-territory.md) — the pens enemies patrol inside, drawn as the barriers they are instead of anonymous meta boxes. _Small-medium, anywhere._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the shell joins the opt-in artwork cache, so visited areas open with no network at all. _Small-medium, anywhere._
 - [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does: switch-id edges from levers and gates to the doors, walls and drills they drive. _Large, anywhere._
 - [**85.** Cross-path route planner](item-085-cross-path-routes.md) — a route that survives following a door, totalled per segment and overall. _Medium-large, anywhere._
@@ -108,6 +107,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**81.** Enemy territory rendering](item-081-enemy-territory.md) — barrier posts and the hover pen in one: the decomp settled the pairing the sketch could only guess at, by id rather than by nearness. _2026-08-09._
 - [**87.** By the numbers](item-087-by-the-numbers.md) — pick object types, read their counts per screen/path/level/game as you browse; the comparisons the vision sketched stayed out, counting questions being the ones people bring. _2026-08-08._
 - [**7.** AO menu level (S1)](item-007-ao-menu-level.md) — the last level joins the map, its grid read off the chunk because the decomp tabulates none. _2026-08-07._
 - [**54.** Stamp `sw.js`'s `CACHE_NAME` from the builder](item-054-stamp-cache-name.md) — a content hash of the artwork, so the name moves when a PNG does and holds still when none did. _2026-08-07._

@@ -5,7 +5,8 @@ import {
   KEY_PAN_PX,
   KEY_ZOOM_STEP,
   PAGE_ZOOM_MIN,
-  catOf,
+  markerShown,
+  PENS,
   LINE_COLORS,
   LINE_NAMES,
 } from "./config.js";
@@ -23,12 +24,13 @@ import {
 } from "./dom.js";
 import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY, gX, gY } from "./state.js";
-import { draw, scheduleDraw, setConnFocus, setHighlight } from "./render.js";
+import { draw, scheduleDraw, setConnFocus, setHighlight, setPatrol } from "./render.js";
 import {
   destOf,
   destTrusted,
   isLoopback,
   pathIn,
+  patrolZone,
   resolveTarget,
   snapTarget,
   zoomAt,
@@ -209,6 +211,7 @@ cv.addEventListener("pointerleave", () => {
   cv.style.cursor = modeCursor();
   setHighlight(null);
   setConnFocus(null);
+  setPatrol(null);
 });
 
 cv.addEventListener("click", () => {
@@ -391,8 +394,7 @@ function updateHover() {
       .slice(0, 4);
   }
   hoverTlvs = state.path.tlvs.filter((t) => {
-    const c = catOf(t);
-    if (!c.on) return false;
+    if (!markerShown(t)) return false;
     const x1 = dX(t.x1),
       y1 = dY(t.y1);
     const x2 = Math.max(dX(t.x2), x1 + 10),
@@ -412,6 +414,10 @@ function updateHover() {
     }
   }
   setHighlight(partner);
+  // a hovered Slig (or its spawner) shades the pen its own bounds pair pens it into
+  setPatrol(
+    PENS.on ? (hoverTlvs.map((t) => patrolZone(t, state.path)).find(Boolean) ?? null) : null,
+  );
   // arrows overlay: spotlight the hovered object's own edges
   setConnFocus(state.show.conn ? (hoverTlvs.find((t) => shownDest(t)) ?? null) : null);
   if (hoverTlvs.length || hoverLines.length) {

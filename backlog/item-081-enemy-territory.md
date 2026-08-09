@@ -1,6 +1,6 @@
 # 81. Enemy territory rendering
 
-**Status:** open · **Effort:** small-medium (viewer) · **Where:** anywhere · **Filed:** 2026-08-07 feature-ideation sweep
+**Status:** shipped 2026-08-09 · **Effort:** small-medium (viewer) · **Where:** anywhere · **Filed:** 2026-08-07 feature-ideation sweep
 
 ## Why
 
@@ -16,3 +16,17 @@ The invisible walls that pen enemies in are in the data and on the map, but unre
 
 - Phase 2's pairing rule must come from the decomp, not from eyeballing: which bound stops which enemy kind (`EnemyStopper` carries fields; `SligPersist` is a different concern entirely), and whether bounds act path-wide or per camera. Do not ship a shaded band on a guess — a wrong band is worse than no band, and [71](item-071-mudokon-rescue-census.md) is the standing example of a field that did not mean what it looked like.
 - AO and AE name and split these types differently; match by name per game and keep the drawing rule shared.
+
+## Shipped
+
+_The pens enemies patrol are on the map_: barrier posts for SligBound/ScrabBound/EnemyStopper/MovingBombStopper (dashed, enemy colour, a foot pointing into the pen), and the hover pen for Sligs and SligSpawners — both phases at once, because the decomp settled what the sketch could only guess at.
+
+Where the sketch was wrong, read from `Slig.cpp` before building:
+
+- The pairing is **by id**, not "the nearest facing pair in the camera row": a slig's `slig_bound_persist_id` matches its bounds' id (named `slig_id` in AO, `slig_bound_persist_id` in AE) over a camera window of ±2 cells in AO and ±3 in AE. The zone is the x-span between the pair's top-left corners; it has no y component at all. The viewer honours only a unique pair, and skips the seven AE pairs whose right bound sits left of the left one — 149 of AO's 186 penned sligs and 267 of AE's 323 get a pen; the engine's last-match-wins on duplicates is not worth imitating.
+- `ScrabNoFall` is not a barrier: its markers are wide zones (median 125 units), so it stayed a nav box. `MovingBombStopper` and the Scrab bounds joined instead — but Scrab bounds ship no ids, so scrabs get posts and no pen.
+- `EnemyStopper` carries a `stop_direction` field (left / right / both), so its foot comes from the data rather than the name.
+- `markerShown` in [js/config.js](../public/js/config.js) became the one marker-visibility rule (drawing, hover, ruler snapping), so a barrier shown by the Enemies toggle is also hoverable and snappable — drawn and pointable stay the same set.
+
+- The whole treatment sits behind Settings → "Show enemy patrol pens", **off by default**: hundreds of posts are clutter for anyone not reading patrol ranges. Pens off, barriers are the plain meta boxes they always were.
+- The posts stand on each stamp's top-left x — the boundary the engine actually enforces, and the edge the pen band is built from, so posts and band always meet; a centred post would stand half a stamp off the band on both sides. Snapping follows the line too.

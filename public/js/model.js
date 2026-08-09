@@ -10,7 +10,9 @@ import {
   FOCUS_ZOOM_MAX,
   FOCUS_SCREENS,
   MAX_ROUTE_PTS,
-  catOf,
+  BARRIERS,
+  PENS,
+  markerShown,
 } from "./config.js";
 import { GEO, state, CELL_W, CELL_H, dX, dY } from "./state.js";
 
@@ -173,8 +175,10 @@ export function snapTarget(pt, path, tol, lines = false) {
     }
   };
   for (const t of path.tlvs) {
-    if (!catOf(t).on) continue;
-    consider((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
+    if (!markerShown(t)) continue;
+    // a barrier drawn as a post snaps on its boundary line, not the stamp's middle
+    const post = PENS.on && t.name in BARRIERS;
+    consider(post ? dX(t.x1) : (dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
   }
   if (lines)
     for (const [x1, y1, x2, y2] of path.lines) {
@@ -182,6 +186,40 @@ export function snapTarget(pt, path, tol, lines = false) {
       consider(dX(x2), dY(y2));
     }
   return best;
+}
+
+// the pen a Slig or SligSpawner patrols: the x-span between the SligBound pair
+// sharing its id, which the engine scans for over a camera window (AO ±2 cells,
+// AE ±3 — Slig.cpp's bound loops) and reads by each bound's top-left x. Honoured
+// only when exactly one Left and one Right answer in the window: the engine's
+// last-match-wins on duplicates is not worth imitating. Scrab bounds ship no
+// ids, so scrabs get no pen. Returns a draw-space rect, or null.
+const BOUND_WINDOW = { AO: 2, AE: 3 };
+export function patrolZone(t, path, geo = GEO, gameId = state.data?.id) {
+  if (t.name !== "Slig" && t.name !== "SligSpawner") return null;
+  const id = t.fields?.slig_bound_persist_id;
+  if (id == null) return null;
+  const win = BOUND_WINDOW[gameId] ?? 2;
+  const cellOf = (o) => [Math.floor(o.x1 / geo.worldW), Math.floor(o.y1 / geo.worldH)];
+  const [tc, tr] = cellOf(t);
+  const near = (o) => {
+    const [c, r] = cellOf(o);
+    return Math.abs(c - tc) <= win && Math.abs(r - tr) <= win;
+  };
+  // the id lives under a different name per game (AO slig_id, AE the same key
+  // the Slig itself carries)
+  const idOf = (o) => o.fields?.slig_id ?? o.fields?.slig_bound_persist_id;
+  const find = (name) => path.tlvs.filter((o) => o.name === name && idOf(o) === id && near(o));
+  const L = find("SligBoundLeft"),
+    R = find("SligBoundRight");
+  if (L.length !== 1 || R.length !== 1) return null;
+  if (R[0].x1 <= L[0].x1) return null; // an inside-out pen is data noise, not a zone
+  return {
+    x1: dX(L[0].x1),
+    x2: dX(R[0].x1),
+    y1: dY(Math.min(L[0].y1, R[0].y1, t.y1)),
+    y2: dY(Math.max(L[0].y2, R[0].y2, t.y2)),
+  };
 }
 
 // the paired TLV a destination lands on: door numbers are only unique per

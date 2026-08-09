@@ -43,3 +43,27 @@ const NAME_CAT = {};
 CATS.forEach(c => c.names.forEach(n => NAME_CAT[n] = c));
 const META_CAT = CATS[CATS.length - 1];
 export const catOf = t => NAME_CAT[t.name] || META_CAT;
+
+// the invisible posts that pen enemies in — tiny stamps in the data, rendered as
+// barriers and shown whenever Enemies is, whatever bucket holds them. The value
+// is the side the pen lies on (+1 right of the post, -1 left, 0 unclaimed);
+// EnemyStopper carries its own stop_direction field instead.
+export const BARRIERS = { SligBoundLeft:1, SligBoundRight:-1, ScrabLeftBound:1, ScrabRightBound:-1,
+                          EnemyStopper:0, MovingBombStopper:0 };
+export const ENEMY_CAT = CATS.find(c => c.key === "enemy");
+export const barrierDir = t => {
+  const b = BARRIERS[t.name];
+  if (b === undefined) return null;
+  if (t.name !== "EnemyStopper") return b;
+  const d = t.fields?.stop_direction; // 0 stops leftward travel, 1 rightward, 2 both
+  return d === 0 ? 1 : d === 1 ? -1 : 0;
+};
+
+// the pens setting gates the whole barrier treatment — off by default, since
+// hundreds of posts are clutter for anyone not reading patrol ranges
+export const PENS = { on: false };
+
+// the one visibility rule for map markers: what is drawn is exactly what can
+// be pointed at
+export const markerShown = t =>
+  catOf(t).on || (t.name in BARRIERS && PENS.on && ENEMY_CAT.on);

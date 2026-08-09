@@ -4,10 +4,14 @@ import { formatDist } from "./util.js";
 import {
   CACHE_MAX_IMAGES,
   CONN_COLORS,
+  ENEMY_CAT,
   FLASH_HOLD_MAX_MS,
   FLASH_MS,
   LINE_COLORS,
+  PENS,
+  barrierDir,
   catOf,
+  markerShown,
 } from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
@@ -120,9 +124,7 @@ export function setConnFocus(t) {
   connFocus = t;
   scheduleDraw();
 }
-window.addEventListener("selection-changed", () => {
-  connFocus = null;
-});
+window.addEventListener("selection-changed", () => setConnFocus(null));
 
 // pointed-at object: a dashed outline around one TLV, for hover affordances
 // that reference an object without selecting it (camera-panel rows, a hovered
@@ -134,6 +136,21 @@ export function setHighlight(t) {
   scheduleDraw();
 }
 window.addEventListener("selection-changed", () => setHighlight(null)); // TLVs don't outlive their path
+
+// hovered Slig's patrol pen: a shaded band between its own pair of bounds
+let patrol = null;
+const sameRect = (a, b) =>
+  a && b && a.x1 === b.x1 && a.x2 === b.x2 && a.y1 === b.y1 && a.y2 === b.y2;
+export function setPatrol(z) {
+  if (z === patrol || sameRect(z, patrol)) return;
+  patrol = z;
+  scheduleDraw();
+}
+window.addEventListener("selection-changed", () => setPatrol(null));
+
+window.addEventListener("settings-changed", (e) => {
+  if (e.detail?.key === "enemyPens") scheduleDraw();
+});
 
 // coalesce bursty redraw sources (pointer moves, image loads) into one paint per frame
 let drawPending = false;
@@ -166,6 +183,30 @@ export function resize() {
 }
 window.addEventListener("resize", resize); // catches devicePixelRatio changes, which leave the map box untouched
 new ResizeObserver(resize).observe($("main")); // the sidebar slide resizes the map without a window resize
+
+// a barrier post: dashed vertical on the boundary the engine enforces — the
+// stamp's top-left x, which is also the edge a hovered pen band ends on —
+// extended past the stamp so it reads at any zoom, with a solid foot pointing
+// into the pen where the type claims a side
+function drawBarrier(t, dir, z) {
+  const cx = dX(t.x1);
+  const y1 = dY(t.y1) - 26,
+    y2 = dY(t.y2) + 6;
+  ctx.strokeStyle = ENEMY_CAT.color;
+  ctx.lineWidth = 2 / z;
+  ctx.setLineDash([5 / z, 4 / z]);
+  ctx.beginPath();
+  ctx.moveTo(cx, y1);
+  ctx.lineTo(cx, y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  if (dir) {
+    ctx.beginPath();
+    ctx.moveTo(cx, y2);
+    ctx.lineTo(cx + 9 * dir, y2);
+    ctx.stroke();
+  }
+}
 
 // filled arrowhead at (tx, ty) pointing along (dx, dy), h long in draw units
 function arrowhead(tx, ty, dx, dy, h) {
@@ -273,12 +314,26 @@ export function draw() {
     ctx.setLineDash([]);
   }
 
+  if (patrol) {
+    ctx.fillStyle = ENEMY_CAT.color + "22";
+    ctx.fillRect(patrol.x1, patrol.y1 - 8, patrol.x2 - patrol.x1, patrol.y2 - patrol.y1 + 16);
+  }
+
   // TLVs
   const showLabels = show.labels && cam.z > 0.45;
   ctx.font = `${11 / cam.z}px sans-serif`;
   for (const t of path.tlvs) {
+    if (!markerShown(t)) continue;
+    const dir = PENS.on ? barrierDir(t) : null; // pens off: barriers are plain meta boxes
+    if (dir !== null) {
+      drawBarrier(t, dir, cam.z);
+      if (showLabels) {
+        ctx.fillStyle = ENEMY_CAT.color;
+        ctx.fillText(t.name, dX(t.x1), dY(t.y1) - 3 / cam.z);
+      }
+      continue;
+    }
     const c = catOf(t);
-    if (!c.on) continue;
     // far edge goes through the transform too: AE cells are scaled and AO
     // spans can cross cells, so raw world deltas overshoot
     const x1 = dX(t.x1),
