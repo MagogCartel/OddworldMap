@@ -16,6 +16,7 @@ import "./whatsnew.js";
 import "./about.js";
 import "./shuffle.js";
 import "./numbers.js";
+import "./minimap.js";
 
 initSettings();
 initFieldPanel();

@@ -392,6 +392,30 @@ body.page-zoomed #cv {
 #help {
   left: 10px;
 }
+/* the minimap: the path's grid in a corner with the viewport on it, for the
+   paths that outgrow the window; the numbers panel owns the same corner and
+   wins while open */
+#minimap {
+  position: absolute;
+  right: 10px;
+  bottom: 34px;
+  z-index: var(--z-map-overlay);
+  background: rgba(var(--over-rgb), 0.85);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: var(--shadow-float);
+  cursor: pointer;
+  touch-action: none;
+}
+#minimap[hidden] {
+  display: none;
+}
+#main:has(#numbersPanel:not([hidden])) #minimap {
+  display: none;
+}
+body.page-zoomed #minimap {
+  touch-action: pinch-zoom;
+}
 .muted {
   color: var(--dim);
   padding: 2px 14px 8px;
@@ -1237,7 +1261,8 @@ kbd {
   #sidebar h1 {
     padding-left: 60px;
   }
-  #hud {
+  #hud,
+  #minimap {
     display: none;
   }
   #help {

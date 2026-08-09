@@ -227,6 +227,7 @@ export function draw() {
   if (!state.path) {
     ctx.fillStyle = COLOR.bg;
     ctx.fillRect(0, 0, cv.width, cv.height);
+    mm.hidden = true;
     return;
   }
   const { cam, path, show, ruler, route } = state;
@@ -529,4 +530,56 @@ export function draw() {
   }
 
   ctx.restore();
+  paintMinimap(cam, path);
+}
+
+// ---- minimap: the path's cell grid in a corner, the viewport drawn on it ----
+const mm = $("minimap");
+const mmCtx = mm.getContext("2d");
+const MM_MAX_W = 180,
+  MM_MAX_H = 120;
+
+// draw units to minimap pixels
+export const minimapScale = (path) =>
+  Math.min(MM_MAX_W / (path.w * CELL_W), MM_MAX_H / (path.h * CELL_H));
+
+function paintMinimap(cam, path) {
+  // the inset earns its corner only while some of the path lies off-screen
+  const fits =
+    path.w * CELL_W * cam.z <= cv.clientWidth && path.h * CELL_H * cam.z <= cv.clientHeight;
+  mm.hidden = fits;
+  if (fits) return;
+  const s = minimapScale(path);
+  const w = Math.round(path.w * CELL_W * s),
+    h = Math.round(path.h * CELL_H * s);
+  // rounded before comparing: canvas sizes truncate to ints, and a fractional
+  // devicePixelRatio would otherwise defeat the guard and realloc every frame
+  const bw = Math.round(w * devicePixelRatio),
+    bh = Math.round(h * devicePixelRatio);
+  if (mm.width !== bw || mm.height !== bh) {
+    mm.width = bw;
+    mm.height = bh;
+    mm.style.width = w + "px";
+    mm.style.height = h + "px";
+  }
+  mmCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  mmCtx.clearRect(0, 0, w, h); // the tinted CSS background is the empty-cell colour
+  mmCtx.fillStyle = "rgba(216, 219, 226, 0.22)";
+  for (const c of path.cams) {
+    mmCtx.fillRect(
+      (c.cell % path.w) * CELL_W * s + 0.5,
+      Math.floor(c.cell / path.w) * CELL_H * s + 0.5,
+      CELL_W * s - 1,
+      CELL_H * s - 1,
+    );
+  }
+  // unclamped on purpose: a viewport out in the margins really is out there
+  mmCtx.strokeStyle = `rgb(${COLOR.accentRgb})`;
+  mmCtx.lineWidth = 1;
+  mmCtx.strokeRect(
+    cam.x * s + 0.5,
+    cam.y * s + 0.5,
+    (cv.clientWidth / cam.z) * s,
+    (cv.clientHeight / cam.z) * s,
+  );
 }

@@ -3,6 +3,12 @@
   {
    "date": "2026-08-09",
    "tag": "new",
+   "title": "A minimap for the paths that outgrow the window",
+   "detail": "Zoomed in on a big path, there was nothing that said where in it you are or how much lies off-screen. Now a small overview sits in the lower-right corner: the path's camera grid, with a rectangle showing exactly what the window sees. Click or drag inside it to jump the view around. It appears only when some of the path is off-screen, steps aside while the By-the-numbers panel is open."
+  },
+  {
+   "date": "2026-08-09",
+   "tag": "new",
    "title": "Routes go through doors now",
    "detail": "The route planner used to stop at the edge of the path you plotted it on; a run through a door was two routes and a sum done by hand. Now, with the planner armed, clicking a door, well, portal or teleporter closes the leg on it, rides it, and keeps plotting where you land. The line breaks at each crossing (the travel between the halves isn't walked) and the bar totals the whole journey and says how many paths it spans. Undo takes a crossing back whole, and the back button retraces every ride with the route as it stood. A shared link carries the whole journey: whoever opens one can walk it, moving among its paths by button, by door or by the back button without losing it. Only wandering somewhere the route never goes clears it, and the back button brings it back."
   },
