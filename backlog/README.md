@@ -28,6 +28,10 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
+- [84. Switch wiring overlay](item-084-switch-wiring-overlay.md) — the decomp checkout sits ready for the id-scope question.
+- [83. Offline app shell](item-083-offline-app-shell.md)
+- [82. Type encyclopedia cards](item-082-type-encyclopedia.md) — the mechanism, then the content pass it exists for.
+- [86. World graph](item-086-world-graph.md) — feeds on the wiring overlay's aggregation experience.
 - [15. Path buttons in game order](item-015-path-buttons-game-order.md)
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [17. Field glossary](item-017-field-glossary.md) — the same, and endless by nature.

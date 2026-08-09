@@ -40,6 +40,8 @@ Content: game, level (full name), path, its curated or in-game name if any, and 
 
 The By-the-numbers panel ([87](item-087-by-the-numbers.md)) brought two more: its count grid is styled spans carrying no table semantics for a screen reader, and `#numbersBtn` opens a panel without the `aria-expanded` / `aria-controls` pair `#placeBtn` models.
 
+The minimap ([80](item-080-minimap-inset.md)) scrubs by pointer alone, so a keyboard user has the arrow keys but not the jump-anywhere gesture the rectangle offers.
+
 ## Verify
 
 VoiceOver on macOS or NVDA on Windows: load the page, tab to the map, switch paths, confirm the announcement fires once per real change and reads sensibly. Then unplug the mouse and try to answer "what is on screen R1 P15 C04" using only the keyboard.
