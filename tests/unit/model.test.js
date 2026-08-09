@@ -762,14 +762,26 @@ test("a percent-encoded fragment is read the same as a bare one", () => {
 
 test("permalinks can carry a route of draw-space waypoints, rounded like the view", () => {
   const route = [
-    { x: 10.4, y: 21.6 },
-    { x: -30, y: 40 },
+    {
+      lv: "R2",
+      pa: 1,
+      pts: [
+        { x: 10.4, y: 21.6 },
+        { x: -30, y: 40 },
+      ],
+    },
   ];
   const h = formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }, null, route);
-  assert.equal(h, "#AO/R2/1/177/55/2.23/route=n2;10,22;-30,40;end");
+  assert.equal(h, "#AO/R2/1/177/55/2.23/route=n2;sR2.1;10,22;-30,40;end");
   assert.deepEqual(parseHash(h).route, [
-    { x: 10, y: 22 },
-    { x: -30, y: 40 },
+    {
+      lv: "R2",
+      pa: 1,
+      pts: [
+        { x: 10, y: 22 },
+        { x: -30, y: 40 },
+      ],
+    },
   ]);
   assert.equal(parseHash(h).routeLost, 0);
   assert.equal(formatHash("AO", "R2", 1, { x: 0, y: 0, z: 1 }, null, []), "#AO/R2/1/0/0/1.00");
@@ -777,60 +789,76 @@ test("permalinks can carry a route of draw-space waypoints, rounded like the vie
 
 test("object and route segments coexist, matched by shape in either order", () => {
   const obj = { name: "Door", x1: 8746, y1: 1232 };
-  const h = formatHash("AO", "R1", 18, { x: 0, y: 0, z: 1 }, obj, [{ x: 1, y: 2 }]);
-  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=n1;1,2;end");
+  const one = [{ lv: "R1", pa: 18, pts: [{ x: 1, y: 2 }] }];
+  const h = formatHash("AO", "R1", 18, { x: 0, y: 0, z: 1 }, obj, one);
+  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=n1;sR1.18;1,2;end");
   assert.deepEqual(parseHash(h).obj, obj);
-  assert.deepEqual(parseHash(h).route, [{ x: 1, y: 2 }]);
-  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=n1;1,2;end/Door@8746,1232");
+  assert.deepEqual(parseHash(h).route, one);
+  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=n1;sR1.18;1,2;end/Door@8746,1232");
   assert.deepEqual(swapped.obj, obj);
-  assert.deepEqual(swapped.route, [{ x: 1, y: 2 }]);
+  assert.deepEqual(swapped.route, one);
   // an unknown segment in between bothers neither
-  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=n1;1,2;end");
+  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=n1;sR1.18;1,2;end");
   assert.equal(padded.obj, null);
-  assert.deepEqual(padded.route, [{ x: 1, y: 2 }]);
+  assert.deepEqual(padded.route, one);
 });
 
-test("route segment is all-or-nothing: any malformed pair drops the whole route", () => {
+test("route segment is all-or-nothing: any malformed token drops the whole route", () => {
   const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`).route;
   assert.equal(at("route="), null);
-  assert.equal(at("route=n2;1,2;junk;end"), null);
-  assert.equal(at("route=n1;1.5,2;end"), null);
-  assert.equal(at("route=n3;1,2;;3,4;end"), null);
-  assert.equal(at("route=1,2;3,4;end"), null); // nothing leading the pairs
-  assert.equal(at("route=2;1,2;3,4;end"), null); // a bare number is not the count
-  assert.equal(at("route=n0;end"), null); // a count with nothing to count
-  assert.deepEqual(at("route=n1;1,2;end"), [{ x: 1, y: 2 }]);
+  assert.equal(at("route=n2;sR2.1;1,2;junk;end"), null);
+  assert.equal(at("route=n1;sR2.1;1.5,2;end"), null);
+  assert.equal(at("route=n3;sR2.1;1,2;;3,4;end"), null);
+  assert.equal(at("route=sR2.1;1,2;end"), null); // nothing leading the body
+  assert.equal(at("route=2;sR2.1;1,2;end"), null); // a bare number is not the count
+  assert.equal(at("route=n0;sR2.1;end"), null); // a count with nothing to count
+  // a pathless body — pairs before any segment marker — reads as no route
+  assert.equal(at("route=n1;1,2;end"), null);
+  assert.deepEqual(at("route=n1;sR2.1;1,2;end"), [{ lv: "R2", pa: 1, pts: [{ x: 1, y: 2 }] }]);
   const pairs = (n) => Array.from({ length: n }, (_, i) => `${i},${i}`).join(";");
-  assert.equal(at(`route=n${MAX_ROUTE_PTS};${pairs(MAX_ROUTE_PTS)};end`).length, MAX_ROUTE_PTS);
-  assert.equal(at(`route=n${MAX_ROUTE_PTS + 1};${pairs(MAX_ROUTE_PTS + 1)};end`), null);
+  assert.equal(
+    at(`route=n${MAX_ROUTE_PTS};sR2.1;${pairs(MAX_ROUTE_PTS)};end`)[0].pts.length,
+    MAX_ROUTE_PTS,
+  );
+  assert.equal(at(`route=n${MAX_ROUTE_PTS + 1};sR2.1;${pairs(MAX_ROUTE_PTS + 1)};end`), null);
 });
 
 test("a route link cut short keeps the waypoints that arrived and counts the rest", () => {
   const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`);
-  const three = "route=n3;1,2;3,4;5,6";
+  const seg1 = (pts) => [{ lv: "R2", pa: 1, pts }];
+  const three = "route=n3;sR2.1;1,2;3,4;5,6";
   // only the marker lost: every pair before it is whole
-  assert.deepEqual(at(`${three};en`).route, [
-    { x: 1, y: 2 },
-    { x: 3, y: 4 },
-    { x: 5, y: 6 },
-  ]);
+  assert.deepEqual(
+    at(`${three};en`).route,
+    seg1([
+      { x: 1, y: 2 },
+      { x: 3, y: 4 },
+      { x: 5, y: 6 },
+    ]),
+  );
   assert.equal(at(`${three};en`).routeLost, 0);
   // a cut inside the last pair leaves one that still reads as legal: unread
-  assert.deepEqual(at(three).route, [
-    { x: 1, y: 2 },
-    { x: 3, y: 4 },
-  ]);
+  assert.deepEqual(
+    at(three).route,
+    seg1([
+      { x: 1, y: 2 },
+      { x: 3, y: 4 },
+    ]),
+  );
   assert.equal(at(three).routeLost, 1);
-  assert.deepEqual(at("route=n9;1,2;3,4;5,").route, [
-    { x: 1, y: 2 },
-    { x: 3, y: 4 },
-  ]);
-  assert.equal(at("route=n9;1,2;3,4;5,").routeLost, 7);
+  assert.deepEqual(
+    at("route=n9;sR2.1;1,2;3,4;5,").route,
+    seg1([
+      { x: 1, y: 2 },
+      { x: 3, y: 4 },
+    ]),
+  );
+  assert.equal(at("route=n9;sR2.1;1,2;3,4;5,").routeLost, 7);
   // the marker vouches for the count, so one that disagrees is a hand edit
-  assert.equal(at("route=n2;1,2;3,4;5,6;end").route, null);
-  assert.equal(at("route=n4;1,2;3,4;5,6;end").route, null);
+  assert.equal(at("route=n2;sR2.1;1,2;3,4;5,6;end").route, null);
+  assert.equal(at("route=n4;sR2.1;1,2;3,4;5,6;end").route, null);
   // more pairs than the count claims, marker or not
-  assert.equal(at("route=n1;1,2;3,4;5,6").route, null);
+  assert.equal(at("route=n1;sR2.1;1,2;3,4;5,6").route, null);
   // cut down to the head alone: a smaller count with nothing under it
   assert.equal(at("route=n1").route, null);
   assert.equal(at("route=n1").routeLost, 0);
@@ -842,10 +870,11 @@ test("a route link cut short keeps the waypoints that arrived and counts the res
 // therefore be a leading stretch of what the sender plotted, never a leg they
 // never clicked, and the tally must square with the count the link leads with.
 test("every prefix of a route link parses as a prefix of the route, or as none", () => {
-  const route =
+  const pts =
     "620,411;563,472;602,585;522,578;505,681;398,688;350,680;256,676;182,676;110,684;61,684;60,578;129,586;222,583;294,583;405,578"
       .split(";")
       .map((p) => ({ x: +p.split(",")[0], y: +p.split(",")[1] }));
+  const route = [{ lv: "R6", pa: 6, pts }];
   const full = formatHash("AO", "R6", 6, { x: -120, y: 226, z: 1.29 }, null, route);
   assert.deepEqual(parseHash(full).route, route);
   assert.equal(parseHash(full).routeLost, 0);
@@ -856,8 +885,114 @@ test("every prefix of a route link parses as a prefix of the route, or as none",
       assert.equal(lost, 0, `${where} claims losses with nothing to show`);
       continue;
     }
-    assert.deepEqual(got, route.slice(0, got.length), `${where} altered the route`);
-    assert.equal(got.length + lost, route.length, `${where} miscounted what it lost`);
+    assert.equal(got.length, 1, `${where} invented a segment`);
+    assert.deepEqual(got[0].pts, pts.slice(0, got[0].pts.length), `${where} altered the route`);
+    assert.equal(got[0].pts.length + lost, pts.length, `${where} miscounted what it lost`);
+  }
+});
+
+test("a multi-path route round-trips, and a seam can stand empty", () => {
+  const route = [
+    {
+      lv: "R1",
+      pa: 15,
+      pts: [
+        { x: 1, y: 2 },
+        { x: 3, y: 4 },
+      ],
+    },
+    { lv: "R1", pa: 16, pts: [{ x: 5, y: 6 }] },
+    { lv: "BA", pa: 2, pts: [] },
+  ];
+  const h = formatHash("AE", "R1", 16, { x: 0, y: 0, z: 1 }, null, route);
+  assert.equal(h, "#AE/R1/16/0/0/1.00/route=n3;sR1.15;1,2;3,4;sR1.16;5,6;sBA.2;end");
+  assert.deepEqual(parseHash(h).route, route);
+  assert.equal(parseHash(h).routeLost, 0);
+  // codes read back uppercased, the way the game and level codes do
+  assert.deepEqual(parseHash(h.toLowerCase()).route, route);
+});
+
+test("malformed bodies drop the route whole; cuts keep the prefix", () => {
+  const at = (seg) => parseHash(`#AO/R2/1/0/0/1.00/${seg}`);
+  assert.equal(at("route=n2;1,2;3,4;end").route, null); // a pair before any segment
+  assert.equal(at("route=n2;sR1.15;1,2;junk;3,4;end").route, null);
+  assert.equal(at("route=n1;sR1.15;1,2;3,4;end").route, null); // more than the count
+  const full = "route=n3;sR1.15;1,2;3,4;sBA.2;5,6";
+  assert.deepEqual(at(`${full};end`).route, [
+    {
+      lv: "R1",
+      pa: 15,
+      pts: [
+        { x: 1, y: 2 },
+        { x: 3, y: 4 },
+      ],
+    },
+    { lv: "BA", pa: 2, pts: [{ x: 5, y: 6 }] },
+  ]);
+  // the cut drops the unproven last pair; the opened segment survives, empty
+  assert.deepEqual(at(full).route, [
+    {
+      lv: "R1",
+      pa: 15,
+      pts: [
+        { x: 1, y: 2 },
+        { x: 3, y: 4 },
+      ],
+    },
+    { lv: "BA", pa: 2, pts: [] },
+  ]);
+  assert.equal(at(full).routeLost, 1);
+});
+
+test("every prefix of a multi-path route link parses as a prefix of it, or as none", () => {
+  const route = [
+    {
+      lv: "R6",
+      pa: 6,
+      pts: [
+        { x: 620, y: 411 },
+        { x: 563, y: 472 },
+        { x: 602, y: 585 },
+      ],
+    },
+    {
+      lv: "R1",
+      pa: 15,
+      pts: [
+        { x: 129, y: 586 },
+        { x: 222, y: 583 },
+      ],
+    },
+    {
+      lv: "BA",
+      pa: 2,
+      pts: [
+        { x: 405, y: 578 },
+        { x: 12, y: 9 },
+      ],
+    },
+  ];
+  const total = 7;
+  const full = formatHash("AO", "BA", 2, { x: -120, y: 226, z: 1.29 }, null, route);
+  assert.deepEqual(parseHash(full).route, route);
+  for (let cut = full.indexOf("route=") + 6; cut < full.length; cut++) {
+    const { route: got, routeLost: lost } = parseHash(full.slice(0, cut));
+    const where = `prefix of length ${cut}`;
+    if (!got) {
+      assert.equal(lost, 0, `${where} claims losses with nothing to show`);
+      continue;
+    }
+    const n = got.reduce((k, s) => k + s.pts.length, 0);
+    assert.equal(n + lost, total, `${where} miscounted what it lost`);
+    for (let i = 0; i < got.length; i++) {
+      assert.equal(
+        `${got[i].lv} ${got[i].pa}`,
+        `${route[i].lv} ${route[i].pa}`,
+        `${where} invented a seam`,
+      );
+      const expect = i < got.length - 1 ? route[i].pts : route[i].pts.slice(0, got[i].pts.length);
+      assert.deepEqual(got[i].pts, expect, `${where} altered segment ${i}`);
+    }
   }
 });
 
@@ -938,4 +1073,17 @@ test("patrolZone: the pen between the id-matched bound pair, window-bounded", ()
     1,
   );
   assert.equal(patrolZone(slig, P3, AO_GEOMETRY, "AO"), null);
+});
+
+test("a segment always names its path, so undo across a seam cannot rebind it", () => {
+  // undo across a seam leaves exactly this: the route on R1 P15, you on P16
+  const route = [{ lv: "R1", pa: 15, pts: [{ x: 1, y: 2 }] }];
+  const h = formatHash("AO", "R1", 16, { x: 0, y: 0, z: 1 }, null, route);
+  assert.equal(h, "#AO/R1/16/0/0/1.00/route=n1;sR1.15;1,2;end");
+  assert.deepEqual(parseHash(h).route, route);
+});
+
+test("the route token refuses a marker flood", () => {
+  const markers = Array.from({ length: MAX_ROUTE_PTS + 1 }, () => "sR1.1").join(";");
+  assert.equal(parseHash(`#AO/R2/1/0/0/1.00/route=n1;${markers};1,2;end`).route, null);
 });

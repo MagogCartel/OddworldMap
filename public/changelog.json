@@ -3,6 +3,12 @@
   {
    "date": "2026-08-09",
    "tag": "new",
+   "title": "Routes go through doors now",
+   "detail": "The route planner used to stop at the edge of the path you plotted it on; a run through a door was two routes and a sum done by hand. Now, with the planner armed, clicking a door, well, portal or teleporter closes the leg on it, rides it, and keeps plotting where you land. The line breaks at each crossing (the travel between the halves isn't walked) and the bar totals the whole journey and says how many paths it spans. Undo takes a crossing back whole, and the back button retraces every ride with the route as it stood. A shared link carries the whole journey: whoever opens one can walk it, moving among its paths by button, by door or by the back button without losing it. Only wandering somewhere the route never goes clears it, and the back button brings it back."
+  },
+  {
+   "date": "2026-08-09",
+   "tag": "new",
    "title": "The pens enemies patrol are on the map",
    "detail": "Sligs and Scrabs are penned in by invisible bound markers, and until now those hid in the default-off Meta bucket looking like every other grey box. A new Settings option, \"Show enemy patrol pens\", draws them as dashed posts on the exact boundary the game enforces, each with a small foot pointing into the pen. Hovering a Slig or a Slig spawner shades the span it patrols, edge to edge between its own pair of posts, matched the way the game itself does it: by the slig id both ends carry. Scrab bounds carry no such id, so Scrabs get their posts and no shading. The posts need Enemies / spawners on, and the setting is off by default, since hundreds of posts are a lot of ink for anyone not reading patrol ranges."
   },

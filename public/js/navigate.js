@@ -106,10 +106,17 @@ function buildPathButtons() {
   if (state.path) markOn(pathBtns, String(state.path.id));
 }
 
-function selectLevel(L) {
+// the level-switch half alone, no path selected: a caller that knows its
+// target path selects it itself, in one selection change — an intermediate
+// default-path selection would fire listeners against a path nobody chose
+function setLevel(L) {
   state.lvl = L;
   markOn(levelBtns, L.short);
   buildPathButtons();
+}
+
+function selectLevel(L) {
+  setLevel(L);
   const first = visiblePaths(L)[0] ?? L.paths[0];
   if (first) selectPathById(first.id);
 }
@@ -210,7 +217,7 @@ export function navigateToDest(d) {
   }
   const L = state.data.levels.find((l) => l.short === d.lv);
   if (!L) return;
-  if (state.lvl !== L) selectLevel(L);
+  if (state.lvl !== L) setLevel(L);
   if (!selectPathById(d.pa)) return;
 
   let fx = null,
@@ -231,7 +238,7 @@ export function navigateToDest(d) {
 
 export function jumpToTlv(G, L, P, t) {
   if (state.data !== G) selectGame(G, true);
-  if (state.lvl !== L) selectLevel(L);
+  if (state.lvl !== L) setLevel(L);
   if (state.path !== P) selectPathById(P.id);
   focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
 }
@@ -240,9 +247,13 @@ export function jumpToTlv(G, L, P, t) {
 // or one screen of a path, centered when a camera id is named
 export function jumpToPlace(G, L, P, cam) {
   if (state.data !== G) selectGame(G, true);
-  if (!P || state.lvl !== L) selectLevel(L);
-  if (P) selectPathById(P.id);
-  if (!P || cam == null) return;
+  if (!P) {
+    selectLevel(L);
+    return;
+  }
+  if (state.lvl !== L) setLevel(L);
+  selectPathById(P.id);
+  if (cam == null) return;
   const cell = camCell(state.path, cam);
   if (cell != null)
     focusOn(
@@ -253,7 +264,8 @@ export function jumpToPlace(G, L, P, cam) {
 
 // ---- permalinks ---------------------------------------------------------
 let applyingHash = false,
-  hashTimer = null;
+  hashTimer = null,
+  hashPush = false; // a requested history entry survives later replace requests
 
 // embeds sit in other people's pages: browsing one must not move the
 // visitor's remembered location
@@ -266,22 +278,35 @@ export function viewHash() {
   return formatHash(state.data.id, state.lvl.short, state.path.id, v, null, state.route);
 }
 
+function writeHash(push) {
+  hashTimer = null;
+  hashPush = false;
+  // every pan, zoom and selection settles through here, debounced
+  window.dispatchEvent(new CustomEvent("view-changed"));
+  const h = viewHash();
+  if (!inEmbed()) rememberLocation(h);
+  if (h === location.hash) return;
+  if (push)
+    location.hash = h; // history entry (level/path/follow)
+  else history.replaceState(null, "", h); // silent update (pan/zoom)
+}
+
+// each call reschedules the one pending write; push-ness is sticky until it
+// fires, so a follow's history entry can't be downgraded by the quick silent
+// writes that ride on its heels
 export function scheduleHash(push) {
   if (applyingHash || !state.path) return;
+  hashPush ||= push;
   clearTimeout(hashTimer);
-  hashTimer = setTimeout(
-    () => {
-      // every pan, zoom and selection settles through here, debounced
-      window.dispatchEvent(new CustomEvent("view-changed"));
-      const h = viewHash();
-      if (!inEmbed()) rememberLocation(h);
-      if (h === location.hash) return;
-      if (push)
-        location.hash = h; // history entry (level/path/follow)
-      else history.replaceState(null, "", h); // silent update (pan/zoom)
-    },
-    push ? 0 : 350,
-  );
+  hashTimer = setTimeout(() => writeHash(hashPush), hashPush ? 0 : 350);
+}
+
+// a pending write fires now: the entry a follow is about to leave behind
+// should hold what the eye last saw, not what last settled
+export function flushHash() {
+  if (hashTimer == null) return;
+  clearTimeout(hashTimer);
+  writeHash(hashPush);
 }
 
 export function applyHash() {
@@ -310,8 +335,10 @@ export function applyHash() {
     toast(t ? `marker on ${t.name}` : `no ${p.obj.name} at that spot`);
   }
   state.route = p.route; // the hash is the source of truth: absent means no route
-  if (p.routeLost)
-    toast(`route link cut short: ${p.route.length} of ${p.route.length + p.routeLost} waypoints`);
+  if (p.routeLost) {
+    const arrived = p.route.reduce((n, s) => n + s.pts.length, 0);
+    toast(`route link cut short: ${arrived} of ${arrived + p.routeLost} waypoints`);
+  }
   window.dispatchEvent(new CustomEvent("route-changed"));
   draw();
   return true;

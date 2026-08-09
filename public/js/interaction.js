@@ -35,13 +35,20 @@ import {
   snapTarget,
   zoomAt,
 } from "./model.js";
-import { cyclePath, navigateToDest, objectHash, scheduleHash, viewHash } from "./navigate.js";
+import {
+  cyclePath,
+  flushHash,
+  navigateToDest,
+  objectHash,
+  scheduleHash,
+  viewHash,
+} from "./navigate.js";
 import { levelInfo } from "./annotations.js";
 import { toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
 import { syncPlace, togglePlace } from "./place.js";
-import { addRoutePoint, undoRoutePoint } from "./route.js";
+import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
 import { trapDialogKeys } from "./dialog.js";
 import { HAMBURGER_SVG, CLOSE_SVG, LINK_SVG, EXTERNAL_SVG } from "./icons.js";
 
@@ -217,7 +224,20 @@ cv.addEventListener("pointerleave", () => {
 cv.addEventListener("click", () => {
   if (panMoved || state.show.ruler) return;
   if (state.show.route) {
-    addRoutePoint(snapAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
+    updateHover(); // taps arrive without a preceding hover move
+    // a followed object seams the route: the segment closes on it, the ride
+    // happens, and the next opens where it lands. Hand stones only show a
+    // camera and loopbacks travel nowhere, so both stay plain waypoints
+    const seam = hoverTlvs.find(
+      (t) => (t.extra || {}).view1_cam == null && !isLoopback(t) && followableDest(t),
+    );
+    if (seam) {
+      const d = followableDest(seam);
+      flushHash(); // the entry left behind keeps the route as plotted so far
+      routeSeam({ x: (dX(seam.x1) + dX(seam.x2)) / 2, y: (dY(seam.y1) + dY(seam.y2)) / 2 }, d);
+      navigateToDest(d);
+      routeArrive(d);
+    } else addRoutePoint(snapAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
     return;
   }
   updateHover(); // taps arrive without a preceding hover move

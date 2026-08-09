@@ -341,16 +341,21 @@ export const focusZoom = (cw, ch) =>
     FOCUS_ZOOM_MAX,
   );
 
-// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=nCOUNT;x,y;…;end] -
+// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=…] -
 // cx/cy is the view's center, not the corner the renderer works in, so a link
 // lands on the same spot whatever the size of the window it opens in. Trailing
 // segments are matched by shape, not position, and unknown ones are ignored.
+// A route is a list of per-path segments {lv, pa, pts}, and its token is
+// "route=nCOUNT;sLV.PA;x,y;…;end": every segment names its path, so no
+// waypoint can ever rebind to artwork it was not plotted on.
 export function formatHash(gameId, levelShort, pathId, view, obj, route) {
   let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(view.x)}/${Math.round(view.y)}/${view.z.toFixed(2)}`;
   if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
-  if (route?.length) {
-    const pairs = route.map((p) => `${Math.round(p.x)},${Math.round(p.y)}`);
-    h += `/route=n${route.length};${pairs.join(";")};end`;
+  const count = route?.reduce((n, s) => n + s.pts.length, 0);
+  if (count) {
+    const pair = (p) => `${Math.round(p.x)},${Math.round(p.y)}`;
+    const body = route.map((s) => [`s${s.lv}.${s.pa}`, ...s.pts.map(pair)].join(";")).join(";");
+    h += `/route=n${count};${body};end`;
   }
   return h;
 }
@@ -362,23 +367,36 @@ export function formatHash(gameId, levelShort, pathId, view, obj, route) {
 // complete, a cut inside the final pair still reading as a well-formed one.
 // Both tokens end on a letter or digit, past what autolinkers eat off a URL,
 // and the count wears the "n" so that a pair cannot pass for it.
+// segments from a "route=" payload: the count first so it outlives a cut,
+// "sLV.PA" tokens opening each segment's run of pairs, and only the trailing
+// marker proving the payload complete — a cut inside the final token still
+// reads as a well-formed one, so the unproven tail goes unread. Every token
+// ends on a letter or digit, past what autolinkers eat off a URL, and the
+// count wears the "n" so a pair cannot pass for it. A segment whose points
+// were all cut away still arrives, empty, so the seam survives its legs.
 function parseRoute(payload) {
   const tokens = payload.split(";");
   const head = /^n(\d+)$/.exec(tokens[0]);
   const total = head ? +head[1] : 0;
   if (total < 1 || total > MAX_ROUTE_PTS) return null;
-  const pairs = tokens.slice(1);
-  // the tail goes unread unless it is the marker: a cut leaves either a
-  // shortened marker (all pairs arrived) or a pair that may still look whole
-  const complete = pairs.pop() === "end";
-  if (complete ? pairs.length !== total : pairs.length > total) return null;
-  const pts = [];
-  for (const pair of pairs) {
-    const m = /^(-?\d+),(-?\d+)$/.exec(pair);
-    if (!m) return null;
-    pts.push({ x: +m[1], y: +m[2] });
+  const body = tokens.slice(1);
+  const complete = body.pop() === "end";
+  const segs = [];
+  let count = 0;
+  for (const token of body) {
+    const sm = /^s([a-z0-9]+)\.(\d+)$/i.exec(token);
+    if (sm) {
+      segs.push({ lv: sm[1].toUpperCase(), pa: +sm[2], pts: [] });
+      if (segs.length > MAX_ROUTE_PTS) return null; // markers share the points' sanity cap
+      continue;
+    }
+    const m = /^(-?\d+),(-?\d+)$/.exec(token);
+    if (!m || !segs.length) return null; // a pair before any segment is malformed, not cut
+    segs[segs.length - 1].pts.push({ x: +m[1], y: +m[2] });
+    count++;
   }
-  return pts.length ? { pts, lost: total - pts.length } : null;
+  if (complete ? count !== total : count > total) return null;
+  return count || segs.length ? { segs, lost: total - count } : null;
 }
 
 // the TLV a permalink's object segment names, identified by name and origin
@@ -408,24 +426,26 @@ const finiteView = (x, y, z) =>
 
 // null for an empty hash; view is the center point plus zoom, null unless all
 // three read; obj names a TLV to highlight, identified by name and origin;
-// route is a list of draw-space waypoints, routeLost how many of them a
-// shortened URL never delivered. game/level/path may still come back empty or
-// NaN — the caller resolves those against the data.
+// route is a list of draw-space segments {lv, pa, pts}, routeLost how many
+// waypoints a shortened URL never delivered. game/level/path may still come
+// back empty or NaN — the caller resolves those against the data.
 export function parseHash(hash) {
   const h = decodeFragment(hash.replace(/^#/, ""));
   if (!h) return null;
   const parts = h.split("/");
-  const segs = parts.slice(6);
-  const om = segs.map((s) => /^(\w+)@(-?\d+),(-?\d+)$/.exec(s)).find(Boolean);
-  const rt = segs.find((s) => s.startsWith("route="));
+  const tail = parts.slice(6);
+  const om = tail.map((s) => /^(\w+)@(-?\d+),(-?\d+)$/.exec(s)).find(Boolean);
+  const level = (parts[1] || "").toUpperCase();
+  const path = +parts[2];
+  const rt = tail.find((s) => s.startsWith("route="));
   const route = rt ? parseRoute(rt.slice(6)) : null;
   return {
     game: parts[0].toUpperCase(),
-    level: (parts[1] || "").toUpperCase(),
-    path: +parts[2],
+    level,
+    path,
     view: parts.length >= 6 ? finiteView(+parts[3], +parts[4], +parts[5]) : null,
     obj: om ? { name: om[1], x1: +om[2], y1: +om[3] } : null,
-    route: route ? route.pts : null,
+    route: route ? route.segs : null,
     routeLost: route ? route.lost : 0,
   };
 }

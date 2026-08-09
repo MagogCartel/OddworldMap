@@ -469,44 +469,52 @@ export function draw() {
     ctx.fillText(label, midx - tw / 2, midy);
   }
 
-  // route-planner polyline: solid accent (the ruler stays dashed white), a
-  // ring on the start so a shared route reads direction, per-leg lengths
+  // route-planner polylines: solid accent (the ruler stays dashed white), one
+  // per segment of this path — a seam (a followed door or well) breaks the
+  // line, since the travel between the halves isn't walked. A ring marks the
+  // route's start when it is on this path; per-leg lengths label each segment
   if (route) {
     const col = `rgb(${COLOR.accentRgb})`;
-    ctx.strokeStyle = col;
-    ctx.fillStyle = col;
-    ctx.lineWidth = 2.5 / cam.z;
-    if (route.length > 1) {
-      ctx.beginPath();
-      ctx.moveTo(route[0].x, route[0].y);
-      for (let i = 1; i < route.length; i++) ctx.lineTo(route[i].x, route[i].y);
-      ctx.stroke();
-    }
-    for (const p of route) {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 3.5 / cam.z, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.lineWidth = 2 / cam.z;
-    ctx.beginPath();
-    ctx.arc(route[0].x, route[0].y, 6.5 / cam.z, 0, Math.PI * 2);
-    ctx.stroke();
     ctx.font = `${12 / cam.z}px sans-serif`;
-    for (let i = 1; i < route.length; i++) {
-      const a = route[i - 1],
-        b = route[i];
-      const dx = b.x - a.x,
-        dy = b.y - a.y;
-      if (Math.hypot(dx, dy) * cam.z < 60) continue; // zoomed out, the labels would drown the route
-      const label = formatDist(worldLen(dx, dy));
-      const midx = (a.x + b.x) / 2,
-        midy = (a.y + b.y) / 2 - 10 / cam.z;
-      const tw = ctx.measureText(label).width;
-      ctx.fillStyle = `rgba(${COLOR.mapBgRgb},.85)`;
-      ctx.fillRect(midx - tw / 2 - 5 / cam.z, midy - 12 / cam.z, tw + 10 / cam.z, 17 / cam.z);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillText(label, midx - tw / 2, midy);
-    }
+    route.forEach((seg, si) => {
+      if (seg.lv !== state.lvl.short || seg.pa !== path.id) return;
+      const pts = seg.pts;
+      ctx.strokeStyle = col;
+      ctx.fillStyle = col;
+      ctx.lineWidth = 2.5 / cam.z;
+      if (pts.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+        ctx.stroke();
+      }
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3.5 / cam.z, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (si === 0 && pts.length) {
+        ctx.lineWidth = 2 / cam.z;
+        ctx.beginPath();
+        ctx.arc(pts[0].x, pts[0].y, 6.5 / cam.z, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      for (let i = 1; i < pts.length; i++) {
+        const a = pts[i - 1],
+          b = pts[i];
+        const dx = b.x - a.x,
+          dy = b.y - a.y;
+        if (Math.hypot(dx, dy) * cam.z < 60) continue; // zoomed out, the labels would drown the route
+        const label = formatDist(worldLen(dx, dy));
+        const midx = (a.x + b.x) / 2,
+          midy = (a.y + b.y) / 2 - 10 / cam.z;
+        const tw = ctx.measureText(label).width;
+        ctx.fillStyle = `rgba(${COLOR.mapBgRgb},.85)`;
+        ctx.fillRect(midx - tw / 2 - 5 / cam.z, midy - 12 / cam.z, tw + 10 / cam.z, 17 / cam.z);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(label, midx - tw / 2, midy);
+      }
+    });
   }
 
   if (flash) {

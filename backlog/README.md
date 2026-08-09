@@ -53,7 +53,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**80.** Minimap inset](item-080-minimap-inset.md) — a small overview with a viewport rectangle, for the paths that outgrow the window. _Medium, anywhere._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the shell joins the opt-in artwork cache, so visited areas open with no network at all. _Small-medium, anywhere._
 - [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does: switch-id edges from levers and gates to the doors, walls and drills they drive. _Large, anywhere._
-- [**85.** Cross-path route planner](item-085-cross-path-routes.md) — a route that survives following a door, totalled per segment and overall. _Medium-large, anywhere._
 - [**86.** World graph](item-086-world-graph.md) — every path a node, every transition an edge: the metro map of each game. _Large, anywhere._
 
 ## Content depth
@@ -107,6 +106,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**85.** Cross-path route planner](item-085-cross-path-routes.md) — the planner rides doors and wells mid-plot; one survival rule, a seam that breaks the line, and a link older viewers degrade politely on. _2026-08-09._
 - [**81.** Enemy territory rendering](item-081-enemy-territory.md) — barrier posts and the hover pen in one: the decomp settled the pairing the sketch could only guess at, by id rather than by nearness. _2026-08-09._
 - [**87.** By the numbers](item-087-by-the-numbers.md) — pick object types, read their counts per screen/path/level/game as you browse; the comparisons the vision sketched stayed out, counting questions being the ones people bring. _2026-08-08._
 - [**7.** AO menu level (S1)](item-007-ao-menu-level.md) — the last level joins the map, its grid read off the chunk because the decomp tabulates none. _2026-08-07._

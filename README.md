@@ -67,8 +67,10 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - moving on (switching path, following a door, changing game) clears the measurement
 - **Route planner**: arm it (or press **`r`**), then click waypoints to plot a route — every leg is labelled with its length, and a bar at the top totals the distance in the same units
   - waypoints snap the way the ruler's ends do
-  - **Backspace** (or the bar's undo button) removes the last waypoint; clear starts over, and the browser back button brings a cleared route back
-  - the route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports; switching paths clears it
+  - **routes go through doors**: while the planner is armed, clicking a door, well, portal or teleporter closes the leg on it, rides it, and keeps plotting where you land — the line breaks at the seam, since the travel between the halves isn't walked, and the bar says how many paths the route crosses (hand stones only show a camera, so they stay plain waypoints)
+  - **Backspace** (or the bar's undo button) removes the last waypoint — at a seam it takes the whole crossing back; clear starts over, and the browser back button brings a cleared route back
+  - the route travels in the URL, so copying the link shares it exactly as plotted — it opens visible with the map fully browsable, no mode armed — and it appears in PNG exports
+  - whoever you share it with can walk it: the route stays while you move among its own paths — path buttons, doors, the back button — and clears only when you wander somewhere it never visits (Back brings it back)
   - should a chat app or forum shorten the link, it opens with the waypoints that survived and says how many are missing
 
 ### By the numbers
