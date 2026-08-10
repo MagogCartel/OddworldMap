@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-10",
+   "tag": "new",
+   "title": "What does that lever do? Switch wiring, drawn",
+   "detail": "Every lever, button, wheel and pressure plate in these games flips a numbered switch, and a door, drill, electric wall, trapdoor or spawner can be wired to listen for one. The new Switch wiring toggle under Display (or the w key) draws those connections as green dotted lines, including the logic gates Exoddus hides between them, where several work wheels have to agree before a door will open. Hover a wired object to spotlight just its own wires, with arrowheads showing which way the signal runs. The tooltip spells out what it sets and what it answers to, including wires that reach another path of the level. Wires run between markers you can see, so a hidden category takes its wires with it. The timer relays and pull rings now file under Switches / levers, green and on by default, so the objects doing the wiring are visible out of the box."
+  },
+  {
    "date": "2026-08-09",
    "tag": "new",
    "title": "A minimap for the paths that outgrow the window",

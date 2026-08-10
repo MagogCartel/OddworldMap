@@ -56,6 +56,9 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - a double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
   - colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
   - hovering an object spotlights just its own arrows
+- **Switch wiring** (off by default, or press **`w`**): what a lever actually does — green dotted lines from everything that writes a switch id (levers, buttons, work wheels, pressure plates, pull rings) to everything on the path answering that id (doors, drills, electric walls, trapdoors, bird portals, spawners, status lights), through the logic gates Exoddus wires between them and the hub doors Oddysee opens only when every zulag id they watch is set
+  - hovering a wired object spotlights just its own wires, with arrowheads showing which way the signal runs, and the tooltip spells them out — `sets 66 → 5 objects`, or `answers 11 — set in P2` for a wire whose other end lives on another path of the level (switch state is level-wide in the engine, so those connections are real)
+  - wires run between markers you can see: hide a category and its wires go with it (status lights and alarms sit in buckets that are off by default)
 - **Object labels (zoomed)**: names each object beside its marker, from about half zoom in
 - **Dim backgrounds**: fades the camera artwork to a third of its brightness, so markers and overlays stand out against it
 

@@ -9,6 +9,7 @@ import {
   PENS,
   LINE_COLORS,
   LINE_NAMES,
+  WIRE_COLOR,
 } from "./config.js";
 import {
   $,
@@ -24,15 +25,25 @@ import {
 } from "./dom.js";
 import { toast } from "./toast.js";
 import { state, GEO, dX, dY, wX, wY, gX, gY } from "./state.js";
-import { draw, scheduleDraw, setConnFocus, setHighlight, setPatrol } from "./render.js";
 import {
+  draw,
+  scheduleDraw,
+  setConnFocus,
+  setHighlight,
+  setPatrol,
+  setWireFocus,
+} from "./render.js";
+import {
+  computeWiring,
   destOf,
   destTrusted,
   isLoopback,
+  levelWiring,
   pathIn,
   patrolZone,
   resolveTarget,
   snapTarget,
+  wireEnds,
   zoomAt,
 } from "./model.js";
 import {
@@ -218,6 +229,7 @@ cv.addEventListener("pointerleave", () => {
   cv.style.cursor = modeCursor();
   setHighlight(null);
   setConnFocus(null);
+  setWireFocus(null);
   setPatrol(null);
 });
 
@@ -333,7 +345,9 @@ window.addEventListener("keydown", (e) => {
     return;
   }
   if (e.altKey) return;
-  const show = { g: "grid", c: "coll", f: "fg", a: "conn", r: "route", m: "ruler" }[e.key];
+  const show = { g: "grid", c: "coll", f: "fg", a: "conn", w: "wires", r: "route", m: "ruler" }[
+    e.key
+  ];
   if (show) {
     toggleShow(show);
     return;
@@ -440,6 +454,16 @@ function updateHover() {
   );
   // arrows overlay: spotlight the hovered object's own edges
   setConnFocus(state.show.conn ? (hoverTlvs.find((t) => shownDest(t)) ?? null) : null);
+  // wiring overlay: the same, for the hovered object's own drawn wires
+  const wiring = state.show.wires ? computeWiring(state.path) : null;
+  const wireDrawn = (e) => markerShown(e.src) && markerShown(e.dst);
+  setWireFocus(
+    wiring
+      ? (hoverTlvs.find((t) =>
+          wiring.edges.some((e) => (e.src === t || e.dst === t) && wireDrawn(e)),
+        ) ?? null)
+      : null,
+  );
   if (hoverTlvs.length || hoverLines.length) {
     tip.style.display = "block";
     const html =
@@ -459,9 +483,51 @@ function updateHover() {
           } else if (d) {
             follow = `<br><span class="f">➜ click to follow to ${esc(`${d.lv} P${d.pa}${d.ca != null ? " C" + d.ca : ""}`)}</span>`;
           }
+          // wiring lines describe the drawn wires — a local partner in a
+          // hidden category is neither drawn nor named, while a cross-path
+          // note names a path rather than a marker — and state only what
+          // exists: a shown partner, or the other paths of the level holding
+          // one when this path holds none at all. Silence is never a claim,
+          // since an id can drive things the wire table has no evidence for
+          let wireInfo = "";
+          if (wiring) {
+            const lines = [];
+            const remote = levelWiring(state.lvl);
+            const others = (paths) =>
+              [...(paths ?? [])].filter((pa) => pa !== state.path.id).map((pa) => "P" + pa);
+            const ends = wireEnds(t);
+            const wired = (m, id) => (m.get(id) ?? []).filter((o) => o !== t);
+            for (const id of ends.out) {
+              const local = wired(wiring.cons, id);
+              const shown = local.filter(markerShown);
+              if (shown.length === 1) lines.push(`sets ${id} → ${shown[0].name}`);
+              else if (shown.length) lines.push(`sets ${id} → ${shown.length} objects`);
+              else if (!local.length) {
+                const paths = others(remote.cons.get(id));
+                if (paths.length) lines.push(`sets ${id} — answered in ${paths.join(", ")}`);
+              }
+            }
+            for (const id of ends.in) {
+              const local = wired(wiring.prod, id);
+              const shown = local.filter(markerShown);
+              const names = new Set(shown.map((o) => o.name));
+              if (shown.length === 1) lines.push(`answers ${id} ← ${shown[0].name}`);
+              else if (names.size === 1)
+                lines.push(`answers ${id} ← ${shown.length}× ${[...names][0]}`);
+              else if (shown.length) lines.push(`answers ${id} ← ${shown.length} producers`);
+              else if (!local.length) {
+                const paths = others(remote.prod.get(id));
+                if (paths.length) lines.push(`answers ${id} — set in ${paths.join(", ")}`);
+              }
+            }
+            wireInfo = lines
+              .map((l) => `<br><span class="f" style="color:${WIRE_COLOR}">↯ ${esc(l)}</span>`)
+              .join("");
+          }
           return (
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
             (ex ? `<br><span class="e">${esc(ex)}</span>` : "") +
+            wireInfo +
             follow +
             `</div>`
           );

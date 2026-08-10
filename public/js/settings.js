@@ -26,7 +26,7 @@ export const SETTINGS_DEFAULTS = {
 // fieldPrefs (not a boolean; added by sanitizeSettings) — which object fields
 // to show: mode "default" (the notable ones) or "more" (per-game, per-type
 // picks in byType, falling back to the defaults).
-export const SHOW_KEYS = ["grid", "coll", "fg", "conn", "labels", "dim"];
+export const SHOW_KEYS = ["grid", "coll", "fg", "conn", "wires", "labels", "dim"];
 
 // localStorage may be unavailable (private mode, blocked); never let that break the viewer
 const store = {

@@ -13,7 +13,11 @@ import {
   BARRIERS,
   PENS,
   markerShown,
+  WIRES,
+  DOOR_GATE,
+  HUB_FIELDS,
 } from "./config.js";
+import { isDemoPath } from "./demo.js";
 import { GEO, state, CELL_W, CELL_H, dX, dY } from "./state.js";
 
 export function computeEntryPaths(data, geo = data.geometry) {
@@ -312,6 +316,94 @@ export function computeConnections(
     }
   }
   return [...edges, ...stubs];
+}
+
+const liveId = (v) => Number.isInteger(v) && v >= 2 && v <= 255;
+const addEnd = (m, id, t) => {
+  if (!liveId(id)) return;
+  let list = m.get(id);
+  if (!list) m.set(id, (list = []));
+  list.push(t);
+};
+
+// a path's switch wiring: edges from every producer to every consumer sharing
+// a live id, plus the id->object maps behind them. A gate door swaps sides:
+// its hub ids are inputs and its own switch id the AND's output alone — the
+// gate rewrites that id every frame, so an external feed cannot hold it.
+// Edges dedupe by endpoint pair and an object never wires to itself.
+// Memoized by path identity (paths live as long as their dataset).
+const wiringCache = new WeakMap();
+export function computeWiring(path, gameId = state.data?.id) {
+  let w = wiringCache.get(path);
+  if (w && w.gameId === gameId) return w;
+  const table = WIRES[gameId] ?? { out: {}, in: {} };
+  const prod = new Map();
+  const cons = new Map();
+  for (const t of path.tlvs) {
+    const f = t.fields || {};
+    const gate = t.name === "Door" && DOOR_GATE[gameId]?.(t);
+    if (gate) {
+      addEnd(prod, f.switch_id, t);
+      for (const k of HUB_FIELDS) addEnd(cons, f[k], t);
+      continue;
+    }
+    for (const k of table.out[t.name] ?? []) addEnd(prod, f[k], t);
+    for (const k of table.in[t.name] ?? []) addEnd(cons, f[k], t);
+  }
+  const edges = [];
+  const seen = new Set();
+  const ord = new Map();
+  const n = (t) => ord.get(t) ?? (ord.set(t, ord.size), ord.size - 1);
+  for (const [id, ps] of prod)
+    for (const p of ps)
+      for (const c of cons.get(id) ?? []) {
+        if (c === p) continue;
+        const key = n(p) + ":" + n(c);
+        if (!seen.has(key)) {
+          seen.add(key);
+          edges.push({ src: p, dst: c });
+        }
+      }
+  w = { gameId, edges, prod, cons };
+  wiringCache.set(path, w);
+  return w;
+}
+
+// one object's wired fields: the ids it writes and the ids it answers to
+export function wireEnds(t, gameId = state.data?.id) {
+  const table = WIRES[gameId] ?? {};
+  const f = t.fields || {};
+  const ids = (keys) => (keys ?? []).map((k) => f[k]).filter(liveId);
+  if (t.name === "Door" && DOOR_GATE[gameId]?.(t))
+    return { out: [...new Set(ids(["switch_id"]))], in: [...new Set(ids(HUB_FIELDS))] };
+  return {
+    out: [...new Set(ids(table.out?.[t.name]))],
+    in: [...new Set(ids(table.in?.[t.name]))],
+  };
+}
+
+// level-wide ends, for the cross-path wiring note: which paths hold a producer
+// or consumer of each id — switch state is level-scoped, so an id set in one
+// path is heard in every other. Demo paths stay out: a note naming an
+// unreachable copy would send the reader somewhere nothing travels.
+const levelWiringCache = new WeakMap();
+export function levelWiring(lvl, gameId = state.data?.id) {
+  let w = levelWiringCache.get(lvl);
+  if (w && w.gameId === gameId) return w;
+  w = { gameId, prod: new Map(), cons: new Map() };
+  const note = (m, id, pa) => {
+    let set = m.get(id);
+    if (!set) m.set(id, (set = new Set()));
+    set.add(pa);
+  };
+  for (const P of lvl.paths) {
+    if (isDemoPath(P)) continue;
+    const { prod, cons } = computeWiring(P, gameId);
+    for (const id of prod.keys()) note(w.prod, id, P.id);
+    for (const id of cons.keys()) note(w.cons, id, P.id);
+  }
+  levelWiringCache.set(lvl, w);
+  return w;
 }
 
 // zoom the camera by factor about a fixed canvas point: the world spot under

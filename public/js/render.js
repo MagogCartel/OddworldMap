@@ -9,13 +9,14 @@ import {
   FLASH_MS,
   LINE_COLORS,
   PENS,
+  WIRE_COLOR,
   barrierDir,
   catOf,
   markerShown,
 } from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
-import { camCenter, centerCam, computeConnections } from "./model.js";
+import { camCenter, centerCam, computeConnections, computeWiring } from "./model.js";
 import { onBackgroundPlane } from "./fields.js";
 
 // canvas colors shared with the stylesheet, read once from the tokens
@@ -125,6 +126,15 @@ export function setConnFocus(t) {
   scheduleDraw();
 }
 window.addEventListener("selection-changed", () => setConnFocus(null));
+
+// hovered wired object: same spotlight for the wiring overlay
+let wireFocus = null;
+export function setWireFocus(t) {
+  if (wireFocus === t) return;
+  wireFocus = t;
+  scheduleDraw();
+}
+window.addEventListener("selection-changed", () => setWireFocus(null));
 
 // pointed-at object: a dashed outline around one TLV, for hover affordances
 // that reference an object without selecting it (camera-panel rows, a hovered
@@ -359,6 +369,45 @@ export function draw() {
       ctx.globalAlpha = 1;
       ctx.setLineDash([]);
     }
+  }
+
+  // switch wiring: dotted hairlines from each producer to its id's consumers,
+  // straight and thin so the circulation arrows' solid curves stay a separate
+  // voice. Hovering a wired object spotlights its own wires and gives them
+  // arrowheads at the consumer end; an edge hides with either endpoint. A wire
+  // to a barrier post lands on the post's line, as the ruler's snap does.
+  if (show.wires) {
+    const centre = (t) => {
+      const post = PENS.on && barrierDir(t) !== null;
+      return [post ? dX(t.x1) : (dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2];
+    };
+    // the spotlight judges what is drawn: a hovered object whose wires are
+    // all hidden must not dim the rest with nothing to show for it
+    const drawn = computeWiring(path).edges.filter((e) => markerShown(e.src) && markerShown(e.dst));
+    const focusActive = wireFocus && drawn.some((e) => e.src === wireFocus || e.dst === wireFocus);
+    ctx.strokeStyle = ctx.fillStyle = WIRE_COLOR;
+    const dash = [2.5 / cam.z, 4.5 / cam.z];
+    ctx.setLineDash(dash);
+    for (const e of drawn) {
+      const focused = focusActive && (e.src === wireFocus || e.dst === wireFocus);
+      ctx.globalAlpha = focusActive ? (focused ? 0.95 : 0.12) : 0.5;
+      ctx.lineWidth = (focused ? 2.5 : 1.25) / cam.z;
+      const [sx, sy] = centre(e.src);
+      const [tx, ty] = centre(e.dst);
+      const len = Math.hypot(tx - sx, ty - sy);
+      if (len < 1) continue;
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+      if (focused) {
+        ctx.setLineDash([]);
+        arrowhead(tx, ty, tx - sx, ty - sy, Math.min(10 / cam.z, 0.3 * len));
+        ctx.setLineDash(dash);
+      }
+    }
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
   }
 
   // connection arrows: the path's circulation — curves between resolved

@@ -32,11 +32,11 @@ export const CATS = [
   { key:"mud",    label:"Mudokons",          color:"#3ec6ff", on:true, names:["Mudokon","SlingMudokon","RingMudokon","LiftMudokon","MudokonPathTrans","TorturedMudokon"] },
   { key:"door",   label:"Doors / Transitions", color:"#ffd23e", on:true, names:["Door","PathTransition","BirdPortal","BirdPortalExit","WellLocal","LocalWell","WellExpress","Teleporter","TrainDoor","SlamDoor","MineCar"] },
   { key:"cont",   label:"Continue points",   color:"#ffffff", on:true, names:["ContinuePoint","AbeStart","ElumStart"] },
-  { key:"switch", label:"Switches / levers", color:"#5dde75", on:true, names:["Switch","Lever","InvisibleSwitch","FootSwitch","BellHammer","HandStone","IdSplitter","SecurityOrb","SecurityDoor","BellSongStone","ChimeLock","MovieHandStone","GlukkonSwitch","CrawlingSligButton","MultiSwitchController","WheelSyncer","WorkWheel","SlapLock"] },
+  { key:"switch", label:"Switches / levers", color:"#5dde75", on:true, names:["Switch","Lever","InvisibleSwitch","FootSwitch","BellHammer","HandStone","IdSplitter","SecurityOrb","SecurityDoor","BellSongStone","ChimeLock","MovieHandStone","GlukkonSwitch","CrawlingSligButton","MultiSwitchController","WheelSyncer","TimerTrigger","WorkWheel","SlapLock","PullRingRope"] },
   { key:"hazard", label:"Hazards",           color:"#ff8b3d", on:true, names:["DeathDrop","TimedMine","Mine","UXB","ElectricWall","DoorFlame","MovingBomb","MeatSaw","BoomMachine","DeathClock","GasEmitter","GasCountdown","TrapDoor","FallingItem","RollingBall","RollingRock","ZBall","Drill","LaughingGas","ExplosionSet","BrewMachine","Water"] },
   { key:"enemy",  label:"Enemies / spawners", color:"#c85dff", on:true, names:["Slig","Slog","Paramite","Scrab","Bat","Bees","SligSpawner","SlogSpawner","ScrabSpawner","Glukkon","SlogHut","FlyingSlig","FlyingSligSpawner","CrawlingSlig","Fleech","Slurg","SlurgSpawner","ZzzSpawner","Greeter","SligGetPants","SligGetWings","BeeSwarmHole"] },
   { key:"screen", label:"Screens / pickups", color:"#3effc8", on:false, names:["LCDScreen","LCD","MovieStone","HintFly","DemoPlaybackStone","Honey","HoneySack","HoneyDripTarget","MeatSack","RockSack","BoneBag","Dove","StatusLight","ColourfulMeter"] },
-  { key:"nav",    label:"Hoists / edges / lifts", color:"#8f9bb3", on:false, names:["Hoist","Edge","LiftPoint","LiftMover","Pulley","PullRingRope","ElumWall","ScrabNoFall","RollingBallStopper","FlintLockFire","ParamiteWebLine"] },
+  { key:"nav",    label:"Hoists / edges / lifts", color:"#8f9bb3", on:false, names:["Hoist","Edge","LiftPoint","LiftMover","Pulley","ElumWall","ScrabNoFall","RollingBallStopper","FlintLockFire","ParamiteWebLine"] },
   { key:"meta",   label:"Meta / bounds / fx", color:"#5b6270", on:false, names:[] },   // fallback for everything else
 ];
 const NAME_CAT = {};
@@ -67,3 +67,81 @@ export const PENS = { on: false };
 // be pointed at
 export const markerShown = t =>
   catOf(t).on || (t.name in BARRIERS && PENS.on && ENEMY_CAT.on);
+
+// ---- switch wiring: the fields that write a switch id (out) and the fields
+// that answer to one (in). The engine keeps one switch-state array per level
+// (ids are level-scoped; the array resets only on level change), ids 0 and 1
+// are hardwired never/always-on and producers refuse them, so only 2..255 can
+// carry a wire. Curated against the engine's actual read/write sites: most
+// fields named switch_id are neither end (pair numbers, spawner bindings,
+// words never read), and a drill or saw that writes its own id back at cycle
+// end is group timing rather than wiring, so those stay consumers.
+export const WIRES = {
+  AO: {
+    out: {
+      Switch:["switch_id"], InvisibleSwitch:["switch_id"], FootSwitch:["switch_id"],
+      PullRingRope:["switch_id"], BellSongStone:["switch_id"], ChimeLock:["solve_switch_id"],
+      SecurityDoor:["switch_id"], Mudokon:["rescue_switch_id"], MotionDetector:["alarm_switch_id"],
+      SecurityClaw:["alarm_switch_id"], IdSplitter:["id_1","id_2","id_3","id_4"],
+      RollingBallStopper:["ball_switch_id"],
+    },
+    in: {
+      Door:["switch_id"], TrapDoor:["switch_id"], ElectricWall:["switch_id"],
+      DoorFlame:["switch_id"], FlintLockFire:["switch_id"], MeatSaw:["switch_id"],
+      EnemyStopper:["switch_id"], MovingBomb:["switch_id"], FallingItem:["switch_id"],
+      RollingBall:["release_switch_id"], RollingBallStopper:["stopper_switch_id"],
+      LiftMover:["lift_mover_switch_id"], MusicTrigger:["switch_id"], DeathClock:["start_switch_id"],
+      Bees:["switch_id"], BellHammer:["switch_id"], WellLocal:["switch_id"], WellExpress:["switch_id"],
+      SligSpawner:["slig_spawner_switch_id"], SlogSpawner:["spawner_switch_id"],
+      Slog:["anger_switch_id"], Paramite:["surprise_web_switch_id"], ChimeLock:["password_switch_id"],
+      IdSplitter:["source_switch_id"], MotionDetector:["disable_switch_id"],
+    },
+  },
+  AE: {
+    out: {
+      Lever:["switch_id"], InvisibleSwitch:["switch_id"], FootSwitch:["switch_id"],
+      PullRingRope:["switch_id"], WorkWheel:["switch_id"], CrawlingSligButton:["switch_id"],
+      SlapLock:["toggle_switch_id","target_tomb_id_2"], GlukkonSwitch:["ok_switch_id","fail_switch_id"],
+      Glukkon:["help_switch_id","death_switch_id"], Mudokon:["rescue_switch_id"],
+      MotionDetector:["alarm_switch_id"], HandStone:["trigger_switch_id"],
+      MovieHandStone:["trigger_switch_id"], SecurityDoor:["switch_id"],
+      Slurg:["switch_id"], SlurgSpawner:["switch_id"], MultiSwitchController:["output_switch_id"],
+      TimerTrigger:["output_switch_id_1","output_switch_id_2","output_switch_id_3","output_switch_id_4"],
+      WheelSyncer:["output_switch_id"],
+    },
+    in: {
+      Door:["switch_id"], SlamDoor:["switch_id"], TrapDoor:["switch_id"], DoorBlocker:["switch_id"],
+      DoorFlame:["switch_id"], Drill:["switch_id"], ElectricWall:["switch_id"], EnemyStopper:["switch_id"],
+      ExplosionSet:["switch_id"], FallingItem:["switch_id"], MovingBomb:["start_moving_switch_id"],
+      LiftMover:["lift_mover_switch_id"], BirdPortal:["create_portal_switch_id","delete_portal_switch_id"],
+      StatusLight:["switch_id","id_1","id_2","id_3","id_4","id_5"], LCD:["toggle_message_switch_id"],
+      ColourfulMeter:["switch_id"], Alarm:["switch_id"], Water:["switch_id"], GasEmitter:["switch_id"],
+      GasCountdown:["start_timer_switch_id","stop_timer_switch_id"], LaughingGas:["laughing_gas_switch_id"],
+      LevelLoader:["switch_id"], SoftLanding:["switch_id"], Teleporter:["switch_id"],
+      WellExpress:["switch_id"], LocalWell:["switch_id"], ZzzSpawner:["switch_id"],
+      SligSpawner:["id"], SlogSpawner:["spawner_switch_id"], ScrabSpawner:["spawner_switch_id"],
+      SlurgSpawner:["spawner_switch_id"],
+      FlyingSligSpawner:["spawner_switch_id","launch_grenade_switch_id"],
+      FlyingSlig:["launch_grenade_switch_id"], CrawlingSlig:["panic_switch_id"],
+      Fleech:["wake_up_switch_id","can_wake_up_switch_id"], Slog:["anger_switch_id"],
+      Paramite:["surprise_web_switch_id"], Mudokon:["angry_switch_id"],
+      Glukkon:["spawn_switch_id","play_movie_switch_id"], TimerTrigger:["input_switch_id"],
+      TorturedMudokon:["kill_switch_id","release_switch_id"],
+      MultiSwitchController:["input_switch_id_1","input_switch_id_2","input_switch_id_3",
+                             "input_switch_id_4","input_switch_id_5","input_switch_id_6"],
+      WheelSyncer:["input_switch_id_1","input_switch_id_2","input_switch_id_3",
+                   "input_switch_id_4","input_switch_id_5","input_switch_id_6"],
+    },
+  },
+};
+
+// hub doors run an AND over their eight hub ids and write the result to their
+// own switch id, making those doors both consumer and producer; which doors
+// run the gate is a per-game field value (Door.cpp's hub/tasks-door update)
+export const DOOR_GATE = { AO: t => t.fields?.start_state === 2,
+                           AE: t => t.fields?.door_type === 2 || t.fields?.door_type === 3 };
+export const HUB_FIELDS = ["hub_1_id","hub_2_id","hub_3_id","hub_4_id",
+                           "hub_5_id","hub_6_id","hub_7_id","hub_8_id"];
+
+// wires carry the switch signal, so they take the switches category's green
+export const WIRE_COLOR = CATS.find(c => c.key === "switch").color;

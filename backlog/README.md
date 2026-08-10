@@ -28,7 +28,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
-- [84. Switch wiring overlay](item-084-switch-wiring-overlay.md) — the decomp checkout sits ready for the id-scope question.
 - [83. Offline app shell](item-083-offline-app-shell.md)
 - [82. Type encyclopedia cards](item-082-type-encyclopedia.md) — the mechanism, then the content pass it exists for.
 - [86. World graph](item-086-world-graph.md) — feeds on the wiring overlay's aggregation experience.
@@ -55,7 +54,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the shell joins the opt-in artwork cache, so visited areas open with no network at all. _Small-medium, anywhere._
-- [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does: switch-id edges from levers and gates to the doors, walls and drills they drive. _Large, anywhere._
 - [**86.** World graph](item-086-world-graph.md) — every path a node, every transition an edge: the metro map of each game. _Large, anywhere._
 
 ## Content depth
@@ -109,6 +107,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does, drawn: switch-id wires from producers through the logic gates to the doors, drills and walls they drive; the decomp settled the id scope (level-wide) and which of the ninety switch-named fields are real ends. _2026-08-10._
 - [**80.** Minimap inset](item-080-minimap-inset.md) — the path's grid in the corner with the viewport on it, painted at the end of every frame; yields its corner to the numbers panel. _2026-08-09._
 - [**85.** Cross-path route planner](item-085-cross-path-routes.md) — the planner rides doors and wells mid-plot; one survival rule, a seam that breaks the line, and a link older viewers degrade politely on. _2026-08-09._
 - [**81.** Enemy territory rendering](item-081-enemy-territory.md) — barrier posts and the hover pen in one: the decomp settled the pairing the sketch could only guess at, by id rather than by nearness. _2026-08-09._
