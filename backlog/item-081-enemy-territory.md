@@ -28,5 +28,5 @@ Where the sketch was wrong, read from `Slig.cpp` before building:
 - `EnemyStopper` carries a `stop_direction` field (left / right / both), so its foot comes from the data rather than the name.
 - `markerShown` in [js/config.js](../public/js/config.js) became the one marker-visibility rule (drawing, hover, ruler snapping), so a barrier shown by the Enemies toggle is also hoverable and snappable — drawn and pointable stay the same set.
 
-- The whole treatment sits behind Settings → "Show enemy patrol pens", **off by default**: hundreds of posts are clutter for anyone not reading patrol ranges. Pens off, barriers are the plain meta boxes they always were.
+- The whole treatment sits behind the "Enemy patrol pens" Display toggle (`p` — initially shipped as a Settings row, but a lens you flip mid-reading is Display ink), **off by default**: hundreds of posts are clutter for anyone not reading patrol ranges. Pens off, barriers are the plain meta boxes they always were.
 - The posts stand on each stamp's top-left x — the boundary the engine actually enforces, and the edge the pen band is built from, so posts and band always meet; a centred post would stand half a stamp off the band on both sides. Snapping follows the line too.

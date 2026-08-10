@@ -49,7 +49,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 - **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
 - **Background-plane objects**: objects placed on the half-scale background plane are drawn dimmed with a dashed outline, so foreground and background objects are tellable apart when reading a route
-- **Enemy patrol pens** (Settings → "Show enemy patrol pens", off by default): the invisible posts that pen enemies in (Slig and Scrab bounds, enemy stoppers, moving-bomb stoppers) draw as dashed posts on the exact boundary the game enforces, whenever Enemies / spawners is on and whatever filter bucket they belong to; a foot at the base points into the pen where the type claims a side
+- **Enemy patrol pens** (off by default, or press **`p`**): the invisible posts that pen enemies in (Slig and Scrab bounds, enemy stoppers, moving-bomb stoppers) draw as dashed posts on the exact boundary the game enforces, whenever Enemies / spawners is on and whatever filter bucket they belong to; a foot at the base points into the pen where the type claims a side
   - hover a Slig (or a Slig spawner) and the span it patrols shades in, edge to edge between its own pair of posts — matched the way the game itself matches them, by the slig id both ends carry
 - **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
@@ -108,7 +108,6 @@ The gear button at the top of the sidebar opens them, in three groups. A setting
   - "Show demo paths" (off by default) adds Exoddus' 25 demo areas to the path buttons, marked `[Demo]`; they are copies of real places that only the title-screen demos visit, so the map leaves them out of the buttons and out of search results, but a shared link to one still opens it and says what it is
 - **Objects and fields**
   - "List a screen's objects on click" (on by default) opens the screen-inventory panel when a click/tap finds nothing to follow
-  - "Show enemy patrol pens" (off by default) draws the invisible Slig and Scrab bounds as dashed posts and shades a hovered Slig's patrol span — informative on a route, busy everywhere else
   - "Show more object fields" (off by default) reveals a "Fields" panel in the sidebar where you pick, per object type, which of its fields show in tooltips and the screen list (the notable ones pre-checked) — a ⚙ next to an object in a screen's list opens that type's row in the panel; with it off, only the notable fields show and the panel stays hidden
   - "Show raw field values" (off by default) shows field values as the raw numbers the game stores (1/0, 15, …) instead of the translated text (left/right, patrol, true/false); search matches whichever representation you're viewing
 

@@ -22,7 +22,7 @@
    "date": "2026-08-09",
    "tag": "new",
    "title": "The pens enemies patrol are on the map",
-   "detail": "Sligs and Scrabs are penned in by invisible bound markers, and until now those hid in the default-off Meta bucket looking like every other grey box. A new Settings option, \"Show enemy patrol pens\", draws them as dashed posts on the exact boundary the game enforces, each with a small foot pointing into the pen. Hovering a Slig or a Slig spawner shades the span it patrols, edge to edge between its own pair of posts, matched the way the game itself does it: by the slig id both ends carry. Scrab bounds carry no such id, so Scrabs get their posts and no shading. The posts need Enemies / spawners on, and the setting is off by default, since hundreds of posts are a lot of ink for anyone not reading patrol ranges."
+   "detail": "Sligs and Scrabs are penned in by invisible bound markers, and until now those hid in the default-off Meta bucket looking like every other grey box. A new Display toggle, Enemy patrol pens (or the p key), draws them as dashed posts on the exact boundary the game enforces, each with a small foot pointing into the pen. Hovering a Slig or a Slig spawner shades the span it patrols, edge to edge between its own pair of posts, matched the way the game itself does it: by the slig id both ends carry. Scrab bounds carry no such id, so Scrabs get their posts and no shading. The posts need Enemies / spawners on, and the toggle is off by default, since hundreds of posts are a lot of ink for anyone not reading patrol ranges."
   },
   {
    "date": "2026-08-08",

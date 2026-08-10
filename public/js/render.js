@@ -158,10 +158,6 @@ export function setPatrol(z) {
 }
 window.addEventListener("selection-changed", () => setPatrol(null));
 
-window.addEventListener("settings-changed", (e) => {
-  if (e.detail?.key === "enemyPens") scheduleDraw();
-});
-
 // coalesce bursty redraw sources (pointer moves, image loads) into one paint per frame
 let drawPending = false;
 export function scheduleDraw() {

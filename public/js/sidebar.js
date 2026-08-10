@@ -1,6 +1,6 @@
 // Sidebar controls: category filters, display toggles, PNG export, feedback link.
 
-import { CATS, catOf } from "./config.js";
+import { CATS, PENS, catOf } from "./config.js";
 import { $, cv, filterBox } from "./dom.js";
 import { toast } from "./toast.js";
 import { state } from "./state.js";
@@ -45,6 +45,7 @@ $("fReset").onclick = () => setFilters((c) => catDefaults.get(c.key));
 const showUI = new Map(); // show key -> its checkbox
 function syncShow(key, cb) {
   state.show[key] = cb.checked;
+  if (key === "pens") PENS.on = cb.checked; // the barrier gate lives in config
   if (key !== "ruler" && key !== "route") return;
   if (cb.checked) {
     const other = key === "ruler" ? "route" : "ruler"; // one measuring tool armed at a time
@@ -64,6 +65,7 @@ for (const [key, id] of Object.entries({
   fg: "tFg",
   conn: "tConn",
   wires: "tWires",
+  pens: "tPens",
   labels: "tLabels",
   dim: "tDim",
   ruler: "tRuler",
@@ -79,6 +81,7 @@ for (const [key, id] of Object.entries({
   };
   showUI.set(key, cb);
 }
+PENS.on = state.show.pens; // ahead of the first draw
 // the g/c/f shortcuts flip the same checkboxes the pointer does
 export function toggleShow(key) {
   const cb = showUI.get(key);

@@ -59,7 +59,7 @@ export const barrierDir = t => {
   return d === 0 ? 1 : d === 1 ? -1 : 0;
 };
 
-// the pens setting gates the whole barrier treatment — off by default, since
+// the pens toggle gates the whole barrier treatment — off by default, since
 // hundreds of posts are clutter for anyone not reading patrol ranges
 export const PENS = { on: false };
 

@@ -103,6 +103,9 @@
           ><input type="checkbox" id="tWires" autocomplete="off" /> Switch wiring</label
         >
         <label class="checkrow"
+          ><input type="checkbox" id="tPens" autocomplete="off" /> Enemy patrol pens</label
+        >
+        <label class="checkrow"
           ><input type="checkbox" id="tLabels" autocomplete="off" checked /> Object labels
           (zoomed)</label
         >
@@ -302,6 +305,10 @@
             >switch wiring
           </div>
           <div class="sc-row">
+            <span class="sc-keys"><kbd>p</kbd></span
+            >enemy patrol pens
+          </div>
+          <div class="sc-row">
             <span class="sc-keys"><kbd>r</kbd></span
             >route planner — clicks add waypoints
           </div>
@@ -387,14 +394,6 @@
             <div class="st-desc">
               Clicking or tapping a screen (anywhere that isn't a followable object) opens a panel
               listing everything on it.
-            </div>
-            <label class="checkrow"
-              ><input type="checkbox" id="sEnemyPens" autocomplete="off" /> Show enemy patrol
-              pens</label
-            >
-            <div class="st-desc">
-              Draws the invisible posts that pen Sligs and Scrabs in as dashed lines whenever
-              Enemies / spawners is on, and shades the span a Slig patrols when you hover it.
             </div>
             <label class="checkrow"
               ><input type="checkbox" id="sShowMore" autocomplete="off" /> Show more object

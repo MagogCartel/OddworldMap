@@ -345,9 +345,16 @@ window.addEventListener("keydown", (e) => {
     return;
   }
   if (e.altKey) return;
-  const show = { g: "grid", c: "coll", f: "fg", a: "conn", w: "wires", r: "route", m: "ruler" }[
-    e.key
-  ];
+  const show = {
+    g: "grid",
+    c: "coll",
+    f: "fg",
+    a: "conn",
+    w: "wires",
+    p: "pens",
+    r: "route",
+    m: "ruler",
+  }[e.key];
   if (show) {
     toggleShow(show);
     return;
