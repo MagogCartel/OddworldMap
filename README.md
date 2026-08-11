@@ -47,11 +47,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 ### Overlays
 
-- **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
-- **Background-plane objects**: objects placed on the half-scale background plane are drawn dimmed with a dashed outline, so foreground and background objects are tellable apart when reading a route
-- **Enemy patrol pens** (off by default, or press **`p`**): the invisible posts that pen enemies in (Slig and Scrab bounds, enemy stoppers, moving-bomb stoppers) draw as dashed posts on the exact boundary the game enforces, whenever Enemies / spawners is on and whatever filter bucket they belong to; a foot at the base points into the pen where the type claims a side
-  - hover a Slig (or a Slig spawner) and the span it patrols shades in, edge to edge between its own pair of posts — matched the way the game itself matches them, by the slig id both ends carry
-- **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")
+- **Object labels**: names each object beside its marker, from about half zoom in
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
   - a double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
   - colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
@@ -59,7 +55,11 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **Switch wiring** (off by default, or press **`w`**): what a lever actually does — green dotted lines from everything that writes a switch id (levers, buttons, work wheels, pressure plates, pull rings) to everything on the path answering that id (doors, drills, electric walls, trapdoors, bird portals, spawners, status lights), through the logic gates Exoddus wires between them and the hub doors Oddysee opens only when every zulag id they watch is set
   - hovering a wired object spotlights just its own wires, with arrowheads showing which way the signal runs, and the tooltip spells them out — `sets 66 → 5 objects`, or `answers 11 — set in P2` for a wire whose other end lives on another path of the level (switch state is level-wide in the engine, so those connections are real)
   - wires run between markers you can see: hide a category and its wires go with it (status lights and alarms sit in buckets that are off by default)
-- **Object labels (zoomed)**: names each object beside its marker, from about half zoom in
+- **Enemy patrol pens** (off by default, or press **`p`**): the invisible posts that pen enemies in (Slig and Scrab bounds, enemy stoppers, moving-bomb stoppers) draw as dashed posts on the exact boundary the game enforces, whenever Enemies / spawners is on and whatever filter bucket they belong to; a foot at the base points into the pen where the type claims a side
+  - hover a Slig (or a Slig spawner) and the span it patrols shades in, edge to edge between its own pair of posts — matched the way the game itself matches them, by the slig id both ends carry
+- **Collision lines**: floors green, walls red/orange, ceilings blue, dashed = background layer
+- **Background-plane objects**: objects placed on the half-scale background plane are drawn dimmed with a dashed outline, so foreground and background objects are tellable apart when reading a route
+- **Foreground masks (FG1)**: highlights the scenery drawn in front of the player — every hideable/behind-walkable spot at a glance (pairs well with "Dim backgrounds")
 - **Dim backgrounds**: fades the camera artwork to a third of its brightness, so markers and overlays stand out against it
 
 ### Measuring and routes

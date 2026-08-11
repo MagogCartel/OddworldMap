@@ -347,13 +347,13 @@ window.addEventListener("keydown", (e) => {
   if (e.altKey) return;
   const show = {
     g: "grid",
-    c: "coll",
-    f: "fg",
     a: "conn",
     w: "wires",
     p: "pens",
-    r: "route",
+    c: "coll",
+    f: "fg",
     m: "ruler",
+    r: "route",
   }[e.key];
   if (show) {
     toggleShow(show);

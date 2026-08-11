@@ -61,12 +61,12 @@ function syncShow(key, cb) {
 }
 for (const [key, id] of Object.entries({
   grid: "tGrid",
-  coll: "tColl",
-  fg: "tFg",
+  labels: "tLabels",
   conn: "tConn",
   wires: "tWires",
   pens: "tPens",
-  labels: "tLabels",
+  coll: "tColl",
+  fg: "tFg",
   dim: "tDim",
   ruler: "tRuler",
   route: "tRoute",
