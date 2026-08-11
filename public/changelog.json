@@ -3,6 +3,12 @@
   {
    "date": "2026-08-11",
    "tag": "improved",
+   "title": "The Display toggles wear their keys",
+   "detail": "Each Display toggle with a keyboard shortcut now shows it as a small key at the row's edge, and the key lights up while it's held. The shortcuts are learnable right where the toggles live, not just in the ? list."
+  },
+  {
+   "date": "2026-08-11",
+   "tag": "improved",
    "title": "The Display toggles explain themselves",
    "detail": "Hover any toggle under Display for a short note on what it draws and how to read it: which colour marks a ceiling, what the wiring spotlight does, where the ruler snaps, how far a Slig will patrol. On a phone the note appears as you tap the toggle, so it explains itself in the same gesture that flips it. No more switching all ten on to find out which is which."
   },

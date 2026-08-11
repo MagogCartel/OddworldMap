@@ -55,7 +55,7 @@ import {
   viewHash,
 } from "./navigate.js";
 import { levelInfo } from "./annotations.js";
-import { toggleShow } from "./sidebar.js";
+import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
 import { syncPlace, togglePlace } from "./place.js";
@@ -336,6 +336,24 @@ function snapAtMouse() {
 
 // ---- keyboard: arrows pan, + / - zoom about the canvas center, [ / ] cycle
 // paths, letter keys flip the display toggles, ? lists the shortcuts --------
+const SHOW_KEY = {
+  g: "grid",
+  a: "conn",
+  w: "wires",
+  p: "pens",
+  c: "coll",
+  f: "fg",
+  m: "ruler",
+  r: "route",
+};
+window.addEventListener("keyup", (e) => {
+  const show = SHOW_KEY[e.key];
+  if (show) markKeyHeld(show, false);
+});
+// a key released outside the window never sends its keyup
+window.addEventListener("blur", () => {
+  for (const key of Object.values(SHOW_KEY)) markKeyHeld(key, false);
+});
 window.addEventListener("keydown", (e) => {
   if (e.ctrlKey || e.metaKey || e.target.matches?.("input, textarea, select")) return;
   // brackets before the Alt guard: several layouts type them via Option/AltGr
@@ -345,18 +363,10 @@ window.addEventListener("keydown", (e) => {
     return;
   }
   if (e.altKey) return;
-  const show = {
-    g: "grid",
-    a: "conn",
-    w: "wires",
-    p: "pens",
-    c: "coll",
-    f: "fg",
-    m: "ruler",
-    r: "route",
-  }[e.key];
+  const show = SHOW_KEY[e.key];
   if (show) {
-    toggleShow(show);
+    markKeyHeld(show, true);
+    if (!e.repeat) toggleShow(show); // a held key autorepeats; the toggle must not
     return;
   }
   if (e.key === "Backspace" && state.route) {

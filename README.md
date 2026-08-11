@@ -47,7 +47,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 ### Overlays
 
-Every toggle in the Display section explains itself: hover it for a short note on what it draws (on a phone, the note appears as you tap the toggle).
+Every toggle in the Display section explains itself: hover it for a short note on what it draws (on a phone, the note appears as you tap the toggle). The toggles with a keyboard key wear it at the row's edge, and it lights while the key is held.
 
 - **Object labels**: names each object beside its marker, from about half zoom in
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
