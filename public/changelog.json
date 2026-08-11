@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-11",
+   "tag": "new",
+   "title": "The map works offline now",
+   "detail": "Switch on \"Keep the map on this device\" in Settings and the app itself (page, code and data) is stored alongside the artwork of the screens you visit. With no connection at all, the map opens and works, every place you've browsed included. Online, nothing changes: you always get the freshest version, and the stored copy refreshes as you browse. The setting used to keep only the artwork; it now keeps the whole map, and turning it off still removes everything."
+  },
+  {
+   "date": "2026-08-11",
    "tag": "improved",
    "title": "The Display toggles wear their keys",
    "detail": "Each Display toggle with a keyboard shortcut now shows it as a small key at the row's edge, and the key lights up while it's held. The shortcuts are learnable right where the toggles live, not just in the ? list."

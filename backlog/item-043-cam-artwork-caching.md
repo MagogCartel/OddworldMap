@@ -18,6 +18,6 @@ GitHub Pages re-stamps its HTTP validators on every deploy, so ordinary browser 
 
 ## Shipped
 
-[sw.js](../public/sw.js) serves `cams/**/*.png` cache-first, gated on the "Cache screen artwork on this device" setting.
+[sw.js](../public/sw.js) serves `cams/**/*.png` cache-first, gated on the "Keep the map on this device" setting.
 
 **The standing obligation this created** — bump `CACHE_NAME` whenever cam artwork is regenerated, or opted-in visitors keep the old art forever — is retired: [54](item-054-stamp-cache-name.md) has the builder stamp the name from a content hash of the artwork, on the grounds that three documents describing a manual step is the signature of a missing mechanism.

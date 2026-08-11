@@ -19,7 +19,7 @@ export const SETTINGS_DEFAULTS = {
   fullNames: true,
   showDemoPaths: false,
   screenList: true,
-  cacheImages: false,
+  cacheMap: false,
   showRawValues: false,
 };
 // fieldPrefs (not a boolean; added by sanitizeSettings) — which object fields
@@ -251,19 +251,23 @@ export function initSettings() {
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "demoPaths" } })),
   );
 
-  applyCacheImages(s.cacheImages); // boot: register, or sweep leftovers from a mid-session disable
-  bind("sCacheImages", "cacheImages", applyCacheImages);
+  applyCacheMap(s.cacheMap, true); // boot: register, or sweep leftovers from a mid-session disable
+  bind("sCacheMap", "cacheMap", applyCacheMap);
 }
 
-// cam-artwork caching (sw.js) is opt-in; the worker can't read settings, so
-// the page gates it. The "cams-on" marker bucket, not registration, is the
-// real switch: unregister() leaves the worker controlling the page until
-// reload, so only deleting the marker stops caching immediately.
-function applyCacheImages(on) {
+// offline caching (sw.js) is opt-in; the worker can't read settings, so the
+// page gates it. The "cams-on" marker bucket, not registration, is the real
+// switch: unregister() leaves the worker controlling the page until reload,
+// so only deleting the marker stops caching immediately.
+function applyCacheMap(on, boot) {
   if (!("serviceWorker" in navigator)) return;
   if (on) {
-    if ("caches" in window) caches.open("cams-on").catch(() => {});
+    const marker = "caches" in window ? caches.open("cams-on").catch(() => {}) : Promise.resolve();
     navigator.serviceWorker.register("sw.js").catch(() => {});
+    // a user enable always warms (a re-enable follows a sweep, whatever
+    // still controls the page) while the boot call never does: a controlled
+    // page's own boot fetches are already the refresh
+    if (!boot) marker.then(() => warmShell());
     return;
   }
   // every registration on the origin: sw.js is the only worker there is
@@ -271,9 +275,41 @@ function applyCacheImages(on) {
     (regs) => regs.forEach((r) => r.unregister()),
     () => {},
   );
+  // the marker goes first: it is what the worker consults, so nothing can
+  // repopulate a bucket the sweep is still deleting
   if ("caches" in window)
-    caches.keys().then(
-      (names) => names.filter((n) => n.startsWith("cams-")).forEach((n) => caches.delete(n)),
+    caches.delete("cams-on").then(
+      () =>
+        caches.keys().then(
+          (names) =>
+            names
+              .filter((n) => n.startsWith("cams-") || n.startsWith("shell-"))
+              .forEach((n) => caches.delete(n)),
+          () => {},
+        ),
       () => {},
     );
+}
+
+// the worker only caches what passes through it, and a page from before it
+// loaded uncontrolled — so once the worker takes the page, re-fetch
+// everything it already pulled (the document included), and offline works
+// from the enabling visit onward
+function warmShell() {
+  const warm = () => {
+    if (!getSettings().cacheMap) return; // toggled back off before the worker took the page
+    const urls = new Set([new URL("index.html", location.href).href]);
+    for (const e of performance.getEntriesByType("resource")) {
+      const u = new URL(e.name, location.href);
+      if (u.origin === location.origin) urls.add(u.href);
+    }
+    for (const url of urls) fetch(url).catch(() => {});
+  };
+  navigator.serviceWorker.ready
+    .then(() => {
+      // a first registration's claim() can land after ready resolves
+      if (navigator.serviceWorker.controller) warm();
+      else navigator.serviceWorker.addEventListener("controllerchange", warm, { once: true });
+    })
+    .catch(() => {});
 }
