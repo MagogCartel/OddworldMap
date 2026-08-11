@@ -86,35 +86,55 @@
       <div id="toggles">
         <!-- autocomplete=off: the script mirrors .checked into state, so form-state
          restoration (which fires no change events) must not flip these -->
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Draws each screen's border and camera name over the artwork.&#10;Names appear once you zoom in a little."
           ><input type="checkbox" id="tGrid" autocomplete="off" checked /> Camera grid +
           names</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Names each object beside its marker.&#10;From about half zoom in."
           ><input type="checkbox" id="tLabels" autocomplete="off" checked /> Object labels</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Every door, well, portal, teleporter and transition, linked to where it leads.&#10;Hover an object to spotlight its own arrows."
           ><input type="checkbox" id="tConn" autocomplete="off" checked /> Connection arrows</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Wires from levers, buttons and wheels to the doors, drills and walls answering their switch id.&#10;Hover a wired object to read what it sets and answers."
           ><input type="checkbox" id="tWires" autocomplete="off" /> Switch wiring</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Draws the invisible posts that pen Sligs and Scrabs in, whenever Enemies / spawners is on.&#10;Hover a Slig to shade the span it patrols."
           ><input type="checkbox" id="tPens" autocomplete="off" /> Enemy patrol pens</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="The level's walkable geometry: floors green, walls red and orange, ceilings blue.&#10;Dashed lines sit on the background plane."
           ><input type="checkbox" id="tColl" autocomplete="off" /> Collision lines</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Highlights scenery drawn in front of Abe; shows every hideable spot at a glance.&#10;Pairs well with Dim backgrounds."
           ><input type="checkbox" id="tFg" autocomplete="off" /> Foreground masks (FG1)</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Fades the artwork to a third of its brightness, so markers and overlays stand out."
           ><input type="checkbox" id="tDim" autocomplete="off" /> Dim backgrounds</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Drag on the map to measure; world units and grid squares.&#10;Ends snap to nearby objects."
           ><input type="checkbox" id="tRuler" autocomplete="off" /> Ruler (drag to measure)</label
         >
-        <label class="checkrow"
+        <label
+          class="checkrow"
+          data-tip="Click waypoints to plot a route; the bar totals the distance.&#10;Clicking a door rides it and keeps plotting."
           ><input type="checkbox" id="tRoute" autocomplete="off" /> Route planner (click
           waypoints)</label
         >

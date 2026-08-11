@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-11",
+   "tag": "improved",
+   "title": "The Display toggles explain themselves",
+   "detail": "Hover any toggle under Display for a short note on what it draws and how to read it: which colour marks a ceiling, what the wiring spotlight does, where the ruler snaps, how far a Slig will patrol. On a phone the note appears as you tap the toggle, so it explains itself in the same gesture that flips it. No more switching all ten on to find out which is which."
+  },
+  {
    "date": "2026-08-10",
    "tag": "new",
    "title": "What does that lever do? Switch wiring, drawn",

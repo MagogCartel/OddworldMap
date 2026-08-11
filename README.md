@@ -47,6 +47,8 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 
 ### Overlays
 
+Every toggle in the Display section explains itself: hover it for a short note on what it draws (on a phone, the note appears as you tap the toggle).
+
 - **Object labels**: names each object beside its marker, from about half zoom in
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
   - a double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
