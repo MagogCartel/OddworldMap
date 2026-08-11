@@ -293,6 +293,10 @@ body.fullnames .btnrow button {
   font-size: 12px;
   width: calc(100% - 24px);
 }
+#exportBtn {
+  margin: 6px 0 2px;
+  width: 100%;
+}
 #exportBtn:hover,
 #numbersBtn:hover {
   border-color: var(--accent);
