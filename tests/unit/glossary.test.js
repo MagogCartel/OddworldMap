@@ -37,8 +37,8 @@ test("glossaryProse: resolves most-specific tier first, null on miss", () => {
   setGlossary(null); // reset for other tests importing this module
 });
 
-test("glossary.json: every key names a real field / type / game type", () => {
-  const g = load("glossary.json");
+test("glossary_fields.json: every key names a real field / type / game type", () => {
+  const g = load("glossary_fields.json");
   const fieldNames = new Set();
   const typeFields = {}; // Type -> Set(field)
   for (const game of ["ao", "ae"]) {

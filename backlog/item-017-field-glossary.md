@@ -4,11 +4,11 @@
 
 ## What and why
 
-Architecture, wiring and visuals are live. What remains is **content** — curating meanings for more of the field names, which mostly needs game knowledge. Coverage as of 2026-07-31 is 44 entries against 451 distinct field names in the shipped data (both counts recomputable from [glossary.json](../public/glossary.json) and the `fields` archives in `map_data_{ao,ae}.json`); the fields objects show by default are nearly all covered, the picker-only long tail is not.
+Architecture, wiring and visuals are live. What remains is **content** — curating meanings for more of the field names, which mostly needs game knowledge. Coverage as of 2026-07-31 is 44 entries against 451 distinct field names in the shipped data (both counts recomputable from [glossary_fields.json](../public/glossary_fields.json) and the `fields` archives in `map_data_{ao,ae}.json`); the fields objects show by default are nearly all covered, the picker-only long tail is not.
 
 ## Sketch
 
-Add entries to [glossary.json](../public/glossary.json) in the tier that fits:
+Add entries to [glossary_fields.json](../public/glossary_fields.json) in the tier that fits:
 
 - `byField` — a global by name, for a field that means the same wherever it appears (e.g. `scale`).
 - `byGameType` — keyed by the field's decomp game type (e.g. `Path_Slig::StartState`), so every object sharing that type shares the meaning (the group); the key is the same one `enum_labels` uses, findable in `field_types_{ao,ae}.json`.
@@ -28,7 +28,7 @@ The floating hover tooltip cannot host a per-field hover, so the definitions liv
 
 ## Shipped
 
-**Architecture and wiring, 2026-07-25.** [glossary.json](../public/glossary.json), hand-curated and game-agnostic, plus [js/glossary.js](../public/js/glossary.js) — `sanitizeGlossary` / `setGlossary` / `glossaryProse`, a leaf — resolving a field's meaning through the three tiers. `fieldHelp(game, type, field)` in [js/fields.js](../public/js/fields.js) composes the prose with the field's full value list, so an entry only ever has to carry the prose. Wired at boot beside the other sidecars, with a schema test pinning every key to the shipped data.
+**Architecture and wiring, 2026-07-25.** [glossary_fields.json](../public/glossary_fields.json), hand-curated and game-agnostic, plus [js/glossary.js](../public/js/glossary.js) — `sanitizeGlossary` / `setGlossary` / `glossaryProse`, a leaf — resolving a field's meaning through the three tiers. `fieldHelp(game, type, field)` in [js/fields.js](../public/js/fields.js) composes the prose with the field's full value list, so an entry only ever has to carry the prose. Wired at boot beside the other sidecars, with a schema test pinning every key to the shipped data.
 
 Seeded with exactly three entries, one per tier — `scale`, `Path_Slig::StartState`, `Mudokon.state` — because the content needs game knowledge and inventing it would have been worse than leaving it thin.
 

@@ -1,4 +1,4 @@
-// Curated plain-English field meanings from glossary.json, resolved in three
+// Curated plain-English field meanings from glossary_fields.json, resolved in three
 // tiers so a field is defined once at the broadest level that fits:
 //   byType["Type.field"]   — one object type's own meaning (wins)
 //   byGameType["GameType"] — every object whose field has that game type (the

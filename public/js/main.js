@@ -51,7 +51,7 @@ Promise.all([
   loadOne("field_types_ae.json"),
   loadOne("enum_labels_ao.json"),
   loadOne("enum_labels_ae.json"),
-  loadOne("glossary.json"),
+  loadOne("glossary_fields.json"),
   loadOne("glossary_types.json"),
 ]).then(([ao, ae, annotations, ftAo, ftAe, elAo, elAe, glossary, types]) => {
   setAnnotations(annotations); // before the path buttons build their labels
