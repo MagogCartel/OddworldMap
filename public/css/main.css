@@ -1051,7 +1051,7 @@ body.embed #openSiteBtn {
   transform: none;
 }
 #shortcuts {
-  --dialog-w: 340px;
+  --dialog-w: 400px;
 }
 #about {
   --dialog-w: 420px;
