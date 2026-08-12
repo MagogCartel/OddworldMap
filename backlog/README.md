@@ -28,7 +28,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
-- [82. Type encyclopedia cards](item-082-type-encyclopedia.md) — the mechanism, then the content pass it exists for.
 - [86. World graph](item-086-world-graph.md) — feeds on the wiring overlay's aggregation experience.
 - [15. Path buttons in game order](item-015-path-buttons-game-order.md)
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
@@ -58,7 +57,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [**17.** Field glossary](item-017-field-glossary.md) — curating more field meanings; the fields shown by default are nearly all covered, the picker-only long tail is not. _Incremental, one JSON line each._
 - [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — a marquee's actual scrolling text, if the string tables turn out to be extractable. _Spike first, effort unknown._
-- [**82.** Type encyclopedia cards](item-082-type-encyclopedia.md) — a curated card per object type, with derived counts and a find-all link; the glossary's economics applied to types. _Incremental, anywhere._
 
 ## Code and build
 
@@ -105,6 +103,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**82.** Type encyclopedia cards](item-082-type-encyclopedia.md) — every object type explains itself: one curated paragraph per type, all 139 across both games, the first sentence riding the hover tooltip and the card composing the rest with live counts and field meanings. _2026-08-12._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the app joins the artwork in the opt-in cache, network-first with an offline fallback, so no stamp and no version skew; the map opens on a plane. _2026-08-11._
 - [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does, drawn: switch-id wires from producers through the logic gates to the doors, drills and walls they drive; the decomp settled the id scope (level-wide) and which of the ninety switch-named fields are real ends. _2026-08-10._
 - [**80.** Minimap inset](item-080-minimap-inset.md) — the path's grid in the corner with the viewport on it, painted at the end of every frame; yields its corner to the numbers panel. _2026-08-09._

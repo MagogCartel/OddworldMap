@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-12",
+   "tag": "new",
+   "title": "Every object type explains itself",
+   "detail": "The map now carries an encyclopedia: one curated paragraph per object type, researched from the games' reverse-engineered code, telling you what a ZBall, a SlapLock or a Greeter actually is and does. Hovering an object opens with that story's first sentence. The ⓘ beside any object in the screen list, or next to a type in the Fields panel, opens the full card. That gives the whole entry, how many are placed in each game (counted live, demo paths noted apart), what the type's stored fields mean, and a link that finds every one of them with search. All 139 object types across both games are covered."
+  },
+  {
    "date": "2026-08-11",
    "tag": "new",
    "title": "The map works offline now",

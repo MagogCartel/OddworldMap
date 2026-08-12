@@ -46,5 +46,8 @@ test("glossary_types.json: every key names a shipped type, prose reads as prose"
     assert.match(s, /[.!?]$/, `${k}: first sentence closes punctuated`);
     assert.ok(s.length <= SUMMARY_MAX, `${k}: summary fits a tooltip line (${s.length})`);
   }
+  // exact coverage: a rebuild that surfaces a new type fails here until the
+  // encyclopedia covers it
+  assert.deepEqual(Object.keys(info).sort(), [...names].sort(), "one entry per shipped type");
   setTypeInfo(null);
 });
