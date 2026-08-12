@@ -54,7 +54,17 @@ function renderType({ name, fields }) {
   const countEl = document.createElement("span");
   countEl.className = "fp-count";
   const recount = () => (countEl.textContent = `${shown.size} / ${fields.length}`);
-  sum.append(nameEl, countEl);
+  const info = document.createElement("button");
+  info.className = "rowtool";
+  info.type = "button";
+  info.textContent = "ⓘ";
+  info.title = `About ${name}`;
+  info.setAttribute("aria-label", info.title);
+  info.onclick = (e) => {
+    e.preventDefault(); // inside <summary>, an unprevented click also toggles the row
+    window.dispatchEvent(new CustomEvent("typecard-open", { detail: { type: name } }));
+  };
+  sum.append(nameEl, countEl, info);
   det.append(sum);
   recount();
 

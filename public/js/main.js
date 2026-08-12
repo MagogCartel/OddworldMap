@@ -6,6 +6,7 @@ import { initGames, selectGame, applyHash } from "./navigate.js";
 import { setAnnotations } from "./annotations.js";
 import { setFieldTypes, setEnumLabels } from "./fields.js";
 import { setGlossary } from "./glossary.js";
+import { setTypeInfo } from "./typeinfo.js";
 import { initSettings, storedLocationHash, clearStoredLocation } from "./settings.js";
 import "./sidebar.js";
 import "./search.js";
@@ -14,6 +15,7 @@ import { initFieldPanel } from "./fieldpanel.js";
 import "./anchortip.js";
 import "./whatsnew.js";
 import "./about.js";
+import "./typecard.js";
 import "./shuffle.js";
 import "./numbers.js";
 import "./minimap.js";
@@ -50,12 +52,14 @@ Promise.all([
   loadOne("enum_labels_ao.json"),
   loadOne("enum_labels_ae.json"),
   loadOne("glossary.json"),
-]).then(([ao, ae, annotations, ftAo, ftAe, elAo, elAe, glossary]) => {
+  loadOne("glossary_types.json"),
+]).then(([ao, ae, annotations, ftAo, ftAe, elAo, elAe, glossary, types]) => {
   setAnnotations(annotations); // before the path buttons build their labels
   // before any tooltip/search prettifies
   setFieldTypes({ AO: ftAo || {}, AE: ftAe || {} });
   setEnumLabels({ AO: elAo || {}, AE: elAe || {} });
   setGlossary(glossary);
+  setTypeInfo(types);
   const games = [ao, ae].filter((d) => d && d.levels && d.levels.length);
   if (!games.length) {
     $("gameName").textContent = "Map data failed to load.";

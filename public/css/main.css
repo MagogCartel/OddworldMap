@@ -721,7 +721,8 @@ body.page-zoomed #minimap {
   flex: 1;
   min-width: 0;
 }
-.cp-fields-btn {
+/* a quiet icon button at a row's edge */
+.rowtool {
   flex: none;
   background: none;
   border: 0;
@@ -731,7 +732,7 @@ body.page-zoomed #minimap {
   border-radius: 5px;
   font-size: 12px;
 }
-.cp-fields-btn:hover {
+.rowtool:hover {
   background: var(--panel2);
   color: var(--text);
 }
@@ -1250,6 +1251,42 @@ kbd {
 }
 #aboutBody a {
   color: var(--accent);
+}
+/* the type encyclopedia card's rows; the dialog shell is the shared one */
+.tc-cat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.tc-prose {
+  margin: 10px 0;
+  line-height: 1.55;
+}
+.tc-counts {
+  font-size: 12px;
+}
+#typeCardBody .e {
+  color: var(--dim);
+}
+.tc-fhead {
+  padding: 12px 0 3px;
+  border-bottom: 1px solid var(--line);
+}
+.tc-field {
+  margin: 7px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.tc-fname {
+  color: var(--accent);
+}
+.tc-find {
+  margin-top: 12px;
+  font-size: 12px;
 }
 
 /* narrow: the sidebar leaves the flow and slides over the map instead of shrinking it

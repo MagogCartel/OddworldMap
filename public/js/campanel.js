@@ -76,21 +76,31 @@ export function openCamPanel(x, y, focus = null) {
       b.onclick = () => jumpToTlv(state.data, state.lvl, state.path, t);
       b.onmouseenter = () => setHighlight(t);
       b.onmouseleave = () => setHighlight(null);
+      const wrap = document.createElement("div");
+      wrap.className = "cp-row-wrap";
+      wrap.append(b);
       // with the field picker on, a ⚙ jumps to this type's row in it
       if (t.fields && getSettings().fieldPrefs.mode === "more") {
-        const wrap = document.createElement("div");
-        wrap.className = "cp-row-wrap";
         const gear = document.createElement("button");
-        gear.className = "cp-fields-btn";
+        gear.className = "rowtool";
         gear.type = "button";
         gear.textContent = "⚙";
         gear.title = `Configure ${t.name} fields`;
         gear.setAttribute("aria-label", gear.title);
         gear.onclick = () =>
           window.dispatchEvent(new CustomEvent("reveal-field-type", { detail: { type: t.name } }));
-        wrap.append(b, gear);
-        body.appendChild(wrap);
-      } else body.appendChild(b);
+        wrap.append(gear);
+      }
+      const info = document.createElement("button");
+      info.className = "rowtool";
+      info.type = "button";
+      info.textContent = "ⓘ";
+      info.title = `About ${t.name}`;
+      info.setAttribute("aria-label", info.title);
+      info.onclick = () =>
+        window.dispatchEvent(new CustomEvent("typecard-open", { detail: { type: t.name } }));
+      wrap.append(info);
+      body.appendChild(wrap);
     }
   }
   if (!n) body.innerHTML = `<div class="cp-none">no objects on this screen</div>`;

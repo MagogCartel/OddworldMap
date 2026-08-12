@@ -13,6 +13,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **AO / AE** buttons switch between the two games
 - **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom; **`[` / `]`** step through the level's paths, **`g` / `c` / `f` / `a`** flip the grid, collision lines, foreground masks and connection arrows, **`r`** / **`m`** arm the route planner and the ruler, and **`i`** says where you are — press **`?`** for the full shortcut list
 - **hover** any object for decoded details
+  - the details open with what the thing *is*: one plain-English sentence per object type, the opening line of its encyclopedia entry (curated in [glossary_types.json](public/glossary_types.json))
   - door destinations (level/path/door#), switch IDs, path-transition targets, continue-point zones, Mudokon state (Oddysee job / Exoddus work state + mood), and enemy behaviour (a Slig's start state and how it attacks — `shoot_on_sight_delay=0` means it shoots the instant it sees Abe, no "FREEZE!" warning; whether a Slog starts asleep and the switch that angers it)
   - each object type surfaces its own notable fields too — a door's lock state, a trap door's or electric wall's on/off, a bird portal's type, a Glukkon's or Crawling Slig's type/state
   - Settings → "Show more object fields" picks which of the game's stored fields each object type shows; search covers them all either way
@@ -24,6 +25,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **click/tap** anywhere else on a screen to list everything on it, grouped by category
   - hover a row to outline that object on the map, click it to jump there
   - tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object
+  - the **ⓘ** at a row's edge (also next to each type in the Fields panel) opens that type's encyclopedia card: the full curated entry, how many are placed in each game — counted live, with what the hidden demo paths hold noted apart — what its stored fields mean, and a link that finds every one of them with search
   - on phones the panel opens as a bottom sheet with the map staying visible above it; switch "List a screen's objects on click" off in Settings if you'd rather those clicks did nothing
 - level and path buttons top-left; object category filters with counts below
   - hover a path button for its area name: a curated community name from [annotations.json](public/annotations.json) where one is defined (a deliberate override), otherwise the in-game name (Rupture Farms Return's Zulag 1–4)

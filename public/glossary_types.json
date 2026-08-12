@@ -1,0 +1,9 @@
+{
+ "types": {
+  "EnemyStopper": "An invisible fence for creatures: Abe walks straight through, while patrols and chases stop, turn or give up at its line, each creature its own way. Its switch gate is inverted between the games: an Oddysee stopper blocks while its switch is off, an Exoddus one while it is on, so the permanent fence reads switch_id 0 in Oddysee and 1 in Exoddus.",
+  "Greeter": "A wheeled security machine sweeping a motion-detector beam ahead of itself. Cross the beam while moving and it charges and electrocutes; hold still and it rolls past. It carries its own detector rather than answering a placed one, and its start direction is wired backwards: Left starts it rolling right.",
+  "SlapLock": "A shuddering spirit lock that only Abe's slap can break. Ghost-guarded ones free a spirit that flies to the tomb door named by one target field and sets the switch named by the other on arrival; a broken lock holding the invisibility power-up respawns as a permanent dispenser of it.",
+  "SligPersist": "A leash pin that keeps a Slig alive off-camera. A Slig sharing its id survives while any of its pins is on the current screen, instead of despawning when it walks out of view; Exoddus leans on these harder than Oddysee, placing more pins than it places Sligs.",
+  "ZBall": "A pendulum swinging toward and away from the camera, in front of Abe and then behind him. Its damage rides the animation itself: only frames the artists marked can hit. Its start position (centre, out, in) staggers a row of balls out of phase. All six in the game hang in the Paramonian Temple."
+ }
+}

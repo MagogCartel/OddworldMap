@@ -55,6 +55,7 @@ import {
   viewHash,
 } from "./navigate.js";
 import { levelInfo } from "./annotations.js";
+import { typeSummary } from "./typeinfo.js";
 import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
@@ -487,6 +488,7 @@ function updateHover() {
       hoverTlvs
         .slice(0, 8)
         .map((t) => {
+          const about = typeSummary(t.name);
           const ex = extrasText(t, "  ", fieldPrefsFor(state.data.id));
           const d = shownDest(t);
           let follow = "";
@@ -543,6 +545,7 @@ function updateHover() {
           }
           return (
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
+            (about ? `<br><span class="e">${esc(about)}</span>` : "") +
             (ex ? `<br><span class="e">${esc(ex)}</span>` : "") +
             wireInfo +
             follow +
