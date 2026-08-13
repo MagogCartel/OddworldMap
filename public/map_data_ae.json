@@ -101022,10 +101022,9 @@
        "y2": 384,
        "extra": {},
        "fields": {
-        "scale": 3,
-        "movie_number": 0,
-        "trigger_switch_id": 201,
-        "padding": 0
+        "movie_number": 3,
+        "scale": 0,
+        "trigger_switch_id": 201
        }
       },
       {
@@ -105573,10 +105572,9 @@
        "y2": 1760,
        "extra": {},
        "fields": {
-        "scale": 2,
-        "movie_number": 0,
-        "trigger_switch_id": 252,
-        "padding": 0
+        "movie_number": 2,
+        "scale": 0,
+        "trigger_switch_id": 252
        }
       },
       {
@@ -135575,10 +135573,9 @@
        "y2": 464,
        "extra": {},
        "fields": {
-        "scale": 4,
-        "movie_number": 0,
-        "trigger_switch_id": 255,
-        "padding": 0
+        "movie_number": 4,
+        "scale": 0,
+        "trigger_switch_id": 255
        }
       },
       {
@@ -167061,10 +167058,9 @@
        "y2": 1204,
        "extra": {},
        "fields": {
-        "scale": 4,
-        "movie_number": 0,
-        "trigger_switch_id": 2,
-        "padding": 0
+        "movie_number": 4,
+        "scale": 0,
+        "trigger_switch_id": 2
        }
       },
       {
@@ -224130,10 +224126,9 @@
        "y2": 464,
        "extra": {},
        "fields": {
-        "scale": 14,
-        "movie_number": 0,
-        "trigger_switch_id": 200,
-        "padding": 0
+        "movie_number": 14,
+        "scale": 0,
+        "trigger_switch_id": 200
        }
       },
       {

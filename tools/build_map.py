@@ -405,6 +405,19 @@ _SCHEMA_LAYOUT_OVERRIDES = {
     ("AO", 109): [],  # RingCancel — EMPTY_CTOR, no payload fields
 }
 
+# layouts the CTOR expresses wrongly, as (derived, corrected): keyed to what the
+# parser currently yields, so an upstream fix retires the entry loudly instead of
+# silently double-correcting.
+_SCHEMA_LAYOUT_CORRECTIONS = {
+    # MovieHandStone: relive_api's field order contradicts the engine, which reads
+    # word 0 as the movie number and words 2-3 as one s32 switch id (Path_MovieStone);
+    # the s32's meaningless high word is dropped rather than kept as a phantom field
+    ("AE", 27): (
+        [[0, "scale", "Scale_short"], [1, "movie_number"], [2, "trigger_switch_id"], [3, "padding"]],
+        [[0, "movie_number"], [1, "scale", "Scale_short"], [2, "trigger_switch_id"]],
+    ),
+}
+
 def _derive_label(enumerator):
     """a readable label from an enumerator name: drop the value suffix and the
     decomp's `e` prefix, split CamelCase (eChaseAndDisappear_4 -> Chase And Disappear)"""
@@ -600,6 +613,12 @@ def load_object_schema(game_key, game):
         if tid in schema:
             raise RuntimeError(f"spent schema layout override: the parser derives {game_key} {game['tlv_names'][tid]}")
         schema[tid] = layout
+    for (gk, tid), (derived, corrected) in _SCHEMA_LAYOUT_CORRECTIONS.items():
+        if gk != game_key:
+            continue
+        if schema.get(tid) != derived:
+            raise RuntimeError(f"spent schema layout correction: {game_key} type {tid} no longer derives as pinned")
+        schema[tid] = corrected
     return schema
 
 def write_field_types(game_key, out):
