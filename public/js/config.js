@@ -92,7 +92,7 @@ export const WIRES = {
       RollingBall:["release_switch_id"], RollingBallStopper:["stopper_switch_id"],
       LiftMover:["lift_mover_switch_id"], MusicTrigger:["switch_id"], DeathClock:["start_switch_id"],
       Bees:["switch_id"], BellHammer:["switch_id"], WellLocal:["switch_id"], WellExpress:["switch_id"],
-      SligSpawner:["slig_spawner_switch_id"], SlogSpawner:["spawner_switch_id"],
+      SligSpawner:["slig_spawner_switch_id"], SlogSpawner:["spawner_switch_id"], SlogHut:["switch_id"],
       Slog:["anger_switch_id"], Paramite:["surprise_web_switch_id"], ChimeLock:["password_switch_id"],
       IdSplitter:["source_switch_id"], MotionDetector:["disable_switch_id"],
     },

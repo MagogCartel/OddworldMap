@@ -103,7 +103,7 @@ for (const [file, game] of [
 // totals over the shipped data, pinned: a table edit that changes the graph
 // has to answer for the difference
 test("shipped wiring totals", () => {
-  const expect = { AO: [354, 64, 74], AE: [2380, 105, 117] };
+  const expect = { AO: [364, 64, 74], AE: [2380, 105, 117] };
   for (const [file, game] of [
     ["map_data_ao.json", "AO"],
     ["map_data_ae.json", "AE"],
