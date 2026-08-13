@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-13",
+   "tag": "new",
+   "title": "Every object field explains itself",
+   "detail": "The field glossary is complete: every stored field of every object in both games now carries a plain-English definition. Hover the dotted underline in the screen list or the Fields picker (or tap it on a phone) for what the field means, in frames and grid squares where the engine counts that way, with its possible values listed. Fields the games' code never reads say so outright, so a custom-level builder knows which knobs are real. Five hundred and sixty-five definitions, up from forty-four."
+  },
+  {
    "date": "2026-08-12",
    "tag": "new",
    "title": "Every object type explains itself",

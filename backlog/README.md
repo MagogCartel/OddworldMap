@@ -31,7 +31,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [86. World graph](item-086-world-graph.md) — feeds on the wiring overlay's aggregation experience.
 - [15. Path buttons in game order](item-015-path-buttons-game-order.md)
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
-- [17. Field glossary](item-017-field-glossary.md) — the same, and endless by nature.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 - [5. LCD marquee text](item-005-lcd-marquee-text.md) — disc machine, and only after the spike says the strings are reachable.
 - [28. Readable units](item-028-readable-units.md), the seconds tier — disc machine, and only after a measured logic rate.
@@ -55,7 +54,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 ## Content depth
 
-- [**17.** Field glossary](item-017-field-glossary.md) — curating more field meanings; the fields shown by default are nearly all covered, the picker-only long tail is not. _Incremental, one JSON line each._
 - [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — a marquee's actual scrolling text, if the string tables turn out to be extractable. _Spike first, effort unknown._
 
 ## Code and build
@@ -103,6 +101,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**17.** Field glossary](item-017-field-glossary.md) — every shipped field now resolves a definition, coverage pinned by test; the long tail fell to the decomp research in one sitting, 44 entries to 565. _2026-08-13._
 - [**82.** Type encyclopedia cards](item-082-type-encyclopedia.md) — every object type explains itself: one curated paragraph per type, all 139 across both games, the first sentence riding the hover tooltip and the card composing the rest with live counts and field meanings. _2026-08-12._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the app joins the artwork in the opt-in cache, network-first with an offline fallback, so no stamp and no version skew; the map opens on a plane. _2026-08-11._
 - [**84.** Switch wiring overlay](item-084-switch-wiring-overlay.md) — what a lever actually does, drawn: switch-id wires from producers through the logic gates to the doors, drills and walls they drive; the decomp settled the id scope (level-wide) and which of the ninety switch-named fields are real ends. _2026-08-10._

@@ -77,3 +77,23 @@ test("glossary_fields.json: every key names a real field / type / game type", ()
       assert.ok(!/\b0 = |\b1 = /.test(v), `${section} "${k}" leaves the value list to fieldHelp`);
     }
 });
+
+// full coverage: a rebuild that surfaces a new field fails here until the
+// glossary covers it
+test("every shipped field resolves a definition", () => {
+  setGlossary(load("glossary_fields.json"));
+  const fieldTypes = {
+    ao: load("field_types_ao.json"),
+    ae: load("field_types_ae.json"),
+  };
+  const missing = new Set();
+  for (const game of ["ao", "ae"])
+    for (const lv of load(`map_data_${game}.json`).levels)
+      for (const p of lv.paths)
+        for (const t of p.tlvs)
+          for (const k of Object.keys(t.fields || {}))
+            if (!glossaryProse(t.name, k, fieldTypes[game][t.name]?.[k]))
+              missing.add(`${t.name}.${k}`);
+  setGlossary(null);
+  assert.deepEqual([...missing].sort(), [], "every field has a def");
+});

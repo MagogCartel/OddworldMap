@@ -1,6 +1,6 @@
 # 17. Field glossary
 
-**Status:** open — content curation · **Effort:** incremental; each entry is one JSON line · **Where:** anywhere, viewer data only
+**Status:** shipped 2026-08-13 · **Effort:** incremental; each entry is one JSON line · **Where:** anywhere, viewer data only
 
 ## What and why
 
@@ -33,3 +33,7 @@ The floating hover tooltip cannot host a per-field hover, so the definitions liv
 Seeded with exactly three entries, one per tier — `scale`, `Path_Slig::StartState`, `Mudokon.state` — because the content needs game knowledge and inventing it would have been worse than leaving it thin.
 
 **Surfaced first as a native `title`** with a dotted underline, which was the right cheap start and the wrong end state: a `title` says nothing on touch, so the underline promised an explanation a phone could not collect. [35](item-035-glossary-tooltips-touch.md) replaced it with a real tooltip and then generalised the mechanism to any element carrying `data-tip`.
+
+**Content, 2026-08-13.** The long tail fell in one sitting, written from the same whole-decomp research pass that produced the type encyclopedia's entries: 44 entries became 565 (65 `byGameType`, 82 `byField`, 418 `byType`), and every shipped field in both games — 1,105 distinct (game, type, field) combinations — resolves a definition, which the suite pins: a rebuild that surfaces a new field fails until the glossary covers it. The tiers did the compressing they were designed for: one `byGameType` line covers every field sharing the game type, and a name unique to one family (the walking-slig block, the flying-slig block, the gates' numbered inputs) lands once in `byField` and serves the whole family. The two basic value types stay out of `byGameType` on purpose — that tier outranks the globals, so a generic Choice or Scale entry would shadow `byField`'s `asleep` and `scale`.
+
+A field the engine never reads gets a plain "read by nothing" def rather than silence — the death drop's eleven dead words, the mines' patterns, the authored shadow feathers the engine ignores — and a def whose family copy is dead or backwards is overridden per type (the slig family's fossil chant codes, the flying slig's misnamed persistance, the greeter's inverted start direction). Timer and delay defs state frames outright; the seconds tier stays [28](item-028-readable-units.md)'s, waiting on a measured logic rate. Defs never enumerate values — `fieldHelp` appends the generated list — and are style-checked like the notes.
