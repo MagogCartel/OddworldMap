@@ -397,6 +397,8 @@ _VALUE_TYPES = {"Choice_short", "Choice_int", "Scale_short", "Scale_int"}
 _FIELD_TYPE_OVERRIDES = {
     # a boolean declared as a direction instead of choice
     ("AE", "SligSpawner", "chase_abe_when_spotted"): "Choice_short",
+    # an enum the member-type parser can't reach: Path_Drill_Data sits outside the Tlvs include graph
+    ("AE", "Drill", "start_direction"): "DrillDirection",
 }
 
 # layouts the schema parser can't derive from the relive_api CTOR alone. An empty
@@ -633,11 +635,12 @@ def write_field_types(game_key, out):
         typed = {r[1]: r[2] for r in rows if len(r) > 2}
         if name and typed:
             ft[name] = {k: typed[k] for k in sorted(typed)}
+    names = {game["tlv_names"].get(tid): rows for tid, rows in game["schema"].items()}
     for (gk, obj, fld), ty in _FIELD_TYPE_OVERRIDES.items():
         if gk == game_key:
-            if fld not in ft.get(obj, {}):
+            if all(r[1] != fld for r in names.get(obj) or []):
                 raise RuntimeError(f"stale field-type override: {gk} {obj}.{fld}")
-            ft[obj][fld] = ty
+            ft.setdefault(obj, {})[fld] = ty
     dst = out / game["field_types_file"]
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text(json.dumps({k: ft[k] for k in sorted(ft)}, indent=1))
@@ -653,6 +656,7 @@ def write_enum_labels(game_key, out):
     game = game_setup(game_key)
     used = {r[2] for tid, rows in game["schema"].items() if game["tlv_names"].get(tid)
             for r in rows if len(r) > 2}
+    used |= {ty for (gk, _, _), ty in _FIELD_TYPE_OVERRIDES.items() if gk == game_key}
     labels, bad = parse_enum_labels(game_key)
     broken = used & bad
     if broken:  # a used type must never ship silently unlabelled or mislabelled

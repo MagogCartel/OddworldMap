@@ -88,6 +88,7 @@
   "CrawlingSligButtonSounds": "The sound the button borrows for this press outcome: the game reuses effects from other machines here.",
   "DoorStates": "In Exoddus, the state the door holds while its switch is off; the switch flips it. In Oddysee this picks the door's kind instead (the third value is the hub gate), and whether it starts closed is its own field.",
   "DoorTypes": "What kind of door this is: a plain doorway, or a tasks gate that opens only when its hub switches are all on.",
+  "DrillDirection": "Which surface the drill punches from; its numbering is the drill's own, not the usual left and right.",
   "ElectricWallStartState": "Whether the wall is electrified when the level starts.",
   "FootSwitchTriggerBy": "Who can set this floor switch off.",
   "GasColour": "The colour of the gas this emitter releases.",

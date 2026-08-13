@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-14",
+   "tag": "improved",
+   "title": "Drill directions read as words",
+   "detail": "An Exoddus drill's start direction now shows as down, right or left. The drill's own direction enum sits outside the headers the builder reads types from, so the field shipped as a bare number that the usual left-and-right convention misread: its common value means down, not left."
+  },
+  {
    "date": "2026-08-13",
    "tag": "new",
    "title": "Every object field explains itself",

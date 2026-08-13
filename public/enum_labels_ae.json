@@ -20,6 +20,11 @@
   "2": "tasks door with secret music",
   "3": "tasks door"
  },
+ "DrillDirection": {
+  "0": "down",
+  "1": "right",
+  "2": "left"
+ },
  "ElectricWallStartState": {
   "0": "off",
   "1": "on"
