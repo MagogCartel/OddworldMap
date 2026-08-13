@@ -68,4 +68,12 @@ test("glossary_fields.json: every key names a real field / type / game type", ()
       `byType "${k}" is a real "Type.field"`,
     );
   }
+
+  // a def is prose among labels: it opens capitalized and closes punctuated,
+  // and never enumerates values — fieldHelp appends the value list itself
+  for (const section of ["byType", "byGameType", "byField"])
+    for (const [k, v] of Object.entries(g[section] || {})) {
+      assert.match(v, /^[A-Z].*[.!?]$/, `${section} "${k}" reads as prose`);
+      assert.ok(!/\b0 = |\b1 = /.test(v), `${section} "${k}" leaves the value list to fieldHelp`);
+    }
 });
