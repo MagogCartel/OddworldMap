@@ -6,6 +6,7 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+.claude/
 
 # build artifacts (cam2rgba is compiled on demand by build_map.py)
 tools/cam2rgba
