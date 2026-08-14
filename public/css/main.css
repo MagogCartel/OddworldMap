@@ -376,6 +376,23 @@ body.page-zoomed #cv {
 #tip .e {
   color: var(--dim);
 }
+#tip .about {
+  font-style: italic;
+}
+/* field pairs wrap as units; word-spacing opens only the seams between them */
+#tip .kv {
+  display: inline-block;
+  margin-top: 3px;
+  color: var(--dim);
+  word-spacing: 5px;
+}
+#tip .kv > span {
+  display: inline-block;
+  word-spacing: normal;
+}
+#tip .v {
+  color: var(--text);
+}
 #tip .f {
   color: var(--accent);
 }

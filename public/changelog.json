@@ -3,6 +3,12 @@
   {
    "date": "2026-08-14",
    "tag": "improved",
+   "title": "Object tooltips separate description from data",
+   "detail": "An object's hover tooltip now reads in layers. The type description leans into an italic aside, and field values brighten against their dimmed names, so the words and numbers that vary from one placement to the next are what catch the eye. Lines also wrap between whole fields now, never splitting a value from its name."
+  },
+  {
+   "date": "2026-08-14",
+   "tag": "improved",
    "title": "Drill directions read as words",
    "detail": "An Exoddus drill's start direction now shows as down, right or left. The drill's own direction enum sits outside the headers the builder reads types from, so the field shipped as a bare number that the usual left-and-right convention misread: its common value means down, not left."
   },

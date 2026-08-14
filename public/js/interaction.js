@@ -1,6 +1,7 @@
 // Pointer input on the map (mouse, touch, pen), hover inspection, and the menu toggle.
 
-import { esc, extrasText, formatDist, segDist } from "./util.js";
+import { esc, formatDist, segDist } from "./util.js";
+import { fieldEntries } from "./fields.js";
 import {
   KEY_PAN_PX,
   KEY_ZOOM_STEP,
@@ -489,7 +490,9 @@ function updateHover() {
         .slice(0, 8)
         .map((t) => {
           const about = typeSummary(t.name);
-          const ex = extrasText(t, "  ", fieldPrefsFor(state.data.id));
+          const ex = fieldEntries(t, fieldPrefsFor(state.data.id))
+            .map(([k, v]) => `<span>${esc(k)}=<span class="v">${esc(String(v))}</span></span>`)
+            .join(" ");
           const d = shownDest(t);
           let follow = "";
           if (d && isLoopback(t)) {
@@ -545,8 +548,8 @@ function updateHover() {
           }
           return (
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
-            (about ? `<br><span class="e">${esc(about)}</span>` : "") +
-            (ex ? `<br><span class="e">${esc(ex)}</span>` : "") +
+            (about ? `<br><span class="e about">${esc(about)}</span>` : "") +
+            (ex ? `<br><span class="kv">${ex}</span>` : "") +
             wireInfo +
             follow +
             `</div>`
