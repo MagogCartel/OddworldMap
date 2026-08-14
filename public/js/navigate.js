@@ -15,6 +15,7 @@ import {
   findTlv,
   focusZoom,
   formatHash,
+  hashToDraw,
   parseHash,
   resolveTarget,
 } from "./model.js";
@@ -323,18 +324,21 @@ export function applyHash() {
     applyingHash = false;
     return false;
   }
-  if (p.view) centerOn(p.view.x, p.view.y, clamp(p.view.z, ZOOM_MIN, ZOOM_MAX));
+  // the geometry is the link's own from here, which is what world coordinates
+  // in it are waiting on
+  const { view, route } = hashToDraw(p);
+  if (view) centerOn(view.x, view.y, clamp(view.z, ZOOM_MIN, ZOOM_MAX));
   applyingHash = false;
   if (p.obj) {
     // a link to a specific object: center it and hold a marker on it
     const t = findTlv(state.path.tlvs, p.obj);
-    const fx = t ? (dX(t.x1) + dX(t.x2)) / 2 : (p.view?.x ?? dX(p.obj.x1)),
-      fy = t ? (dY(t.y1) + dY(t.y2)) / 2 : (p.view?.y ?? dY(p.obj.y1));
+    const fx = t ? (dX(t.x1) + dX(t.x2)) / 2 : (view?.x ?? dX(p.obj.x1)),
+      fy = t ? (dY(t.y1) + dY(t.y2)) / 2 : (view?.y ?? dY(p.obj.y1));
     centerOn(fx, fy, null); // re-derives the focus zoom for this viewport
     flashAt(fx, fy, true);
     toast(t ? `marker on ${t.name}` : `no ${p.obj.name} at that spot`);
   }
-  state.route = p.route; // the hash is the source of truth: absent means no route
+  state.route = route; // the hash is the source of truth: absent means no route
   if (p.routeLost) {
     const arrived = p.route.reduce((n, s) => n + s.pts.length, 0);
     toast(`route link cut short: ${arrived} of ${arrived + p.routeLost} waypoints`);

@@ -91,7 +91,7 @@ Every toggle in the Display section explains itself: hover it for a short note o
 
 ### Sharing and embedding
 
-- the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view) always reflects the current view, including any plotted route
+- the URL hash (`#GAME/LEVEL/path/x/y/zoom`, where x/y is the point in the middle of the view, in the game's own world coordinates) always reflects the current view, including any plotted route
   - copy it to share an exact location, and it opens on that spot whatever the size of the window it lands in; the browser back button retraces follows
   - the chain button in the top-right corner copies the same link, for phones and installed-app mode where there may be no address bar
 - **right-click** an object to copy a direct link to it — opening that link centers the object, holds a marker on it until you interact, and names what the marker is on at the bottom of the map

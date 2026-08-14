@@ -1,4 +1,4 @@
-import { test } from "node:test";
+import { test, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import {
   camCell,
@@ -12,6 +12,7 @@ import {
   findTlv,
   focusZoom,
   formatHash,
+  hashToDraw,
   isLoopback,
   parseHash,
   patrolZone,
@@ -28,6 +29,11 @@ import { AO_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtur
 // the dataset can land on one
 const HERE_PATH = path(15, [], [{ cell: 0, name: "XXP15C01" }], 1, 1);
 const HERE = [{ short: "R1" }, HERE_PATH, SYNTH_GEOMETRY, dataset([level("R1", HERE_PATH)])];
+
+// AO is the file's baseline geometry: its window offset and cell margins put
+// draw space and world space far enough apart that a missing conversion shows.
+// A test wanting another sets it and needs no restore.
+beforeEach(() => setGeometry(AO_GEOMETRY));
 
 // a TLV moved to world position (x, y); SYNTH_GEOMETRY cells are 400x200 units
 const at = (t, x, y) => ({ ...t, x1: x, y1: y, x2: x + 10, y2: y + 10 });
@@ -290,7 +296,6 @@ test("cellAt: draw-space point to grid cell, null anywhere outside the grid", ()
   assert.equal(cellAt(910, 20, P), null);
   assert.equal(cellAt(450, -5, P), null);
   assert.equal(cellAt(450, 301, P), null);
-  setGeometry(AO_GEOMETRY);
 });
 
 test("resolveTarget: matches inside the destination camera before anything else", () => {
@@ -644,7 +649,6 @@ test("the focus zoom fits a few screens and clamps at both ends", () => {
     y: 105,
     z: 0.5,
   });
-  setGeometry(AO_GEOMETRY);
 });
 
 test("zoomAt clamps to the manual zoom range", () => {
@@ -658,22 +662,29 @@ test("camCenter and centerCam invert each other", () => {
   assert.deepEqual(centerCam(camCenter(cam, 800, 600), 800, 600), cam);
 });
 
+// a link read the way applyHash reads one: parsed, then resolved to draw space
+const readHash = (h) => {
+  const p = parseHash(h);
+  return p && { ...p, ...hashToDraw(p) };
+};
+
 test("a permalinked center survives a change of viewport, a corner would not", () => {
   const desktop = [1512, 900],
     phone = [390, 700];
   const cam = { x: 0, y: 0, z: 1.29 }; // whatever the sender was looking at
   const link = formatHash("AO", "R2", 1, camCenter(cam, ...desktop));
-  assert.equal(link, "#AO/R2/1/586/349/1.29"); // the middle of the sender's window
+  assert.equal(link, "#AO/R2/1/1498/709/1.29"); // the middle of the sender's window
   // holding that center costs the recipient a different corner, by half the
   // difference in window size — more than a 368-unit cell horizontally, which
   // is what a link carrying the corner would misplace them by instead
-  const got = centerCam(parseHash(link).view, ...phone);
+  const got = centerCam(readHash(link).view, ...phone);
   assert.equal(Math.round(got.x - cam.x), 435);
   assert.equal(Math.round(got.y - cam.y), 78);
 });
 
-test("formatHash rounds coordinates and fixes zoom to two decimals", () => {
-  assert.equal(formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }), "#AO/R2/1/177/55/2.23");
+test("formatHash writes world coordinates, rounded, and zoom to two decimals", () => {
+  // draw (177.4, 54.6) sits in cell 0, whose window starts at world (256, 120)
+  assert.equal(formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }), "#AO/R2/1/433/175/2.23");
 });
 
 test("an unreadable or non-positive zoom drops the whole view", () => {
@@ -689,11 +700,13 @@ test("parseHash round-trips a formatted hash (against the rounded values)", () =
     game: "AO",
     level: "R2",
     path: 1,
-    view: { x: 177, y: 55, z: 2.23 },
+    view: { x: 433, y: 175, z: 2.23 },
     obj: null,
     route: null,
     routeLost: 0,
   });
+  // the world point the link names, back in the space the renderer works in
+  assert.deepEqual(hashToDraw(p).view, { x: 177, y: 55, z: 2.23 });
 });
 
 test("permalinks can carry an object, identified by name and origin", () => {
@@ -704,10 +717,10 @@ test("permalinks can carry an object, identified by name and origin", () => {
     { x: 177.4, y: 54.6, z: 2.234 },
     { name: "Door", x1: 8746, y1: 1232 },
   );
-  assert.equal(h, "#AO/R1/18/177/55/2.23/Door@8746,1232");
+  assert.equal(h, "#AO/R1/18/433/175/2.23/Door@8746,1232");
   assert.deepEqual(parseHash(h).obj, { name: "Door", x1: 8746, y1: 1232 });
-  assert.equal(parseHash("#AO/R1/18/177/55/2.23").obj, null);
-  assert.equal(parseHash("#AO/R1/18/177/55/2.23/garbage!").obj, null);
+  assert.equal(parseHash("#AO/R1/18/433/175/2.23").obj, null);
+  assert.equal(parseHash("#AO/R1/18/433/175/2.23/garbage!").obj, null);
 });
 
 test("parseHash: case-insensitive, partial and garbage inputs", () => {
@@ -754,13 +767,13 @@ test("a permalinked object is found by name and origin, whatever its capitals", 
 });
 
 test("a percent-encoded fragment is read the same as a bare one", () => {
-  const h = "#AO/R6/6/-329/568/1.60/Mudokon@479,1735/route=n2;620,411;563,472;end";
+  const h = "#AO/R6/6/-329/568/1.60/Mudokon@479,1735/route=n2;sR6.6;620,411;563,472;end";
   assert.deepEqual(parseHash("#" + encodeURIComponent(h.slice(1))), parseHash(h));
   // a stray % that isn't an escape must not throw the whole link away
   assert.deepEqual(parseHash("#AO/R2/1/10/20/1.00/100%").view, { x: 10, y: 20, z: 1 });
 });
 
-test("permalinks can carry a route of draw-space waypoints, rounded like the view", () => {
+test("permalinks can carry a route of waypoints, rounded like the view", () => {
   const route = [
     {
       lv: "R2",
@@ -772,8 +785,8 @@ test("permalinks can carry a route of draw-space waypoints, rounded like the vie
     },
   ];
   const h = formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }, null, route);
-  assert.equal(h, "#AO/R2/1/177/55/2.23/route=n2;sR2.1;10,22;-30,40;end");
-  assert.deepEqual(parseHash(h).route, [
+  assert.equal(h, "#AO/R2/1/433/175/2.23/route=n2;sR2.1;266,142;-430,160;end");
+  assert.deepEqual(readHash(h).route, [
     {
       lv: "R2",
       pa: 1,
@@ -784,21 +797,21 @@ test("permalinks can carry a route of draw-space waypoints, rounded like the vie
     },
   ]);
   assert.equal(parseHash(h).routeLost, 0);
-  assert.equal(formatHash("AO", "R2", 1, { x: 0, y: 0, z: 1 }, null, []), "#AO/R2/1/0/0/1.00");
+  assert.equal(formatHash("AO", "R2", 1, { x: 0, y: 0, z: 1 }, null, []), "#AO/R2/1/256/120/1.00");
 });
 
 test("object and route segments coexist, matched by shape in either order", () => {
   const obj = { name: "Door", x1: 8746, y1: 1232 };
   const one = [{ lv: "R1", pa: 18, pts: [{ x: 1, y: 2 }] }];
   const h = formatHash("AO", "R1", 18, { x: 0, y: 0, z: 1 }, obj, one);
-  assert.equal(h, "#AO/R1/18/0/0/1.00/Door@8746,1232/route=n1;sR1.18;1,2;end");
+  assert.equal(h, "#AO/R1/18/256/120/1.00/Door@8746,1232/route=n1;sR1.18;257,122;end");
   assert.deepEqual(parseHash(h).obj, obj);
-  assert.deepEqual(parseHash(h).route, one);
-  const swapped = parseHash("#AO/R1/18/0/0/1.00/route=n1;sR1.18;1,2;end/Door@8746,1232");
+  assert.deepEqual(readHash(h).route, one);
+  const swapped = readHash("#AO/R1/18/256/120/1.00/route=n1;sR1.18;257,122;end/Door@8746,1232");
   assert.deepEqual(swapped.obj, obj);
   assert.deepEqual(swapped.route, one);
   // an unknown segment in between bothers neither
-  const padded = parseHash("#AO/R1/18/0/0/1.00/garbage!/route=n1;sR1.18;1,2;end");
+  const padded = readHash("#AO/R1/18/256/120/1.00/garbage!/route=n1;sR1.18;257,122;end");
   assert.equal(padded.obj, null);
   assert.deepEqual(padded.route, one);
 });
@@ -876,10 +889,10 @@ test("every prefix of a route link parses as a prefix of the route, or as none",
       .map((p) => ({ x: +p.split(",")[0], y: +p.split(",")[1] }));
   const route = [{ lv: "R6", pa: 6, pts }];
   const full = formatHash("AO", "R6", 6, { x: -120, y: 226, z: 1.29 }, null, route);
-  assert.deepEqual(parseHash(full).route, route);
+  assert.deepEqual(readHash(full).route, route);
   assert.equal(parseHash(full).routeLost, 0);
   for (let cut = full.indexOf("route=") + 6; cut < full.length; cut++) {
-    const { route: got, routeLost: lost } = parseHash(full.slice(0, cut));
+    const { route: got, routeLost: lost } = readHash(full.slice(0, cut));
     const where = `prefix of length ${cut}`;
     if (!got) {
       assert.equal(lost, 0, `${where} claims losses with nothing to show`);
@@ -905,11 +918,14 @@ test("a multi-path route round-trips, and a seam can stand empty", () => {
     { lv: "BA", pa: 2, pts: [] },
   ];
   const h = formatHash("AE", "R1", 16, { x: 0, y: 0, z: 1 }, null, route);
-  assert.equal(h, "#AE/R1/16/0/0/1.00/route=n3;sR1.15;1,2;3,4;sR1.16;5,6;sBA.2;end");
-  assert.deepEqual(parseHash(h).route, route);
+  assert.equal(
+    h,
+    "#AE/R1/16/256/120/1.00/route=n3;sR1.15;257,122;259,124;sR1.16;261,126;sBA.2;end",
+  );
+  assert.deepEqual(readHash(h).route, route);
   assert.equal(parseHash(h).routeLost, 0);
   // codes read back uppercased, the way the game and level codes do
-  assert.deepEqual(parseHash(h.toLowerCase()).route, route);
+  assert.deepEqual(readHash(h.toLowerCase()).route, route);
 });
 
 test("malformed bodies drop the route whole; cuts keep the prefix", () => {
@@ -974,9 +990,9 @@ test("every prefix of a multi-path route link parses as a prefix of it, or as no
   ];
   const total = 7;
   const full = formatHash("AO", "BA", 2, { x: -120, y: 226, z: 1.29 }, null, route);
-  assert.deepEqual(parseHash(full).route, route);
+  assert.deepEqual(readHash(full).route, route);
   for (let cut = full.indexOf("route=") + 6; cut < full.length; cut++) {
-    const { route: got, routeLost: lost } = parseHash(full.slice(0, cut));
+    const { route: got, routeLost: lost } = readHash(full.slice(0, cut));
     const where = `prefix of length ${cut}`;
     if (!got) {
       assert.equal(lost, 0, `${where} claims losses with nothing to show`);
@@ -1079,8 +1095,8 @@ test("a segment always names its path, so undo across a seam cannot rebind it", 
   // undo across a seam leaves exactly this: the route on R1 P15, you on P16
   const route = [{ lv: "R1", pa: 15, pts: [{ x: 1, y: 2 }] }];
   const h = formatHash("AO", "R1", 16, { x: 0, y: 0, z: 1 }, null, route);
-  assert.equal(h, "#AO/R1/16/0/0/1.00/route=n1;sR1.15;1,2;end");
-  assert.deepEqual(parseHash(h).route, route);
+  assert.equal(h, "#AO/R1/16/256/120/1.00/route=n1;sR1.15;257,122;end");
+  assert.deepEqual(readHash(h).route, route);
 });
 
 test("the route token refuses a marker flood", () => {

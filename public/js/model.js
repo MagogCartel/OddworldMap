@@ -18,7 +18,7 @@ import {
   HUB_FIELDS,
 } from "./config.js";
 import { isDemoPath } from "./demo.js";
-import { GEO, state, CELL_W, CELL_H, dX, dY } from "./state.js";
+import { GEO, state, CELL_W, CELL_H, dX, dY, wX, wY } from "./state.js";
 
 export function computeEntryPaths(data, geo = data.geometry) {
   const entries = {};
@@ -440,32 +440,30 @@ export const focusZoom = (cw, ch) =>
 // A route is a list of per-path segments {lv, pa, pts}, and its token is
 // "route=nCOUNT;sLV.PA;x,y;…;end": every segment names its path, so no
 // waypoint can ever rebind to artwork it was not plotted on.
+// Every coordinate a link carries is a world coordinate, the object segment's
+// included: draw space is a packing of the world that a change of pitch would
+// slide under a link, while a world point names a place in the game.
 export function formatHash(gameId, levelShort, pathId, view, obj, route) {
-  let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(view.x)}/${Math.round(view.y)}/${view.z.toFixed(2)}`;
+  let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(wX(view.x))}/${Math.round(wY(view.y))}/${view.z.toFixed(2)}`;
   if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
   const count = route?.reduce((n, s) => n + s.pts.length, 0);
   if (count) {
-    const pair = (p) => `${Math.round(p.x)},${Math.round(p.y)}`;
+    const pair = (p) => `${Math.round(wX(p.x))},${Math.round(wY(p.y))}`;
     const body = route.map((s) => [`s${s.lv}.${s.pa}`, ...s.pts.map(pair)].join(";")).join(";");
     h += `/route=n${count};${body};end`;
   }
   return h;
 }
 
-// waypoints from a "route=" payload, "nCOUNT;x,y;…;x,y;end", as the survivors
-// plus how many of the count never arrived: a URL shortened in transit keeps
-// the legs that made it rather than losing the route whole. The count leads so
-// that it outlives the cut; only the trailing marker can prove the payload
-// complete, a cut inside the final pair still reading as a well-formed one.
-// Both tokens end on a letter or digit, past what autolinkers eat off a URL,
-// and the count wears the "n" so that a pair cannot pass for it.
-// segments from a "route=" payload: the count first so it outlives a cut,
-// "sLV.PA" tokens opening each segment's run of pairs, and only the trailing
-// marker proving the payload complete — a cut inside the final token still
-// reads as a well-formed one, so the unproven tail goes unread. Every token
-// ends on a letter or digit, past what autolinkers eat off a URL, and the
-// count wears the "n" so a pair cannot pass for it. A segment whose points
-// were all cut away still arrives, empty, so the seam survives its legs.
+// segments from a "route=" payload, as the survivors plus how many of the
+// count never arrived: a URL shortened in transit keeps the legs that made it
+// rather than losing the route whole. The count comes first so it outlives a
+// cut, "sLV.PA" tokens open each segment's run of pairs, and only the trailing
+// marker proves the payload complete: a cut inside the final token still reads
+// as a well-formed one, so the unproven tail goes unread. Every token ends on
+// a letter or digit, past what autolinkers eat off a URL, and the count wears
+// the "n" so a pair cannot pass for it. A segment whose points were all cut
+// away still arrives, empty, so the seam survives its legs.
 function parseRoute(payload) {
   const tokens = payload.split(";");
   const head = /^n(\d+)$/.exec(tokens[0]);
@@ -518,9 +516,11 @@ const finiteView = (x, y, z) =>
 
 // null for an empty hash; view is the center point plus zoom, null unless all
 // three read; obj names a TLV to highlight, identified by name and origin;
-// route is a list of draw-space segments {lv, pa, pts}, routeLost how many
-// waypoints a shortened URL never delivered. game/level/path may still come
-// back empty or NaN — the caller resolves those against the data.
+// route is a list of segments {lv, pa, pts}, routeLost how many waypoints a
+// shortened URL never delivered. Coordinates come back as the link wrote them,
+// in world space, which hashToDraw resolves once the link's own game has been
+// selected. game/level/path may still come back empty or NaN, which the caller
+// resolves against the data.
 export function parseHash(hash) {
   const h = decodeFragment(hash.replace(/^#/, ""));
   if (!h) return null;
@@ -539,5 +539,17 @@ export function parseHash(hash) {
     obj: om ? { name: om[1], x1: +om[2], y1: +om[3] } : null,
     route: route ? route.segs : null,
     routeLost: route ? route.lost : 0,
+  };
+}
+
+// a parsed permalink's view and route in draw space. The conversion needs the
+// link's own geometry, which is not live while parseHash is reading the text:
+// applyHash has yet to select the game, and sanitizeLocationHash runs at boot
+// with no geometry at all.
+export function hashToDraw(p) {
+  const at = (x, y) => ({ x: dX(x), y: dY(y) });
+  return {
+    view: p.view && { ...at(p.view.x, p.view.y), z: p.view.z },
+    route: p.route?.map((s) => ({ ...s, pts: s.pts.map((q) => at(q.x, q.y)) })) ?? null,
   };
 }
