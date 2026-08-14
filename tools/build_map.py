@@ -798,6 +798,10 @@ def tlv_extra_ae(t, blob, pos, length, level_short):
             e = {"portal": {0: "travel", 1: "rescue", 2: "shrykull"}.get(v[6], v[6])}
             if v[6] == 0:  # only travel portals have a real destination
                 e.update(dest(v[1], v[2], v[3]))
+    elif t == 86:  # LevelLoader: switch id, dest level/path/camera, movie
+        v = s16s(5)
+        if len(v) >= 5:
+            e = dest(v[1], v[2], v[3])
     # gameplay objects get their full field set decoded generically into
     # `fields`; see walk_obj_region
     if not e:

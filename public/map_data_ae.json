@@ -845,7 +845,11 @@
        "y1": 580,
        "x2": 1724,
        "y2": 604,
-       "extra": {},
+       "extra": {
+        "to_level": "MI",
+        "to_path": 2,
+        "to_cam": 16
+       },
        "fields": {
         "switch_id": 109,
         "destination_level": 1,
