@@ -341,8 +341,8 @@ export function draw() {
       continue;
     }
     const c = catOf(t);
-    // far edge goes through the transform too: AE cells are scaled and AO
-    // spans can cross cells, so raw world deltas overshoot
+    // far edge goes through the transform too: a span can cross cells, where
+    // the packing folds the slack out of the width
     const x1 = dX(t.x1),
       y1 = dY(t.y1);
     const w = Math.max(dX(t.x2) - x1, 10),

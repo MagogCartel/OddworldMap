@@ -2,40 +2,38 @@
 
 import { GRID_UNIT } from "./config.js";
 
-// Each game maps world coordinates to screen artwork differently (data.geometry):
-// AO cameras occupy 1024x480-unit world cells with a 368x240 window at +256/+120
-// (1:1 world:pixel; Map.cpp SetActiveCam + ScreenManager xpos/ypos); AE cameras
-// are 375x260-unit cells shown scaled into 368x240. Screens are laid out edge to
-// edge at cellW x cellH pitch either way.
+// Both games address cameras on a grid coarser than the screen (data.geometry):
+// a visW x visH window of world units sits inside the cell at winX/winY, world
+// units being PS1 screen pixels and the artwork 1:1 with them. AO's cell is
+// 1024x480 with a 368x240 window at +256/+120; AE's is 375x260 with the same
+// window at +0/+0. Draw space is world units too, so a screen's interior maps
+// 1:1 and cellW/cellH are only the pitch screens are laid out at: packed edge
+// to edge, which folds away the slack between windows.
 export let GEO = null,
   CELL_W = 368,
   CELL_H = 240;
-let SX = 1,
-  SY = 1;
 
 export function setGeometry(g) {
   GEO = g;
   CELL_W = g.cellW;
   CELL_H = g.cellH;
-  SX = g.cellW / g.visW;
-  SY = g.cellH / g.visH;
 }
 
 export function dX(wx) {
   const c = Math.floor(wx / GEO.worldW);
-  return c * CELL_W + (wx - c * GEO.worldW - GEO.winX) * SX;
+  return c * CELL_W + (wx - c * GEO.worldW - GEO.winX);
 }
 export function dY(wy) {
   const c = Math.floor(wy / GEO.worldH);
-  return c * CELL_H + (wy - c * GEO.worldH - GEO.winY) * SY;
+  return c * CELL_H + (wy - c * GEO.worldH - GEO.winY);
 }
 export function wX(dx) {
   const c = Math.floor(dx / CELL_W);
-  return c * GEO.worldW + GEO.winX + (dx - c * CELL_W) / SX;
+  return c * GEO.worldW + GEO.winX + (dx - c * CELL_W);
 }
 export function wY(dy) {
   const c = Math.floor(dy / CELL_H);
-  return c * GEO.worldH + GEO.winY + (dy - c * CELL_H) / SY;
+  return c * GEO.worldH + GEO.winY + (dy - c * CELL_H);
 }
 
 // position within its own screen, in grid squares (measured from the visible
@@ -43,9 +41,9 @@ export function wY(dy) {
 export const gX = (wx) => (wx - Math.floor(wx / GEO.worldW) * GEO.worldW - GEO.winX) / GRID_UNIT;
 export const gY = (wy) => (wy - Math.floor(wy / GEO.worldH) * GEO.worldH - GEO.winY) / GRID_UNIT;
 
-// world-unit length of a draw-space delta: draw scales world by SX/SY per axis,
-// so lengths convert directly; AO's hidden cell margins deliberately stay uncounted
-export const worldLen = (dx, dy) => Math.hypot(dx / SX, dy / SY);
+// world-unit length of a draw-space delta: a screen's interior is 1:1, so the
+// delta is already a world length; the folded-away slack stays uncounted
+export const worldLen = (dx, dy) => Math.hypot(dx, dy);
 
 // total world-unit length over [{x, y}, …] draw-space waypoints
 export const routeTotal = (pts) =>

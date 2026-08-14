@@ -159,7 +159,7 @@ A rebuild that changes any committed cam PNG also rewrites `CACHE_NAME` in [sw.j
   - A path's section is not a name and stands outside the rule: it says which half of the level the path belongs to, so it shows beside the curated name instead of having to be repeated inside it.
   - An adopted name stands outside it for the same reason — it is not the curated name, so it has nothing to refine.
 
-Structure layouts (TLV types, path tables, collision records) come from the alive_reversing decompilation (commit `c1ba4c6c8` for AO, current sources for AE), which matches the PS1 data formats. AO cameras occupy 1024×480-unit world cells showing a 368×240 window centered at (cell·1024+440, cell·480+240), world units mapping 1:1 to PS1 screen pixels; AE cameras are 375×260-unit cells displayed scaled.
+Structure layouts (TLV types, path tables, collision records) come from the alive_reversing decompilation (commit `c1ba4c6c8` for AO, current sources for AE), which matches the PS1 data formats. Both games address cameras on a grid coarser than the screen: world units map 1:1 to PS1 screen pixels, and each camera shows a 368×240 window of them inside its cell. AO's cell is 1024×480, with the window centered at (cell·1024+440, cell·480+240); AE's is 375×260, with the window at the cell's corner. The map lays screens out edge to edge, folding away the slack the game never renders.
 
 ## Credits & licensing
 

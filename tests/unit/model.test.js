@@ -279,17 +279,17 @@ test("camCell: zero-padded C## suffix lookup, null for unknown or missing ids", 
 });
 
 test("cellAt: draw-space point to grid cell, null anywhere outside the grid", () => {
-  setGeometry(SYNTH_GEOMETRY); // 100x50 draw cells
+  setGeometry(SYNTH_GEOMETRY); // 300x150 draw cells
   const P = path(1, [], [], 3, 2);
   assert.equal(cellAt(0, 0, P), 0);
-  assert.equal(cellAt(250, 20, P), 2); // row 0, col 2
-  assert.equal(cellAt(150, 75, P), 4); // row 1, col 1
+  assert.equal(cellAt(750, 20, P), 2); // row 0, col 2
+  assert.equal(cellAt(450, 200, P), 4); // row 1, col 1
   // the margins must not fold into a neighbouring row's edge cell:
   // col -1 is not "last cell of the row above", col w is not "first of the next"
-  assert.equal(cellAt(-1, 75, P), null);
-  assert.equal(cellAt(310, 20, P), null);
-  assert.equal(cellAt(150, -5, P), null);
-  assert.equal(cellAt(150, 101, P), null);
+  assert.equal(cellAt(-1, 200, P), null);
+  assert.equal(cellAt(910, 20, P), null);
+  assert.equal(cellAt(450, -5, P), null);
+  assert.equal(cellAt(450, 301, P), null);
   setGeometry(AO_GEOMETRY);
 });
 
@@ -634,14 +634,14 @@ test("zoomAt keeps the world point under the anchor fixed", () => {
 });
 
 test("the focus zoom fits a few screens and clamps at both ends", () => {
-  setGeometry(SYNTH_GEOMETRY); // 100x50 cells; FOCUS_SCREENS 2.6 -> fit bounds 260x130
-  assert.equal(focusZoom(520, 260), 1.6); // large canvas: clamps at FOCUS_ZOOM_MAX
-  assert.equal(focusZoom(130, 65), 0.5); // small canvas: clamps at FOCUS_ZOOM_MIN
-  assert.equal(focusZoom(260, 130), 1); // in between: exactly FOCUS_SCREENS across
+  setGeometry(SYNTH_GEOMETRY); // 300x150 cells; FOCUS_SCREENS 2.6 -> fit bounds 780x390
+  assert.equal(focusZoom(1560, 780), 1.6); // large canvas: clamps at FOCUS_ZOOM_MAX
+  assert.equal(focusZoom(390, 195), 0.5); // small canvas: clamps at FOCUS_ZOOM_MIN
+  assert.equal(focusZoom(780, 390), 1); // in between: exactly FOCUS_SCREENS across
   // a jump to a point puts it at the middle of the canvas whichever zoom won
-  assert.deepEqual(centerCam({ x: 500, y: 300, z: focusZoom(130, 65) }, 130, 65), {
-    x: 370,
-    y: 235,
+  assert.deepEqual(centerCam({ x: 500, y: 300, z: focusZoom(390, 195) }, 390, 195), {
+    x: 110,
+    y: 105,
     z: 0.5,
   });
   setGeometry(AO_GEOMETRY);

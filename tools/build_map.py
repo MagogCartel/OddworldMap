@@ -1093,7 +1093,7 @@ GAMES = {
         "enum_labels_file": "enum_labels_ae.json",
         "env": "ODDWORLD_DISC_AE",
         "geometry": {"cellW": 368, "cellH": 240, "worldW": 375, "worldH": 260,
-                     "winX": 0, "winY": 0, "visW": 375, "visH": 260},
+                     "winX": 0, "winY": 0, "visW": 368, "visH": 240},
         "tlv": {"header_len": 0x10, "rect_off": 0x08, "min_len": 16, "max_len": 512,
                 "max_type": 150, "check_flags": False, "extra_fn": tlv_extra_ae},
         "fg1_bitmask": True,

@@ -18,15 +18,16 @@ export const AE_GEOMETRY = {
   worldH: 260,
   winX: 0,
   winY: 0,
-  visW: 375,
-  visH: 260,
+  visW: 368,
+  visH: 240,
 };
 
-// unlike either game (window offset AND 2:1 scaling, cell size ≠ the state.js
-// defaults) so transform and live-binding bugs cannot hide behind real values
+// unlike either game: a window offset, and screens spaced wider apart than the
+// window they show, so neither a live-binding bug nor a pitch mistaken for a
+// scale can hide behind real values
 export const SYNTH_GEOMETRY = {
-  cellW: 100,
-  cellH: 50,
+  cellW: 300,
+  cellH: 150,
   worldW: 400,
   worldH: 200,
   winX: 40,

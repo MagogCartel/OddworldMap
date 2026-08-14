@@ -3,6 +3,12 @@
   {
    "date": "2026-08-14",
    "tag": "fixed",
+   "title": "Exoddus screens are no longer squashed",
+   "detail": "Exoddus addresses its cameras on a grid a little larger than the screen you actually see, and the map had been treating that whole grid cell as visible artwork. Everything on an Exoddus screen was therefore pulled toward its top-left corner: up to 7 pixels across and 20 down, worst at the bottom of a screen. Floors sat below their collision lines, status boards floated off their panels, and objects near a screen's edge drifted off it. Screens now sit 1:1 on their artwork, as Oddysee's already did."
+  },
+  {
+   "date": "2026-08-14",
+   "tag": "fixed",
    "title": "The Mines' two tunnels are joined at last",
    "detail": "Necrum Mines Tunnel 2 had no door joining it to Tunnel 1, because the game carries you across in a cutscene instead. The level loader that runs that cutscene now names its destination and follows like any door."
   },
