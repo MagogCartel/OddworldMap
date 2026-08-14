@@ -336,16 +336,18 @@ GAMEPLAY_FIELD_TYPES = {
     "FlyingSlig", "CrawlingSlig", "SligGetPants", "SligGetWings", "Bees", "SlogHut", "BeeSwarmHole",
     "SligSpawner", "SlogSpawner", "ScrabSpawner", "SlurgSpawner", "FlyingSligSpawner", "ZzzSpawner",
     # doors / travel
-    "Door", "SlamDoor", "TrainDoor", "MineCar", "PathTransition", "BirdPortal", "BirdPortalExit",
+    "Door", "SlamDoor", "MineCar", "PathTransition", "BirdPortal", "BirdPortalExit",
     "WellLocal", "LocalWell", "WellExpress", "Teleporter",
     # switches / triggers
     "Switch", "Lever", "InvisibleSwitch", "FootSwitch", "BellHammer", "HandStone", "IdSplitter",
-    "SecurityOrb", "SecurityDoor", "BellSongStone", "ChimeLock", "MovieHandStone", "GlukkonSwitch",
+    "SecurityDoor", "BellSongStone", "ChimeLock", "MovieHandStone", "GlukkonSwitch",
     "CrawlingSligButton", "MultiSwitchController", "WheelSyncer", "WorkWheel", "SlapLock", "PullRingRope",
+    "ResetPath", "ResetSwitchRange",
     # hazards
     "DeathDrop", "TimedMine", "Mine", "UXB", "ElectricWall", "MovingBomb", "MeatSaw",
     "DeathClock", "GasEmitter", "GasCountdown", "TrapDoor", "FallingItem",
     "RollingBall", "RollingRock", "ZBall", "Drill", "LaughingGas", "ExplosionSet", "Water",
+    "SecurityOrb", "SecurityClaw", "MotionDetector",
     # info / interactables
     "LCDStatusBoard", "LCDScreen", "LCD", "MovieStone", "DemoPlaybackStone", "HintFly", "DoorFlame",
     "ContinuePoint", "ContinueZone", "AbeStart", "ElumStart",
@@ -353,8 +355,8 @@ GAMEPLAY_FIELD_TYPES = {
     "LightEffect", "ShadowZone", "Hoist", "Edge", "StatusLight", "BackgroundAnimation", "ParamiteWebLine",
     "SligBoundLeft", "SligBoundRight", "EnemyStopper", "SligPersist", "MovingBombStopper", "RollingBallStopper",
     "LiftPoint", "LiftMover", "Pulley", "SoftLanding", "FlintLockFire",
-    "MusicTrigger", "TimerTrigger", "Alarm", "ResetPath", "ResetSwitchRange", "Preloader", "LevelLoader",
-    "RingCancel", "Null", "ElumPathTrans", "DoorBlocker", "SecurityClaw", "MotionDetector", "ColourfulMeter",
+    "MusicTrigger", "TimerTrigger", "Alarm", "Preloader", "LevelLoader", "TrainDoor",
+    "RingCancel", "Null", "ElumPathTrans", "DoorBlocker", "ColourfulMeter",
     "RockSack", "MeatSack", "HoneySack", "Honey", "BoneBag", "Dove", "BoomMachine", "BrewMachine",
 }
 

@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-14",
+   "tag": "fixed",
+   "title": "Objects filed under the wrong filter move",
+   "detail": "The security orb that zaps Abe for chanting sat among the switches and levers. The security claw and the sweeping motion detectors sat in the meta bucket, hidden by default. The orb and the claw both punish Abe, and the detectors raise the alarm that fetches something which will, so all three are hazards now. The boxes that wipe a range of switch ids join the switches, where the rest of the wiring logic already lives. The FeeCo train door leaves Doors / Transitions for meta: it is a graphic, and the ordinary door beside it is what carries the ride."
+  },
+  {
+   "date": "2026-08-14",
    "tag": "new",
    "title": "Sacks and vending machines get a filter of their own",
    "detail": "The sacks and machines that stock Abe up now have a filter of their own, \"Pickups / dispensers\", on by default: rock, meat and bone sacks, grenade machines and brew dispensers. What is left of that bucket becomes \"Displays\": scrolling boards, status lamps and meters, and hint flies."
