@@ -32,6 +32,8 @@ const fmtDate = (iso) => {
 // class intact; whatever a class can't carry becomes a dash
 const tagClass = (tag) => "wn-tag-" + tag.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
+const labelsOf = (e) => [e.tag, e.flagship && "flagship"].filter(Boolean);
+
 // localStorage may be unavailable (private mode, blocked); never let that break the panel
 const store = {
   get: () => {
@@ -70,13 +72,14 @@ async function init() {
     closeBtn = $("whatsnewClose");
   const newest = entries[0].date;
 
-  // the feed names its own tags; sorted so the row keeps its order as it grows
-  const tags = [...new Set(entries.map((e) => e.tag).filter(Boolean))].sort();
-  const off = new Set(); // switched-off tags; an untagged entry answers to none and stays
+  // the feed names its own kinds; sorted so the row keeps its order as it grows
+  const kinds = [...new Set(entries.map((e) => e.tag).filter(Boolean))].sort();
+  const chips = entries.some((e) => e.flagship) ? [...kinds, "flagship"] : kinds;
+  const off = new Set(); // switched-off labels; an unlabelled entry answers to none and stays
   let expanded = false;
 
   const renderFilter = () => {
-    filter.innerHTML = tags
+    filter.innerHTML = chips
       .map(
         (t) =>
           `<button type="button" class="wn-tag ${tagClass(t)} wn-chip" data-tag="${esc(t)}" aria-pressed="${!off.has(t)}">${esc(t)}</button>`,
@@ -85,7 +88,9 @@ async function init() {
   };
 
   const render = () => {
-    const matching = entries.filter((e) => !e.tag || !off.has(e.tag));
+    const matching = entries.filter((e) =>
+      e.flagship ? !off.has("flagship") : !e.tag || !off.has(e.tag),
+    );
     if (!matching.length) {
       body.innerHTML = `<div class="wn-empty">Nothing to show — turn a tag back on.</div>`;
       return;
@@ -97,9 +102,13 @@ async function init() {
         html += `<div class="wn-date">${esc(fmtDate(e.date))}</div>`;
         lastDate = e.date;
       }
-      const tag = e.tag ? `<span class="wn-tag ${tagClass(e.tag)}">${esc(e.tag)}</span>` : "";
+      const line = labelsOf(e)
+        .map((t) => `<span class="wn-tag ${tagClass(t)}">${esc(t)}</span>`)
+        .join("");
+      const tags = line ? `<div class="wn-tags">${line}</div>` : "";
       const detail = e.detail ? `<div class="wn-detail">${esc(e.detail)}</div>` : "";
-      html += `<div class="wn-entry">${tag}<span class="wn-title">${esc(e.title)}</span>${detail}</div>`;
+      const cls = e.flagship ? "wn-entry wn-flagship" : "wn-entry";
+      html += `<div class="${cls}">${tags}<span class="wn-title">${esc(e.title)}</span>${detail}</div>`;
     }
     if (!expanded && matching.length > PREVIEW_N)
       html += `<button class="wn-more" id="whatsnewMore">See all ${matching.length} updates</button>`;

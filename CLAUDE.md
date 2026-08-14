@@ -131,6 +131,9 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
 - `#whatsnewFilter` ([js/whatsnew.js](public/js/whatsnew.js)) builds the What's New tag row from the tags `changelog.json` actually carries rather than from a list in the code, so a new tag needs no JavaScript.
   - Give it a colour rule or it takes the dim default, and add one word to `tests/unit/changelog.test.js`'s tag set, which is the only thing standing between a typo'd tag and a phantom chip nothing catches.
   - The chip's *fill* is what says on or off, because the text colour belongs to the tag. Do not reach for opacity: `fixed` is already dim, so fading it says nothing.
+  - `flagship` is an entry's second axis rather than a fourth kind: a `"flagship": true` beside the kind it keeps, a chip appended after the sorted kinds so it lands where a sorted fourth tag could not, and a badge beside that kind on the entry (`labelsOf`, the one place in the module that names it).
+  - A flagship answers to **its own chip alone**, which is what lets the three kinds switch off and leave the flagships by themselves. It cannot also answer to its kind's chip: every flagship is new, so an entry surviving on either label would leave the flagship chip inert, and one needing both would make the kinds' chips hide what the flagship chip is there to isolate.
+  - One `--foil` token, because the badge, its chip and the entry's rail have to agree on it. The chip takes it as a *fill* where the badge takes it as clipped text: `background-clip: text` would clip the chip's own fill away, and the fill is the on/off signal. Naming the on state (`[aria-pressed="true"]`) outranks the off rule from anywhere in the sheet, so off needs no flagship case at all. In the reduced-motion block the foil stays and only the sweep and the sheen go — the gradient is colour, the travel is motion.
 
 ## Format gotchas (hard-won)
 

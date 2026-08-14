@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-14",
+   "tag": "new",
+   "title": "The biggest additions now wear a flagship badge",
+   "detail": "Seventeen entries so far in this feed are not ordinary updates. They are the features the map was built around, and they now say so: a shifting foil badge beside the NEW label and a lit rail down the entry. The row above gains a flagship chip to match; switch the other three off and what remains is the shortest possible history of the site."
+  },
+  {
+   "date": "2026-08-14",
    "tag": "improved",
    "title": "Object tooltips separate description from data",
    "detail": "An object's hover tooltip now reads in layers. The type description leans into an italic aside, and field values brighten against their dimmed names, so the words and numbers that vary from one placement to the next are what catch the eye. Lines also wrap between whole fields now, never splitting a value from its name."
@@ -15,12 +21,14 @@
   {
    "date": "2026-08-13",
    "tag": "new",
+   "flagship": true,
    "title": "Every object field explains itself",
    "detail": "The field glossary is complete: every stored field of every object in both games now carries a plain-English definition. Hover the dotted underline in the screen list or the Fields picker (or tap it on a phone) for what the field means, in frames and grid squares where the engine counts that way, with its possible values listed. Fields the games' code never reads say so outright, so a custom-level builder knows which knobs are real. Five hundred and sixty-five definitions, up from forty-four."
   },
   {
    "date": "2026-08-12",
    "tag": "new",
+   "flagship": true,
    "title": "Every object type explains itself",
    "detail": "The map now carries an encyclopedia: one curated paragraph per object type, researched from the games' reverse-engineered code, telling you what a ZBall, a SlapLock or a Greeter actually is and does. Hovering an object opens with that story's first sentence. The ⓘ beside any object in the screen list, or next to a type in the Fields panel, opens the full card. That gives the whole entry, how many are placed in each game (counted live, demo paths noted apart), what the type's stored fields mean, and a link that finds every one of them with search. All 139 object types across both games are covered."
   },
@@ -45,12 +53,14 @@
   {
    "date": "2026-08-10",
    "tag": "new",
+   "flagship": true,
    "title": "What does that lever do? Switch wiring, drawn",
    "detail": "Every lever, button, wheel and pressure plate in these games flips a numbered switch, and a door, drill, electric wall, trapdoor or spawner can be wired to listen for one. The new Switch wiring toggle under Display (or the w key) draws those connections as green dotted lines, including the logic gates Exoddus hides between them, where several work wheels have to agree before a door will open. Hover a wired object to spotlight just its own wires, with arrowheads showing which way the signal runs. The tooltip spells out what it sets and what it answers to, including wires that reach another path of the level. Wires run between markers you can see, so a hidden category takes its wires with it. The timer relays and pull rings now file under Switches / levers, green and on by default, so the objects doing the wiring are visible out of the box."
   },
   {
    "date": "2026-08-09",
    "tag": "new",
+   "flagship": true,
    "title": "A minimap for the paths that outgrow the window",
    "detail": "Zoomed in on a big path, there was nothing that said where in it you are or how much lies off-screen. Now a small overview sits in the lower-right corner: the path's camera grid, with a rectangle showing exactly what the window sees. Click or drag inside it to jump the view around. It appears only when some of the path is off-screen, steps aside while the By-the-numbers panel is open."
   },
@@ -63,12 +73,14 @@
   {
    "date": "2026-08-09",
    "tag": "new",
+   "flagship": true,
    "title": "The pens enemies patrol are on the map",
    "detail": "Sligs and Scrabs are penned in by invisible bound markers, and until now those hid in the default-off Meta bucket looking like every other grey box. A new Display toggle, Enemy patrol pens (or the p key), draws them as dashed posts on the exact boundary the game enforces, each with a small foot pointing into the pen. Hovering a Slig or a Slig spawner shades the span it patrols, edge to edge between its own pair of posts, matched the way the game itself does it: by the slig id both ends carry. Scrab bounds carry no such id, so Scrabs get their posts and no shading. The posts need Enemies / spawners on, and the toggle is off by default, since hundreds of posts are a lot of ink for anyone not reading patrol ranges."
   },
   {
    "date": "2026-08-08",
    "tag": "new",
+   "flagship": true,
    "title": "Count anything, everywhere, at a glance",
    "detail": "A new \"By the numbers\" button under the Objects filters opens a panel that counts. Pick up to six object types and read how many stand on the screen under your view, on the current path, in the level, and across the whole game. The figures re-derive themselves as you switch paths, follow doors or shuffle. Counts read the data rather than the display, so a type whose filter is off still counts, and the demo-paths setting is honoured with a note on what the hidden copies hold. Click a type's name in the table to drop it."
   },
@@ -207,6 +219,7 @@
   {
    "date": "2026-07-28",
    "tag": "new",
+   "flagship": true,
    "title": "The map says where you are, and what is odd about it",
    "detail": "A chip in the map's top-left corner now names the level and path you are looking at, wherever you arrived from. Click it, or press i, and it tells you the level's full name, whether the game ever arrives at this path from another level, and, on the paths that have something odd about them, a short remark on what that is. Thirteen Exoddus paths carry one so far, each marked by a dot on the chip. There is the Brewery's zulag 13, which almost every board in it misprints as 14 (a developer slip corrected for the Japanese release), and the arch out of zulag 11 that repeats the mistake. There are nine screens furnished with another level's artwork, eight of them secret areas, from the Slig Barracks hidden in the Necrum jungle to the railway depot tucked inside a Paramite trial. And there is the Mines' escape route, the boiler room you already crossed screen for screen, and FeeCo's terminal 3, the one terminal the game never numbers."
   },
@@ -219,6 +232,7 @@
   {
    "date": "2026-07-28",
    "tag": "new",
+   "flagship": true,
    "title": "Every Exoddus area now has a name",
    "detail": "The rest of Exoddus follows the Brewery: all eighty-six paths across the Mines, Necrum, both vaults, FeeCo Depot, the Slig Barracks, Bonewerkz and the final boiler room now say where you are. Where the game paints the answer on the wall, that is what you get: the mine's numbered tunnels, the barracks' blocks, FeeCo's numbered terminals, each read off the boards and arches in the artwork. Where it paints nothing, as in the two vaults, the name comes from matching each path's contents against a walkthrough, so the vault trials are numbered the way players number them. Eighteen more paths turn out to be demo copies you can never walk to, marked [Demo], sixteen of them under the names the game gives those demos."
   },
@@ -417,6 +431,7 @@
   {
    "date": "2026-07-21",
    "tag": "new",
+   "flagship": true,
    "title": "Every object field, yours to pick",
    "detail": "Hover a Slig and you'll now see how it attacks, for example shoot_on_sight_delay=0 means it shoots the instant it sees you, with no \"FREEZE!\" warning - a nasty surprise at some screens. And there's much more underneath: turn on \"Show more object fields\" in Settings and a \"Fields\" panel appears in the sidebar, listing the object types on the current screen. Expand a type (Slig, Mudokon, ...) and tick exactly the fields you want in its tooltips and the screen list, with the notable ones pre-checked and \"all\" / \"reset\" shortcuts per type; your picks are remembered per game. Search always reaches every field even when it's hidden, so shoot_on_sight_delay=0 finds every ambush Slig in a level - and a result matched on a hidden field shows that field on the row."
   },
@@ -435,6 +450,7 @@
   {
    "date": "2026-07-21",
    "tag": "new",
+   "flagship": true,
    "title": "Plot a route and share it as a link",
    "detail": "The new \"Route planner\" display toggle (or the r key) turns clicks into waypoints: every leg is labelled with its length, and a bar at the top totals the route in world units and grid squares. This is the ruler's big sibling, made for planning and practising runs. Backspace (or the bar's undo) removes the last point. The whole route travels in the page address, so copying the link shares it exactly as plotted and it shows up in PNG exports too; whoever opens it can still click doors and browse freely, the route stays put until they switch paths or clear it."
   },
@@ -459,6 +475,7 @@
   {
    "date": "2026-07-19",
    "tag": "new",
+   "flagship": true,
    "title": "See a path's whole circulation as arrows",
    "detail": "The new \"Connection arrows\" display toggle (or the a key) draws every door, express well, bird portal, teleporter and path transition linked to where it leads, turning the path into a readable routing flowchart. Two-way pairs collapse into one double-headed arrow, transitions to other paths show as short labelled stubs, colours tell the kinds apart, and hovering an object spotlights just its own arrows."
   },
@@ -471,6 +488,7 @@
   {
    "date": "2026-07-19",
    "tag": "new",
+   "flagship": true,
    "title": "Tap a screen to see everything on it",
    "detail": "Click or tap a camera screen (anywhere that isn't a followable object) and a panel lists every object on that screen, grouped by category. Hovering a row outlines the object on the map, clicking it jumps straight there, and tapping an object opens the list scrolled to that object's row. On phones the panel is a bottom sheet that leaves the map visible - with no hover to inspect with, this is the way to see what a screen holds. A Settings switch turns it off."
   },
@@ -513,6 +531,7 @@
   {
    "date": "2026-07-18",
    "tag": "new",
+   "flagship": true,
    "title": "Full game, level and path names on the buttons",
    "detail": "Turn on \"Show full names\" in Settings and the game, level and path buttons expand into a list carrying their full names next to the short codes: \"AO (Abe's Oddysee)\", \"R1 (Rupture Farms)\", and the named path areas like the Rupture Farms Return zulags and the Exoddus enders."
   },
@@ -615,6 +634,7 @@
   {
    "date": "2026-07-14",
    "tag": "new",
+   "flagship": true,
    "title": "Abe's Exoddus joins the map",
    "detail": "The entire second game (every level, camera and object) sits alongside Abe's Oddysee. Switch between them with the game tabs."
   },
@@ -627,12 +647,14 @@
   {
    "date": "2026-07-12",
    "tag": "new",
+   "flagship": true,
    "title": "Follow doors, portals and wells",
    "detail": "Click a door, bird portal or express well to jump straight to where it leads."
   },
   {
    "date": "2026-07-12",
    "tag": "new",
+   "flagship": true,
    "title": "Search every object in the game",
    "detail": "Find any Mudokon, switch or object by name and jump to it instantly."
   },
@@ -645,6 +667,7 @@
   {
    "date": "2026-07-12",
    "tag": "new",
+   "flagship": true,
    "title": "Oddworld Map is live",
    "detail": "An interactive map of Abe's Oddysee, built straight from the PS1 disc: every camera screen, object and collision line. Pan, zoom, measure with the ruler, export the view and toggle foreground masks."
   }

@@ -7,6 +7,9 @@
   --line: #32363f;
   --accent-rgb: 232, 163, 61;
   --accent: rgb(var(--accent-rgb));
+  /* the flagship foil; it ends where it starts, so a sweep loops */
+  --foil: linear-gradient(90deg, var(--accent), #ffe6b8, #c48cf0, #5fd8e8, var(--accent));
+  --foil-glow: rgba(196, 140, 240, 0.35);
   /* canvas backdrop / empty camera cells, read by the script */
   --map-bg-rgb: 14, 15, 18;
   --map-bg: rgb(var(--map-bg-rgb));
@@ -1140,6 +1143,22 @@ body.embed #openSiteBtn {
 .wn-tag-improved {
   color: var(--text);
 }
+.wn-tags {
+  display: flex;
+  gap: 5px;
+}
+/* the separator is the kind's, so the foil never carries one through its text clip,
+   and it is drawn rather than written so it stays out of the label's spoken name */
+.wn-tags .wn-tag:has(+ .wn-tag)::after {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-left: 5px;
+  vertical-align: 0.15em;
+  border-radius: 50%;
+  background: var(--dim);
+}
 /* the filter row, pinned under the masthead */
 #whatsnewFilter {
   display: flex;
@@ -1193,6 +1212,79 @@ body.embed #openSiteBtn {
 }
 .wn-more:hover {
   border-color: var(--accent);
+}
+.wn-tags .wn-tag-flagship {
+  background: var(--foil);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: foil-sweep 6s linear infinite;
+}
+/* the fill is the chip's on/off signal, so its foil is never clipped to text;
+   naming the on state outranks the off rule, so off needs no flagship case */
+.wn-chip.wn-tag-flagship[aria-pressed="true"] {
+  background: var(--foil);
+  background-size: 200% 100%;
+  color: var(--bg);
+  border-color: transparent;
+  box-shadow: 0 0 10px var(--foil-glow);
+  animation: foil-sweep 6s linear infinite;
+}
+/* the shared border-color hover cannot show through the foil */
+.wn-chip.wn-tag-flagship[aria-pressed="true"]:hover,
+.wn-chip.wn-tag-flagship[aria-pressed="true"]:focus-visible {
+  box-shadow: 0 0 15px var(--foil-glow);
+}
+.wn-entry.wn-flagship {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  /* the rail hangs in the dialog's gutter, so the title keeps the common left edge */
+  margin-left: -11px;
+  padding-left: 11px;
+  background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.07), transparent 60%);
+}
+.wn-entry.wn-flagship::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--foil);
+  background-size: 200% 100%;
+  animation: foil-sweep 6s linear infinite;
+}
+.wn-entry.wn-flagship::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.07) 50%,
+    transparent 58%
+  );
+  animation: foil-sheen 7s ease-in-out infinite;
+}
+.wn-flagship .wn-title {
+  font-size: 14px;
+}
+@keyframes foil-sweep {
+  to {
+    background-position: 200% 0;
+  }
+}
+@keyframes foil-sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  55%,
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .st-sec + .st-sec {
@@ -1394,6 +1486,15 @@ kbd {
     transition: none;
   }
   .toast-bar {
+    display: none;
+  }
+  /* the foil is colour and stays; only its sweep and the sheen are motion */
+  .wn-tags .wn-tag-flagship,
+  .wn-chip.wn-tag-flagship[aria-pressed="true"],
+  .wn-entry.wn-flagship::before {
+    animation: none;
+  }
+  .wn-entry.wn-flagship::after {
     display: none;
   }
 }
