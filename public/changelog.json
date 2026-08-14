@@ -3,6 +3,12 @@
   {
    "date": "2026-08-14",
    "tag": "fixed",
+   "title": "The Mines' two tunnels are joined at last",
+   "detail": "Necrum Mines Tunnel 2 had no door joining it to Tunnel 1, because the game carries you across in a cutscene instead. The level loader that runs that cutscene now names its destination and follows like any door."
+  },
+  {
+   "date": "2026-08-14",
+   "tag": "fixed",
    "title": "Water is a provocation, not decoration",
    "detail": "The encyclopedia called Exoddus' falling water purely cosmetic, which it is not. The game counts a soaking as a slap, so the Mudokon under it turns angry and throws a punch."
   },

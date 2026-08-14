@@ -225,7 +225,26 @@ const CLAIMS = {
     const sb = listed(AE, "LCDStatusBoard");
     return n(sb) === 159 && count(sb, (r) => f(r, "hide_board") === 1) === 80;
   },
-  LevelLoader: () => n(listed(AE, "LevelLoader")) === 1,
+  LevelLoader: () => {
+    const ll = listed(AE, "LevelLoader");
+    if (n(ll) !== 1 || !within(ll, "MI") || ll[0].p.id !== 1) return false;
+    const { p, t } = ll[0];
+    const sync = p.tlvs.find(
+      (o) => o.name === "WheelSyncer" && o.fields.output_switch_id === t.fields.switch_id,
+    );
+    if (!sync || sync.fields.output_requirement !== 0) return false;
+    const inputs = [1, 2, 3, 4, 5, 6].map((i) => sync.fields[`input_switch_id_${i}`]);
+    const wheels = p.tlvs.filter(
+      (o) => o.name === "WorkWheel" && inputs.includes(o.fields.switch_id),
+    );
+    return (
+      new Set(inputs).size === 6 &&
+      n(wheels) === 6 &&
+      wheels.every((o) => o.fields.turn_off_when_stopped === 1) && // what makes it all at once
+      t.extra.to_path === 2 &&
+      f(ll[0], "movie_id") === 2631 // BREW.STR then BREWCAMT.STR in the Mines' movie table
+    );
+  },
   LightEffect: () => {
     const stars = allOf(AO, "LightEffect").filter((r) => f(r, "type") === 0);
     return n(stars) === 31 && within(stars, "E1", "E2");

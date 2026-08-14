@@ -23,14 +23,15 @@ export const LINE_NAMES = { 0:"Floor", 1:"Wall (left)", 2:"Wall (right)", 3:"Cei
 // connection-arrow colors by source kind — every transition kind shares the
 // one Doors/Transitions CATS bucket, so the category color can't tell them
 // apart; unlisted kinds fall back to white
-export const CONN_COLORS = { Door:"#ffd23e", WellExpress:"#ff6ee9", BirdPortal:"#b78cff",
+export const CONN_COLORS = { Door:"#ffd23e", LevelLoader:"#ffd23e",
+                             WellExpress:"#ff6ee9", BirdPortal:"#b78cff",
                              Teleporter:"#6ef0e2", PathTransition:"#ffffff" };
 
 // ---- categories (matched by TLV name so both games share the buckets) ----
 export const CATS = [
   { key:"board",  label:"LCD Status Boards", color:"#ff3860", on:true, names:["LCDStatusBoard"] },
   { key:"mud",    label:"Mudokons",          color:"#3ec6ff", on:true, names:["Mudokon","SlingMudokon","RingMudokon","LiftMudokon","MudokonPathTrans","TorturedMudokon"] },
-  { key:"door",   label:"Doors / Transitions", color:"#ffd23e", on:true, names:["Door","PathTransition","BirdPortal","BirdPortalExit","WellLocal","LocalWell","WellExpress","Teleporter","SlamDoor","MineCar"] },
+  { key:"door",   label:"Doors / Transitions", color:"#ffd23e", on:true, names:["Door","PathTransition","BirdPortal","BirdPortalExit","WellLocal","LocalWell","WellExpress","Teleporter","SlamDoor","MineCar","LevelLoader"] },
   { key:"cont",   label:"Continue points",   color:"#ffffff", on:true, names:["ContinuePoint","AbeStart","ElumStart"] },
   { key:"switch", label:"Switches / levers", color:"#5dde75", on:true, names:["Switch","Lever","InvisibleSwitch","FootSwitch","BellHammer","HandStone","IdSplitter","SecurityDoor","BellSongStone","ChimeLock","MovieHandStone","GlukkonSwitch","CrawlingSligButton","MultiSwitchController","WheelSyncer","TimerTrigger","WorkWheel","SlapLock","PullRingRope","ResetPath","ResetSwitchRange"] },
   { key:"hazard", label:"Hazards",           color:"#ff8b3d", on:true, names:["DeathDrop","TimedMine","Mine","UXB","ElectricWall","MovingBomb","MeatSaw","DeathClock","GasEmitter","GasCountdown","TrapDoor","FallingItem","RollingBall","RollingRock","ZBall","Drill","LaughingGas","ExplosionSet","Water","SecurityOrb","SecurityClaw","MotionDetector"] },

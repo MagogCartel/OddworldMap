@@ -38,7 +38,6 @@ export const DEFAULT_BY_TYPE = {
   // doors & travel
   BirdPortal: ["portal_type"],
   Door: ["door_type"],
-  LevelLoader: ["destination_level"],
   SlamDoor: ["start_shut"],
   TrapDoor: ["self_closing"],
   // hazards

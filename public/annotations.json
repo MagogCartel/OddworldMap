@@ -77,7 +77,7 @@
     "1": "Tunnel 1",
     "2": {
      "name": "Tunnel 2",
-     "note": "Nothing on the map directly joins this to Tunnel 1 next door, because the game carries you across in the cutscene at the brew machine rather than through any door."
+     "note": "No door joins this to Tunnel 1. The way in is the level loader under Tunnel 1's no-return sign, fired when its six wheels turn at once. The brew-machine cutscene then sets you down on the screen this path starts on."
     },
     "3": "Boiler Room",
     "4": "Tunnels 3-5",

@@ -18,7 +18,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - each object type surfaces its own notable fields too — a door's lock state, a trap door's or electric wall's on/off, a bird portal's type, a Glukkon's or Crawling Slig's type/state
   - Settings → "Show more object fields" picks which of the game's stored fields each object type shows; search covers them all either way
   - in the screen list and the Fields picker, every field name carries a definition, marked by a dotted underline — what it means and its possible values, curated in [glossary_fields.json](public/glossary_fields.json); hover it with a mouse or tap it on a touch screen, where the tap still does what it would have done anyway (tick the field, jump to the object)
-- **click** a door, path transition, travel portal, express well, teleporter or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
+- **click** a door, path transition, travel portal, express well, teleporter, level loader or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
   - while hovering one, its partner — the object you'd come out of — gets a dashed outline whenever the pair sits on the current path
   - a destination is only believed where the object it pairs with is really there: Exoddus stores a level of 1 on links that were never pointed anywhere, which reads as Necrum Mines, so those name no destination and offer no follow — their stored fields still show, raw as the game left them
   - an express well has a destination for each state of the switch it answers to, and the map follows whichever of the two leads somewhere
@@ -55,7 +55,7 @@ Every toggle in the Display section explains itself: hover it for a short note o
 - **Object labels**: names each object beside its marker, from about half zoom in
 - **Connection arrows**: draws the path's whole circulation — every door, express well, bird portal, teleporter and path transition linked to where it leads
   - a double-headed arrow is a two-way pair; a dashed arrow points at the arrival camera when the exact arrival object isn't resolvable; short 45° stubs labelled `→ MI P7` lead to other paths (stub labels appear zoomed in with object labels on)
-  - colours tell the kinds apart: doors yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
+  - colours tell the kinds apart: doors and the level loader yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
   - hovering an object spotlights just its own arrows
 - **Switch wiring** (off by default, or press **`w`**): what a lever actually does — green dotted lines from everything that writes a switch id (levers, buttons, work wheels, pressure plates, pull rings) to everything on the path answering that id (doors, drills, electric walls, trapdoors, bird portals, spawners, status lights), through the logic gates Exoddus wires between them and the hub doors Oddysee opens only when every zulag id they watch is set
   - hovering a wired object spotlights just its own wires, with arrowheads showing which way the signal runs, and the tooltip spells them out — `sets 66 → 5 objects`, or `answers 11 — set in P2` for a wire whose other end lives on another path of the level (switch state is level-wide in the engine, so those connections are real)
