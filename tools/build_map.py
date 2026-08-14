@@ -343,11 +343,11 @@ GAMEPLAY_FIELD_TYPES = {
     "SecurityOrb", "SecurityDoor", "BellSongStone", "ChimeLock", "MovieHandStone", "GlukkonSwitch",
     "CrawlingSligButton", "MultiSwitchController", "WheelSyncer", "WorkWheel", "SlapLock", "PullRingRope",
     # hazards
-    "DeathDrop", "TimedMine", "Mine", "UXB", "ElectricWall", "DoorFlame", "MovingBomb", "MeatSaw",
-    "BoomMachine", "DeathClock", "GasEmitter", "GasCountdown", "TrapDoor", "FallingItem",
-    "RollingBall", "RollingRock", "ZBall", "Drill", "LaughingGas", "ExplosionSet", "BrewMachine", "Water",
+    "DeathDrop", "TimedMine", "Mine", "UXB", "ElectricWall", "MovingBomb", "MeatSaw",
+    "DeathClock", "GasEmitter", "GasCountdown", "TrapDoor", "FallingItem",
+    "RollingBall", "RollingRock", "ZBall", "Drill", "LaughingGas", "ExplosionSet", "Water",
     # info / interactables
-    "LCDStatusBoard", "LCDScreen", "LCD", "MovieStone", "DemoPlaybackStone", "HintFly",
+    "LCDStatusBoard", "LCDScreen", "LCD", "MovieStone", "DemoPlaybackStone", "HintFly", "DoorFlame",
     "ContinuePoint", "ContinueZone", "AbeStart", "ElumStart",
     # scenery / helpers / pickups
     "LightEffect", "ShadowZone", "Hoist", "Edge", "StatusLight", "BackgroundAnimation", "ParamiteWebLine",
@@ -355,7 +355,7 @@ GAMEPLAY_FIELD_TYPES = {
     "LiftPoint", "LiftMover", "Pulley", "SoftLanding", "FlintLockFire",
     "MusicTrigger", "TimerTrigger", "Alarm", "ResetPath", "ResetSwitchRange", "Preloader", "LevelLoader",
     "RingCancel", "Null", "ElumPathTrans", "DoorBlocker", "SecurityClaw", "MotionDetector", "ColourfulMeter",
-    "RockSack", "MeatSack", "HoneySack", "Honey", "BoneBag", "Dove",
+    "RockSack", "MeatSack", "HoneySack", "Honey", "BoneBag", "Dove", "BoomMachine", "BrewMachine",
 }
 
 _SKIP_TYPES = {"s8", "s16", "s32", "s64", "u8", "u16", "u32", "u64", "int", "short", "char",
