@@ -16,6 +16,11 @@ export const GRID_UNIT = 25;                             // world units per in-g
 export const PAGE_ZOOM_MIN = 1.02;                       // browser zoom counted as zoomed (a pinch settles a hair off 1)
 export const MAX_ROUTE_PTS = 512;                        // route waypoints a permalink may carry (parser sanity cap)
 
+// what an object anchored between camera windows has to say for itself, on the
+// hover tooltip and on its screen-list row
+export const OFFSCREEN_NOTE =
+  "Offscreen: anchored between camera windows, where the map draws it over a neighbouring screen.";
+
 export const LINE_COLORS = { 0:"#43d94c", 1:"#ff5c5c", 2:"#ff9d3d", 3:"#5ca9ff", 4:"#2b8f33", 5:"#a33c3c", 6:"#a3702b" };
 export const LINE_NAMES = { 0:"Floor", 1:"Wall (left)", 2:"Wall (right)", 3:"Ceiling",
                             4:"Background floor", 5:"Background wall (left)", 6:"Background wall (right)" };

@@ -14,6 +14,8 @@ import {
   formatHash,
   hashToDraw,
   isLoopback,
+  offScreen,
+  screenRuns,
   parseHash,
   patrolZone,
   resolveTarget,
@@ -22,7 +24,7 @@ import {
 } from "../../public/js/model.js";
 import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../public/js/config.js";
 import { setGeometry } from "../../public/js/state.js";
-import { AO_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
+import { AO_GEOMETRY, AE_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
 
 // current level/path, with the dataset destOf looks a destination's partner up
 // in; the path holds no objects, so only destinations naming another path of
@@ -296,6 +298,47 @@ test("cellAt: draw-space point to grid cell, null anywhere outside the grid", ()
   assert.equal(cellAt(910, 20, P), null);
   assert.equal(cellAt(450, -5, P), null);
   assert.equal(cellAt(450, 301, P), null);
+});
+
+// AO's window is 368x240 at +256/+120 of a 1024x480 cell, so 656x240 of slack
+const box = (x, y, w = 10, h = 10) => ({ x1: x, y1: y, x2: x + w, y2: y + h });
+
+test("screenRuns: the draw-space parts of a marker that cover screen", () => {
+  const runs = (t) => screenRuns(t, AO_GEOMETRY);
+  // wholly inside one window: one run per axis, the marker's own extent
+  assert.deepEqual(runs(box(300, 200, 50, 20)).xs, [[44, 94]]);
+  assert.deepEqual(runs(box(300, 200, 50, 20)).ys, [[80, 100]]);
+  // reaching past the window's right edge: the run stops at the edge
+  assert.deepEqual(runs(box(600, 200, 100, 20)).xs, [[344, 368]]);
+  // wholly in the slack: nothing covers screen
+  assert.deepEqual(runs(box(700, 200, 50, 20)).xs, []);
+  assert.deepEqual(runs(box(300, 40, 50, 20)).ys, []);
+  // crossing the slack into the next window: touching runs, so nothing is lost
+  assert.deepEqual(runs(box(600, 200, 700, 20)).xs, [
+    [344, 368],
+    [368, 388],
+  ]);
+});
+
+test("screenRuns: whole is nothing drawn anywhere the marker is not", () => {
+  const whole = (t) => screenRuns(t, AO_GEOMETRY).whole;
+  assert.equal(whole(box(300, 200, 50, 20)), true); // inside one window
+  assert.equal(whole(box(600, 200, 700, 20)), true); // straddling two, slack crossed whole
+  assert.equal(whole(box(600, 200, 100, 20)), false); // stops inside the slack
+  assert.equal(whole(box(700, 200, 50, 20)), false); // never reaches a window
+  // the measure is the drawn extent, not the world span the slack inflates
+  assert.equal(box(600, 200, 700, 20).x2 - box(600, 200, 700, 20).x1, 700);
+});
+
+test("offScreen: no part of the marker is on any screen", () => {
+  assert.equal(offScreen(box(300, 200), AO_GEOMETRY), false);
+  assert.equal(offScreen(box(2 * 1024 + 300, 3 * 480 + 200), AO_GEOMETRY), false); // any cell
+  assert.equal(offScreen(box(700, 200), AO_GEOMETRY), true); // between two windows
+  assert.equal(offScreen(box(300, 40), AO_GEOMETRY), true); // above one
+  // an anchor in the slack whose span reaches its window is drawn, not lost
+  assert.equal(offScreen(box(250, 200, 50, 20), AO_GEOMETRY), false);
+  assert.equal(offScreen({ x1: 0, y1: 0, x2: 10, y2: 10 }, AE_GEOMETRY), false);
+  assert.equal(offScreen(box(700, 200)), true); // the live geometry by default
 });
 
 test("resolveTarget: matches inside the destination camera before anything else", () => {

@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-14",
+   "tag": "new",
+   "title": "Objects spilling off their screen show where they end",
+   "detail": "Both games address their cameras on a grid coarser than the screen you see, and the designers sometimes ran an object into the leftover gap. The map lays screens out edge to edge, so that part of it gets drawn over the neighbouring screen and has always looked misplaced. An outline now goes hollow and dotted exactly where the object leaves its own screen, and stays solid where it covers screen you can see. Oddysee's gap is 656 units wide and swallows 276 objects whole: those are dotted throughout, and their row in a screen's object list is tagged. Abe never walks that gap either, since the game teleports him straight across it whenever the camera changes."
+  },
+  {
+   "date": "2026-08-14",
    "tag": "improved",
    "title": "A shared link uses the game's own coordinates",
    "detail": "Copy a link and the view it carries, along with any route you have plotted, is written in the coordinates Oddworld itself uses: the same numbers the readout in the map's corner shows. A link now points at a place in the game rather than at a place on the map, so how the map lays its screens out can change without moving it."

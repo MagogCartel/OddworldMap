@@ -16,7 +16,14 @@ import {
 } from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
-import { camCenter, centerCam, computeConnections, computeWiring } from "./model.js";
+import {
+  camCenter,
+  centerCam,
+  computeConnections,
+  computeWiring,
+  offScreen,
+  screenRuns,
+} from "./model.js";
 import { onBackgroundPlane } from "./fields.js";
 
 // canvas colors shared with the stylesheet, read once from the tokens
@@ -193,14 +200,15 @@ new ResizeObserver(resize).observe($("main")); // the sidebar slide resizes the 
 // a barrier post: dashed vertical on the boundary the engine enforces — the
 // stamp's top-left x, which is also the edge a hovered pen band ends on —
 // extended past the stamp so it reads at any zoom, with a solid foot pointing
-// into the pen where the type claims a side
+// into the pen where the type claims a side. It dots like a marker box when it
+// stands in the slack between windows
 function drawBarrier(t, dir, z) {
   const cx = dX(t.x1);
   const y1 = dY(t.y1) - 26,
     y2 = dY(t.y2) + 6;
   ctx.strokeStyle = ENEMY_CAT.color;
   ctx.lineWidth = 2 / z;
-  ctx.setLineDash([5 / z, 4 / z]);
+  ctx.setLineDash(offScreen(t) ? [2 / z, 3 / z] : [5 / z, 4 / z]);
   ctx.beginPath();
   ctx.moveTo(cx, y1);
   ctx.lineTo(cx, y2);
@@ -348,23 +356,50 @@ export function draw() {
     const w = Math.max(dX(t.x2) - x1, 10),
       h = Math.max(dY(t.y2) - y1, 10);
     const bg = onBackgroundPlane(state.data.id, t);
-    if (bg) {
-      ctx.globalAlpha = 0.5;
-      ctx.setLineDash([8 / cam.z, 6 / cam.z]);
-    }
+    if (bg) ctx.globalAlpha = 0.5;
     ctx.strokeStyle = c.color;
-    ctx.lineWidth = (t.name === "LCDStatusBoard" ? 3.5 : 2) / cam.z;
-    ctx.strokeRect(x1, y1, w, h);
     ctx.fillStyle = c.color + "26";
-    ctx.fillRect(x1, y1, w, h);
+    ctx.lineWidth = (t.name === "LCDStatusBoard" ? 3.5 : 2) / cam.z;
+    // solid and filled where the marker covers screen, hollow and dotted over
+    // the slack the packing folded away, which is a neighbour's artwork
+    const onScreen = () => {
+      ctx.setLineDash(bg ? [8 / cam.z, 6 / cam.z] : []);
+      ctx.strokeRect(x1, y1, w, h);
+      ctx.fillRect(x1, y1, w, h);
+    };
+    const inSlack = () => {
+      ctx.setLineDash([2 / cam.z, 3 / cam.z]);
+      ctx.strokeRect(x1, y1, w, h);
+    };
+    const runs = screenRuns(t);
+    if (runs.whole) onScreen();
+    else if (!runs.xs.length || !runs.ys.length) inSlack();
+    else {
+      // straddling the two: one pass each, partitioned by a clip on the runs,
+      // so neither can paint over the other's half of a shared edge
+      const covered = new Path2D();
+      const pad = ctx.lineWidth / 2;
+      for (const [ax, bx] of runs.xs)
+        for (const [ay, by] of runs.ys)
+          covered.rect(ax - pad, ay - pad, bx - ax + 2 * pad, by - ay + 2 * pad);
+      const rest = new Path2D();
+      rest.rect(x1 - pad, y1 - pad, w + 2 * pad, h + 2 * pad);
+      rest.addPath(covered);
+      ctx.save();
+      ctx.clip(rest, "evenodd");
+      inSlack();
+      ctx.restore();
+      ctx.save();
+      ctx.clip(covered);
+      onScreen();
+      ctx.restore();
+    }
     if (showLabels) {
       ctx.fillStyle = c.color;
       ctx.fillText(t.name, x1, y1 - 3 / cam.z);
     }
-    if (bg) {
-      ctx.globalAlpha = 1;
-      ctx.setLineDash([]);
-    }
+    ctx.globalAlpha = 1;
+    ctx.setLineDash([]);
   }
 
   // switch wiring: dotted hairlines from each producer to its id's consumers,

@@ -158,6 +158,58 @@ export function camCell(path, camId) {
 export const tlvCell = (t, path, geo) =>
   Math.floor(t.y1 / geo.worldH) * path.w + Math.floor(t.x1 / geo.worldW);
 
+const drawAt = (v, cell, win, pitch) => {
+  const c = Math.floor(v / cell);
+  return c * pitch + v - c * cell - win;
+};
+
+// the draw-space runs a world span lands on, one per window it reaches into.
+// The packing folds the slack out, so a span that crosses it whole comes back
+// as touching runs, one that stops inside it leaves a gap, and one that never
+// reaches a window comes back with nothing.
+function windowRuns(a, b, cell, win, vis, pitch) {
+  const runs = [];
+  for (let c = Math.floor(a / cell); c <= Math.floor(b / cell); c++) {
+    const lo = Math.max(a, c * cell + win),
+      hi = Math.min(b, c * cell + win + vis);
+    if (lo <= hi) runs.push([drawAt(lo, cell, win, pitch), drawAt(hi, cell, win, pitch)]);
+  }
+  return runs;
+}
+
+// where a marker covers screen, as draw-space x and y runs whose product is
+// the part of its rect drawn where the object really is. The rest is slack the
+// packing folded away, so it lands on a neighbour's artwork. `whole` is the
+// common case of nothing being drawn anywhere the object is not: a marker
+// inside one window, and equally one straddling windows, whose runs touch
+// because the slack between them takes no draw space at all.
+export function screenRuns(t, geo = GEO) {
+  const xs = windowRuns(t.x1, t.x2, geo.worldW, geo.winX, geo.visW, geo.cellW),
+    ys = windowRuns(t.y1, t.y2, geo.worldH, geo.winY, geo.visH, geo.cellH);
+  const covers = (runs, a, b, cell, win, pitch) =>
+    runs.reduce((n, [lo, hi]) => n + hi - lo, 0) ===
+    drawAt(b, cell, win, pitch) - drawAt(a, cell, win, pitch);
+  return {
+    xs,
+    ys,
+    whole:
+      !!xs.length &&
+      !!ys.length &&
+      covers(xs, t.x1, t.x2, geo.worldW, geo.winX, geo.cellW) &&
+      covers(ys, t.y1, t.y2, geo.worldH, geo.winY, geo.cellH),
+  };
+}
+
+// a marker with no part of it on any screen: it stands wholly in the slack the
+// game never renders and the player never reaches, so every pixel of it is
+// drawn over a neighbour's artwork and the screen it is listed under is not
+// one it is on. A marker that merely reaches into the slack says so by the
+// part of it that draws dotted, and is not one of these.
+export const offScreen = (t, geo = GEO) => {
+  const { xs, ys } = screenRuns(t, geo);
+  return !xs.length || !ys.length;
+};
+
 // grid cell under a draw-space point, or null outside the path's grid —
 // the margins must not fold into a neighbouring row's edge cell
 export function cellAt(x, y, path) {

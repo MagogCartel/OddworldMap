@@ -4,10 +4,10 @@
 
 import { esc } from "./util.js";
 import { fieldEntries, fieldHelp } from "./fields.js";
-import { CATS, catOf } from "./config.js";
+import { CATS, OFFSCREEN_NOTE, catOf } from "./config.js";
 import { $, narrowMQ } from "./dom.js";
 import { state, dX, dY } from "./state.js";
-import { cellAt } from "./model.js";
+import { cellAt, offScreen } from "./model.js";
 import { setHighlight } from "./render.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
@@ -72,7 +72,12 @@ export function openCamPanel(x, y, focus = null) {
             : `<span class="e">${kv}</span>`;
         })
         .join(" ");
-      b.innerHTML = esc(t.name) + (ex ? " " + ex : "");
+      // the list buckets by where a marker is drawn, so one anchored between
+      // windows is listed under the screen it was folded onto, not its own
+      const off = offScreen(t)
+        ? ` <span class="e gloss" data-tip="${esc(OFFSCREEN_NOTE)}">· offscreen</span>`
+        : "";
+      b.innerHTML = esc(t.name) + off + (ex ? " " + ex : "");
       b.onclick = () => jumpToTlv(state.data, state.lvl, state.path, t);
       b.onmouseenter = () => setHighlight(t);
       b.onmouseleave = () => setHighlight(null);

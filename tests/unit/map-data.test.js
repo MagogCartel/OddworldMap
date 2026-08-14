@@ -7,6 +7,7 @@ import {
   destOf,
   destTrusted,
   isLoopback,
+  offScreen,
   pathIn,
 } from "../../public/js/model.js";
 import { isDemoPath } from "../../public/js/demo.js";
@@ -610,4 +611,25 @@ test("loopbacks in the shipped data are exactly the three known ones", () => {
     "AE SV P7 Door (1026,440)",
     "AE BW P7 Teleporter (199,439)",
   ]);
+});
+
+// The gap between camera windows is addressing slack the game never renders,
+// and level authors parked objects in it. A marker reaching into it draws that
+// part dotted; one standing wholly inside it covers no screen at all, which is
+// what offScreen marks. AO leaves 656x240 units of slack per cell, enough to
+// swallow an object whole; AE's 7x20 never does, so nothing there is offscreen
+// and every AE marker that reaches into the slack still shows where it is.
+test("the shipped data's offscreen objects are the known ones", () => {
+  const counts = {};
+  for (const [file, geometry] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    counts[data.id] = data.levels
+      .flatMap((L) => L.paths)
+      .flatMap((P) => P.tlvs)
+      .filter((t) => offScreen(t, geometry)).length;
+  }
+  assert.deepEqual(counts, { AO: 276, AE: 0 });
 });
