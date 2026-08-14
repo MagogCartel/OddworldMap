@@ -3,6 +3,12 @@
   {
    "date": "2026-08-14",
    "tag": "fixed",
+   "title": "Water is a provocation, not decoration",
+   "detail": "The encyclopedia called Exoddus' falling water purely cosmetic, which it is not. The game counts a soaking as a slap, so the Mudokon under it turns angry and throws a punch."
+  },
+  {
+   "date": "2026-08-14",
+   "tag": "fixed",
    "title": "Objects filed under the wrong filter move",
    "detail": "The security orb that zaps Abe for chanting sat among the switches and levers. The security claw and the sweeping motion detectors sat in the meta bucket, hidden by default. The orb and the claw both punish Abe, and the detectors raise the alarm that fetches something which will, so all three are hazards now. The boxes that wipe a range of switch ids join the switches, where the rest of the wiring logic already lives. The FeeCo train door leaves Doors / Transitions for meta: it is a graphic, and the ordinary door beside it is what carries the ride."
   },

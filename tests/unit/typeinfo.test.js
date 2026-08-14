@@ -400,12 +400,9 @@ const CLAIMS = {
   },
   Water: () => {
     const w = listed(AE, "Water");
-    return (
-      n(w) === 2 &&
-      levels(w).has("MI") &&
-      levels(w).has("BR") &&
-      every(w, (r) => f(r, "max_drops") === 300)
-    );
+    const angeredBy = (r) =>
+      r.p.tlvs.some((t) => t.name === "Mudokon" && t.fields.angry_switch_id === f(r, "switch_id"));
+    return n(w) === 2 && levels(w).has("MI") && levels(w).has("BR") && every(w, angeredBy);
   },
   WheelSyncer: () => {
     const ws = listed(AE, "WheelSyncer");
