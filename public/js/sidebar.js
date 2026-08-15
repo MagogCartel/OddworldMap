@@ -4,6 +4,7 @@ import { CATS, PENS, catOf } from "./config.js";
 import { $, cv, filterBox } from "./dom.js";
 import { toast } from "./toast.js";
 import { state } from "./state.js";
+import { setPitch } from "./navigate.js";
 import { draw } from "./render.js";
 import { getViewSnapshot, viewChanged } from "./settings.js";
 
@@ -46,6 +47,7 @@ const showUI = new Map(); // show key -> its checkbox
 function syncShow(key, cb) {
   state.show[key] = cb.checked;
   if (key === "pens") PENS.on = cb.checked; // the barrier gate lives in config
+  if (key === "spaced") setPitch(cb.checked); // moves every draw coordinate; it redraws itself
   if (key !== "ruler" && key !== "route") return;
   if (cb.checked) {
     const other = key === "ruler" ? "route" : "ruler"; // one measuring tool armed at a time
@@ -60,6 +62,7 @@ function syncShow(key, cb) {
   if (key === "route") window.dispatchEvent(new CustomEvent("route-changed"));
 }
 for (const [key, id] of Object.entries({
+  spaced: "tSpaced",
   grid: "tGrid",
   labels: "tLabels",
   conn: "tConn",

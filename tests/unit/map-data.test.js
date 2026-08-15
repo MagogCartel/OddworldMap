@@ -663,6 +663,48 @@ test("no collision-line piece is drawn backwards or overlong", () => {
   assert.deepEqual(bad, []);
 });
 
+// The pieces of a collision line are one polyline, so each must start where
+// the last one ended, at either pitch. A fold drawn where the packing folded
+// it away has nowhere of its own to go: it paints over the neighbour it lands
+// on and leaves the rest of the line restarting behind it.
+test("collision-line pieces meet, packed or spaced", () => {
+  const bad = [];
+  for (const [file, geometry] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    for (const g of [geometry, { ...geometry, cellW: geometry.worldW, cellH: geometry.worldH }])
+      for (const L of data.levels)
+        for (const P of L.paths)
+          for (const [x1, y1, x2, y2] of P.lines) {
+            const rs = lineRuns(x1, y1, x2, y2, g);
+            for (let i = 1; i < rs.length; i++)
+              if (Math.hypot(rs[i].x1 - rs[i - 1].x2, rs[i].y1 - rs[i - 1].y2) > 1e-6)
+                bad.push(`${data.id} ${L.short} P${P.id} (${x1},${y1})–(${x2},${y2})`);
+          }
+  }
+  assert.deepEqual(bad, []);
+});
+
+// How much of each game runs through ground it never renders, which is what
+// the dotting is there to say. Stated in CLAUDE.md, and a rule that quietly
+// dots more than it should moves these before it breaks anything visible.
+test("the count of collision lines dotted somewhere", () => {
+  const counts = {};
+  for (const [file, geometry] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    counts[data.id] = data.levels
+      .flatMap((L) => L.paths)
+      .flatMap((P) => P.lines)
+      .filter(([x1, y1, x2, y2]) => lineRuns(x1, y1, x2, y2, geometry).some((r) => !r.on)).length;
+  }
+  assert.deepEqual(counts, { AO: 1740, AE: 812 });
+});
+
 // A marker box must not come back inside out. A span lying in the slack can
 // have its ends fall in different cells, and in AO the slack straddles a cell
 // boundary, so the folded extent goes negative and the degenerate-rect guard

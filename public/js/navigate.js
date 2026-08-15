@@ -5,7 +5,7 @@ import { clamp, esc } from "./util.js";
 import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
 import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
 import { toast } from "./toast.js";
-import { state, GEO, CELL_W, CELL_H, setGeometry, dX, dY } from "./state.js";
+import { state, GEO, CELL_W, CELL_H, setGeometry, setSpacing, dX, dY, wX, wY } from "./state.js";
 import { draw, flashAt } from "./render.js";
 import {
   camCell,
@@ -267,6 +267,39 @@ export function jumpToPlace(G, L, P, cam) {
 let applyingHash = false,
   hashTimer = null,
   hashPush = false; // a requested history entry survives later replace requests
+
+// ---- pitch ---------------------------------------------------------------
+
+// Spacing the screens out or packing them back moves every draw coordinate, so
+// what the viewer holds in draw space is carried across by the world points it
+// stands for: the view's centre (not its corner, which would slide the view),
+// the ruler's ends and every route waypoint. The flip happens between the two
+// halves, which is why they are read out and put back here rather than inside
+// setSpacing. A route survives the round trip because its waypoints are world
+// points either way, the same reason a link does.
+export function setPitch(on) {
+  const cw = cv.clientWidth,
+    ch = cv.clientHeight;
+  const world = (p) => ({ x: wX(p.x), y: wY(p.y) });
+  const centre = world(camCenter(state.cam, cw, ch));
+  const ruler = state.ruler && {
+    a: world({ x: state.ruler.x1, y: state.ruler.y1 }),
+    b: world({ x: state.ruler.x2, y: state.ruler.y2 }),
+  };
+  const route = state.route?.map((s) => ({ ...s, pts: s.pts.map(world) }));
+
+  if (!setSpacing(on)) return;
+
+  Object.assign(state.cam, centerCam({ ...toDraw(centre), z: state.cam.z }, cw, ch));
+  if (ruler) {
+    const [a, b] = [toDraw(ruler.a), toDraw(ruler.b)];
+    state.ruler = { x1: a.x, y1: a.y, x2: b.x, y2: b.y };
+  }
+  if (route) state.route = route.map((s) => ({ ...s, pts: s.pts.map(toDraw) }));
+  scheduleHash(false);
+  draw();
+}
+const toDraw = (p) => ({ x: dX(p.x), y: dY(p.y) });
 
 // embeds sit in other people's pages: browsing one must not move the
 // visitor's remembered location

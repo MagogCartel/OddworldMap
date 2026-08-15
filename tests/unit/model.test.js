@@ -389,6 +389,29 @@ test("lineRuns: a diagonal is cut on whichever axis leaves the window first", ()
   assert.deepEqual([rs[0].x2, rs[0].y2], [rs[1].x1, rs[1].y1]);
 });
 
+test("lineRuns: the fold answers to the axes it crosses, not the ones it travels", () => {
+  // descending as it crosses the slack between two windows, its y staying
+  // inside one window throughout: that travel is screen distance the packing
+  // folds nothing out of, so it cannot speak for whether the crossing has room
+  const line = [500, 200, 1396, 312];
+  const packed = lineRuns(...line, AO_GEOMETRY);
+  const spaced = lineRuns(...line, { ...AO_GEOMETRY, cellW: 1024, cellH: 480 });
+  // packed the crossing has no draw space, so the line stays the floor it is
+  assert.deepEqual(
+    packed.map((r) => r.on),
+    [true],
+  );
+  assert.deepEqual([packed[0].x1, packed[0].y1, packed[0].x2, packed[0].y2], [244, 80, 484, 192]);
+  // spaced the slack is canvas, and the crossing draws over it dotted
+  assert.deepEqual(
+    spaced.map((r) => r.on),
+    [true, false, true],
+  );
+  // every piece starts where the last ended, at either pitch
+  for (const rs of [packed, spaced])
+    rs.slice(1).forEach((r, i) => assert.deepEqual([r.x1, r.y1], [rs[i].x2, rs[i].y2]));
+});
+
 test("offScreen: no part of the marker is on any screen", () => {
   assert.equal(offScreen(box(300, 200), AO_GEOMETRY), false);
   assert.equal(offScreen(box(2 * 1024 + 300, 3 * 480 + 200), AO_GEOMETRY), false); // any cell
@@ -741,14 +764,15 @@ test("zoomAt keeps the world point under the anchor fixed", () => {
 });
 
 test("the focus zoom fits a few screens and clamps at both ends", () => {
-  setGeometry(SYNTH_GEOMETRY); // 300x150 cells; FOCUS_SCREENS 2.6 -> fit bounds 780x390
-  assert.equal(focusZoom(1560, 780), 1.6); // large canvas: clamps at FOCUS_ZOOM_MAX
-  assert.equal(focusZoom(390, 195), 0.5); // small canvas: clamps at FOCUS_ZOOM_MIN
-  assert.equal(focusZoom(780, 390), 1); // in between: exactly FOCUS_SCREENS across
+  // screens, not cells: the 200x100 window, so FOCUS_SCREENS 2.6 -> 520x260
+  setGeometry(SYNTH_GEOMETRY);
+  assert.equal(focusZoom(1040, 520), 1.6); // large canvas: clamps at FOCUS_ZOOM_MAX
+  assert.equal(focusZoom(260, 130), 0.5); // small canvas: clamps at FOCUS_ZOOM_MIN
+  assert.equal(focusZoom(520, 260), 1); // in between: exactly FOCUS_SCREENS across
   // a jump to a point puts it at the middle of the canvas whichever zoom won
-  assert.deepEqual(centerCam({ x: 500, y: 300, z: focusZoom(390, 195) }, 390, 195), {
-    x: 110,
-    y: 105,
+  assert.deepEqual(centerCam({ x: 500, y: 300, z: focusZoom(260, 130) }, 260, 130), {
+    x: 240,
+    y: 170,
     z: 0.5,
   });
 });

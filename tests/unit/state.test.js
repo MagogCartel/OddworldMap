@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   setGeometry,
+  setSpacing,
   dX,
   dY,
   wX,
@@ -109,4 +110,47 @@ test("cellW/cellH space screens out, they do not scale what is inside one", () =
   assert.equal(dX(400 + 40 + 30), 300 + 30); // cell 1, 30 units into the window
   assert.equal(dY(200 + 20 + 30), 150 + 30);
   assert.equal(dX(40 + 200) - dX(40), 200); // the window keeps its own width
+});
+
+test("spacing lays screens at the cell's own pitch, packing folds it away", () => {
+  setGeometry(AO_GEOMETRY);
+  assert.equal(dX(256), 0); // packed: the window's corner is the cell's
+  assert.equal(dX(1024 + 256), 368);
+  setSpacing(true);
+  assert.equal(CELL_W, 1024); // spaced: the pitch is the cell
+  assert.equal(CELL_H, 480);
+  // the transform degenerates to a translation, draw space becoming world space
+  assert.equal(dX(256), 0);
+  assert.equal(dX(1024 + 256), 1024);
+  assert.equal(dY(120), 0);
+  assert.equal(dY(480 + 120), 480);
+  // a screen's interior is still 1:1, which is what keeps a link's zoom meaning
+  // the same thing either way
+  assert.equal(dX(256 + 100) - dX(256), 100);
+  setSpacing(false);
+  assert.equal(CELL_W, 368);
+  assert.equal(dX(1024 + 256), 368);
+});
+
+test("a draw point survives a change of pitch through the world point it names", () => {
+  for (const g of [AO_GEOMETRY, AE_GEOMETRY]) {
+    for (const spacedFirst of [false, true]) {
+      setGeometry(g);
+      setSpacing(spacedFirst);
+      // a point inside a window, which is all a route waypoint or a view can be
+      for (const cell of [0, 1, 4]) {
+        const before = {
+          x: dX(cell * g.worldW + g.winX + 40),
+          y: dY(cell * g.worldH + g.winY + 30),
+        };
+        const world = { x: wX(before.x), y: wY(before.y) };
+        setSpacing(!spacedFirst);
+        const after = { x: dX(world.x), y: dY(world.y) };
+        setSpacing(spacedFirst);
+        assert.deepEqual({ x: dX(world.x), y: dY(world.y) }, before, "and back again");
+        assert.ok(Number.isFinite(after.x) && Number.isFinite(after.y));
+      }
+    }
+  }
+  setSpacing(false);
 });

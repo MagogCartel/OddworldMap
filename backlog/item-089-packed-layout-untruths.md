@@ -18,7 +18,7 @@ The slack is not level the player ever occupies. A camera change teleports the c
 
 **Ruled out: laying the screens out at their true world pitch as the default.** Measured 2026-08-14 over the shipped data: AO's largest path, `C1 P1`, goes from 3680x2400 draw units to 10240x4800, 5.6x the area, nearly all of it empty. AE barely moves, 1.1x, its slack being 7x20 against AO's 656x240. A default that makes Oddysee five times emptier to browse buys back space no one can stand in.
 
-It survives as a Display toggle if anyone wants it, and it is cheaper to build now than it was: permalinks carry world coordinates, so a route or a view plotted in one spacing means the same place in the other. Before that it would have moved every shared link.
+It shipped as a Display toggle instead, off by default. See *See the gaps the games leave between screens* below.
 
 ## Sketch
 
@@ -46,5 +46,13 @@ Three things the sketch guessed at turned out differently.
 The marker boxes went with them, in *A marker box in the slack keeps its own extent*. `drawExtent` folds the slack out of a span that crosses one and keeps the span's own extent where that folding turns it inside out. It is the same rule `lineRuns` follows, and stating it once for both is what makes it a rule rather than a pair of guards: what lies in the slack has no draw position of its own, so it answers to the frame of the screen it hangs off.
 
 The sweep that pins it calls the same helper the renderer does. An invariant test that reimplements the thing it checks passes whatever the shipped code does, which is the failure mode worth avoiding here: the defect it guards was invisible for as long as it was because nothing ever asked whether a drawn box pointed the right way.
+
+## Shipped: the spacing toggle, 2026-08-15
+
+"Gaps between screens", off by default, in *See the gaps the games leave between screens*. `setSpacing` in [js/state.js](../public/js/state.js) swaps the pitch for the cell's own, and `setPitch` in [js/navigate.js](../public/js/navigate.js) carries the view, the ruler and the route across it.
+
+It cost far less than the estimate, because three things the sketch expected to pay for were already true. The transform degenerates to `dX(wx) = wx - winX` rather than needing a second one. `col * CELL_W` is where the window's corner lands at either pitch, so the artwork needed only its drawn *size* corrected from the cell to the window, which is a no-op packed. And permalinks needed nothing at all: coordinates were already world, and zoom is px per world unit inside a screen in both, so a link means the same place at the same magnification either way. That last one is the world-coordinate change paying for itself.
+
+The one part that did need building is the round trip, because it is the only place a bug could stand a user's own work: a route plotted, the pitch flipped, the waypoints landing somewhere else. It is pinned both ways in `tests/unit/state.test.js` and checked end to end in the browser, where packed to spaced and back returns the permalink byte for byte.
 
 **Ruled out: making the ruler report the true distance.** Left measuring the packed distance. The number it gives is the distance along the map as drawn, and the alternative charges for ground the engine teleports across. Dotting the lines makes the fold visible, which makes that behaviour discoverable rather than more wrong, so the case for changing it got weaker rather than stronger.

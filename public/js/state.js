@@ -7,17 +7,41 @@ import { GRID_UNIT } from "./config.js";
 // units being PS1 screen pixels and the artwork 1:1 with them. AO's cell is
 // 1024x480 with a 368x240 window at +256/+120; AE's is 375x260 with the same
 // window at +0/+0. Draw space is world units too, so a screen's interior maps
-// 1:1 and cellW/cellH are only the pitch screens are laid out at: packed edge
-// to edge, which folds away the slack between windows.
+// 1:1 whatever the pitch, and CELL_W/CELL_H are only how far apart screens are
+// laid out: packed edge to edge, which folds the slack between windows away.
+//
+// Spacing them at the cell's own pitch instead puts every screen where the
+// game addresses it, and the transform degenerates to dX(wx) = wx - winX,
+// draw space becoming world space shifted. Nothing else in the viewer knows
+// which it is looking at.
 export let GEO = null,
   CELL_W = 368,
   CELL_H = 240;
+let spaced = false;
 
 export function setGeometry(g) {
   GEO = g;
-  CELL_W = g.cellW;
-  CELL_H = g.cellH;
+  applyPitch();
 }
+
+function applyPitch() {
+  CELL_W = spaced ? GEO.worldW : GEO.cellW;
+  CELL_H = spaced ? GEO.worldH : GEO.cellH;
+  // the geometry as the map is laid out right now: the data's windows, with
+  // cellW/cellH standing for the pitch in force. What reads a pitch reads this
+  LAYOUT = { ...GEO, cellW: CELL_W, cellH: CELL_H };
+}
+export let LAYOUT = null;
+
+// Flipping the pitch moves every draw coordinate, so whatever the viewer holds
+// in draw space is the caller's to carry across.
+export function setSpacing(on) {
+  if (!GEO || on === spaced) return false;
+  spaced = on;
+  applyPitch();
+  return true;
+}
+export const isSpaced = () => spaced;
 
 export function dX(wx) {
   const c = Math.floor(wx / GEO.worldW);

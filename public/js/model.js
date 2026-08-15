@@ -18,7 +18,7 @@ import {
   HUB_FIELDS,
 } from "./config.js";
 import { isDemoPath } from "./demo.js";
-import { GEO, state, CELL_W, CELL_H, dX, dY, wX, wY } from "./state.js";
+import { GEO, LAYOUT, state, CELL_W, CELL_H, dX, dY, wX, wY } from "./state.js";
 
 export function computeEntryPaths(data, geo = data.geometry) {
   const entries = {};
@@ -183,7 +183,7 @@ function windowRuns(a, b, cell, win, vis, pitch) {
 // common case of nothing being drawn anywhere the object is not: a marker
 // inside one window, and equally one straddling windows, whose runs touch
 // because the slack between them takes no draw space at all.
-export function screenRuns(t, geo = GEO) {
+export function screenRuns(t, geo = LAYOUT) {
   const xs = windowRuns(t.x1, t.x2, geo.worldW, geo.winX, geo.visW, geo.cellW),
     ys = windowRuns(t.y1, t.y2, geo.worldH, geo.winY, geo.visH, geo.cellH);
   const covers = (runs, a, b, cell, win, pitch) =>
@@ -231,14 +231,14 @@ function windowCuts(cuts, a, b, cell, win, vis) {
 // translation, so it lands exactly and stays straight, diagonals included.
 //
 // A piece in the slack has no draw position of its own and is drawn rather
-// than located. One with screen on both sides is the fold itself: it collapses
-// to nothing, which is what lets a line running between two screens read as
-// the continuous floor it is. One with screen on a single side is an overhang,
-// drawn at 1:1 from the edge it left, over whatever the packing put there.
-// Both take the frame of the screen they touch, and that is load-bearing: the
-// slack straddles a cell boundary in AO, so giving each end its own cell would
-// run the piece backwards.
-export function lineRuns(x1, y1, x2, y2, geo = GEO) {
+// than located. One with screen on both sides is the fold itself: packed it
+// collapses to nothing, which is what lets a line running between two screens
+// read as the continuous floor it is. One with screen on a single side is an
+// overhang, drawn at 1:1 from the edge it left, over whatever the packing put
+// there. Both take the frame of the screen they touch, and that is
+// load-bearing: the slack straddles a cell boundary in AO, so giving each end
+// its own cell would run the piece backwards.
+export function lineRuns(x1, y1, x2, y2, geo = LAYOUT) {
   const cuts = new Set([0, 1]);
   windowCuts(cuts, x1, x2, geo.worldW, geo.winX, geo.visW);
   windowCuts(cuts, y1, y2, geo.worldH, geo.winY, geo.visH);
@@ -247,15 +247,13 @@ export function lineRuns(x1, y1, x2, y2, geo = GEO) {
   const spans = [];
   for (let i = 0; i + 1 < ts.length; i++) {
     const mid = at((ts[i] + ts[i + 1]) / 2);
-    spans.push({
-      a: at(ts[i]),
-      b: at(ts[i + 1]),
-      mid,
-      on:
-        inWindow(mid[0], geo.worldW, geo.winX, geo.visW) &&
-        inWindow(mid[1], geo.worldH, geo.winY, geo.visH),
-    });
+    const onX = inWindow(mid[0], geo.worldW, geo.winX, geo.visW),
+      onY = inWindow(mid[1], geo.worldH, geo.winY, geo.visH);
+    spans.push({ a: at(ts[i]), b: at(ts[i + 1]), mid, onX, onY, on: onX && onY });
   }
+  // draw space the packing allots the slack between two windows, per axis
+  const slackX = geo.cellW - geo.visW,
+    slackY = geo.cellH - geo.visH;
   // one cell frames a whole piece, so both ends answer to the same translation
   const frame = ([wx, wy], [fx, fy]) => {
     const cx = Math.floor(fx / geo.worldW),
@@ -267,11 +265,17 @@ export function lineRuns(x1, y1, x2, y2, geo = GEO) {
   };
   const out = [];
   spans.forEach((s, i) => {
-    // a slack span with screen on both sides is the fold between two screens
-    // and takes no draw space. It asks for spans rather than for the points
-    // bounding it: a line ending exactly on a window edge touches that screen
-    // at one point and covers none of it, so what it leaves is an overhang
-    if (!s.on && spans[i - 1]?.on && spans[i + 1]?.on) return;
+    // A slack span with screen on both sides is the fold between two screens.
+    // It asks for spans rather than for the points bounding it: a line ending
+    // exactly on a window edge touches that screen at one point and covers
+    // none of it, so what it leaves is an overhang. The fold vanishes only
+    // where the packing gives the slack it crosses no draw space; spaced out
+    // that slack is real canvas and it draws like any other stretch the game
+    // does not render. The axes it crosses are the whole question: along one
+    // it stays inside its window it travels screen distance, which is none of
+    // the fold's.
+    const fold = !s.on && spans[i - 1]?.on && spans[i + 1]?.on;
+    if (fold && (!slackX || s.onX) && (!slackY || s.onY)) return;
     const anchor = s.on ? s.mid : ((spans[i - 1]?.on ? spans[i - 1] : spans[i + 1])?.mid ?? s.mid);
     const [ax, ay] = frame(s.a, anchor),
       [bx, by] = frame(s.b, anchor);
@@ -288,7 +292,7 @@ export function lineRuns(x1, y1, x2, y2, geo = GEO) {
 // drawn over a neighbour's artwork and the screen it is listed under is not
 // one it is on. A marker that merely reaches into the slack says so by the
 // part of it that draws dotted, and is not one of these.
-export const offScreen = (t, geo = GEO) => {
+export const offScreen = (t, geo = LAYOUT) => {
   const { xs, ys } = screenRuns(t, geo);
   return !xs.length || !ys.length;
 };
@@ -298,7 +302,11 @@ export const offScreen = (t, geo = GEO) => {
 export function cellAt(x, y, path) {
   const col = Math.floor(x / CELL_W),
     row = Math.floor(y / CELL_H);
-  return col >= 0 && col < path.w && row >= 0 && row < path.h ? row * path.w + col : null;
+  if (col < 0 || col >= path.w || row < 0 || row >= path.h) return null;
+  // a screen is its window, so the slack around one belongs to no cell. Packed
+  // there is none of it to land in and this never fires
+  if (x - col * CELL_W >= GEO.visW || y - row * CELL_H >= GEO.visH) return null;
+  return row * path.w + col;
 }
 
 // nearest snappable point within tol draw units of pt — a shown object's
@@ -560,10 +568,11 @@ export const centerCam = (v, cw, ch) => ({
   z: v.z,
 });
 
-// zoom for jumping to a point: a few screens across, within the focus clamp
+// zoom for jumping to a point: a few screens across, within the focus clamp.
+// Screens rather than cells, so it holds still when the pitch around them moves
 export const focusZoom = (cw, ch) =>
   clamp(
-    Math.min(cw / (FOCUS_SCREENS * CELL_W), ch / (FOCUS_SCREENS * CELL_H)),
+    Math.min(cw / (FOCUS_SCREENS * GEO.visW), ch / (FOCUS_SCREENS * GEO.visH)),
     FOCUS_ZOOM_MIN,
     FOCUS_ZOOM_MAX,
   );

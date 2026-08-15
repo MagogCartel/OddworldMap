@@ -259,17 +259,19 @@ export function draw() {
   for (const c of path.cams) {
     const cx = (c.cell % path.w) * CELL_W,
       cy = Math.floor(c.cell / path.w) * CELL_H;
+    // a screen is its window, never the whole cell: (cx, cy) is where the
+    // transform puts the window's corner at either pitch, so the slack stays bare
     if (c.png) {
       const im = img(c.png);
       if (im.complete && im.naturalWidth) {
         ctx.globalAlpha = show.dim ? 0.35 : 1;
         // source is 384px wide (24 MDEC macroblocks); only the first 368 columns are real
-        ctx.drawImage(im, 0, 0, CELL_W, CELL_H, cx, cy, CELL_W, CELL_H);
+        ctx.drawImage(im, 0, 0, GEO.visW, GEO.visH, cx, cy, GEO.visW, GEO.visH);
         ctx.globalAlpha = 1;
       }
     } else {
       ctx.fillStyle = COLOR.cellEmpty;
-      ctx.fillRect(cx, cy, CELL_W, CELL_H);
+      ctx.fillRect(cx, cy, GEO.visW, GEO.visH);
     }
   }
 
@@ -282,7 +284,7 @@ export function draw() {
       const cx = (c.cell % path.w) * CELL_W,
         cy = Math.floor(c.cell / path.w) * CELL_H;
       ctx.globalAlpha = 0.6;
-      ctx.drawImage(t, cx, cy, CELL_W, CELL_H);
+      ctx.drawImage(t, cx, cy, GEO.visW, GEO.visH);
       ctx.globalAlpha = 1;
     }
   }
@@ -303,7 +305,7 @@ export function draw() {
       ctx.lineTo(path.w * CELL_W, gy * CELL_H);
       ctx.stroke();
     }
-    if (CELL_W * cam.z > 90) {
+    if (GEO.visW * cam.z > 90) {
       ctx.fillStyle = "rgba(255,255,255,.8)";
       ctx.font = `${12 / cam.z}px sans-serif`;
       ctx.shadowColor = "rgba(0,0,0,.9)";

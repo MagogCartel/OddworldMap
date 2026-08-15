@@ -341,6 +341,7 @@ function snapAtMouse() {
 // ---- keyboard: arrows pan, + / - zoom about the canvas center, [ / ] cycle
 // paths, letter keys flip the display toggles, ? lists the shortcuts --------
 const SHOW_KEY = {
+  s: "spaced",
   g: "grid",
   a: "conn",
   w: "wires",

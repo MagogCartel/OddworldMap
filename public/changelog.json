@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-15",
+   "tag": "new",
+   "title": "See the gaps the games leave between screens",
+   "detail": "The map packs away the slack the games leave around each camera, so screens sit edge to edge. The new \"Gaps between screens\" toggle in Display spreads them onto the real grid instead: 656 units of empty space beside every Oddysee screen and 240 below it, against 7 and 20 in Exoddus. Objects and collision lines the designers left in a gap stop hovering over the neighbouring screen and sit where they really are. They stay dotted, because the games draw none of it and Abe is teleported straight across whenever the camera changes. Your view, your ruler and any route you have plotted all survive the switch."
+  },
+  {
+   "date": "2026-08-15",
    "tag": "improved",
    "title": "Collision lines stop pretending the gap is floor",
    "detail": "Objects already showed where they run off their own screen. Now collision lines do too: a floor, wall or ceiling goes dotted where it crosses the gap between cameras, and stays solid where you can really stand on it. One that crosses the gap and carries on into the next screen stays solid throughout, since the packed map gives that gap no width. It shows most in Oddysee, whose wide gap dots 1740 of its 2895 lines, against 812 of Exoddus' 6645."
