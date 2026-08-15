@@ -200,6 +200,16 @@ export function screenRuns(t, geo = GEO) {
   };
 }
 
+// the draw-space extent of a world span on one axis. The packing folds the
+// slack out of a span that crosses one, but a span lying inside the slack can
+// have its ends fall in different cells and fold to less than nothing, so one
+// that comes back inside out keeps its own extent, the way a collision line's
+// slack piece keeps the frame of the screen it left.
+export const drawExtent = (a, b, cell, win, pitch) => {
+  const folded = drawAt(b, cell, win, pitch) - drawAt(a, cell, win, pitch);
+  return folded >= 0 ? folded : b - a;
+};
+
 const inWindow = (v, cell, win, vis) => {
   const off = v - Math.floor(v / cell) * cell;
   return off >= win && off < win + vis;

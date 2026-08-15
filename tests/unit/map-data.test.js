@@ -6,6 +6,7 @@ import {
   computeEntryPaths,
   destOf,
   destTrusted,
+  drawExtent,
   isLoopback,
   lineRuns,
   offScreen,
@@ -657,6 +658,29 @@ test("no collision-line piece is drawn backwards or overlong", () => {
             if (dx * (x2 - x1) + dy * (y2 - y1) < -1e-9) bad.push(`${where} reversed`);
             if (Math.hypot(dx, dy) > span + 1e-6) bad.push(`${where} longer than its line`);
           }
+        }
+  }
+  assert.deepEqual(bad, []);
+});
+
+// A marker box must not come back inside out. A span lying in the slack can
+// have its ends fall in different cells, and in AO the slack straddles a cell
+// boundary, so the folded extent goes negative and the degenerate-rect guard
+// draws a stub in place of the object.
+test("no marker box in the shipped data is drawn inside out", () => {
+  const bad = [];
+  for (const [file, g] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const t of P.tlvs) {
+          const w = drawExtent(t.x1, t.x2, g.worldW, g.winX, g.cellW);
+          const h = drawExtent(t.y1, t.y2, g.worldH, g.winY, g.cellH);
+          if (w < 0 || h < 0)
+            bad.push(`${data.id} ${L.short} P${P.id} ${t.name} (${t.x1},${t.y1}) ${w}x${h}`);
         }
   }
   assert.deepEqual(bad, []);

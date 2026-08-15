@@ -21,6 +21,7 @@ import {
   centerCam,
   computeConnections,
   computeWiring,
+  drawExtent,
   lineRuns,
   offScreen,
   screenRuns,
@@ -354,12 +355,12 @@ export function draw() {
       continue;
     }
     const c = catOf(t);
-    // far edge goes through the transform too: a span can cross cells, where
-    // the packing folds the slack out of the width
+    // the far edge goes through the transform too: a span can cross cells,
+    // where the packing folds the slack out of the width
     const x1 = dX(t.x1),
       y1 = dY(t.y1);
-    const w = Math.max(dX(t.x2) - x1, 10),
-      h = Math.max(dY(t.y2) - y1, 10);
+    const w = Math.max(drawExtent(t.x1, t.x2, GEO.worldW, GEO.winX, CELL_W), 10),
+      h = Math.max(drawExtent(t.y1, t.y2, GEO.worldH, GEO.winY, CELL_H), 10);
     const bg = onBackgroundPlane(state.data.id, t);
     if (bg) ctx.globalAlpha = 0.5;
     ctx.strokeStyle = c.color;

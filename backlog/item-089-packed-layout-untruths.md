@@ -1,6 +1,6 @@
 # 89. What the packed layout still misreports
 
-**Status:** open — the counting half; the lines shipped 2026-08-15 · **Effort:** small (viewer) · **Where:** anywhere, no disc · **Filed:** 2026-08-14, out of the camera-window work
+**Status:** open — the counting half; the lines and the marker boxes shipped 2026-08-15 · **Effort:** small (viewer) · **Where:** anywhere, no disc · **Filed:** 2026-08-14, out of the camera-window work
 
 ## What it is
 
@@ -9,6 +9,8 @@ Both games address cameras on a grid coarser than the screen, and the map lays t
 **Collision lines.** 2385 of AO's 5790 line endpoints sit in the slack, and 665 of AE's 13290. A floor line drawn across a gap is one continuous stroke that silently skips 656 world units, and the ruler measuring along it reports the packed distance rather than the real one. `worldLen` says so in [js/state.js](../public/js/state.js), and that is the whole of the disclosure.
 
 **Per-screen counts.** The screen list and the numbers panel bucket a marker by its drawn centre, so one folded onto a neighbour is counted there: 1051 of AO's 5623 markers are tallied under a screen they cover no part of, against 2 of AE's 10602. The row carries an `offscreen` tag where nothing of it is on screen at all, but the header count and the By-the-numbers screen tier still count it where it landed.
+
+**A marker box framed by its own two ends.** 22 AO markers and 2 AE ones have a span lying wholly in the slack and straddling a cell boundary, so `dX`/`dY` transform its ends under different cells and the box comes back with a negative width or height. `Math.max(…, 10)` in [js/render.js](../public/js/render.js) catches the degenerate result and draws a 10px stub instead of the object, on markers like `R1 P15`'s DeathDrop at `(7424,432)–(7938,506)`, whose real height is 74. This is the same defect `lineRuns` fixed for lines by framing a slack piece with the screen it hangs off, and the same remedy applies: where an axis has no run at all, frame that axis from the marker's anchor so its extent stays 1:1. Unlike the two above it is a plain defect rather than a question, and it predates the marking work.
 
 ## Decided: the packing itself stays
 
@@ -29,7 +31,7 @@ The two halves want different answers and should not be bundled into one change.
 
 The counting rule is load-bearing for two surfaces that are pinned against each other, and the screen list is the touch device's only inspection surface. Changing what a screen holds changes what a phone user is shown, so the tag and the count should end up saying the same thing rather than a third one.
 
-## Shipped: the lines, 2026-08-15
+## Shipped: the lines and the marker boxes, 2026-08-15
 
 `lineRuns` in [js/model.js](../public/js/model.js), in *Collision lines stop pretending the gap is floor*. A line is cut wherever it crosses a window edge on either axis, each piece drawn solid or dotted by whether its midpoint is on screen. 1740 of AO's 2895 lines are dotted somewhere, and 812 of AE's 6645.
 
@@ -40,5 +42,9 @@ Three things the sketch guessed at turned out differently.
 **Diagonals needed no special case.** The sketch worried that a line is not a rect, so the split could not be a clip. True, but the transform is a *translation* within a window, so a diagonal maps exactly and stays straight as long as the cut lands on the window edge rather than on a lerp of the drawn endpoints. The 43 AO and 105 AE diagonals that cross slack come out exact, and the general algorithm was no harder than the axis-aligned one it would have replaced.
 
 **A line crossing the slack whole needs nothing dotted**, and the fold that says so has to be read off the neighbouring spans rather than off the points bounding it. A line ending exactly on a window edge touches that screen at one point and covers none of it, so what it leaves is an overhang; asking the endpoint instead collapses 352 AE lines' overhangs into nothing. The merge that follows also keeps a background line's dash pattern from restarting mid-line.
+
+The marker boxes went with them, in *A marker box in the slack keeps its own extent*. `drawExtent` folds the slack out of a span that crosses one and keeps the span's own extent where that folding turns it inside out. It is the same rule `lineRuns` follows, and stating it once for both is what makes it a rule rather than a pair of guards: what lies in the slack has no draw position of its own, so it answers to the frame of the screen it hangs off.
+
+The sweep that pins it calls the same helper the renderer does. An invariant test that reimplements the thing it checks passes whatever the shipped code does, which is the failure mode worth avoiding here: the defect it guards was invisible for as long as it was because nothing ever asked whether a drawn box pointed the right way.
 
 **Ruled out: making the ruler report the true distance.** Left measuring the packed distance. The number it gives is the distance along the map as drawn, and the alternative charges for ground the engine teleports across. Dotting the lines makes the fold visible, which makes that behaviour discoverable rather than more wrong, so the case for changing it got weaker rather than stronger.

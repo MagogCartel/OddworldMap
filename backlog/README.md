@@ -51,7 +51,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
 - [**86.** World graph](item-086-world-graph.md) — every path a node, every transition an edge: the metro map of each game. _Large, anywhere._
-- [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md). Per-screen counts tally a marker under the screen it was folded onto; the collision-line half shipped. _Small, anywhere, needs a verdict on what a count is for._
+- [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md). Per-screen counts tally a marker under the screen it was folded onto; the collision lines and the marker boxes shipped. _Small, anywhere; the counting half needs a verdict on what a count is for._
 
 ## Content depth
 
