@@ -200,6 +200,79 @@ export function screenRuns(t, geo = GEO) {
   };
 }
 
+const inWindow = (v, cell, win, vis) => {
+  const off = v - Math.floor(v / cell) * cell;
+  return off >= win && off < win + vis;
+};
+
+// every point on [a, b] where the span enters or leaves a window, as a fraction
+// along it; an axis the span does not travel cuts nothing
+function windowCuts(cuts, a, b, cell, win, vis) {
+  if (a === b) return;
+  for (let c = Math.floor(Math.min(a, b) / cell); c <= Math.floor(Math.max(a, b) / cell); c++)
+    for (const edge of [c * cell + win, c * cell + win + vis]) {
+      const t = (edge - a) / (b - a);
+      if (t > 0 && t < 1) cuts.add(t);
+    }
+}
+
+// a collision line as draw-space pieces, each flagged for whether it covers
+// screen. A piece on screen lies inside one window, where the transform is a
+// translation, so it lands exactly and stays straight, diagonals included.
+//
+// A piece in the slack has no draw position of its own and is drawn rather
+// than located. One with screen on both sides is the fold itself: it collapses
+// to nothing, which is what lets a line running between two screens read as
+// the continuous floor it is. One with screen on a single side is an overhang,
+// drawn at 1:1 from the edge it left, over whatever the packing put there.
+// Both take the frame of the screen they touch, and that is load-bearing: the
+// slack straddles a cell boundary in AO, so giving each end its own cell would
+// run the piece backwards.
+export function lineRuns(x1, y1, x2, y2, geo = GEO) {
+  const cuts = new Set([0, 1]);
+  windowCuts(cuts, x1, x2, geo.worldW, geo.winX, geo.visW);
+  windowCuts(cuts, y1, y2, geo.worldH, geo.winY, geo.visH);
+  const at = (t) => [x1 + t * (x2 - x1), y1 + t * (y2 - y1)];
+  const ts = [...cuts].sort((p, q) => p - q);
+  const spans = [];
+  for (let i = 0; i + 1 < ts.length; i++) {
+    const mid = at((ts[i] + ts[i + 1]) / 2);
+    spans.push({
+      a: at(ts[i]),
+      b: at(ts[i + 1]),
+      mid,
+      on:
+        inWindow(mid[0], geo.worldW, geo.winX, geo.visW) &&
+        inWindow(mid[1], geo.worldH, geo.winY, geo.visH),
+    });
+  }
+  // one cell frames a whole piece, so both ends answer to the same translation
+  const frame = ([wx, wy], [fx, fy]) => {
+    const cx = Math.floor(fx / geo.worldW),
+      cy = Math.floor(fy / geo.worldH);
+    return [
+      cx * geo.cellW + wx - cx * geo.worldW - geo.winX,
+      cy * geo.cellH + wy - cy * geo.worldH - geo.winY,
+    ];
+  };
+  const out = [];
+  spans.forEach((s, i) => {
+    // a slack span with screen on both sides is the fold between two screens
+    // and takes no draw space. It asks for spans rather than for the points
+    // bounding it: a line ending exactly on a window edge touches that screen
+    // at one point and covers none of it, so what it leaves is an overhang
+    if (!s.on && spans[i - 1]?.on && spans[i + 1]?.on) return;
+    const anchor = s.on ? s.mid : ((spans[i - 1]?.on ? spans[i - 1] : spans[i + 1])?.mid ?? s.mid);
+    const [ax, ay] = frame(s.a, anchor),
+      [bx, by] = frame(s.b, anchor);
+    if (Math.abs(bx - ax) < 1e-6 && Math.abs(by - ay) < 1e-6) return; // a degenerate span
+    const prev = out[out.length - 1];
+    if (prev && prev.on === s.on) [prev.x2, prev.y2] = [bx, by];
+    else out.push({ x1: ax, y1: ay, x2: bx, y2: by, on: s.on });
+  });
+  return out;
+}
+
 // a marker with no part of it on any screen: it stands wholly in the slack the
 // game never renders and the player never reaches, so every pixel of it is
 // drawn over a neighbour's artwork and the screen it is listed under is not

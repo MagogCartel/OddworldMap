@@ -21,6 +21,7 @@ import {
   centerCam,
   computeConnections,
   computeWiring,
+  lineRuns,
   offScreen,
   screenRuns,
 } from "./model.js";
@@ -315,16 +316,20 @@ export function draw() {
     }
   }
 
-  // collision lines
+  // collision lines, dotted over the slack the packing folded away, as markers are
   if (show.coll) {
     ctx.lineWidth = 2.5 / cam.z;
+    const bg = [8 / cam.z, 6 / cam.z],
+      slack = [2 / cam.z, 3 / cam.z];
     for (const [x1, y1, x2, y2, t] of path.lines) {
       ctx.strokeStyle = LINE_COLORS[t] || "#999";
-      ctx.setLineDash(t >= 4 ? [8 / cam.z, 6 / cam.z] : []);
-      ctx.beginPath();
-      ctx.moveTo(dX(x1), dY(y1));
-      ctx.lineTo(dX(x2), dY(y2));
-      ctx.stroke();
+      for (const r of lineRuns(x1, y1, x2, y2)) {
+        ctx.setLineDash(r.on ? (t >= 4 ? bg : []) : slack);
+        ctx.beginPath();
+        ctx.moveTo(r.x1, r.y1);
+        ctx.lineTo(r.x2, r.y2);
+        ctx.stroke();
+      }
     }
     ctx.setLineDash([]);
   }

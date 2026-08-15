@@ -7,6 +7,7 @@ import {
   destOf,
   destTrusted,
   isLoopback,
+  lineRuns,
   offScreen,
   pathIn,
 } from "../../public/js/model.js";
@@ -632,4 +633,31 @@ test("the shipped data's offscreen objects are the known ones", () => {
       .filter((t) => offScreen(t, geometry)).length;
   }
   assert.deepEqual(counts, { AO: 276, AE: 0 });
+});
+
+// A piece drawn for a collision line must run the way its line does and be no
+// longer than it. The slack straddles a cell boundary in AO, so a piece framed
+// end by end rather than as a whole comes back reversed, across most of a
+// screen; this is the sweep that says so over the shipped data rather than
+// over a case someone thought to write down.
+test("no collision-line piece is drawn backwards or overlong", () => {
+  const bad = [];
+  for (const [file, geometry] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    for (const L of data.levels)
+      for (const P of L.paths)
+        for (const [x1, y1, x2, y2] of P.lines) {
+          const span = Math.hypot(x2 - x1, y2 - y1);
+          for (const r of lineRuns(x1, y1, x2, y2, geometry)) {
+            const [dx, dy] = [r.x2 - r.x1, r.y2 - r.y1];
+            const where = `${data.id} ${L.short} P${P.id} (${x1},${y1})–(${x2},${y2})`;
+            if (dx * (x2 - x1) + dy * (y2 - y1) < -1e-9) bad.push(`${where} reversed`);
+            if (Math.hypot(dx, dy) > span + 1e-6) bad.push(`${where} longer than its line`);
+          }
+        }
+  }
+  assert.deepEqual(bad, []);
 });

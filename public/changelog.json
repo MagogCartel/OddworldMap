@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-15",
+   "tag": "improved",
+   "title": "Collision lines stop pretending the gap is floor",
+   "detail": "Objects already showed where they run off their own screen. Now collision lines do too: a floor, wall or ceiling goes dotted where it crosses the gap between cameras, and stays solid where you can really stand on it. One that crosses the gap and carries on into the next screen stays solid throughout, since the packed map gives that gap no width. It shows most in Oddysee, whose wide gap dots 1740 of its 2895 lines, against 812 of Exoddus' 6645."
+  },
+  {
    "date": "2026-08-14",
    "tag": "new",
    "title": "Objects spilling off their screen show where they end",

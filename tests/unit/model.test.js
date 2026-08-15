@@ -14,6 +14,7 @@ import {
   formatHash,
   hashToDraw,
   isLoopback,
+  lineRuns,
   offScreen,
   screenRuns,
   parseHash,
@@ -328,6 +329,64 @@ test("screenRuns: whole is nothing drawn anywhere the marker is not", () => {
   assert.equal(whole(box(700, 200, 50, 20)), false); // never reaches a window
   // the measure is the drawn extent, not the world span the slack inflates
   assert.equal(box(600, 200, 700, 20).x2 - box(600, 200, 700, 20).x1, 700);
+});
+
+test("lineRuns: a collision line split where it leaves the screen", () => {
+  const runs = (x1, y1, x2, y2) => lineRuns(x1, y1, x2, y2, AO_GEOMETRY);
+  const shape = (rs) => rs.map((r) => [r.x1, r.y1, r.x2, r.y2, r.on]);
+  // wholly inside one window: one piece, undivided
+  assert.deepEqual(shape(runs(300, 200, 500, 200)), [[44, 80, 244, 80, true]]);
+  // running off the window's right edge: solid to the edge, dotted past it
+  assert.deepEqual(shape(runs(500, 200, 700, 200)), [
+    [244, 80, 368, 80, true],
+    [368, 80, 444, 80, false],
+  ]);
+  // crossing the slack whole: the fold takes no draw space, so it stays one piece
+  assert.deepEqual(shape(runs(500, 200, 1400, 200)), [[244, 80, 488, 80, true]]);
+  // never on screen at all
+  assert.deepEqual(shape(runs(700, 200, 900, 200)), [[444, 80, 644, 80, false]]);
+  // vertical, off the bottom edge
+  assert.deepEqual(shape(runs(300, 300, 300, 400)), [
+    [44, 180, 44, 240, true],
+    [44, 240, 44, 280, false],
+  ]);
+});
+
+test("lineRuns: a piece in the slack keeps the frame of the screen it left", () => {
+  const runs = (x1, y1, x2, y2) => lineRuns(x1, y1, x2, y2, AO_GEOMETRY);
+  const shape = (rs) => rs.map((r) => [r.x1, r.y1, r.x2, r.y2, r.on]);
+  // AO's slack runs 624..1280, straddling the cell boundary at 1024. Taking
+  // each end's own cell would run these backwards, across most of a screen
+  assert.deepEqual(shape(runs(900, 200, 1100, 200)), [[644, 80, 844, 80, false]]);
+  assert.deepEqual(shape(runs(950, 200, 1790, 200)), [
+    [38, 80, 368, 80, false],
+    [368, 80, 736, 80, true],
+    [736, 80, 878, 80, false],
+  ]);
+  // an overhang is 1:1 with its own world span, whichever side it hangs off
+  const [lead] = runs(4092, 200, 4424, 200);
+  assert.equal(lead.x2 - lead.x1, 4352 - 4092);
+  // a line ending exactly on a window edge covers none of that screen, so what
+  // it leaves behind is an overhang and not a fold
+  assert.deepEqual(shape(runs(500, 200, 624, 200)), [[244, 80, 368, 80, true]]);
+  assert.deepEqual(shape(runs(500, 200, 700, 200)), [
+    [244, 80, 368, 80, true],
+    [368, 80, 444, 80, false],
+  ]);
+});
+
+test("lineRuns: a diagonal is cut on whichever axis leaves the window first", () => {
+  // from inside the window to beyond its right edge, descending as it goes: the
+  // cut lands on the x edge at world 624, two thirds along, and the piece
+  // endpoints are the transform's own rather than a lerp of the drawn ends
+  const rs = lineRuns(524, 200, 674, 260, AO_GEOMETRY);
+  assert.equal(rs.length, 2);
+  assert.deepEqual([rs[0].on, rs[1].on], [true, false]);
+  assert.deepEqual([rs[0].x1, rs[0].y1], [268, 80]);
+  assert.ok(Math.abs(rs[0].x2 - 368) < 1e-9 && Math.abs(rs[0].y2 - 120) < 1e-9);
+  assert.deepEqual([rs[1].x2, rs[1].y2], [418, 140]);
+  // the pieces meet: no gap opens at the boundary
+  assert.deepEqual([rs[0].x2, rs[0].y2], [rs[1].x1, rs[1].y1]);
 });
 
 test("offScreen: no part of the marker is on any screen", () => {
