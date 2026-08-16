@@ -14,7 +14,9 @@ const SHELL = "shell-v1";
 // unregistration can't stop a controlling worker until reload, and a
 // module flag wouldn't survive an idle-worker restart
 const ENABLED = "cams-on";
-const MAX_ENTRIES = 2000; // ≈140 MB; a full AE browse is 1936 files
+// has to clear both games' complete artwork (2871 files), which the page can
+// ask for outright; a cap under that would evict the download's own head
+const MAX_ENTRIES = 4000; // ≈280 MB
 const TRIM_SLACK = 50; // hysteresis so trim doesn't scan keys() on every put
 
 self.addEventListener("install", () => self.skipWaiting());

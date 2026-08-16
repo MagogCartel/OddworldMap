@@ -19,6 +19,7 @@ import "./typecard.js";
 import "./shuffle.js";
 import "./numbers.js";
 import "./minimap.js";
+import "./offline.js";
 
 initSettings();
 initFieldPanel();

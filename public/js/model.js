@@ -140,6 +140,15 @@ export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO, data = 
   return d && d.target != null && d.target.field === "well#" ? { ...d, target: null } : d;
 }
 
+// every artwork file a game ships, background and foreground alike: what a
+// copy of it held on the device has to hold
+export const camFiles = (data) =>
+  data.levels
+    .flatMap((L) => L.paths)
+    .flatMap((P) => P.cams)
+    .flatMap((c) => [c.png, c.fg])
+    .filter(Boolean);
+
 // the camera id a cam name's C## suffix carries, or null
 export const camIdOf = (name) => {
   const m = /C(\d+)$/i.exec(name || "");

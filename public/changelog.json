@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-16",
+   "tag": "new",
+   "title": "Take the whole map with you, before you lose signal",
+   "detail": "\"Keep the map on this device\" used to keep only what you had already looked at, which is no help when the place you need is one you have never opened. Switching it on now offers each game's artwork as a single download: about 65 MB for Oddysee, 136 MB for Exoddus, or both in one go. It runs in the background while you carry on browsing, and resumes where it left off if you stop it or lose the connection. Once it finishes, every screen of that game opens with no connection at all: on a plane, underground, or wherever the signal is not."
+  },
+  {
    "date": "2026-08-15",
    "tag": "new",
    "title": "See the gaps the games leave between screens",

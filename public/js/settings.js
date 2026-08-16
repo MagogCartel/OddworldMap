@@ -13,6 +13,9 @@ const SETTINGS_KEY = "owm:settings";
 const VIEW_KEY = "owm:view";
 const LOC_KEY = "owm:lastloc";
 
+// the opt-in marker bucket sw.js consults before storing anything
+export const MARKER_CACHE = "cams-on";
+
 export const SETTINGS_DEFAULTS = {
   rememberView: true,
   rememberLoc: false,
@@ -186,6 +189,7 @@ export function initSettings() {
   const open = () => {
     overlay.classList.add("open");
     closeBtn.focus();
+    window.dispatchEvent(new Event("settings-opened"));
   };
   const close = () => {
     overlay.classList.remove("open");
@@ -251,23 +255,43 @@ export function initSettings() {
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "demoPaths" } })),
   );
 
-  applyCacheMap(s.cacheMap, true); // boot: register, or sweep leftovers from a mid-session disable
-  bind("sCacheMap", "cacheMap", applyCacheMap);
+  applyCacheMap(s.cacheMap); // boot: register, or sweep leftovers from a mid-session disable
+  bind("sCacheMap", "cacheMap", (on) => {
+    applyCacheMap(on);
+    window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "cacheMap" } }));
+  });
+}
+
+// the last registration attempt: not fatal to the app, but fatal to everything
+// offline, so the answer is kept rather than swallowed
+let registered = Promise.resolve(false);
+export const workerRegistered = () => registered;
+
+// the marker's existence is what admits a response to the cache, so anything
+// that wants its fetches stored has to follow this
+export function markerReady() {
+  if (!("caches" in window)) return Promise.resolve();
+  return caches.open(MARKER_CACHE).then(
+    () => {},
+    () => {},
+  );
 }
 
 // offline caching (sw.js) is opt-in; the worker can't read settings, so the
-// page gates it. The "cams-on" marker bucket, not registration, is the real
-// switch: unregister() leaves the worker controlling the page until reload,
-// so only deleting the marker stops caching immediately.
-function applyCacheMap(on, boot) {
+// page gates it. The marker bucket, not registration, is the real switch:
+// unregister() leaves the worker controlling the page until reload, so only
+// deleting the marker stops caching immediately.
+function applyCacheMap(on) {
   if (!("serviceWorker" in navigator)) return;
   if (on) {
-    const marker = "caches" in window ? caches.open("cams-on").catch(() => {}) : Promise.resolve();
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-    // a user enable always warms (a re-enable follows a sweep, whatever
-    // still controls the page) while the boot call never does: a controlled
-    // page's own boot fetches are already the refresh
-    if (!boot) marker.then(() => warmShell());
+    markerReady();
+    registered = navigator.serviceWorker.register("sw.js").then(
+      () => true,
+      (err) => {
+        console.warn("offline storage: the service worker would not register", err);
+        return false;
+      },
+    );
     return;
   }
   // every registration on the origin: sw.js is the only worker there is
@@ -278,7 +302,7 @@ function applyCacheMap(on, boot) {
   // the marker goes first: it is what the worker consults, so nothing can
   // repopulate a bucket the sweep is still deleting
   if ("caches" in window)
-    caches.delete("cams-on").then(
+    caches.delete(MARKER_CACHE).then(
       () =>
         caches.keys().then(
           (names) =>
@@ -289,27 +313,4 @@ function applyCacheMap(on, boot) {
         ),
       () => {},
     );
-}
-
-// the worker only caches what passes through it, and a page from before it
-// loaded uncontrolled — so once the worker takes the page, re-fetch
-// everything it already pulled (the document included), and offline works
-// from the enabling visit onward
-function warmShell() {
-  const warm = () => {
-    if (!getSettings().cacheMap) return; // toggled back off before the worker took the page
-    const urls = new Set([new URL("index.html", location.href).href]);
-    for (const e of performance.getEntriesByType("resource")) {
-      const u = new URL(e.name, location.href);
-      if (u.origin === location.origin) urls.add(u.href);
-    }
-    for (const url of urls) fetch(url).catch(() => {});
-  };
-  navigator.serviceWorker.ready
-    .then(() => {
-      // a first registration's claim() can land after ready resolves
-      if (navigator.serviceWorker.controller) warm();
-      else navigator.serviceWorker.addEventListener("controllerchange", warm, { once: true });
-    })
-    .catch(() => {});
 }

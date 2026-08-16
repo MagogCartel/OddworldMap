@@ -118,7 +118,8 @@ body:not(.menu-open) #sidebar {
   gap: 4px;
   padding: 4px 12px;
 }
-.btnrow button {
+.btnrow button,
+.ofl-go {
   background: var(--panel2);
   color: var(--text);
   border: 1px solid var(--line);
@@ -127,7 +128,8 @@ body:not(.menu-open) #sidebar {
   cursor: pointer;
   font-size: 12px;
 }
-.btnrow button:hover {
+.btnrow button:hover,
+.ofl-go:hover {
   border-color: var(--accent);
 }
 .btnrow button.on {
@@ -1315,6 +1317,52 @@ body.embed #openSiteBtn {
 }
 .st-desc:last-child {
   margin-bottom: 0;
+}
+/* storing a whole game's artwork: one row per game, under the setting that
+   makes storing possible at all */
+#offlineStore {
+  margin-left: 20px;
+}
+.ofl-intro {
+  color: var(--dim);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.ofl-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 10px;
+  margin-bottom: 10px;
+}
+.ofl-name {
+  font-size: 12px;
+}
+.ofl-stat {
+  grid-column: 1;
+  color: var(--dim);
+  font-size: 11px;
+}
+.ofl-go {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+.ofl-bar {
+  grid-column: 1 / -1;
+  height: 3px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.ofl-bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s linear;
+}
+#oflBoth {
+  font-size: 11px;
 }
 
 #shortcutsBody {

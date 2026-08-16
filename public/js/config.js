@@ -11,6 +11,7 @@ export const TOAST_MS = 3000;                            // toast lifetime, and 
 export const TOAST_OUT_MS = 150;                         // fade before a spent toast leaves the stack
 export const TOAST_MAX = 3;                              // toasts on screen at once; the rest wait behind a "+N more" badge
 export const CACHE_MAX_IMAGES = 500;                     // cam bitmaps kept before eviction (~70 KB compressed each)
+export const CAM_FILE_BYTES = 70000;                     // typical cam PNG, for sizing an offline download before it runs
 export const KEY_PAN_PX = 75, KEY_ZOOM_STEP = 1.25;      // keyboard pan step (screen px) / zoom factor per press
 export const GRID_UNIT = 25;                             // world units per in-game grid square
 export const PAGE_ZOOM_MIN = 1.02;                       // browser zoom counted as zoomed (a pinch settles a hair off 1)
