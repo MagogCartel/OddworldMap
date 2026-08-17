@@ -970,13 +970,15 @@ body.embed #openSiteBtn {
 #shuffleBtn[hidden] {
   display: none;
 }
-/* the route bar owns the top row — it is wider than the center of a phone
-   screen, so the chip row and the panel step down while one is up */
-#main:has(#routeBar:not([hidden])) #chipRow {
-  top: 52px;
-}
-#main:has(#routeBar:not([hidden])) #placePanel {
-  top: 94px;
+/* the route bar is centred over the map, so only a narrow map brings it within
+   reach of the chip row */
+@media (max-width: 1400px) {
+  #main:has(#routeBar:not([hidden])) #chipRow {
+    top: 52px;
+  }
+  #main:has(#routeBar:not([hidden])) #placePanel {
+    top: 94px;
+  }
 }
 #placeCode {
   flex: none;
