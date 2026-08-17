@@ -46,6 +46,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - on touch devices one finger pans and two fingers pinch-zoom the map; the page itself pinch-zooms too, and while it is zoomed two fingers on the map zoom the page back out instead; the sidebar collapses behind a menu button on narrow screens
 - **What's new**: the top-right button opens a dated changelog of recent updates; a dot marks entries added since you last opened it, and the tags under the masthead switch each kind of update (new, improved, fixed) in or out of the list — a choice the panel forgets when it closes, so a filter can never hide the news
   - the handful of updates that added something the map was built around wear a shifting foil badge beside their kind, and a Flagship tag at the end of the row switches them; a flagship answers to that tag alone, so turning the other three off leaves the flagships by themselves — the shortest history of the map there is
+  - at the other end, an update that was a one-line fix or a flipped default says Tiny beside its kind, so what was a small refinement and what was real news are told apart at a glance without either leaving the feed
 - **About this map**: the link at the foot of the sidebar opens the notice that this is an unofficial fan project unaffiliated with Oddworld Inhabitants, alongside links to the map's source and to the project whose reverse-engineering the data formats come from
 
 ### Overlays

@@ -3,6 +3,13 @@
   {
    "date": "2026-08-17",
    "tag": "improved",
+   "title": "The smallest updates say so",
+   "detail": "Thirty-nine entries here record a one-line fix, a flipped default or a small refinement, and on this page they looked exactly like the features they were listed beside. Each now carries a quiet Tiny next to its kind, the way the biggest carry Flagship at the other end of the scale, so the shape of a week's work reads at a glance. Nothing has left the feed: the smallest change keeps its date, its place and its paragraph, because a map that is tended every week should look like one."
+  },
+  {
+   "date": "2026-08-17",
+   "tag": "improved",
+   "tiny": true,
    "title": "The wires are drawn before you ask for them",
    "detail": "Switch wiring (the green lines from every lever, button and wheel to the doors, drills and walls answering its switch id) waited behind a Display toggle, so the map opened showing where things are and not what they do. It is on from the first visit now, and the toggle (or the w key) still switches it off. If you've chosen to remember your display settings, your own choice still wins."
   },
@@ -51,12 +58,14 @@
   {
    "date": "2026-08-14",
    "tag": "fixed",
+   "tiny": true,
    "title": "Water is a provocation, not decoration",
    "detail": "The encyclopedia called Exoddus' falling water purely cosmetic, which it is not. The game counts a soaking as a slap, so the Mudokon under it turns angry and throws a punch."
   },
   {
    "date": "2026-08-14",
    "tag": "fixed",
+   "tiny": true,
    "title": "Objects filed under the wrong filter move",
    "detail": "The security orb that zaps Abe for chanting sat among the switches and levers. The security claw and the sweeping motion detectors sat in the meta bucket, hidden by default. The orb and the claw both punish Abe, and the detectors raise the alarm that fetches something which will, so all three are hazards now. The boxes that wipe a range of switch ids join the switches, where the rest of the wiring logic already lives. The FeeCo train door leaves Doors / Transitions for meta: it is a graphic, and the ordinary door beside it is what carries the ride."
   },
@@ -75,12 +84,14 @@
   {
    "date": "2026-08-14",
    "tag": "improved",
+   "tiny": true,
    "title": "Object tooltips separate description from data",
    "detail": "An object's hover tooltip now reads in layers. The type description leans into an italic aside, and field values brighten against their dimmed names, so the words and numbers that vary from one placement to the next are what catch the eye. Lines also wrap between whole fields now, never splitting a value from its name."
   },
   {
    "date": "2026-08-14",
    "tag": "improved",
+   "tiny": true,
    "title": "Drill directions read as words",
    "detail": "An Exoddus drill's start direction now shows as down, right or left. The drill's own direction enum sits outside the headers the builder reads types from, so the field shipped as a bare number that the usual left-and-right convention misread: its common value means down, not left."
   },
@@ -171,6 +182,7 @@
   {
    "date": "2026-08-08",
    "tag": "improved",
+   "tiny": true,
    "title": "The corner readout counts grid squares",
    "detail": "The readout in the map's bottom-right corner has always tracked the pointer's world position. It now also says where the pointer stands within its screen, in the games' own 25-unit grid squares (the unit the ruler already speaks). Read it off the corner instead of arming the ruler to count squares."
   },
@@ -189,6 +201,7 @@
   {
    "date": "2026-08-05",
    "tag": "improved",
+   "tiny": true,
    "title": "The buttons say where you are going by default",
    "detail": "\"Show full names\" started off, so the level and path buttons opened as bare short codes and a name only arrived if you went looking for the setting. Enough of the map is named now (the temple trials, the zulags, the nicknames players gave the Brewery) that the codes were hiding the better label. Full names are now on from the first visit, and the setting is still there to go back to the codes."
   },
@@ -201,6 +214,7 @@
   {
    "date": "2026-08-03",
    "tag": "improved",
+   "tiny": true,
    "title": "A link to an object says which object",
    "detail": "Opening a link to a specific object rings it with a marker, which is easy to follow on a quiet screen and much less so on one carrying two dozen things. The name was only ever in the URL, where it can be missed easily. The map now names what the marker is on, in a message at the bottom, the way it already told you when the object turned out not to be there."
   },
@@ -213,24 +227,28 @@
   {
    "date": "2026-07-31",
    "tag": "fixed",
+   "tiny": true,
    "title": "The newest toast really lands at the bottom",
    "detail": "When several toasts stack, the newest was quietly appearing above the older ones instead of taking the bottom slot where a lone toast stands, so the reaction to what you just did moved around depending on how many messages were up. The newest now always lands at the bottom and pushes the older ones up, the way the stack was described when it shipped."
   },
   {
    "date": "2026-07-30",
    "tag": "improved",
+   "tiny": true,
    "title": "\"Reduce motion\" now stops all of the motion",
    "detail": "If your system asks for reduced motion, the map turned off its animations, except two that slipped through. A dialog still faded in over about a fifth of a second, though it closed instantly, and on a phone the menu drawer still slid in from the side. Both now simply appear and disappear, which is what the setting asks for."
   },
   {
    "date": "2026-07-30",
    "tag": "improved",
+   "tiny": true,
    "title": "Object tooltips are no longer buried",
    "detail": "An object's tooltip is a wide box set just below and right of the pointer, so pointing anywhere near the edge of the map left it sitting beneath whatever else was on screen. The description of the very thing you were pointing at came out underneath the screen list, the panel behind the corner chip, the route planner's bar or a passing message. Tooltips now draw above all four."
   },
   {
    "date": "2026-07-30",
    "tag": "improved",
+   "tiny": true,
    "title": "The buttons and the search box use the map's own font",
    "detail": "A browser hands buttons and text boxes a font of their own unless the page says otherwise, and this page only said so in some places. So the game, level and path buttons, the search box and its scope filters, the rows in a screen's object list and the close button on every panel were drawing in the browser's font rather than the map's. So were the export button and the route planner's undo and clear. They all match now."
   },
@@ -255,12 +273,14 @@
   {
    "date": "2026-07-29",
    "tag": "improved",
+   "tiny": true,
    "title": "The settings you have changed say so",
    "detail": "A setting that is off because it ships that way looked exactly like one you switched off yourself, so there was no telling which of the eight settings you had ever touched. A setting you have changed now says on the right of its row what it was to begin with: \"off by default\" where you turned it on, \"on by default\" where you turned it off. One you have left alone says nothing, so what is written down the right-hand side is the list of what you changed."
   },
   {
    "date": "2026-07-29",
    "tag": "improved",
+   "tiny": true,
    "title": "Settings come in three groups",
    "detail": "The eight settings sat in one column with a paragraph under each, which had grown long enough that the panel scrolled before you reached the end of it. They are now sorted into what is saved on this device, what the buttons say, and what the map tells you about objects, under headings that read like the sidebar's own. The panel is a little wider to match, so on a desktop the whole list fits without scrolling. Nothing changed about what any setting does."
   },
@@ -279,6 +299,7 @@
   {
    "date": "2026-07-28",
    "tag": "improved",
+   "tiny": true,
    "title": "Full names on the buttons read as names",
    "detail": "With \"Show full names\" on, every button wrapped its name in brackets, which reads as an aside rather than as the label it is, and a path whose name carries brackets of its own ([Demo] Annex 8: Slogs Attack) came out with two sets nested. The name now follows the short code after a dash instead."
   },
@@ -292,6 +313,7 @@
   {
    "date": "2026-07-28",
    "tag": "improved",
+   "tiny": true,
    "title": "Links that leave the map say what is out there",
    "detail": "Two objects in Oddysee, one in Rupture Farms and one in Monsaic Lines, point at a level the map doesn't draw. Hovering either already told you its name and that it isn't on the map; it now also says what it is: the main menu, where the game's title-screen demos return when they finish, which is why those two links exist at all."
   },
@@ -311,18 +333,21 @@
   {
    "date": "2026-07-28",
    "tag": "fixed",
+   "tiny": true,
    "title": "Portals that go nowhere stop naming a destination",
    "detail": "In Exoddus, the bird portals that don't travel anywhere (the ones Mudokons fly up through, and the ones that grant Shrykull) nearly all claimed to lead to Necrum Mines P1 C1, and offered a link there. The levels do store a destination for them, but the game never reads it: such a portal closes where it stands and never moves Abe, so the stored value is scratch, usually the untouched default that points at the first screen of the first level. All 118 of them now show no destination at all. Genuine travel portals are unchanged."
   },
   {
    "date": "2026-07-27",
    "tag": "fixed",
+   "tiny": true,
    "title": "Tab skips the closed sidebar",
    "detail": "With the sidebar collapsed, the Tab key still travelled through every one of its buttons (some fifty of them) before reaching the map. It now goes straight past, and closing the sidebar leaves Tab where it left off, on the menu button."
   },
   {
    "date": "2026-07-27",
    "tag": "fixed",
+   "tiny": true,
    "title": "A failed PNG export says so",
    "detail": "\"Export view as PNG\" can fail when the browser won't encode a picture. It used to do nothing at all, no file and no reason given. It now says the export failed."
   },
@@ -341,24 +366,28 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "The view holds still when the window changes size",
    "detail": "Resizing the window, rotating a phone, or opening and closing the sidebar used to slide the map sideways, because the view was pinned by its top-left corner: whatever you were looking at drifted off, and on a narrow window the sidebar alone could push it out of sight. The middle of the view now stays where it is."
   },
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "Object links keep their marker",
    "detail": "A link to a specific object matched its name exactly, so one that had passed through anything that lowercases URLs opened the right view and then quietly dropped the marker. Names now match whatever their capitals, as the game and level codes always have. And when the object really isn't there (a hand-typed link, or one aimed at something a data rebuild has moved) the map still goes to the spot the link named, rings it, and says which object it expected."
   },
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "Links still work when sharing rewrites them",
    "detail": "Some apps rewrite the part of a URL after the # when you share it, leaving %2F where every slash used to be. A link that came through one of those opened the default view instead of the place it named. The rewriting is now undone before the link is read."
   },
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "Route links survive being shortened",
    "detail": "Chat apps and forums sometimes shorten a long URL, and a route that lost its tail could still be read as a complete one, drawn a leg or two short with no sign anything was missing. A shortened route link is now recognised: it opens with the waypoints that did arrive and says how many didn't (\"route link cut short: 13 of 16 waypoints\")."
   },
@@ -371,24 +400,28 @@
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "\"Export view as PNG\" saves the file in every browser",
    "detail": "The export could end with nothing saved and no error, depending on the browser: the image was thrown away the moment the download was handed over, which Firefox and Safari take as a cancelled transfer. It is now kept until the browser has actually taken it, however long a save dialog sits open."
   },
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "Object tooltips stay on screen near the edges",
    "detail": "Hovering an object low on the map cut the tooltip off at the bottom of the window, with no way to scroll it back into view. It now flips above the pointer when there is no room below. Near the right edge it stays beside what it describes instead of jumping left, and on a narrow phone screen it no longer starts off the left edge."
   },
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "The marker on a shared object link settles down",
    "detail": "Opening a link to a specific object rings it with a pulsing marker that holds until you have seen it. On a page nobody touched it held forever, redrawing the map every frame (a quiet battery drain on a tab left open, phones especially). Moving the pointer now counts as seeing it, and the marker settles by itself after half a minute either way."
   },
   {
    "date": "2026-07-26",
    "tag": "fixed",
+   "tiny": true,
    "title": "Measurements no longer linger after you move on",
    "detail": "A line drawn with the ruler stayed on screen when you switched path with [ and ], followed a door or changed game, sitting over the new screens measuring nothing, and after a game switch reading the wrong distance outright. It now clears whenever you move somewhere else."
   },
@@ -401,6 +434,7 @@
   {
    "date": "2026-07-25",
    "tag": "fixed",
+   "tiny": true,
    "title": "Background objects are cued by the right plane",
    "detail": "The dimmed dashed outline that marks the background plane read a raw value that doesn't mean the same thing for every object, so a few kinds were cued backwards: foreground invisible switches were dashed while background ones weren't, and half-scale door flames were missed. Each object's own scale meaning now decides it."
   },
@@ -419,6 +453,7 @@
   {
    "date": "2026-07-24",
    "tag": "improved",
+   "tiny": true,
    "title": "Background-plane objects stand out",
    "detail": "Objects sitting on the half-scale background plane are now drawn dimmed with a dashed outline (the same \"dashed means background\" cue the collision lines already use) so you can tell a foreground hazard from one tucked in the back when reading a screen or planning a route."
   },
@@ -431,12 +466,14 @@
   {
    "date": "2026-07-24",
    "tag": "fixed",
+   "tiny": true,
    "title": "Search follows the raw-values setting",
    "detail": "With \"Show raw field values\" on, search now matches the raw numbers you actually see. For example, start_state=3 finds the chasing Sligs, where before you had to type the translated word even though the rows showed numbers. Matched rows no longer show the value twice, and the highlight lands on it. With the setting off, search works on the translated words as before."
   },
   {
    "date": "2026-07-24",
    "tag": "fixed",
+   "tiny": true,
    "title": "Field changes reach open search results and screen lists",
    "detail": "When you tick a field in the Fields panel, or turn \"Show more object fields\" on or off, any search results and screen lists you already have open now update right away instead of waiting for a re-open."
   },
@@ -449,18 +486,21 @@
   {
    "date": "2026-07-24",
    "tag": "new",
+   "tiny": true,
    "title": "Press \"m\" to measure",
    "detail": "The ruler now has a keyboard shortcut, \"m\" for \"measure\". Tap it and drag to measure a distance without reaching for the sidebar toggle."
   },
   {
    "date": "2026-07-24",
    "tag": "improved",
+   "tiny": true,
    "title": "Connection arrows shown by default",
    "detail": "The map now opens with connection arrows on, so a screen's doors, wells, portals and transitions show where they lead at a glance. Press \"a\" or untick \"Connection arrows\" to turn them off. If you've chosen to remember your display settings, your own choice still wins."
   },
   {
    "date": "2026-07-24",
    "tag": "improved",
+   "tiny": true,
    "title": "Objects and their fields sorted by name",
    "detail": "The Fields panel now lists object types alphabetically, and each type's fields are alphabetical too (in the picker, tooltips and the screen list) instead of the game's internal order, so whatever you're after is where you'd expect it."
   },
@@ -523,6 +563,7 @@
   {
    "date": "2026-07-21",
    "tag": "fixed",
+   "tiny": true,
    "title": "The ruler keeps its crosshair",
    "detail": "Arming the ruler turns the cursor into a crosshair, but the first mouse move used to snap it straight back to the ordinary pointer. The crosshair now stays for as long as the ruler is armed."
   },
@@ -616,6 +657,7 @@
   {
    "date": "2026-07-18",
    "tag": "fixed",
+   "tiny": true,
    "title": "Follow markers land on the destination door",
    "detail": "About 250 door and teleporter pairs share the placeholder pair number 0, and following one used to drop the highlight ring at the center of the destination screen. The ring now lands on the 0-numbered partner door there, which is the same door the game itself picks on arrival."
   },
@@ -640,6 +682,7 @@
   {
    "date": "2026-07-17",
    "tag": "improved",
+   "tiny": true,
    "title": "One map for every version of the games",
    "detail": "The map is built from the PS1 discs, but level layouts and object placements are identical in the PC releases too, so the site no longer leads with PS1 in its titles."
   },
@@ -658,6 +701,7 @@
   {
    "date": "2026-07-17",
    "tag": "improved",
+   "tiny": true,
    "title": "Travel portals land you on the exit",
    "detail": "Following a bird portal now drops you exactly on the destination exit rather than the middle of the screen."
   },
@@ -676,6 +720,7 @@
   {
    "date": "2026-07-16",
    "tag": "fixed",
+   "tiny": true,
    "title": "Smoother touch controls",
    "detail": "Fixed a blue flash when tapping the map and a pinch-zoom glitch that could fling the view off into the distance."
   },

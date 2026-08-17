@@ -32,7 +32,7 @@ const fmtDate = (iso) => {
 // class intact; whatever a class can't carry becomes a dash
 const tagClass = (tag) => "wn-tag-" + tag.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-const labelsOf = (e) => [e.tag, e.flagship && "flagship"].filter(Boolean);
+const labelsOf = (e) => [e.tag, e.flagship && "flagship", e.tiny && "tiny"].filter(Boolean);
 
 // localStorage may be unavailable (private mode, blocked); never let that break the panel
 const store = {
