@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-17",
+   "tag": "improved",
+   "title": "The wires are drawn before you ask for them",
+   "detail": "Switch wiring (the green lines from every lever, button and wheel to the doors, drills and walls answering its switch id) waited behind a Display toggle, so the map opened showing where things are and not what they do. It is on from the first visit now, and the toggle (or the w key) still switches it off. If you've chosen to remember your display settings, your own choice still wins."
+  },
+  {
    "date": "2026-08-16",
    "tag": "new",
    "title": "Take the whole map with you, before you lose signal",
