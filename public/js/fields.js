@@ -9,55 +9,101 @@
 
 import { glossaryProse } from "./glossary.js";
 
-// shown by default for any type that carries them: the few signals that dozens
-// of unrelated types across every group share. A field only one type or one
-// creature family carries belongs in DEFAULT_BY_TYPE instead.
+// shown by default for any type that carries it: a signal dozens of unrelated
+// types across every group share. A field only one type or one creature
+// family carries belongs in DEFAULT_BY_TYPE instead.
 export const GLOBAL_DEFAULT = new Set([
   "start_state", // AI state / door lock / hazard on-off — resolved per owning type
-  "switch_id", // the switch a door/hazard/etc. is wired to
-  "action",
 ]);
 
-// per-type notable fields on top of the globals: the state/identity/direction/
-// count that describes how the object behaves. Keyed by type name; a field the
-// game's copy of the type doesn't carry is simply skipped, so AO-only and
-// AE-only fields coexist here (a Mudokon has job in AO, state in AE).
+// per-type notable fields on top of the globals: what distinguishes one
+// placement of the type from the next. Keyed by type name; a field the game's
+// copy of the type doesn't carry is simply skipped, so AO-only and AE-only
+// fields coexist here (a Mudokon has job in AO, state in AE).
 export const DEFAULT_BY_TYPE = {
   // creatures / enemies
+  Bat: ["speed"],
   BeeSwarmHole: ["movement_type"],
+  Bees: ["swarm_size"],
   CrawlingSlig: ["respawn_on_death", "state"],
   Fleech: ["asleep", "hanging"],
   Glukkon: ["glukkon_type"],
-  Mudokon: ["angry_switch_id", "blind", "deaf", "emotion", "job", "rescue_switch_id", "state"],
+  Greeter: ["start_direction"],
+  Mudokon: ["blind", "deaf", "emotion", "job", "state"],
   Paramite: ["enter_from_web", "entrance_type"],
-  Scrab: ["patrol_type"],
+  Scrab: ["patrol_type", "patrol_type_run_or_walk_chance"],
   Slig: ["chase_abe_when_spotted", "shoot_on_sight_delay"],
+  SligBoundLeft: ["slig_bound_persist_id", "slig_id"],
+  SligBoundRight: ["slig_bound_persist_id", "slig_id"],
   SligGetPants: ["chase_abe_when_spotted", "shoot_on_sight_delay"],
+  SligPersist: ["slig_bound_persist_id", "slig_id"],
   SligSpawner: ["chase_abe_when_spotted", "shoot_on_sight_delay"],
-  Slog: ["anger_switch_id", "asleep"],
+  Slog: ["asleep"],
+  SlogSpawner: ["max_slogs", "max_slogs_at_a_time"],
+  SlurgSpawner: ["max_slurgs"],
   // doors & travel
-  BirdPortal: ["portal_type"],
-  Door: ["door_type"],
-  SlamDoor: ["start_shut"],
+  BirdPortal: ["enter_side"],
+  BirdPortalExit: ["exit_direction"],
+  Door: ["door_closed", "door_type"],
+  ElumPathTrans: ["level", "path"],
+  PathTransition: ["camera"],
+  SlamDoor: ["delete", "start_shut"],
   TrapDoor: ["self_closing"],
   // hazards
+  Drill: ["behavior", "speed", "start_direction"],
+  FallingItem: ["fall_interval"],
+  GasCountdown: ["gas_countdown_time"],
   GasEmitter: ["colour"],
   MeatSaw: ["speed", "type"],
+  MovingBomb: ["speed"],
+  MovingBombStopper: ["max_delay", "min_delay"],
   RollingBall: ["roll_direction"],
   RollingBallStopper: ["direction"],
-  // switches
-  FootSwitch: ["triggered_by"],
-  InvisibleSwitch: ["set_off_alarm"],
+  TimedMine: ["ticks_before_explosion"],
+  UXB: ["pattern", "pattern_length"],
+  // switches & logic
+  EnemyStopper: ["stop_direction"],
+  FootSwitch: ["action", "triggered_by"],
+  InvisibleSwitch: ["action", "delay", "scale"],
+  Lever: ["action"],
+  MovieHandStone: ["movie_number"],
+  MultiSwitchController: ["action", "on_off_delay"],
+  PullRingRope: ["action"],
+  ResetPath: ["from", "path", "to"],
+  ResetSwitchRange: ["end_switch_id", "reset_switches", "start_switch_id"],
+  Switch: ["action"],
+  TimerTrigger: ["trigger_interval"],
+  WheelSyncer: ["output_requirement"],
+  WorkWheel: ["activation_time", "turn_off_when_stopped"],
   // lifts & mechanisms
+  Edge: ["can_grab", "grab_direction"],
   Hoist: ["hoist_type"],
-  LiftMover: ["move_direction"],
-  LiftPoint: ["lift_point_stop_type"],
+  LiftMover: ["move_direction", "target_lift_point_id"],
+  LiftMudokon: ["lift_switch_id"],
+  LiftPoint: ["lift_point_id", "lift_point_stop_type", "start_point"],
   ZBall: ["start_position"],
-  // info & tomb
-  LCDStatusBoard: ["number_of_mudokons", "zulag_number"],
-  SlapLock: ["give_invisibility_power_up"],
-  // sacks
+  // mudokons & temple
+  BellSongStone: ["code_1", "code_2", "type"],
+  ChimeLock: ["code_1", "code_2"],
+  ContinuePoint: ["elum_restarts"],
+  RingMudokon: ["action", "code_1", "code_2", "give_password"],
+  SecurityDoor: ["code_1", "code_2"],
+  SlingMudokon: ["code_1", "code_2"],
+  // info & scenery
+  Alarm: ["duration"],
+  BackgroundAnimation: ["animation_id"],
+  CrawlingSligButton: ["action"],
+  Dove: ["dove_count"],
+  HintFly: ["message_id"],
+  LCDStatusBoard: ["hide_board", "number_of_mudokons", "zulag_number"],
+  LightEffect: ["type"],
+  MusicTrigger: ["music_type", "triggered_by"],
+  SlapLock: ["give_invisibility_power_up", "has_ghost"],
+  // machines & sacks
   BoneBag: ["bone_amount"],
+  BoomMachine: ["number_of_grenades"],
+  BrewMachine: ["brew_count"],
+  ColourfulMeter: ["number_of_meter_bars", "start_filled"],
   MeatSack: ["amount_of_meat"],
   RockSack: ["rock_amount"],
 };
@@ -78,6 +124,23 @@ export const HIDE_WHEN_ZERO = new Set([
   "slig_spawner_switch_id",
   "deaf",
   "blind",
+  "alarm_switch_id",
+  "id_1",
+  "id_2",
+  "id_3",
+  "id_4",
+  "id_5",
+  "lift_point_id",
+  "output_switch_id_1",
+  "output_switch_id_2",
+  "output_switch_id_3",
+  "output_switch_id_4",
+  "panic_switch_id",
+  "spawn_switch_id",
+  "surprise_web_switch_id",
+  "toggle_message_switch_id",
+  "toggle_switch_id",
+  "trigger_switch_id",
 ]);
 
 // value-type transforms the viewer owns (semantic, not decomp labels), keyed by

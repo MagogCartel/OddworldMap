@@ -3,6 +3,12 @@
   {
    "date": "2026-08-17",
    "tag": "improved",
+   "title": "Hover defaults, curated per object",
+   "detail": "What an object shows before you reach for the Fields picker is now curated type by type. Each type shows the mode that picks its machine, and the codes and counts that make a placement itself: a security door's password, a boom machine's grenades, a status board's headcount. It shows the direction fields that decide play too, like an enemy stopper's blocked side or a bird portal exit's facing. The switch ids the wiring overlay draws leave the list, since its arrows already say who sets what. Dead words, constant tuning timers and cosmetic offsets stay behind the picker, and an unused id left at zero no longer shows at all."
+  },
+  {
+   "date": "2026-08-17",
+   "tag": "improved",
    "title": "The smallest updates say so",
    "detail": "Thirty-nine entries here record a one-line fix, a flipped default or a small refinement, and on this page they looked exactly like the features they were listed beside. Each now carries a quiet Tiny next to its kind, the way the biggest carry Flagship at the other end of the scale, so the shape of a week's work reads at a glance. Nothing has left the feed: the smallest change keeps its date, its place and its paragraph, because a map that is tended every week should look like one."
   },

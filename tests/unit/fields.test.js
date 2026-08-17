@@ -59,14 +59,61 @@ test("visibleFields: default is the type's default set, 'all' is everything", ()
 });
 
 test("defaultVisible: globals apply everywhere, type-scoped fields only for their type", () => {
-  assert.ok(defaultVisible("Slig").has("start_state") && defaultVisible("Slig").has("switch_id"));
+  assert.ok(defaultVisible("Slig").has("start_state"));
+  assert.ok(!defaultVisible("Door").has("switch_id"));
+  assert.ok(!defaultVisible("Mudokon").has("rescue_switch_id"));
   // start_state is global — a door's lock state shows by default too (it still
   // renders as DoorStates, not Slig's text; that collision-safety is tested below)
   assert.ok(defaultVisible("Door").has("start_state"));
   assert.ok(defaultVisible("Door").has("door_type")); // a curated per-type addition
   assert.ok(defaultVisible("MeatSaw").has("speed") && defaultVisible("MeatSaw").has("start_state"));
   assert.ok(defaultVisible("Mudokon").has("state") && !defaultVisible("Slig").has("state"));
-  assert.ok(!defaultVisible("Edge").has("can_grab")); // ubiquitous + low-value, picker-only
+  assert.ok(defaultVisible("Edge").has("can_grab")); // a no-grab edge is the trap worth surfacing
+  // DeathDrop's copy of action is a dead word
+  assert.ok(defaultVisible("Switch").has("action") && !defaultVisible("DeathDrop").has("action"));
+});
+
+test("the defaults and zero-hiding tables name only shipped types and fields", () => {
+  const load = (name) =>
+    JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
+  const typeFields = {};
+  const fieldNames = new Set();
+  for (const game of ["ao", "ae"])
+    for (const lv of load(`map_data_${game}.json`).levels)
+      for (const p of lv.paths)
+        for (const t of p.tlvs)
+          for (const k of Object.keys(t.fields || {})) {
+            fieldNames.add(k);
+            (typeFields[t.name] ??= new Set()).add(k);
+          }
+  for (const [type, fields] of Object.entries(DEFAULT_BY_TYPE)) {
+    assert.ok(typeFields[type], `${type} is a shipped type with fields`);
+    for (const f of fields) assert.ok(typeFields[type].has(f), `${type}.${f} is a shipped field`);
+  }
+  for (const k of GLOBAL_DEFAULT) assert.ok(fieldNames.has(k), `global default "${k}" is real`);
+  for (const k of HIDE_WHEN_ZERO) assert.ok(fieldNames.has(k), `zero-hidden "${k}" is real`);
+});
+
+test("the defaults table is sorted: types within their group, fields within their type", () => {
+  const src = readFileSync(new URL("../../public/js/fields.js", import.meta.url), "utf8");
+  const body = src.split("export const DEFAULT_BY_TYPE = {")[1].split("\n};")[0];
+  const groups = {};
+  let group = "";
+  for (const line of body.split("\n")) {
+    const divider = /^\s*\/\/\s*(.+)$/.exec(line),
+      key = /^\s*([A-Za-z0-9_]+):/.exec(line);
+    if (divider) group = divider[1];
+    else if (key) (groups[group] ??= []).push(key[1]);
+  }
+  assert.equal(
+    Object.values(groups).flat().length,
+    Object.keys(DEFAULT_BY_TYPE).length,
+    "every key is read off the source",
+  );
+  for (const [name, types] of Object.entries(groups))
+    assert.deepEqual(types, [...types].sort(), `${name} types are sorted`);
+  for (const [type, fields] of Object.entries(DEFAULT_BY_TYPE))
+    assert.deepEqual(fields, [...fields].sort(), `${type} fields are sorted`);
 });
 
 test("visibleFields: 'more' uses per-type picks, else the type defaults", () => {
@@ -163,11 +210,11 @@ test("fieldEntries: default surfaces notable fields, prettified; nav extra alway
   assert.equal(all.scale, "full"); // Scale_short prettified
 
   // a nav object's derived extra always shows, independent of field policy
-  const door = { name: "Door", extra: { to_level: "R2", "door#": 4 }, fields: { door_closed: 1 } };
+  const door = { name: "Door", extra: { to_level: "R2", "door#": 4 }, fields: { x_offset: 3 } };
   const de = Object.fromEntries(fieldEntries(door, { mode: "default", game: "G" }));
   assert.equal(de.to_level, "R2");
   assert.equal(de["door#"], 4);
-  assert.ok(!("door_closed" in de)); // a raw Door field: not default-visible
+  assert.ok(!("x_offset" in de)); // a cosmetic Door field: not default-visible
 });
 
 test("fieldEntries: raw mode shows the underlying ints, not the prettified text", () => {
@@ -198,28 +245,26 @@ test("fieldEntries: a shared field name is resolved by the owning type's game ty
 
 test("fieldEntries: zero-valued switch ids are hidden, non-zero shown", () => {
   const mud = { name: "Mudokon", extra: {}, fields: { job: 2, rescue_switch_id: 0 } };
-  const e0 = Object.fromEntries(fieldEntries(mud, { mode: "default", game: "G" }));
+  const e0 = Object.fromEntries(fieldEntries(mud, { mode: "all", game: "G" }));
   assert.equal(e0.job, "sit chant");
-  assert.ok(!("rescue_switch_id" in e0)); // 0 = no switch, hidden
+  assert.ok(!("rescue_switch_id" in e0)); // 0 = no switch, hidden whatever the mode
 
   const mud2 = { name: "Mudokon", extra: {}, fields: { job: 1, rescue_switch_id: 70 } };
   assert.equal(
-    Object.fromEntries(fieldEntries(mud2, { mode: "default", game: "G" })).rescue_switch_id,
+    Object.fromEntries(fieldEntries(mud2, { mode: "all", game: "G" })).rescue_switch_id,
     70,
   );
 });
 
-test("fieldEntries: a wired object's switch_id/action are default-visible from fields", () => {
+test("fieldEntries: action shows by default, switch_id only through the picker", () => {
   const sw = { name: "Switch", extra: {}, fields: { switch_id: 3, action: 0, scale: 0 } };
   const e = Object.fromEntries(fieldEntries(sw, { mode: "default", game: "G" }));
-  assert.equal(e.switch_id, 3);
+  assert.ok(!("switch_id" in e));
   assert.equal(e.action, 0); // action 0 is a real value, shown
   assert.ok(!("scale" in e)); // a fields-only key still governed by the picker
 
-  const unwired = { name: "Switch", extra: {}, fields: { switch_id: 0, action: 0 } };
-  assert.ok(
-    !("switch_id" in Object.fromEntries(fieldEntries(unwired, { mode: "default", game: "G" }))),
-  ); // 0 hidden
+  const all = Object.fromEntries(fieldEntries(sw, { mode: "all", game: "G" }));
+  assert.equal(all.switch_id, 3); // any field is still reachable
 });
 
 test("onBackgroundPlane: background is where the scale resolves to half, inversion respected", () => {
