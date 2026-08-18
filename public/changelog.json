@@ -4,6 +4,13 @@
    "date": "2026-08-18",
    "tag": "improved",
    "tiny": true,
+   "title": "A copied object link says what it points at",
+   "detail": "Right-clicking an object to copy a link to it confirmed with \"object link copied\", which said nothing about which of the objects under the pointer it took. It names the one it linked now: \"Mudokon link copied\"."
+  },
+  {
+   "date": "2026-08-18",
+   "tag": "improved",
+   "tiny": true,
    "title": "The minimap comes to phones",
    "detail": "The overview of the path in the lower-right corner, with your viewport drawn on it, was kept to wide screens, leaving it off the screens where a path is least likely to fit at once. It is there on phones now, and dragging it moves the view: one swipe across a path that panning crosses in a dozen. On a phone it steps aside while the screen list or By the numbers is up, and at any width it stays away while the whole path already fits."
   },

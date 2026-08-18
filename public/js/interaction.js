@@ -282,9 +282,10 @@ cv.addEventListener("contextmenu", (e) => {
   updateHover();
   if (!hoverTlvs.length) return;
   e.preventDefault();
-  const url = location.href.split("#")[0] + objectHash(hoverTlvs[0]);
+  const t = hoverTlvs[0];
+  const url = location.href.split("#")[0] + objectHash(t);
   (navigator.clipboard?.writeText(url) ?? Promise.reject()).then(
-    () => toast("object link copied"),
+    () => toast(`${t.name} link copied`),
     () => toast("copy failed"),
   );
 });
