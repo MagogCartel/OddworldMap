@@ -12,8 +12,7 @@ let scrubbing = false;
 
 function scrubTo(e) {
   const r = mm.getBoundingClientRect();
-  // a mid-drag hide — draw()'s own, or CSS display:none (the numbers-panel
-  // yield, the narrow query) — leaves a zero rect: no flinging the view off it
+  // a mid-drag hide leaves a zero rect: no flinging the view off it
   if (mm.hidden || !r.width) return;
   const s = minimapScale(state.path);
   const v = { x: (e.clientX - r.left) / s, y: (e.clientY - r.top) / s, z: state.cam.z };

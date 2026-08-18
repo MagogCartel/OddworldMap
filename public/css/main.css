@@ -1475,8 +1475,13 @@ kbd {
   #sidebar h1 {
     padding-left: 60px;
   }
-  #hud,
+  #hud {
+    display: none;
+  }
   #minimap {
+    bottom: 48px;
+  }
+  #main:has(#camPanel:not([hidden])) #minimap {
     display: none;
   }
   #help {

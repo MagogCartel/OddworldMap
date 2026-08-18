@@ -4,6 +4,13 @@
    "date": "2026-08-18",
    "tag": "improved",
    "tiny": true,
+   "title": "The minimap comes to phones",
+   "detail": "The overview of the path in the lower-right corner, with your viewport drawn on it, was kept to wide screens, leaving it off the screens where a path is least likely to fit at once. It is there on phones now, and dragging it moves the view: one swipe across a path that panning crosses in a dozen. On a phone it steps aside while the screen list or By the numbers is up, and at any width it stays away while the whole path already fits."
+  },
+  {
+   "date": "2026-08-18",
+   "tag": "improved",
+   "tiny": true,
    "title": "Going back closes the panel you are in",
    "detail": "On a phone, going back is how you leave anything, but with What's New, Settings, About, the shortcut list or an object's encyclopedia card open, the browser had nowhere to go but off the map. And on a first visit, there was nowhere to come back from. Back now closes whichever panel is open, exactly as Escape and the × do, and leaves the map only once none is."
   },
