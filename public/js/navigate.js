@@ -5,7 +5,19 @@ import { clamp, esc } from "./util.js";
 import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
 import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
 import { toast } from "./toast.js";
-import { state, GEO, CELL_W, CELL_H, setGeometry, setSpacing, dX, dY, wX, wY } from "./state.js";
+import {
+  state,
+  GEO,
+  CELL_W,
+  CELL_H,
+  cellOrigin,
+  setGeometry,
+  setSpacing,
+  dX,
+  dY,
+  wX,
+  wY,
+} from "./state.js";
 import { draw, flashAt } from "./render.js";
 import {
   camCell,
@@ -164,13 +176,14 @@ function fitView() {
       requestAnimationFrame(attempt);
       return;
     }
+    const [ox, oy] = cellOrigin();
     const w = state.path.w * CELL_W,
       h = state.path.h * CELL_H;
     const zx = cv.clientWidth / (w + 200),
       zy = cv.clientHeight / (h + 200);
     state.cam.z = Math.max(ZOOM_MIN, Math.min(zx, zy));
-    state.cam.x = -(cv.clientWidth / state.cam.z - w) / 2;
-    state.cam.y = -(cv.clientHeight / state.cam.z - h) / 2;
+    state.cam.x = ox - (cv.clientWidth / state.cam.z - w) / 2;
+    state.cam.y = oy - (cv.clientHeight / state.cam.z - h) / 2;
     draw();
   };
   attempt();
@@ -230,8 +243,8 @@ export function navigateToDest(d) {
   }
   const cell = camCell(state.path, d.ca);
   if (fx == null && cell != null) {
-    fx = (cell % state.path.w) * CELL_W + CELL_W / 2;
-    fy = Math.floor(cell / state.path.w) * CELL_H + CELL_H / 2;
+    fx = (cell % state.path.w) * CELL_W + GEO.visW / 2;
+    fy = Math.floor(cell / state.path.w) * CELL_H + GEO.visH / 2;
   }
   if (fx == null) return; // path-level target: selectPath already fit the view
   focusOn(fx, fy);
@@ -258,8 +271,8 @@ export function jumpToPlace(G, L, P, cam) {
   const cell = camCell(state.path, cam);
   if (cell != null)
     focusOn(
-      ((cell % state.path.w) + 0.5) * CELL_W,
-      (Math.floor(cell / state.path.w) + 0.5) * CELL_H,
+      (cell % state.path.w) * CELL_W + GEO.visW / 2,
+      Math.floor(cell / state.path.w) * CELL_H + GEO.visH / 2,
     );
 }
 

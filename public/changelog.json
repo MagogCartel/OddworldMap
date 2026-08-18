@@ -29,7 +29,7 @@
    "date": "2026-08-15",
    "tag": "new",
    "title": "See the gaps the games leave between screens",
-   "detail": "The map packs away the slack the games leave around each camera, so screens sit edge to edge. The new \"Gaps between screens\" toggle in Display spreads them onto the real grid instead: 656 units of empty space beside every Oddysee screen and 240 below it, against 7 and 20 in Exoddus. Objects and collision lines the designers left in a gap stop hovering over the neighbouring screen and sit where they really are. They stay dotted, because the games draw none of it and Abe is teleported straight across whenever the camera changes. Your view, your ruler and any route you have plotted all survive the switch."
+   "detail": "The map packs away the slack the games leave around each camera, so screens sit edge to edge. The new \"Gaps between screens\" toggle in Display spreads them onto the real grid instead. An Oddysee screen turns out to sit well inside its cell: 256 units of space to its left, 400 to its right, 120 above and 120 below. Exoddus leaves only 7 to the right and 20 below. Objects and collision lines left in a gap stop hovering over the neighbouring screen and sit where they really are. They stay dotted, because the games draw none of it and Abe is teleported straight across whenever the camera changes. Your view, ruler and route all survive the switch."
   },
   {
    "date": "2026-08-15",

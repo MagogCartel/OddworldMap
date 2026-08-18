@@ -43,6 +43,11 @@ export function setSpacing(on) {
 }
 export const isSpaced = () => spaced;
 
+// a cell's own corner in draw space, relative to its screen's. Packed the two
+// are the same point, the slack having no draw space to sit in; spaced the
+// screen sits winX/winY inside its cell, so the cell starts that much earlier
+export const cellOrigin = () => (spaced ? [-GEO.winX, -GEO.winY] : [0, 0]);
+
 export function dX(wx) {
   const c = Math.floor(wx / GEO.worldW);
   return c * CELL_W + (wx - c * GEO.worldW - GEO.winX);

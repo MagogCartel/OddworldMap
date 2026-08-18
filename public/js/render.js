@@ -15,7 +15,7 @@ import {
   markerShown,
 } from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
-import { state, GEO, CELL_W, CELL_H, dX, dY, worldLen } from "./state.js";
+import { state, GEO, CELL_W, CELL_H, cellOrigin, dX, dY, worldLen } from "./state.js";
 import {
   camCenter,
   centerCam,
@@ -293,16 +293,18 @@ export function draw() {
   if (show.grid) {
     ctx.strokeStyle = "rgba(255,255,255,.18)";
     ctx.lineWidth = 1.5 / cam.z;
+    // the grid marks the cell, not the screen inside it
+    const [ox, oy] = cellOrigin();
     for (let gx = 0; gx <= path.w; gx++) {
       ctx.beginPath();
-      ctx.moveTo(gx * CELL_W, 0);
-      ctx.lineTo(gx * CELL_W, path.h * CELL_H);
+      ctx.moveTo(ox + gx * CELL_W, oy);
+      ctx.lineTo(ox + gx * CELL_W, oy + path.h * CELL_H);
       ctx.stroke();
     }
     for (let gy = 0; gy <= path.h; gy++) {
       ctx.beginPath();
-      ctx.moveTo(0, gy * CELL_H);
-      ctx.lineTo(path.w * CELL_W, gy * CELL_H);
+      ctx.moveTo(ox, oy + gy * CELL_H);
+      ctx.lineTo(ox + path.w * CELL_W, oy + gy * CELL_H);
       ctx.stroke();
     }
     if (GEO.visW * cam.z > 90) {
@@ -489,7 +491,10 @@ export function draw() {
       }
       const [tx, ty] = e.dst
         ? centre(e.dst)
-        : [((e.cell % path.w) + 0.5) * CELL_W, (Math.floor(e.cell / path.w) + 0.5) * CELL_H];
+        : [
+            (e.cell % path.w) * CELL_W + GEO.visW / 2,
+            Math.floor(e.cell / path.w) * CELL_H + GEO.visH / 2,
+          ];
       const dx = tx - sx,
         dy = ty - sy;
       const len = Math.hypot(dx, dy);
@@ -653,20 +658,21 @@ function paintMinimap(cam, path) {
   mmCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
   mmCtx.clearRect(0, 0, w, h); // the tinted CSS background is the empty-cell colour
   mmCtx.fillStyle = "rgba(216, 219, 226, 0.22)";
+  const [ox, oy] = cellOrigin();
   for (const c of path.cams) {
     mmCtx.fillRect(
-      (c.cell % path.w) * CELL_W * s + 0.5,
-      Math.floor(c.cell / path.w) * CELL_H * s + 0.5,
-      CELL_W * s - 1,
-      CELL_H * s - 1,
+      ((c.cell % path.w) * CELL_W - ox) * s + 0.5,
+      (Math.floor(c.cell / path.w) * CELL_H - oy) * s + 0.5,
+      GEO.visW * s - 1,
+      GEO.visH * s - 1,
     );
   }
   // unclamped on purpose: a viewport out in the margins really is out there
   mmCtx.strokeStyle = `rgb(${COLOR.accentRgb})`;
   mmCtx.lineWidth = 1;
   mmCtx.strokeRect(
-    cam.x * s + 0.5,
-    cam.y * s + 0.5,
+    (cam.x - ox) * s + 0.5,
+    (cam.y - oy) * s + 0.5,
     (cv.clientWidth / cam.z) * s,
     (cv.clientHeight / cam.z) * s,
   );

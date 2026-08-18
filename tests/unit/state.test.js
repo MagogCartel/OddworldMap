@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   setGeometry,
   setSpacing,
+  cellOrigin,
   dX,
   dY,
   wX,
@@ -153,4 +154,21 @@ test("a draw point survives a change of pitch through the world point it names",
     }
   }
   setSpacing(false);
+});
+
+test("cellOrigin: a screen sits inside its cell, never on the cell's own corner", () => {
+  setGeometry(AO_GEOMETRY);
+  assert.deepEqual(cellOrigin(), [0, 0]); // packed: the fold leaves the two the same point
+  setSpacing(true);
+  assert.deepEqual(cellOrigin(), [-256, -120]);
+  // which is where the transform puts the cell's corner, so the grid drawn from
+  // it frames the screen rather than butting against it
+  assert.equal(dX(0), cellOrigin()[0]);
+  assert.equal(dY(0), cellOrigin()[1]);
+  assert.equal(dX(1024), 1 * 1024 + cellOrigin()[0]);
+  // the screen's own corner stays where the artwork is drawn
+  assert.equal(dX(256), 0);
+  setSpacing(false);
+  assert.equal(dX(0), -256); // packed the cell corner has no place of its own
+  assert.deepEqual(cellOrigin(), [0, 0]);
 });
