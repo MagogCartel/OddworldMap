@@ -39,8 +39,10 @@ import {
   computeWiring,
   destOf,
   destTrusted,
+  drawBox,
   isLoopback,
   levelWiring,
+  markerCentre,
   offScreen,
   pathIn,
   patrolZone,
@@ -250,7 +252,8 @@ cv.addEventListener("click", () => {
     if (seam) {
       const d = followableDest(seam);
       flushHash(); // the entry left behind keeps the route as plotted so far
-      routeSeam({ x: (dX(seam.x1) + dX(seam.x2)) / 2, y: (dY(seam.y1) + dY(seam.y2)) / 2 }, d);
+      const [sx, sy] = markerCentre(seam);
+      routeSeam({ x: sx, y: sy }, d);
       navigateToDest(d);
       routeArrive(d);
     } else addRoutePoint(snapAtMouse()); // click-to-add: pan/pinch/wheel gestures stay live
@@ -451,11 +454,10 @@ function updateHover() {
   }
   hoverTlvs = state.path.tlvs.filter((t) => {
     if (!markerShown(t)) return false;
-    const x1 = dX(t.x1),
-      y1 = dY(t.y1);
-    const x2 = Math.max(dX(t.x2), x1 + 10),
-      y2 = Math.max(dY(t.y2), y1 + 10);
-    return pt.x >= x1 - 4 && pt.x <= x2 + 4 && pt.y >= y1 - 4 && pt.y <= y2 + 4;
+    const { x, y, w, h } = drawBox(t);
+    const x2 = x + Math.max(w, 10),
+      y2 = y + Math.max(h, 10);
+    return pt.x >= x - 4 && pt.x <= x2 + 4 && pt.y >= y - 4 && pt.y <= y2 + 4;
   });
   // partner preview: hovering a linked object outlines its counterpart when
   // the destination resolves within the current path

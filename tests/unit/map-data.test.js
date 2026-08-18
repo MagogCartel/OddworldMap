@@ -6,14 +6,15 @@ import {
   computeEntryPaths,
   destOf,
   destTrusted,
-  drawExtent,
+  drawBox,
   isLoopback,
   lineRuns,
   offScreen,
+  screenRuns,
   pathIn,
 } from "../../public/js/model.js";
 import { isDemoPath } from "../../public/js/demo.js";
-import { AO_GEOMETRY, AE_GEOMETRY } from "./fixtures.js";
+import { AO_GEOMETRY, AE_GEOMETRY, pitches } from "./fixtures.js";
 
 // Schema sanity over the shipped data: the invariants the viewer relies on.
 // Referential integrity of to_/alt_ links and LINE_NAMES coverage of all line
@@ -648,17 +649,18 @@ test("no collision-line piece is drawn backwards or overlong", () => {
     ["map_data_ae.json", AE_GEOMETRY],
   ]) {
     const data = load(file);
-    for (const L of data.levels)
-      for (const P of L.paths)
-        for (const [x1, y1, x2, y2] of P.lines) {
-          const span = Math.hypot(x2 - x1, y2 - y1);
-          for (const r of lineRuns(x1, y1, x2, y2, geometry)) {
-            const [dx, dy] = [r.x2 - r.x1, r.y2 - r.y1];
-            const where = `${data.id} ${L.short} P${P.id} (${x1},${y1})–(${x2},${y2})`;
-            if (dx * (x2 - x1) + dy * (y2 - y1) < -1e-9) bad.push(`${where} reversed`);
-            if (Math.hypot(dx, dy) > span + 1e-6) bad.push(`${where} longer than its line`);
+    for (const g of pitches(geometry))
+      for (const L of data.levels)
+        for (const P of L.paths)
+          for (const [x1, y1, x2, y2] of P.lines) {
+            const span = Math.hypot(x2 - x1, y2 - y1);
+            for (const r of lineRuns(x1, y1, x2, y2, g)) {
+              const [dx, dy] = [r.x2 - r.x1, r.y2 - r.y1];
+              const where = `${data.id} ${L.short} P${P.id} (${x1},${y1})–(${x2},${y2})`;
+              if (dx * (x2 - x1) + dy * (y2 - y1) < -1e-9) bad.push(`${where} reversed`);
+              if (Math.hypot(dx, dy) > span + 1e-6) bad.push(`${where} longer than its line`);
+            }
           }
-        }
   }
   assert.deepEqual(bad, []);
 });
@@ -674,7 +676,7 @@ test("collision-line pieces meet, packed or spaced", () => {
     ["map_data_ae.json", AE_GEOMETRY],
   ]) {
     const data = load(file);
-    for (const g of [geometry, { ...geometry, cellW: geometry.worldW, cellH: geometry.worldH }])
+    for (const g of pitches(geometry))
       for (const L of data.levels)
         for (const P of L.paths)
           for (const [x1, y1, x2, y2] of P.lines) {
@@ -705,25 +707,39 @@ test("the count of collision lines dotted somewhere", () => {
   assert.deepEqual(counts, { AO: 1740, AE: 812 });
 });
 
-// A marker box must not come back inside out. A span lying in the slack can
-// have its ends fall in different cells, and in AO the slack straddles a cell
-// boundary, so the folded extent goes negative and the degenerate-rect guard
-// draws a stub in place of the object.
-test("no marker box in the shipped data is drawn inside out", () => {
+// A marker's drawn box must contain every part of it that draws solid. The
+// slack has no draw position of its own, so a box framed by its own two ends
+// walks away from the very screen it covers when those ends fall in different
+// cells: the solid clip then lands outside the box and the dotting comes back
+// inverted, with the part on screen dotted and the part in the slack solid.
+test("a marker's drawn box contains the screen it covers, packed or spaced", () => {
   const bad = [];
-  for (const [file, g] of [
+  for (const [file, geometry] of [
     ["map_data_ao.json", AO_GEOMETRY],
     ["map_data_ae.json", AE_GEOMETRY],
   ]) {
     const data = load(file);
-    for (const L of data.levels)
-      for (const P of L.paths)
-        for (const t of P.tlvs) {
-          const w = drawExtent(t.x1, t.x2, g.worldW, g.winX, g.cellW);
-          const h = drawExtent(t.y1, t.y2, g.worldH, g.winY, g.cellH);
-          if (w < 0 || h < 0)
-            bad.push(`${data.id} ${L.short} P${P.id} ${t.name} (${t.x1},${t.y1}) ${w}x${h}`);
-        }
+    for (const g of pitches(geometry))
+      for (const L of data.levels)
+        for (const P of L.paths)
+          for (const t of P.tlvs) {
+            const where = `${data.id} ${L.short} P${P.id} ${t.name} (${t.x1},${t.y1})`;
+            const box = drawBox(t, g),
+              { xs, ys } = screenRuns(t, g);
+            const axes = [
+              [box.x, box.w, xs, "x"],
+              [box.y, box.h, ys, "y"],
+            ];
+            for (const [start, len, runs, axis] of axes) {
+              if (len < 0) bad.push(`${where} ${axis} span is inside out`);
+              const end = start + Math.max(len, 10);
+              for (const [lo, hi] of runs)
+                if (lo < start - 1e-9 || hi > end + 1e-9)
+                  bad.push(
+                    `${where} ${axis} covers [${lo},${hi}] outside its box [${start},${end}]`,
+                  );
+            }
+          }
   }
   assert.deepEqual(bad, []);
 });

@@ -4,14 +4,12 @@
 // and what the hidden paths hold comes back beside the rows, the way search
 // reports what it dropped. No DOM.
 
-import { cellAt } from "./model.js";
-import { dX, dY } from "./state.js";
+import { cellAt, markerCentre } from "./model.js";
 import { pathVisible } from "./demo.js";
 
 // a screen's objects bucket by rect center in draw space — the screen list's
 // inventory rule, so the two surfaces agree on what a screen holds
-const inCell = (t, P, cell) =>
-  cellAt((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2, P) === cell;
+const inCell = (t, P, cell) => cellAt(...markerCentre(t), P) === cell;
 
 // one row per name, in the order given; screen is null when no cell is named
 export function census(names, data, lvl, path, cell) {

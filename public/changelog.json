@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-18",
+   "tag": "fixed",
+   "tiny": true,
+   "title": "Objects half off their screen dotted the wrong half",
+   "detail": "An object straddling the top or left edge of its screen had its outline drawn the wrong way round: the part on screen came back dotted, the part out in the gap solid. Some pull ring ropes in Mudomo Vault showed it plainly. The box now takes its position from the screen it covers, so the dotting falls the right way and the wires, arrows and pointer all find it where it is drawn."
+  },
+  {
    "date": "2026-08-17",
    "tag": "improved",
    "title": "Hover defaults, curated per object",

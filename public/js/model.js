@@ -209,15 +209,42 @@ export function screenRuns(t, geo = LAYOUT) {
   };
 }
 
-// the draw-space extent of a world span on one axis. The packing folds the
-// slack out of a span that crosses one, but a span lying inside the slack can
-// have its ends fall in different cells and fold to less than nothing, so one
-// that comes back inside out keeps its own extent, the way a collision line's
-// slack piece keeps the frame of the screen it left.
-export const drawExtent = (a, b, cell, win, pitch) => {
-  const folded = drawAt(b, cell, win, pitch) - drawAt(a, cell, win, pitch);
-  return folded >= 0 ? folded : b - a;
-};
+// the draw-space span a marker's world span occupies on one axis, as
+// [start, length]. It is framed by the screen the span covers rather than by
+// its own two ends, which is the rule lineRuns follows for a collision line:
+// the slack has no draw position of its own, so a part of the span lying in it
+// hangs off the screen it touches at 1:1. A span covering no screen at all has
+// only its own frame to answer to, and keeps its extent there.
+function drawSpan(a, b, cell, win, vis, pitch) {
+  let lo = null,
+    hi = null;
+  for (let c = Math.floor(a / cell); c <= Math.floor(b / cell); c++) {
+    const l = Math.max(a, c * cell + win),
+      h = Math.min(b, c * cell + win + vis);
+    if (l > h) continue;
+    if (lo === null) lo = l;
+    hi = h;
+  }
+  if (lo === null) return [drawAt(a, cell, win, pitch), b - a];
+  // the leading overhang, then the screen it covers measured at the pitch in
+  // force, so the slack inside that stretch counts for whatever the layout
+  // gives it, then the trailing overhang
+  const s = drawAt(lo, cell, win, pitch),
+    e = drawAt(hi, cell, win, pitch);
+  return [s - (lo - a), lo - a + (e - s) + (b - hi)];
+}
+
+// a marker's rect in draw space
+export function drawBox(t, geo = LAYOUT) {
+  const [x, w] = drawSpan(t.x1, t.x2, geo.worldW, geo.winX, geo.visW, geo.cellW),
+    [y, h] = drawSpan(t.y1, t.y2, geo.worldH, geo.winY, geo.visH, geo.cellH);
+  return { x, y, w, h };
+}
+
+export function markerCentre(t, geo = LAYOUT) {
+  const b = drawBox(t, geo);
+  return [b.x + b.w / 2, b.y + b.h / 2];
+}
 
 const inWindow = (v, cell, win, vis) => {
   const off = v - Math.floor(v / cell) * cell;
@@ -334,7 +361,8 @@ export function snapTarget(pt, path, tol, lines = false) {
     if (!markerShown(t)) continue;
     // a barrier drawn as a post snaps on its boundary line, not the stamp's middle
     const post = PENS.on && t.name in BARRIERS;
-    consider(post ? dX(t.x1) : (dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
+    const [cx, cy] = markerCentre(t);
+    consider(post ? dX(t.x1) : cx, cy);
   }
   if (lines)
     for (const [x1, y1, x2, y2] of path.lines) {

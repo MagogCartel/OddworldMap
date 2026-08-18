@@ -8,8 +8,8 @@
 import { MAX_ROUTE_PTS } from "./config.js";
 import { formatDist } from "./util.js";
 import { $ } from "./dom.js";
-import { GEO, dX, dY, routeTotal, state } from "./state.js";
-import { resolveTarget } from "./model.js";
+import { GEO, routeTotal, state } from "./state.js";
+import { markerCentre, resolveTarget } from "./model.js";
 import { scheduleDraw } from "./render.js";
 import { scheduleHash } from "./navigate.js";
 
@@ -60,10 +60,8 @@ export function routeArrive(d) {
   if (countPts() >= MAX_ROUTE_PTS) return;
   const g = resolveTarget(d, state.path, GEO);
   if (!g) return;
-  s.pts.push({
-    x: Math.round((dX(g.x1) + dX(g.x2)) / 2),
-    y: Math.round((dY(g.y1) + dY(g.y2)) / 2),
-  });
+  const [cx, cy] = markerCentre(g);
+  s.pts.push({ x: Math.round(cx), y: Math.round(cy) });
   edited(false);
 }
 

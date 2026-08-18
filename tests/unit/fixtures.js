@@ -36,6 +36,10 @@ export const SYNTH_GEOMETRY = {
   visH: 100,
 };
 
+// a geometry at both layouts: as the data ships it, and at the cell's own
+// pitch, where the slack between windows is canvas rather than folded away
+export const pitches = (g) => [g, { ...g, cellW: g.worldW, cellH: g.worldH }];
+
 // minimal dataset builders, shaped like the generated map data
 export const tlv = (name, extra = null) => ({
   t: 0,

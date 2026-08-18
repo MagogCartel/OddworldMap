@@ -28,6 +28,7 @@ import {
   focusZoom,
   formatHash,
   hashToDraw,
+  markerCentre,
   parseHash,
   resolveTarget,
 } from "./model.js";
@@ -217,8 +218,7 @@ function focusOn(fx, fy) {
 // permalink to one object: the focused view plus the object identity, so
 // opening the link can highlight it
 export function objectHash(t) {
-  const fx = (dX(t.x1) + dX(t.x2)) / 2,
-    fy = (dY(t.y1) + dY(t.y2)) / 2;
+  const [fx, fy] = markerCentre(t);
   const v = { x: fx, y: fy, z: focusZoom(cv.clientWidth, cv.clientHeight) };
   return formatHash(state.data.id, state.lvl.short, state.path.id, v, t, state.route);
 }
@@ -238,8 +238,7 @@ export function navigateToDest(d) {
     fy = null;
   const tgt = resolveTarget(d, state.path, GEO);
   if (tgt) {
-    fx = (dX(tgt.x1) + dX(tgt.x2)) / 2;
-    fy = (dY(tgt.y1) + dY(tgt.y2)) / 2;
+    [fx, fy] = markerCentre(tgt);
   }
   const cell = camCell(state.path, d.ca);
   if (fx == null && cell != null) {
@@ -254,7 +253,7 @@ export function jumpToTlv(G, L, P, t) {
   if (state.data !== G) selectGame(G, true);
   if (state.lvl !== L) setLevel(L);
   if (state.path !== P) selectPathById(P.id);
-  focusOn((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2);
+  focusOn(...markerCentre(t));
 }
 
 // a whole place: one path, a level (which opens on the first path it lists),
@@ -378,8 +377,9 @@ export function applyHash() {
   if (p.obj) {
     // a link to a specific object: center it and hold a marker on it
     const t = findTlv(state.path.tlvs, p.obj);
-    const fx = t ? (dX(t.x1) + dX(t.x2)) / 2 : (view?.x ?? dX(p.obj.x1)),
-      fy = t ? (dY(t.y1) + dY(t.y2)) / 2 : (view?.y ?? dY(p.obj.y1));
+    const c = t && markerCentre(t);
+    const fx = c ? c[0] : (view?.x ?? dX(p.obj.x1)),
+      fy = c ? c[1] : (view?.y ?? dY(p.obj.y1));
     centerOn(fx, fy, null); // re-derives the focus zoom for this viewport
     flashAt(fx, fy, true);
     toast(t ? `marker on ${t.name}` : `no ${p.obj.name} at that spot`);

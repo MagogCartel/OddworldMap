@@ -6,8 +6,8 @@ import { esc } from "./util.js";
 import { fieldEntries, fieldHelp } from "./fields.js";
 import { CATS, OFFSCREEN_NOTE, catOf } from "./config.js";
 import { $, narrowMQ } from "./dom.js";
-import { state, dX, dY } from "./state.js";
-import { cellAt, offScreen } from "./model.js";
+import { state } from "./state.js";
+import { cellAt, markerCentre, offScreen } from "./model.js";
 import { setHighlight } from "./render.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
@@ -42,7 +42,7 @@ export function openCamPanel(x, y, focus = null) {
   // objects bucket by rect centre in draw space — an inventory rule; the
   // resolution logic (tlvCell) buckets by world top-left, which can differ
   // for an edge-straddling object
-  const inCell = (t) => cellAt((dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2, path) === cell;
+  const inCell = (t) => cellAt(...markerCentre(t), path) === cell;
   const byCat = new Map(CATS.map((c) => [c, []]));
   let n = 0;
   for (const t of path.tlvs)

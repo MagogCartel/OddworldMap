@@ -21,8 +21,9 @@ import {
   centerCam,
   computeConnections,
   computeWiring,
-  drawExtent,
+  drawBox,
   lineRuns,
+  markerCentre,
   offScreen,
   screenRuns,
 } from "./model.js";
@@ -206,8 +207,9 @@ new ResizeObserver(resize).observe($("main")); // the sidebar slide resizes the 
 // stands in the slack between windows
 function drawBarrier(t, dir, z) {
   const cx = dX(t.x1);
-  const y1 = dY(t.y1) - 26,
-    y2 = dY(t.y2) + 6;
+  const box = drawBox(t);
+  const y1 = box.y - 26,
+    y2 = box.y + box.h + 6;
   ctx.strokeStyle = ENEMY_CAT.color;
   ctx.lineWidth = 2 / z;
   ctx.setLineDash(offScreen(t) ? [2 / z, 3 / z] : [5 / z, 4 / z]);
@@ -359,12 +361,11 @@ export function draw() {
       continue;
     }
     const c = catOf(t);
-    // the far edge goes through the transform too: a span can cross cells,
-    // where the packing folds the slack out of the width
-    const x1 = dX(t.x1),
-      y1 = dY(t.y1);
-    const w = Math.max(drawExtent(t.x1, t.x2, GEO.worldW, GEO.winX, CELL_W), 10),
-      h = Math.max(drawExtent(t.y1, t.y2, GEO.worldH, GEO.winY, CELL_H), 10);
+    const box = drawBox(t);
+    const x1 = box.x,
+      y1 = box.y;
+    const w = Math.max(box.w, 10),
+      h = Math.max(box.h, 10);
     const bg = onBackgroundPlane(state.data.id, t);
     if (bg) ctx.globalAlpha = 0.5;
     ctx.strokeStyle = c.color;
@@ -420,7 +421,8 @@ export function draw() {
   if (show.wires) {
     const centre = (t) => {
       const post = PENS.on && barrierDir(t) !== null;
-      return [post ? dX(t.x1) : (dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2];
+      const [cx, cy] = markerCentre(t);
+      return [post ? dX(t.x1) : cx, cy];
     };
     // the spotlight judges what is drawn: a hovered object whose wires are
     // all hidden must not dim the rest with nothing to show for it
@@ -457,7 +459,6 @@ export function draw() {
   if (show.conn) {
     if (connCache.path !== path)
       connCache = { path, edges: computeConnections(state.lvl, path, GEO) };
-    const centre = (t) => [(dX(t.x1) + dX(t.x2)) / 2, (dY(t.y1) + dY(t.y2)) / 2];
     // focus only dims the rest when the hovered object actually has edges
     const focusActive =
       connFocus && connCache.edges.some((e) => e.src === connFocus || e.dst === connFocus);
@@ -470,7 +471,7 @@ export function draw() {
       ctx.globalAlpha = focusActive ? (focused ? 0.95 : 0.15) : 0.65;
       ctx.lineWidth = (focused ? 3 : 2) / cam.z;
       ctx.strokeStyle = ctx.fillStyle = CONN_COLORS[e.src.name] || "#ffffff";
-      const [sx, sy] = centre(e.src);
+      const [sx, sy] = markerCentre(e.src);
       if (e.label !== undefined) {
         // off-path stub: a constant diagonal reads as "leaves this path"
         // without pretending to know the direction
@@ -490,7 +491,7 @@ export function draw() {
         continue;
       }
       const [tx, ty] = e.dst
-        ? centre(e.dst)
+        ? markerCentre(e.dst)
         : [
             (e.cell % path.w) * CELL_W + GEO.visW / 2,
             Math.floor(e.cell / path.w) * CELL_H + GEO.visH / 2,
@@ -520,10 +521,11 @@ export function draw() {
   if (highlight) {
     // drawn even when the object's category is toggled off: the outline is
     // what locates a listed object whose marker is hidden
-    const x1 = dX(highlight.x1),
-      y1 = dY(highlight.y1);
-    const w = Math.max(dX(highlight.x2) - x1, 10),
-      h = Math.max(dY(highlight.y2) - y1, 10);
+    const box = drawBox(highlight);
+    const x1 = box.x,
+      y1 = box.y;
+    const w = Math.max(box.w, 10),
+      h = Math.max(box.h, 10);
     const pad = 3 / cam.z;
     ctx.strokeStyle = `rgb(${COLOR.accentRgb})`;
     ctx.lineWidth = 2.5 / cam.z;

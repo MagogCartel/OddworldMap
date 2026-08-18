@@ -16,6 +16,8 @@ import {
   isLoopback,
   lineRuns,
   offScreen,
+  drawBox,
+  markerCentre,
   screenRuns,
   parseHash,
   patrolZone,
@@ -25,7 +27,16 @@ import {
 } from "../../public/js/model.js";
 import { ZOOM_MIN, ZOOM_MAX, MAX_ROUTE_PTS } from "../../public/js/config.js";
 import { setGeometry } from "../../public/js/state.js";
-import { AO_GEOMETRY, AE_GEOMETRY, SYNTH_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
+import {
+  AO_GEOMETRY,
+  AE_GEOMETRY,
+  SYNTH_GEOMETRY,
+  dataset,
+  level,
+  path,
+  pitches,
+  tlv,
+} from "./fixtures.js";
 
 // current level/path, with the dataset destOf looks a destination's partner up
 // in; the path holds no objects, so only destinations naming another path of
@@ -329,6 +340,41 @@ test("screenRuns: whole is nothing drawn anywhere the marker is not", () => {
   assert.equal(whole(box(700, 200, 50, 20)), false); // never reaches a window
   // the measure is the drawn extent, not the world span the slack inflates
   assert.equal(box(600, 200, 700, 20).x2 - box(600, 200, 700, 20).x1, 700);
+});
+
+test("drawBox: framed by the screen it covers, not by the marker's own ends", () => {
+  const b = (t) => drawBox(t, AO_GEOMETRY);
+  // wholly inside one window: the marker's own extent, at its own position
+  assert.deepEqual(b(box(300, 200, 50, 20)), { x: 44, y: 80, w: 50, h: 20 });
+  // reaching past the window's right edge: the overhang trails the screen
+  assert.deepEqual(b(box(600, 200, 100, 20)), { x: 344, y: 80, w: 100, h: 20 });
+  // starting in the slack: the overhang leads the screen it reaches, so the
+  // box keeps its extent and still contains the part drawn on that screen
+  assert.deepEqual(b(box(1200, 200, 100, 20)), { x: 288, y: 80, w: 100, h: 20 });
+  // crossing the slack whole: the fold takes the width the packing denies it
+  assert.deepEqual(b(box(600, 200, 700, 20)).w, 44);
+  // covering no screen at all: only its own frame to answer to, folded onto
+  // the neighbour the packing lands it on
+  assert.deepEqual(b(box(700, 200, 50, 20)), { x: 444, y: 80, w: 50, h: 20 });
+});
+
+test("drawBox: spaced, nothing is folded away and the box is the marker", () => {
+  const [, g] = pitches(AO_GEOMETRY);
+  // at the cell's own pitch the transform is a translation, so a box is its
+  // world rect moved by the window's offset however many windows it crosses:
+  // the slack inside it is canvas, not something to fold out of the width
+  for (const t of [box(300, 200, 50, 20), box(600, 200, 700, 20), box(700, 200, 50, 20)])
+    assert.deepEqual(drawBox(t, g), {
+      x: t.x1 - g.winX,
+      y: t.y1 - g.winY,
+      w: t.x2 - t.x1,
+      h: t.y2 - t.y1,
+    });
+});
+
+test("markerCentre: the middle of the drawn box", () => {
+  assert.deepEqual(markerCentre(box(300, 200, 50, 20), AO_GEOMETRY), [69, 90]);
+  assert.deepEqual(markerCentre(box(1200, 200, 100, 20), AO_GEOMETRY), [338, 90]);
 });
 
 test("lineRuns: a collision line split where it leaves the screen", () => {
