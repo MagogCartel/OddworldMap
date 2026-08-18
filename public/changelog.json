@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-08-18",
+   "tag": "fixed",
+   "tiny": true,
+   "title": "A switch wipe with its wipe off no longer shows a range",
+   "detail": "Exoddus's invisible wipe lines store the block of switch ids they clear when Abe crosses them, and a flag for whether they clear anything at all. Six of the twelve have that flag off, where the stored block is a leftover the game never reads, so those now show the flag alone; the six that do wipe still show the range they cover."
+  },
+  {
+   "date": "2026-08-18",
    "tag": "improved",
    "tiny": true,
    "title": "Trip zones show the alarm flag only when they sound one",

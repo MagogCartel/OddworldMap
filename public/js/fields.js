@@ -149,6 +149,9 @@ export const HIDE_WHEN_ZERO = new Set([
 // Keyed "Type.field", asked of the whole TLV — false hides it as dead data.
 export const LIVE_WHEN = {
   "BirdPortal.mudokon_amount_for_shrykull": (t) => t.extra?.portal === "shrykull",
+  "ResetSwitchRange.end_switch_id": (t) => t.fields?.reset_switches === 1,
+  "ResetSwitchRange.skip_switch_id": (t) => t.fields?.reset_switches === 1,
+  "ResetSwitchRange.start_switch_id": (t) => t.fields?.reset_switches === 1,
 };
 
 // value-type transforms the viewer owns (semantic, not decomp labels), keyed by
