@@ -64,7 +64,7 @@ export const DEFAULT_BY_TYPE = {
   // switches & logic
   EnemyStopper: ["stop_direction"],
   FootSwitch: ["action", "triggered_by"],
-  InvisibleSwitch: ["action", "delay", "scale"],
+  InvisibleSwitch: ["action", "delay", "scale", "set_off_alarm"],
   Lever: ["action"],
   MovieHandStone: ["movie_number"],
   MultiSwitchController: ["action", "on_off_delay"],
@@ -136,6 +136,7 @@ export const HIDE_WHEN_ZERO = new Set([
   "output_switch_id_3",
   "output_switch_id_4",
   "panic_switch_id",
+  "set_off_alarm",
   "spawn_switch_id",
   "surprise_web_switch_id",
   "toggle_message_switch_id",

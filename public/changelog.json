@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-08-18",
+   "tag": "improved",
+   "tiny": true,
+   "title": "Trip zones show the alarm flag only when they sound one",
+   "detail": "The game's unmarked trip zones each store whether crossing one sets off the alarm that panics every Slig on the level, and almost none of them do. The flag now shows by default on the 11 in Oddysee and 6 in Exoddus that raise it, and stays out of the way on the 180 that leave it alone."
+  },
+  {
+   "date": "2026-08-18",
    "tag": "fixed",
    "tiny": true,
    "title": "The Shrykull count shows only where it is granted",

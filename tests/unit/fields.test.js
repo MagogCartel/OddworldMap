@@ -37,7 +37,7 @@ setFieldTypes({
     Door: { start_state: "DoorStates", door_type: "DoorTypes" }, // start_state typed but no label below -> stays raw
     MeatSaw: { start_state: "Path_MeatSaw::StartState", type: "Path_MeatSaw::Type" },
     Edge: { can_grab: "Choice_short" },
-    InvisibleSwitch: { scale: "InvisibleSwitchScale" }, // scale, but not the plane enum (1 = full)
+    InvisibleSwitch: { scale: "InvisibleSwitchScale", set_off_alarm: "Choice_short" }, // scale, but not the plane enum (1 = full)
     DoorFlame: { scale: "Path_DoorFlame::Scale" },
   },
 });
@@ -165,7 +165,7 @@ test("resolve: a lookup map, a function for open-ended ranges, and a miss", () =
   assert.equal(resolve(null, 5), undefined);
 });
 
-test("fieldEntries: asleep shows both states; deaf/blind show only when set", () => {
+test("fieldEntries: asleep shows both states; deaf/blind and the alarm flag only when set", () => {
   const asleepSlog = { name: "Slog", extra: {}, fields: { asleep: 1, anger_switch_id: 0 } };
   const awakeSlog = { name: "Slog", extra: {}, fields: { asleep: 0, anger_switch_id: 0 } };
   assert.equal(
@@ -186,6 +186,27 @@ test("fieldEntries: asleep shows both states; deaf/blind show only when set", ()
   assert.ok(
     !("deaf" in Object.fromEntries(fieldEntries(hearingMud, { mode: "default", game: "G" }))),
   ); // 0 hidden
+
+  const loudSwitch = {
+    name: "InvisibleSwitch",
+    extra: {},
+    fields: { action: 1, set_off_alarm: 1 },
+  };
+  const quietSwitch = {
+    name: "InvisibleSwitch",
+    extra: {},
+    fields: { action: 1, set_off_alarm: 0 },
+  };
+  assert.equal(
+    Object.fromEntries(fieldEntries(loudSwitch, { mode: "default", game: "G" })).set_off_alarm,
+    true,
+  );
+  assert.ok(
+    !(
+      "set_off_alarm" in
+      Object.fromEntries(fieldEntries(quietSwitch, { mode: "default", game: "G" }))
+    ),
+  );
 });
 
 test("fieldEntries: a portal's Shrykull count shows only where the power is granted", () => {
