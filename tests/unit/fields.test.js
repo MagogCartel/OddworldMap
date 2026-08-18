@@ -14,6 +14,7 @@ import {
   GLOBAL_DEFAULT,
   DEFAULT_BY_TYPE,
   HIDE_WHEN_ZERO,
+  LIVE_WHEN,
 } from "../../public/js/fields.js";
 import { setGlossary } from "../../public/js/glossary.js";
 
@@ -187,6 +188,21 @@ test("fieldEntries: asleep shows both states; deaf/blind show only when set", ()
   ); // 0 hidden
 });
 
+test("fieldEntries: a portal's Shrykull count shows only where the power is granted", () => {
+  const fields = { enter_side: 1, mudokon_amount_for_shrykull: 3 };
+  const shrykull = { name: "BirdPortal", extra: { portal: "shrykull" }, fields };
+  const travel = { name: "BirdPortal", extra: { portal: "travel", to_level: "R1" }, fields };
+  assert.equal(
+    Object.fromEntries(fieldEntries(shrykull, { mode: "default", game: "G" }))
+      .mudokon_amount_for_shrykull,
+    3,
+  );
+  // dead on a portal that grants nothing, so hidden even where everything shows
+  const shown = Object.fromEntries(fieldEntries(travel, { mode: "all", game: "G" }));
+  assert.ok(!("mudokon_amount_for_shrykull" in shown));
+  assert.equal(shown.portal, "travel"); // the gate reads extra, never withholds it
+});
+
 test("fieldEntries: default surfaces notable fields, prettified; nav extra always shows", () => {
   const slig = {
     name: "Slig",
@@ -303,8 +319,16 @@ const realFields = (dataFile) => {
         if (t.fields) for (const k of Object.keys(t.fields)) (byType[t.name] ??= new Set()).add(k);
   return byType;
 };
+const tlvsByType = (dataFile) => {
+  const byType = {}; // type name -> every shipped placement of it
+  for (const L of loadData(dataFile).levels)
+    for (const P of L.paths) for (const t of P.tlvs) (byType[t.name] ??= []).push(t);
+  return byType;
+};
 const AO_FIELDS = realFields("map_data_ao.json");
 const AE_FIELDS = realFields("map_data_ae.json");
+const AO_TLVS = tlvsByType("map_data_ao.json");
+const AE_TLVS = tlvsByType("map_data_ae.json");
 const carriedByType = (type, field) => AO_FIELDS[type]?.has(field) || AE_FIELDS[type]?.has(field);
 const carriedSomewhere = (field) =>
   [AO_FIELDS, AE_FIELDS].some((g) => Object.values(g).some((s) => s.has(field)));
@@ -322,6 +346,31 @@ test("GLOBAL_DEFAULT / HIDE_WHEN_ZERO: every field name is carried by some shipp
   for (const set of [GLOBAL_DEFAULT, HIDE_WHEN_ZERO])
     for (const f of set)
       assert.ok(carriedSomewhere(f), `${f} is in a default table but no shipped object carries it`);
+});
+
+// a gate that never opens hides its field everywhere, and a predicate naming a
+// sibling the type doesn't carry reads exactly the same, so ask the data for both —
+// per game, since one game's swing can't vouch for the other's builder emission
+test("LIVE_WHEN: every gate names a shipped field and each game's data swings it both ways", () => {
+  for (const [key, live] of Object.entries(LIVE_WHEN)) {
+    const [type, field] = key.split(".");
+    assert.ok(carriedByType(type, field), `${key} is a shipped field on its type`);
+    for (const [game, tlvs] of [
+      ["AO", AO_TLVS],
+      ["AE", AE_TLVS],
+    ]) {
+      const placed = (tlvs[type] || []).filter((t) => field in (t.fields || {}));
+      if (!placed.length) continue; // a game that doesn't place the field has nothing to swing
+      assert.ok(
+        placed.some((t) => live(t)),
+        `${key} is live on some shipped ${game} ${type} (else the field never shows)`,
+      );
+      assert.ok(
+        placed.some((t) => !live(t)),
+        `${key} is dead on some shipped ${game} ${type} (else the gate hides nothing)`,
+      );
+    }
+  }
 });
 
 // a global earns its place by being shared across unrelated types; one a single

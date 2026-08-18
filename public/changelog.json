@@ -4,6 +4,13 @@
    "date": "2026-08-18",
    "tag": "fixed",
    "tiny": true,
+   "title": "The Shrykull count shows only where it is granted",
+   "detail": "Every bird portal stores how many Mudokons must be rescued before the doves hand Abe the Shrykull, whether or not it is that kind of portal, and near enough all the rest sit at the stock 1. The count now shows by default on the ten that do grant the power, four in Oddysee and six in Exoddus. It no longer shows at all on the travel and rescue portals the game never reads it for, however many fields you have turned on."
+  },
+  {
+   "date": "2026-08-18",
+   "tag": "fixed",
+   "tiny": true,
    "title": "Collision lines answer the pointer where they bend",
    "detail": "Hovering a floor, wall or ceiling tested the straight run between the line's two ends, but the map bends a line at every camera edge it crosses. The reading could come out of empty space while the line itself gave nothing back, and the ruler snapped to points the line never reaches. Both follow the line as drawn now. It shows on 42 lines in Oddysee and 749 in Exoddus."
   },

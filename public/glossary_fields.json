@@ -180,7 +180,7 @@
   "BirdPortal.create_portal_switch_id": "The portal is only built while this reads on; the always-on id 1 makes it unconditional.",
   "BirdPortal.delete_portal_switch_id": "Checked as the portal dies: on means it never comes back.",
   "BirdPortal.movie_id": "The film the level change plays; zero is an instant change, and a worker or Shrykull portal never travels at all.",
-  "BirdPortal.mudokon_amount_for_shrykull": "The Shrykull countdown: each rescue decrements it, and the doves only pour back into Abe once it reaches zero.",
+  "BirdPortal.mudokon_amount_for_shrykull": "The Shrykull countdown: each rescue decrements it, and the doves only pour back into Abe once it reaches zero; live only on a shrykull portal.",
   "BirdPortal.path_destination": "The travel ride's arrival path; live only on a travel portal.",
   "BoneBag.bone_amount": "How many bones this bag holds.",
   "BoneBag.bone_fall_direction": "Which way the bones fall out of the bag.",

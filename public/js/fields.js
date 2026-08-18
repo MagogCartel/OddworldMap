@@ -42,7 +42,7 @@ export const DEFAULT_BY_TYPE = {
   SlogSpawner: ["max_slogs", "max_slogs_at_a_time"],
   SlurgSpawner: ["max_slurgs"],
   // doors & travel
-  BirdPortal: ["enter_side"],
+  BirdPortal: ["enter_side", "mudokon_amount_for_shrykull"],
   BirdPortalExit: ["exit_direction"],
   Door: ["door_closed", "door_type"],
   ElumPathTrans: ["level", "path"],
@@ -143,6 +143,13 @@ export const HIDE_WHEN_ZERO = new Set([
   "trigger_switch_id",
 ]);
 
+// fields the engine reads only when a sibling says so: the type carries the word
+// for every placement, so the value alone can't say whether anything reads it.
+// Keyed "Type.field", asked of the whole TLV — false hides it as dead data.
+export const LIVE_WHEN = {
+  "BirdPortal.mudokon_amount_for_shrykull": (t) => t.extra?.portal === "shrykull",
+};
+
 // value-type transforms the viewer owns (semantic, not decomp labels), keyed by
 // the field's game type; a hand entry here wins over the generated enum labels.
 const CHOICE = { 0: false, 1: true };
@@ -235,6 +242,8 @@ export function fieldEntries(t, prefs) {
     for (const [k, v] of Object.entries(t.fields).sort(([a], [b]) => a.localeCompare(b))) {
       if (show !== "all" && !show.has(k)) continue;
       if (v === 0 && HIDE_WHEN_ZERO.has(k)) continue;
+      const live = LIVE_WHEN[`${t.name}.${k}`];
+      if (live && !live(t)) continue;
       out.push([k, prefs && prefs.raw ? v : prettify(prefs && prefs.game, t.name, k, v)]);
     }
   return out;
