@@ -1198,6 +1198,17 @@ test("snapTarget: shown objects' centers and collision ends, within tolerance", 
   assert.deepEqual(snapTarget({ x: 48, y: 3 }, P, 8, true), { x: 50, y: 0 }); // nearer end wins
 });
 
+test("snapTarget: a line's end in the slack snaps where the line is drawn", () => {
+  setGeometry(AO_GEOMETRY);
+  // running off the window's right edge and into the slack, which straddles a
+  // cell boundary: the end is drawn at 844, hanging off the screen it left,
+  // while the transform alone would put it at 188, back over that screen
+  const P = path(1, []);
+  P.lines = [[500, 200, 1100, 200, 0]];
+  assert.deepEqual(snapTarget({ x: 844, y: 80 }, P, 8, true), { x: 844, y: 80 });
+  assert.equal(snapTarget({ x: 188, y: 80 }, P, 8, true), null);
+});
+
 test("patrolZone: the pen between the id-matched bound pair, window-bounded", () => {
   setGeometry(AO_GEOMETRY);
   const at = (name, cellX, off, fields) => ({

@@ -4,6 +4,13 @@
    "date": "2026-08-18",
    "tag": "fixed",
    "tiny": true,
+   "title": "Collision lines answer the pointer where they bend",
+   "detail": "Hovering a floor, wall or ceiling tested the straight run between the line's two ends, but the map bends a line at every camera edge it crosses. The reading could come out of empty space while the line itself gave nothing back, and the ruler snapped to points the line never reaches. Both follow the line as drawn now. It shows on 42 lines in Oddysee and 749 in Exoddus."
+  },
+  {
+   "date": "2026-08-18",
+   "tag": "fixed",
+   "tiny": true,
    "title": "Objects half off their screen dotted the wrong half",
    "detail": "An object straddling the top or left edge of its screen had its outline drawn the wrong way round: the part on screen came back dotted, the part out in the gap solid. Some pull ring ropes in Mudomo Vault showed it plainly. The box now takes its position from the screen it covers, so the dotting falls the right way and the wires, arrows and pointer all find it where it is drawn."
   },

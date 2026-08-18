@@ -366,8 +366,12 @@ export function snapTarget(pt, path, tol, lines = false) {
   }
   if (lines)
     for (const [x1, y1, x2, y2] of path.lines) {
-      consider(dX(x1), dY(y1));
-      consider(dX(x2), dY(y2));
+      // an end lying in the slack is drawn against the screen its line reaches,
+      // so the polyline's own ends are the only ones there to snap to
+      const rs = lineRuns(x1, y1, x2, y2);
+      if (!rs.length) continue;
+      consider(rs[0].x1, rs[0].y1);
+      consider(rs.at(-1).x2, rs.at(-1).y2);
     }
   return best;
 }

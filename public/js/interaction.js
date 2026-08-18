@@ -26,7 +26,7 @@ import {
   narrowMQ,
 } from "./dom.js";
 import { toast } from "./toast.js";
-import { state, GEO, dX, dY, wX, wY, gX, gY } from "./state.js";
+import { state, GEO, wX, wY, gX, gY } from "./state.js";
 import {
   draw,
   scheduleDraw,
@@ -42,6 +42,7 @@ import {
   drawBox,
   isLoopback,
   levelWiring,
+  lineRuns,
   markerCentre,
   offScreen,
   pathIn,
@@ -448,8 +449,13 @@ function updateHover() {
   let hoverLines = [];
   if (state.show.coll) {
     const tol = 6 / state.cam.z;
+    // a line is pointed at where it is drawn: the packing bends it at every
+    // window edge it crosses, so the straight run between its two ends is
+    // ground it may never cover
     hoverLines = state.path.lines
-      .filter(([x1, y1, x2, y2]) => segDist(pt.x, pt.y, dX(x1), dY(y1), dX(x2), dY(y2)) <= tol)
+      .filter(([x1, y1, x2, y2]) =>
+        lineRuns(x1, y1, x2, y2).some((r) => segDist(pt.x, pt.y, r.x1, r.y1, r.x2, r.y2) <= tol),
+      )
       .slice(0, 4);
   }
   hoverTlvs = state.path.tlvs.filter((t) => {
