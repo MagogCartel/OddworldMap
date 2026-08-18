@@ -4,22 +4,8 @@
    "date": "2026-08-18",
    "tag": "fixed",
    "tiny": true,
-   "title": "A switch wipe with its wipe off no longer shows a range",
-   "detail": "Exoddus's invisible wipe lines store the block of switch ids they clear when Abe crosses them, and a flag for whether they clear anything at all. Six of the twelve have that flag off, where the stored block is a leftover the game never reads, so those now show the flag alone; the six that do wipe still show the range they cover."
-  },
-  {
-   "date": "2026-08-18",
-   "tag": "improved",
-   "tiny": true,
-   "title": "Trip zones show the alarm flag only when they sound one",
-   "detail": "The game's unmarked trip zones each store whether crossing one sets off the alarm that panics every Slig on the level, and almost none of them do. The flag now shows by default on the 11 in Oddysee and 6 in Exoddus that raise it, and stays out of the way on the 180 that leave it alone."
-  },
-  {
-   "date": "2026-08-18",
-   "tag": "fixed",
-   "tiny": true,
-   "title": "The Shrykull count shows only where it is granted",
-   "detail": "Every bird portal stores how many Mudokons must be rescued before the doves hand Abe the Shrykull, whether or not it is that kind of portal, and near enough all the rest sit at the stock 1. The count now shows by default on the ten that do grant the power, four in Oddysee and six in Exoddus. It no longer shows at all on the travel and rescue portals the game never reads it for, however many fields you have turned on."
+   "title": "Three fields stop showing where they mean nothing",
+   "detail": "A field the game only reads on some placements used to show on all of them. Exoddus's invisible wipe lines now show the block of switch ids they clear only on the six of twelve that clear anything, and the other six show the flag alone. The unmarked trip zones show their alarm flag on the 17 that raise it, 11 in Oddysee and 6 in Exoddus, and stay quiet on the 180 that leave it alone. A bird portal shows its Shrykull count only on the ten that grant the power, four in Oddysee and six in Exoddus."
   },
   {
    "date": "2026-08-18",
