@@ -176,3 +176,5 @@ Structure layouts (TLV types, path tables, collision records) come from the aliv
   - Those are the wiki's coinages, not this project's, and the map shows them as such — beside each zulag's own number rather than in place of it.
 - `tools/PSXMDECDecoder.{cpp,h}` are GPL-2.0 (see file headers; originally from libbs / psxdev). The rest of the tooling and the viewer were written for this project.
 - Oddworld: Abe's Oddysee and Abe's Exoddus are © Oddworld Inhabitants. This project ships no game code and is intended for research, speedrunning and preservation; the extracted imagery remains the property of its copyright holders. The site says as much in the app, behind the sidebar's "About this map" link.
+- Copyright (C) 2026 mariobob, under GPL-2.0 (see [LICENSE](LICENSE)). The licence covers the code written for this project and nothing else: not the vendored decoder above, and not the extracted imagery, which was never this project's to license.
+- A rights holder who wants something taken down can write to hello@retroatlas.org.
