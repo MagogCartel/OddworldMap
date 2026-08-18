@@ -67,7 +67,7 @@ import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
 import { syncPlace, togglePlace } from "./place.js";
 import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
-import { trapDialogKeys } from "./dialog.js";
+import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 import { HAMBURGER_SVG, CLOSE_SVG, LINK_SVG, EXTERNAL_SVG } from "./icons.js";
 
 let hoverTlvs = [],
@@ -411,10 +411,10 @@ window.addEventListener("keydown", (e) => {
 // ---- shortcuts panel (the ? key) -----------------------------------------
 const shortcutsOverlay = $("shortcutsOverlay");
 function openShortcuts() {
-  shortcutsOverlay.classList.add("open");
+  openDialog(shortcutsOverlay, closeShortcuts);
   $("shortcutsClose").focus();
 }
-const closeShortcuts = () => shortcutsOverlay.classList.remove("open");
+const closeShortcuts = () => closeDialog(shortcutsOverlay);
 $("shortcutsClose").onclick = closeShortcuts;
 shortcutsOverlay.onclick = (e) => {
   if (e.target === e.currentTarget) closeShortcuts();

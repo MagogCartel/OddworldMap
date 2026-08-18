@@ -4,7 +4,7 @@
 import { $ } from "./dom.js";
 import { esc } from "./util.js";
 import { NEWSPAPER_SVG } from "./icons.js";
-import { trapDialogKeys } from "./dialog.js";
+import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 
 const PREVIEW_N = 5; // entries shown before "see all"
 const SEEN_KEY = "owm:whatsnew:lastSeen"; // newest date the visitor has opened
@@ -136,13 +136,13 @@ async function init() {
     expanded = false;
     renderFilter();
     render();
-    overlay.classList.add("open");
+    openDialog(overlay, close);
     btn.classList.remove("hasnew");
     store.set(newest);
     closeBtn.focus();
   };
   const close = () => {
-    overlay.classList.remove("open");
+    closeDialog(overlay);
     btn.focus();
   };
 

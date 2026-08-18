@@ -7,7 +7,7 @@ import { CATS } from "./config.js";
 import { state } from "./state.js";
 import { parseHash } from "./model.js";
 import { GEAR_SVG } from "./icons.js";
-import { trapDialogKeys } from "./dialog.js";
+import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 
 const SETTINGS_KEY = "owm:settings";
 const VIEW_KEY = "owm:view";
@@ -187,12 +187,12 @@ export function initSettings() {
   btn.innerHTML = GEAR_SVG;
 
   const open = () => {
-    overlay.classList.add("open");
+    openDialog(overlay, close);
     closeBtn.focus();
     window.dispatchEvent(new Event("settings-opened"));
   };
   const close = () => {
-    overlay.classList.remove("open");
+    closeDialog(overlay);
     btn.focus();
   };
   btn.onclick = open;

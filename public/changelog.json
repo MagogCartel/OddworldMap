@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-08-18",
+   "tag": "improved",
+   "tiny": true,
+   "title": "Going back closes the panel you are in",
+   "detail": "On a phone, going back is how you leave anything, but with What's New, Settings, About, the shortcut list or an object's encyclopedia card open, the browser had nowhere to go but off the map. And on a first visit, there was nowhere to come back from. Back now closes whichever panel is open, exactly as Escape and the × do, and leaves the map only once none is."
+  },
+  {
+   "date": "2026-08-18",
    "tag": "fixed",
    "tiny": true,
    "title": "Three fields stop showing where they mean nothing",

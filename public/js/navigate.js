@@ -355,6 +355,10 @@ export function flushHash() {
   writeHash(hashPush);
 }
 
+// the entry a dialog leaves behind has to hold the settled view, or the back
+// press that closes it would undo a pan as well
+window.addEventListener("dialog-opened", flushHash);
+
 export function applyHash() {
   const p = parseHash(location.hash);
   if (!p) return false;

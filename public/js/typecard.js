@@ -11,7 +11,7 @@ import { catOf } from "./config.js";
 import { census } from "./census.js";
 import { fieldHelp } from "./fields.js";
 import { typeProse } from "./typeinfo.js";
-import { trapDialogKeys } from "./dialog.js";
+import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 import { toggleMenu } from "./interaction.js";
 
 const overlay = $("typeCardOverlay"),
@@ -123,13 +123,13 @@ function open(name) {
   if (!state.data) return;
   opener = document.activeElement;
   render(name);
-  overlay.classList.add("open");
+  openDialog(overlay, close);
   body.scrollTop = 0;
   closeBtn.focus();
 }
 
 function close() {
-  overlay.classList.remove("open");
+  closeDialog(overlay);
   // the opener may be gone or hidden by now (its surface re-rendered or closed)
   if (opener?.isConnected && opener.offsetParent) opener.focus();
   opener = null;

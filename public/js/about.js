@@ -3,18 +3,18 @@
 // so the notice is in the page source with scripting off.
 
 import { $ } from "./dom.js";
-import { trapDialogKeys } from "./dialog.js";
+import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 
 const btn = $("aboutBtn"),
   overlay = $("aboutOverlay"),
   closeBtn = $("aboutClose");
 
 const open = () => {
-  overlay.classList.add("open");
+  openDialog(overlay, close);
   closeBtn.focus();
 };
 const close = () => {
-  overlay.classList.remove("open");
+  closeDialog(overlay);
   btn.focus();
 };
 
