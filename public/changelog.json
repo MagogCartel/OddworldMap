@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-19",
+   "tag": "new",
+   "title": "This map is part of RetroAtlas",
+   "detail": "Oddworld Map now says where it belongs: it is part of RetroAtlas, a collection of interactive maps of classic games. The line sits in \"About this map\", at the foot of the sidebar, with a link to the rest of them. Nothing about this map changes; it keeps its own address and its own source."
+  },
+  {
    "date": "2026-08-18",
    "tag": "improved",
    "tiny": true,

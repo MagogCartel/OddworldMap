@@ -4,6 +4,8 @@ Interactive map of **Oddworld: Abe's Oddysee** and **Abe's Exoddus** (PS1, NTSC-
 
 Browse it at **[oddworldmap.com](https://oddworldmap.com/)** — or serve the `public/` folder with any static web server (`python3 -m http.server -d public`) to run it locally.
 
+Part of [RetroAtlas](https://retroatlas.org/), a collection of interactive maps of classic games.
+
 ![The viewer on Stock Yards in Oddysee, inspecting a travel bird portal](screenshot.png)
 
 One grid cell = one in-game camera: the viewer lays the games' camera screens out edge to edge on their real world grid and translates every object and collision coordinate to match, so markers land on the artwork.
