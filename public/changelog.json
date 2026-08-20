@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+    "date": "2026-08-20",
+    "tag": "fixed",
+    "tiny": true,
+    "title": "The gaps toggle is remembered like the rest",
+    "detail": "With \"Remember display & object filters\" on, the Display toggles come back the way you left them across visits. \"Gaps between screens\" did not: the choice was saved and then ignored on the way back in, so the map always reopened with the screens packed edge to edge. It now returns spread if that is how you left it."
+  },
+  {
    "date": "2026-08-20",
    "tag": "improved",
    "tiny": true,

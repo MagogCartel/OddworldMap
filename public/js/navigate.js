@@ -72,6 +72,7 @@ export function initGames(games) {
 export function selectGame(G, keepView) {
   state.data = G;
   setGeometry(G.geometry);
+  setSpacing(state.show.spaced);
   markOn(gameBtns, G.id);
   $("gameName").textContent = G.game;
   state.entry = computeEntryPaths(G);

@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import {
   SETTINGS_DEFAULTS,
   SHOW_KEYS,
@@ -75,6 +76,17 @@ test("sanitizeView: unknown keys and wrong-typed values are dropped", () => {
     }),
   );
   assert.deepEqual(v, { show: { grid: false }, cats: { mud: false } });
+});
+
+test("SHOW_KEYS: every sidebar Display toggle is remembered, ruler and route excepted", () => {
+  const src = readFileSync(new URL("../../public/js/sidebar.js", import.meta.url), "utf8");
+  const body = src.split("Object.entries({")[1].split("})")[0];
+  const toggles = [...body.matchAll(/(\w+): "t\w+"/g)].map((m) => m[1]);
+  assert.ok(toggles.length > 0, "the toggle map is read off the source");
+  assert.deepEqual(
+    [...SHOW_KEYS].sort(),
+    toggles.filter((k) => k !== "ruler" && k !== "route").sort(),
+  );
 });
 
 test("displayLabel: code alone by default, code — name in full-names mode", () => {
