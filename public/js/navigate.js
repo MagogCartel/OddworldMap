@@ -287,8 +287,7 @@ let applyingHash = false,
 // stands for: the view's centre (not its corner, which would slide the view),
 // the ruler's ends and every route waypoint. The flip happens between the two
 // halves, which is why they are read out and put back here rather than inside
-// setSpacing. A route survives the round trip because its waypoints are world
-// points either way, the same reason a link does.
+// setSpacing.
 export function setPitch(on) {
   const cw = cv.clientWidth,
     ch = cv.clientHeight;

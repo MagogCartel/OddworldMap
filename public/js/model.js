@@ -210,11 +210,10 @@ export function screenRuns(t, geo = LAYOUT) {
 }
 
 // the draw-space span a marker's world span occupies on one axis, as
-// [start, length]. It is framed by the screen the span covers rather than by
-// its own two ends, which is the rule lineRuns follows for a collision line:
-// the slack has no draw position of its own, so a part of the span lying in it
-// hangs off the screen it touches at 1:1. A span covering no screen at all has
-// only its own frame to answer to, and keeps its extent there.
+// [start, length], framed by the screen the span covers rather than by its own
+// two ends: the slack has no draw position of its own, so a part of the span
+// lying in it hangs off the screen it touches at 1:1. A span covering no screen
+// at all keeps its own frame and extent.
 function drawSpan(a, b, cell, win, vis, pitch) {
   let lo = null,
     hi = null;
@@ -264,16 +263,10 @@ function windowCuts(cuts, a, b, cell, win, vis) {
 
 // a collision line as draw-space pieces, each flagged for whether it covers
 // screen. A piece on screen lies inside one window, where the transform is a
-// translation, so it lands exactly and stays straight, diagonals included.
-//
-// A piece in the slack has no draw position of its own and is drawn rather
-// than located. One with screen on both sides is the fold itself: packed it
-// collapses to nothing, which is what lets a line running between two screens
-// read as the continuous floor it is. One with screen on a single side is an
-// overhang, drawn at 1:1 from the edge it left, over whatever the packing put
-// there. Both take the frame of the screen they touch, and that is
-// load-bearing: the slack straddles a cell boundary in AO, so giving each end
-// its own cell would run the piece backwards.
+// translation, so it lands exactly and stays straight, diagonals included. A
+// piece in the slack takes the frame of the screen it touches: the slack
+// straddles a cell boundary in AO, so framing each end by its own cell would
+// run the piece backwards.
 export function lineRuns(x1, y1, x2, y2, geo = LAYOUT) {
   const cuts = new Set([0, 1]);
   windowCuts(cuts, x1, x2, geo.worldW, geo.winX, geo.visW);
@@ -301,15 +294,11 @@ export function lineRuns(x1, y1, x2, y2, geo = LAYOUT) {
   };
   const out = [];
   spans.forEach((s, i) => {
-    // A slack span with screen on both sides is the fold between two screens.
-    // It asks for spans rather than for the points bounding it: a line ending
-    // exactly on a window edge touches that screen at one point and covers
-    // none of it, so what it leaves is an overhang. The fold vanishes only
-    // where the packing gives the slack it crosses no draw space; spaced out
-    // that slack is real canvas and it draws like any other stretch the game
-    // does not render. The axes it crosses are the whole question: along one
-    // it stays inside its window it travels screen distance, which is none of
-    // the fold's.
+    // the fold between two screens: packed it collapses to nothing, which lets
+    // a line crossing it read as the continuous floor it is. Asked of the
+    // neighbouring spans rather than the points bounding this one, since a line
+    // ending on a window edge covers no screen and leaves an overhang; and only
+    // where the packing denies the slack it crosses any draw space
     const fold = !s.on && spans[i - 1]?.on && spans[i + 1]?.on;
     if (fold && (!slackX || s.onX) && (!slackY || s.onY)) return;
     const anchor = s.on ? s.mid : ((spans[i - 1]?.on ? spans[i - 1] : spans[i + 1])?.mid ?? s.mid);

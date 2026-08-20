@@ -620,8 +620,7 @@ test("loopbacks in the shipped data are exactly the three known ones", () => {
 // and level authors parked objects in it. A marker reaching into it draws that
 // part dotted; one standing wholly inside it covers no screen at all, which is
 // what offScreen marks. AO leaves 656x240 units of slack per cell, enough to
-// swallow an object whole; AE's 7x20 never does, so nothing there is offscreen
-// and every AE marker that reaches into the slack still shows where it is.
+// swallow an object whole; AE's 7x20 never does, so nothing there is offscreen.
 test("the shipped data's offscreen objects are the known ones", () => {
   const counts = {};
   for (const [file, geometry] of [
@@ -639,9 +638,7 @@ test("the shipped data's offscreen objects are the known ones", () => {
 
 // A piece drawn for a collision line must run the way its line does and be no
 // longer than it. The slack straddles a cell boundary in AO, so a piece framed
-// end by end rather than as a whole comes back reversed, across most of a
-// screen; this is the sweep that says so over the shipped data rather than
-// over a case someone thought to write down.
+// end by end rather than as a whole comes back reversed, across most of a screen.
 test("no collision-line piece is drawn backwards or overlong", () => {
   const bad = [];
   for (const [file, geometry] of [
@@ -689,9 +686,9 @@ test("collision-line pieces meet, packed or spaced", () => {
   assert.deepEqual(bad, []);
 });
 
-// How much of each game runs through ground it never renders, which is what
-// the dotting is there to say. Stated in CLAUDE.md, and a rule that quietly
-// dots more than it should moves these before it breaks anything visible.
+// How much of each game runs through ground it never renders, which is what the
+// dotting is there to say: a rule that quietly dots more than it should moves
+// these numbers before it breaks anything visible.
 test("the count of collision lines dotted somewhere", () => {
   const counts = {};
   for (const [file, geometry] of [
@@ -707,11 +704,9 @@ test("the count of collision lines dotted somewhere", () => {
   assert.deepEqual(counts, { AO: 1740, AE: 812 });
 });
 
-// A marker's drawn box must contain every part of it that draws solid. The
-// slack has no draw position of its own, so a box framed by its own two ends
-// walks away from the very screen it covers when those ends fall in different
-// cells: the solid clip then lands outside the box and the dotting comes back
-// inverted, with the part on screen dotted and the part in the slack solid.
+// A marker's drawn box must contain every part of it that draws solid: a box
+// framed by its own two ends walks away from the screen it covers when those
+// ends fall in different cells, which inverts the dotting.
 test("a marker's drawn box contains the screen it covers, packed or spaced", () => {
   const bad = [];
   for (const [file, geometry] of [

@@ -15,7 +15,7 @@ import {
 import { state } from "./state.js";
 import { toast } from "./toast.js";
 
-const CONCURRENCY = 6; // fetches in flight; the worker stores what passes through it
+const CONCURRENCY = 6; // fetches in flight
 const CONTROL_MS = 10000; // how long a download waits for the worker to take the page
 const PROGRESS_MS = 120; // redraw pace while files land
 
