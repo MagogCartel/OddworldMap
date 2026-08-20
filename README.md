@@ -94,6 +94,7 @@ Every toggle in the Display section explains itself: hover it for a short note o
 - the numbers follow you as you browse: switch path, follow a door, even press shuffle, and the panel re-derives itself
 - counting reads the data rather than the display (a type whose category filter is off still counts, the way search still finds it) and follows the demo-paths setting, noting below the table what the hidden demo copies hold
 - click a type's name in the table to stop counting it
+- the table holds six types at once; with six picked the rest of the list greys out until you drop one
 
 ### Sharing and embedding
 

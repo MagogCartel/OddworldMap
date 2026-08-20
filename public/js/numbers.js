@@ -67,6 +67,11 @@ function renderCounts() {
     };
 }
 
+function syncLimit() {
+  const full = picked.size >= MAX_PICKED;
+  for (const box of typesBox.querySelectorAll("input")) box.disabled = full && !box.checked;
+}
+
 function renderTypes() {
   const q = filter.value.trim().toLowerCase();
   typesBox.innerHTML = "";
@@ -85,11 +90,13 @@ function renderTypes() {
       }
       if (box.checked) picked.add(n);
       else picked.delete(n);
+      syncLimit();
       renderCounts();
     };
     label.append(box, ` ${n}`);
     typesBox.appendChild(label);
   }
+  syncLimit();
 }
 
 function renderAll() {

@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-20",
+   "tag": "improved",
+   "tiny": true,
+   "title": "By the numbers says when its table is full",
+   "detail": "The counting table holds six object types, but the list below it gave no sign of that: a seventh tick undid itself the moment you made it, with nothing to say why. With six picked the rest of the list now greys out, so you see the limit instead of running into it. Drop one and the list comes back."
+  },
+  {
    "date": "2026-08-19",
    "tag": "new",
    "title": "This map is part of RetroAtlas",
