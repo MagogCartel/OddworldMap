@@ -18,6 +18,7 @@ CATS.forEach((c) => {
   if (snap && c.key in snap.cats) c.on = snap.cats[c.key];
   const lab = document.createElement("label");
   lab.className = "checkrow";
+  if (c.tip) lab.dataset.tip = c.tip;
   lab.innerHTML = `<span class="sw" style="background:${c.color}"></span>
     <input type="checkbox" autocomplete="off" ${c.on ? "checked" : ""}>
     <span>${c.label}</span><span class="cnt"></span>`;

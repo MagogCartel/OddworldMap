@@ -29,7 +29,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object
   - the **ⓘ** at a row's edge (also next to each type in the Fields panel) opens that type's encyclopedia card: the full curated entry, how many are placed in each game — counted live, with what the hidden demo paths hold noted apart — what its stored fields mean, and a link that finds every one of them with search
   - on phones the panel opens as a bottom sheet with the map staying visible above it; switch "List a screen's objects on click" off in Settings if you'd rather those clicks did nothing
-- level and path buttons top-left; object category filters with counts below
+- level and path buttons top-left; object category filters with counts below — hover a filter for what falls inside it
   - hover a path button for its area name: a curated community name from [annotations.json](public/annotations.json) where one is defined (a deliberate override), otherwise the in-game name (Rupture Farms Return's Zulag 1–4)
   - ahead of either, the section where the game gives one — which half of the level the path belongs to, for the thirteen Exoddus areas the endgame returns to
   - where players have a nickname for a place, that follows after a `·` — nine of the Brewery's zulags carry one, so zulag 3 reads `Zulag 3 · Industrial Machines`, dimmed because it is not what the game calls the place, and on the button itself only with "Show full names" on

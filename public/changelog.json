@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-20",
+   "tag": "improved",
+   "tiny": true,
+   "title": "The object filters say what falls inside them",
+   "detail": "The Display toggles have explained themselves on hover for a while; the object filters beneath them did not, and they are the ones whose contents you cannot guess. Hover one now for what it holds: that the doors filter carries wells, portals and teleporters too, that the hazards include the orbs and claws that punish rather than kill, and what on earth is in \"Meta / bounds / fx\". On a phone the note appears as you tap."
+  },
+  {
     "date": "2026-08-20",
     "tag": "fixed",
     "tiny": true,
