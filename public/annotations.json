@@ -1,6 +1,5 @@
 {
  "AO": {
-  "levels": {},
   "paths": {
    "R1": {
     "15": "Before Packaging",
@@ -71,7 +70,6 @@
   }
  },
  "AE": {
-  "levels": {},
   "paths": {
    "MI": {
     "1": "Tunnel 1",

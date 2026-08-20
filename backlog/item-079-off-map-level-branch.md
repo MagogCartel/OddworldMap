@@ -1,6 +1,6 @@
 # 79. Retire the level annotations, keep the off-map clause
 
-**Status:** open · **Effort:** small (viewer, schema, docs) · **Where:** anywhere, no disc · **Filed:** 2026-08-07, out of [7](item-007-ao-menu-level.md)
+**Status:** shipped 2026-08-20 · **Effort:** small (viewer, schema, docs) · **Where:** anywhere, no disc · **Filed:** 2026-08-07, out of [7](item-007-ao-menu-level.md)
 
 ## What it is
 
@@ -25,3 +25,9 @@ This reverses the first commit of [37](item-037-per-path-notes.md), which existe
 [CLAUDE.md](../CLAUDE.md) records both halves as kept for data that could name an off-map level, which stops being true of the annotations half — that line wants editing in the same commit.
 
 The measurement is the argument for keeping the clause, so it belongs in the commit message rather than only here; a later reader finding an unexercised fallback deserves to know a subset build exercises it.
+
+## Shipped
+
+The `levels` section, `levelInfo` and the two schema rules are gone, and the clause reads `→ leads to LV Pn — not on the map` with nothing conditional left in it. No changelog entry: the clause never fires against the shipped data, so the name and note it stopped composing were never on a screen.
+
+Re-measured 2026-08-20, running the shipped `destOf`, `destTrusted` and `pathIn` over each game's data trimmed to one level: the full data reaches the clause **0** times in either game, while 4 of the 25 single-level subsets reach it — AO `R1` twice (`S1 P1` and `E1 P6`), `E1` twice, `L1` once, and AE `MI` once (`NE P2`). Every one is a `PathTransition`; a subset's other cross-level links name a partner that is not in the tree, so they lose their trust and say nothing at all. The figure above is the AO `R1` half of this, and Exoddus turns out to reach the clause too.

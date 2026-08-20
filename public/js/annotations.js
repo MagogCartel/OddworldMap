@@ -15,13 +15,7 @@ export function sanitizeAnnotations(raw) {
   if (!raw || typeof raw !== "object") return out;
   for (const [game, g] of Object.entries(raw)) {
     if (!g || typeof g !== "object") continue;
-    const levels = {};
     const paths = {};
-    for (const [short, v] of Object.entries(g.levels || {})) {
-      const name = cleanString(v?.name);
-      const note = cleanString(v?.note);
-      if (name) levels[short] = note ? { name, note } : { name };
-    }
     for (const [short, byId] of Object.entries(g.paths || {})) {
       if (!byId || typeof byId !== "object") continue;
       for (const [id, v] of Object.entries(byId)) {
@@ -37,7 +31,7 @@ export function sanitizeAnnotations(raw) {
         };
       }
     }
-    out[game] = { levels, paths };
+    out[game] = { paths };
   }
   return out;
 }
@@ -59,9 +53,4 @@ export function pathNote(gameId, levelShort, path) {
 // what players call a path, where the map has adopted their name, or null
 export function pathNickname(gameId, levelShort, path) {
   return ann[gameId]?.paths?.[levelShort]?.[String(path.id)]?.nickname ?? null;
-}
-
-// {name, note?} for a level the map doesn't render, or null
-export function levelInfo(gameId, levelShort) {
-  return ann[gameId]?.levels?.[levelShort] ?? null;
 }

@@ -60,7 +60,6 @@ import {
   scheduleHash,
   viewHash,
 } from "./navigate.js";
-import { levelInfo } from "./annotations.js";
 import { typeSummary } from "./typeinfo.js";
 import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
@@ -510,10 +509,7 @@ function updateHover() {
           if (d && isLoopback(t)) {
             follow = `<br><span class="f loop">⟳ loops back to itself</span>`;
           } else if (d && !followableDest(t)) {
-            const info = levelInfo(state.data.id, d.lv);
-            follow =
-              `<br><span class="f loop">→ leads to ${esc(`${d.lv} P${d.pa}`)}${info ? ` (${esc(info.name)})` : ""} — not on the map</span>` +
-              (info?.note ? `<br><span class="e">${esc(info.note)}</span>` : "");
+            follow = `<br><span class="f loop">→ leads to ${esc(`${d.lv} P${d.pa}`)} — not on the map</span>`;
           } else if (d) {
             follow = `<br><span class="f">➜ click to follow to ${esc(`${d.lv} P${d.pa}${d.ca != null ? " C" + d.ca : ""}`)}</span>`;
           }

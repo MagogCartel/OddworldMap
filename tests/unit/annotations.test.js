@@ -7,7 +7,6 @@ import {
   pathDisplayName,
   pathNickname,
   pathNote,
-  levelInfo,
 } from "../../public/js/annotations.js";
 import { isDemoPath } from "../../public/js/demo.js";
 
@@ -30,11 +29,6 @@ test("sanitizeAnnotations: tolerates a missing or garbage file", () => {
 test("sanitizeAnnotations: copies only known sections with expected types", () => {
   const s = sanitizeAnnotations({
     AO: {
-      levels: {
-        S1: { name: "Main Menu", note: "menu level", junk: 1 },
-        R9: { note: "no name: dropped" },
-        R8: { name: "  untrimmed  " },
-      },
       paths: {
         R1: {
           15: "Free-Fire Zone",
@@ -52,7 +46,6 @@ test("sanitizeAnnotations: copies only known sections with expected types", () =
   });
   assert.deepEqual(s, {
     AO: {
-      levels: { S1: { name: "Main Menu", note: "menu level" } },
       paths: {
         R1: {
           15: { name: "Free-Fire Zone" },
@@ -120,17 +113,9 @@ test("pathNickname: hit, miss, and an entry carrying nothing else", () => {
   assert.equal(pathNickname("AO", "R1", { id: 15 }), null);
 });
 
-test("levelInfo: hit, miss, and unloaded game", () => {
-  setAnnotations({ AO: { levels: { ZZ: { name: "Somewhere Else" } } } });
-  assert.deepEqual(levelInfo("AO", "ZZ"), { name: "Somewhere Else" });
-  assert.equal(levelInfo("AO", "R1"), null);
-  assert.equal(levelInfo("AE", "ZZ"), null);
-  setAnnotations(null);
-});
-
 // ---- schema sanity over the shipped file, cross-checked against the shipped
-// map data: annotations are hand-curated, so typos and dead entries (a note
-// for a level the map renders) must not ship
+// map data: annotations are hand-curated, so typos and dead entries (a name
+// for a path the game does not hold) must not ship
 test("annotations.json entries all point at live targets", () => {
   const ann = load("annotations.json");
   const data = { AO: load("map_data_ao.json"), AE: load("map_data_ae.json") };
@@ -138,21 +123,7 @@ test("annotations.json entries all point at live targets", () => {
   for (const [game, g] of Object.entries(ann)) {
     assert.ok(game in data, `game ${game} is a shipped dataset`);
     const levels = new Map(data[game].levels.map((l) => [l.short, l]));
-    for (const k of Object.keys(g))
-      assert.ok(["levels", "paths"].includes(k), `${game}.${k} known`);
-
-    for (const [short, v] of Object.entries(g.levels ?? {})) {
-      assert.ok(!levels.has(short), `${game} ${short}: level annotations are for off-map levels`);
-      assert.ok("name" in v, `${game} ${short}: a note-only entry never displays — name required`);
-      const keys = Object.keys(v);
-      assert.ok(
-        keys.every((k) => ["name", "note"].includes(k)),
-        `${game} ${short}: known keys`,
-      );
-      for (const k of keys)
-        assert.ok(v[k] && v[k] === v[k].trim(), `${game} ${short}.${k} is a trimmed string`);
-      if (v.note) assert.match(v.note, SENTENCE, `${game} ${short}: note reads as a sentence`);
-    }
+    for (const k of Object.keys(g)) assert.ok(["paths"].includes(k), `${game}.${k} known`);
 
     for (const [short, byId] of Object.entries(g.paths ?? {})) {
       const L = levels.get(short);

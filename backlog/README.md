@@ -62,7 +62,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — first paint waits on both games when the visitor is looking at one. _Small-medium._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — one file carrying six unrelated concerns, none importable in isolation. _Medium._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
-- [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the `levels` section is empty in both games, while the tooltip clause a subset build still reaches is not. _Small._
 
 ## Moonshot
 
@@ -102,6 +101,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the empty `levels` section and the two schema rules policing it are gone; the tooltip clause stays, a subset build being where it still fires. _2026-08-20._
 - [**17.** Field glossary](item-017-field-glossary.md) — every shipped field now resolves a definition, coverage pinned by test; the long tail fell to the decomp research in one sitting, 44 entries to 565. _2026-08-13._
 - [**82.** Type encyclopedia cards](item-082-type-encyclopedia.md) — every object type explains itself: one curated paragraph per type, all 139 across both games, the first sentence riding the hover tooltip and the card composing the rest with live counts and field meanings. _2026-08-12._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the app joins the artwork in the opt-in cache, network-first with an offline fallback, so no stamp and no version skew; the map opens on a plane. _2026-08-11._
