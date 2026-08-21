@@ -15,6 +15,7 @@ test("pure modules import in bare Node", async () => {
     "settings",
     "searchquery",
     "placesearch",
+    "pathorder",
     "glossary",
     "census",
     "typeinfo",
