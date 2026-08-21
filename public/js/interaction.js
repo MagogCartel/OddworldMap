@@ -556,7 +556,7 @@ function updateHover() {
           }
           return (
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
-            (offScreen(t) ? `<br><span class="e">${esc(OFFSCREEN_NOTE)}</span>` : "") +
+            (offScreen(t) ? `<br><span class="e offscreen">${esc(OFFSCREEN_NOTE)}</span>` : "") +
             (about ? `<br><span class="e about">${esc(about)}</span>` : "") +
             (ex ? `<br><span class="kv">${ex}</span>` : "") +
             wireInfo +

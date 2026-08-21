@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-21",
+   "tag": "improved",
+   "tiny": true,
+   "title": "The offscreen note stops reading like a description",
+   "detail": "Hover an object anchored between camera windows and the tooltip says so: the map is drawing it over a neighbouring screen. That line was set exactly like the object's own description below it, so the two ran together as one paragraph with nothing to say which was which. The note is now a size smaller and a good deal fainter, keeping what the map has to say about its own drawing apart from what it has to say about the object."
+  },
+  {
    "date": "2026-08-20",
    "tag": "improved",
    "tiny": true,

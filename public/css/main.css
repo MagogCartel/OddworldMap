@@ -384,6 +384,10 @@ body.page-zoomed #cv {
 #tip .about {
   font-style: italic;
 }
+#tip .offscreen {
+  font-size: 11px;
+  opacity: 0.68;
+}
 /* field pairs wrap as units; word-spacing opens only the seams between them */
 #tip .kv {
   display: inline-block;
