@@ -29,7 +29,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 **Next up**:
 
 - [86. World graph](item-086-world-graph.md) — feeds on the wiring overlay's aggregation experience.
-- [15. Path buttons in game order](item-015-path-buttons-game-order.md)
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 - [5. LCD marquee text](item-005-lcd-marquee-text.md) — disc machine, and only after the spike says the strings are reachable.
@@ -44,7 +43,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Map-native features
 
 - [**12.** Curated path names](item-012-curated-path-names.md) — the remaining curation: the still-unnamed AO paths, and one AE name that stands by elimination. _Content pass, anywhere._
-- [**15.** Path buttons in game order](item-015-path-buttons-game-order.md) — a setting to sort them by in-game progression where the transition graph can derive it. _Small, anywhere._
 - [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — the artifact people actually want from a map site. _Medium, anywhere._
 - [**59.** Give the map an accessible surface](item-059-accessible-map-surface.md) — assistive tech sees an unlabelled graphic; the keyboard cannot inspect. _Medium, anywhere._
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
@@ -102,6 +100,7 @@ Rejected or disproved, kept so they are not re-proposed.
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
 - [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the empty `levels` section and the two schema rules policing it are gone; the tooltip clause stays, a subset build being where it still fires. _2026-08-20._
+- [**15.** Path buttons in game order](item-015-path-buttons-game-order.md) — a level's paths listed in the order a player meets them: one walk of its own transitions out from the way in, each area kept whole, and the games' own numbering choosing between the branches. _2026-08-21._
 - [**17.** Field glossary](item-017-field-glossary.md) — every shipped field now resolves a definition, coverage pinned by test; the long tail fell to the decomp research in one sitting, 44 entries to 565. _2026-08-13._
 - [**82.** Type encyclopedia cards](item-082-type-encyclopedia.md) — every object type explains itself: one curated paragraph per type, all 139 across both games, the first sentence riding the hover tooltip and the card composing the rest with live counts and field meanings. _2026-08-12._
 - [**83.** Offline app shell](item-083-offline-app-shell.md) — the app joins the artwork in the opt-in cache, network-first with an offline fallback, so no stamp and no version skew; the map opens on a plane. _2026-08-11._

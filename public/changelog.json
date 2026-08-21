@@ -3,6 +3,12 @@
   {
    "date": "2026-08-21",
    "tag": "improved",
+   "title": "Path buttons can follow the order you play",
+   "detail": "A level's path buttons have always followed the order the games store their paths in, which has little to do with walking the level. The Stock Yards list their entrance last, and Rupture Farms Return reads Zulag 2, 2, 2, 4, 3, 3 down its eighteen buttons before it ever reaches Zulag 1. Turn on \"Paths in play order\" in Settings and the paths are listed in the order you reach them instead. The way in comes first, then a walk of the doors, wells, portals and transitions out from it, with each area finished before the next begins. Necrum Mines opens on Tunnel 1 with its secret area beside it, and the Paramonian Temple lists the hub before its six trials. The Brewery reads its terminal, then each of its three hubs ahead of the zulags it opens."
+  },
+  {
+   "date": "2026-08-21",
+   "tag": "improved",
    "tiny": true,
    "title": "The offscreen note stops reading like a description",
    "detail": "Hover an object anchored between camera windows and the tooltip says so: the map is drawing it over a neighbouring screen. That line was set exactly like the object's own description below it, so the two ran together as one paragraph with nothing to say which was which. The note is now a size smaller and a good deal fainter, keeping what the map has to say about its own drawing apart from what it has to say about the object."

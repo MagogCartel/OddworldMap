@@ -116,7 +116,7 @@ test("demo paths in the shipped data are exactly the attract-mode copies", () =>
     const entries = computeEntryPaths(data);
     const demo = [];
     for (const L of data.levels) {
-      // hiding the class must never empty a level: a level button opens on its first path
+      // hiding the class must never empty a level: in disc order, a level opens on this one
       assert.ok(!isDemoPath(L.paths[0]), `${data.id} ${L.short} opens on a gameplay path`);
       for (const P of L.paths) {
         if (isDemoPath(P)) {

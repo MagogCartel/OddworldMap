@@ -34,6 +34,7 @@ import {
 } from "./model.js";
 import { pathDisplayName, pathNickname } from "./annotations.js";
 import { isDemoPath, pathVisible, revealPath } from "./demo.js";
+import { orderPaths } from "./pathorder.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
 
 function markOn(box, key) {
@@ -90,7 +91,10 @@ export function selectGame(G, keepView) {
   if (!keepView && G.levels.length) selectLevel(G.levels[0]);
 }
 
-const visiblePaths = (L) => L.paths.filter(pathVisible);
+const visiblePaths = (L) => {
+  const ps = L.paths.filter(pathVisible);
+  return getSettings().playOrder ? orderPaths(state.data, L, ps) : ps;
+};
 
 function buildPathButtons() {
   const L = state.lvl;
@@ -139,6 +143,11 @@ function selectLevel(L) {
 window.addEventListener("settings-changed", (e) => {
   if (e.detail.key !== "demoPaths" || !state.lvl) return;
   if (state.path) revealPath(state.path); // hiding the class must not unlist the path in hand
+  buildPathButtons();
+});
+
+window.addEventListener("settings-changed", (e) => {
+  if (e.detail.key !== "playOrder" || !state.lvl) return;
   buildPathButtons();
 });
 

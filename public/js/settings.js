@@ -20,6 +20,7 @@ export const SETTINGS_DEFAULTS = {
   rememberView: true,
   rememberLoc: false,
   fullNames: true,
+  playOrder: false,
   showDemoPaths: false,
   screenList: true,
   cacheMap: false,
@@ -250,6 +251,10 @@ export function initSettings() {
     document.body.classList.toggle("fullnames", on);
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "fullNames" } }));
   });
+
+  bind("sPlayOrder", "playOrder", () =>
+    window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "playOrder" } })),
+  );
 
   bind("sDemoPaths", "showDemoPaths", () =>
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "demoPaths" } })),
