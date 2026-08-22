@@ -334,6 +334,13 @@ export function cellAt(x, y, path) {
   return row * path.w + col;
 }
 
+// the draw-space centre of a cell's screen — the window inside it, never the
+// cell around it, which spaced apart is a different point
+export const cellCentre = (cell, path) => [
+  (cell % path.w) * CELL_W + GEO.visW / 2,
+  Math.floor(cell / path.w) * CELL_H + GEO.visH / 2,
+];
+
 // nearest snappable point within tol draw units of pt — a shown object's
 // center, or a collision-line endpoint when those are drawn — or null
 export function snapTarget(pt, path, tol, lines = false) {

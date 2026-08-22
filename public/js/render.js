@@ -18,6 +18,7 @@ import { $, cv, ctx, cssVar } from "./dom.js";
 import { state, GEO, CELL_W, CELL_H, cellOrigin, dX, dY, worldLen } from "./state.js";
 import {
   camCenter,
+  cellCentre,
   centerCam,
   computeConnections,
   computeWiring,
@@ -490,12 +491,7 @@ export function draw() {
         }
         continue;
       }
-      const [tx, ty] = e.dst
-        ? markerCentre(e.dst)
-        : [
-            (e.cell % path.w) * CELL_W + GEO.visW / 2,
-            Math.floor(e.cell / path.w) * CELL_H + GEO.visH / 2,
-          ];
+      const [tx, ty] = e.dst ? markerCentre(e.dst) : cellCentre(e.cell, path);
       const dx = tx - sx,
         dy = ty - sy;
       const len = Math.hypot(dx, dy);

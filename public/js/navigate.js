@@ -22,6 +22,7 @@ import { draw, flashAt } from "./render.js";
 import {
   camCell,
   camCenter,
+  cellCentre,
   centerCam,
   computeEntryPaths,
   findTlv,
@@ -251,10 +252,7 @@ export function navigateToDest(d) {
     [fx, fy] = markerCentre(tgt);
   }
   const cell = camCell(state.path, d.ca);
-  if (fx == null && cell != null) {
-    fx = (cell % state.path.w) * CELL_W + GEO.visW / 2;
-    fy = Math.floor(cell / state.path.w) * CELL_H + GEO.visH / 2;
-  }
+  if (fx == null && cell != null) [fx, fy] = cellCentre(cell, state.path);
   if (fx == null) return; // path-level target: selectPath already fit the view
   focusOn(fx, fy);
 }
@@ -278,11 +276,7 @@ export function jumpToPlace(G, L, P, cam) {
   selectPathById(P.id);
   if (cam == null) return;
   const cell = camCell(state.path, cam);
-  if (cell != null)
-    focusOn(
-      (cell % state.path.w) * CELL_W + GEO.visW / 2,
-      Math.floor(cell / state.path.w) * CELL_H + GEO.visH / 2,
-    );
+  if (cell != null) focusOn(...cellCentre(cell, state.path));
 }
 
 // ---- permalinks ---------------------------------------------------------
