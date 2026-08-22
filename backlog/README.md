@@ -44,7 +44,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [**12.** Curated path names](item-012-curated-path-names.md) — the remaining curation: the still-unnamed AO paths, and one AE name that stands by elimination. _Content pass, anywhere._
 - [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — the artifact people actually want from a map site. _Medium, anywhere._
-- [**59.** Give the map an accessible surface](item-059-accessible-map-surface.md) — assistive tech sees an unlabelled graphic; the keyboard cannot inspect. _Medium, anywhere._
+- [**59.** Give the map an accessible surface](item-059-accessible-map-surface.md) — the count grid carries no table semantics, `#numbersBtn` names nothing it opens, and the minimap scrubs by pointer alone; the announcer and the keyboard's route into a screen shipped. _Small-medium, anywhere._
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._

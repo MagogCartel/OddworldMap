@@ -36,6 +36,7 @@ import {
   setWireFocus,
 } from "./render.js";
 import {
+  camCenter,
   computeWiring,
   destOf,
   destTrusted,
@@ -63,7 +64,7 @@ import {
 import { typeSummary } from "./typeinfo.js";
 import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
-import { openCamPanel } from "./campanel.js";
+import { focusCamPanel, openCamPanel, openCamPanelNear } from "./campanel.js";
 import { togglePlace } from "./place.js";
 import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
 import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
@@ -384,6 +385,15 @@ window.addEventListener("keydown", (e) => {
   }
   if (e.key === "i") {
     togglePlace();
+    return;
+  }
+  if (e.key === "l") {
+    if (e.repeat || !state.path) return;
+    const c = camCenter(state.cam, cv.clientWidth, cv.clientHeight);
+    if (openCamPanelNear(c.x, c.y)) {
+      if (isNarrow()) toggleMenu(false); // the panel is a bottom sheet under the scrim otherwise
+      focusCamPanel();
+    }
     return;
   }
   if (e.key === "?") {

@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-22",
+   "tag": "improved",
+   "title": "A key lists what is on the screen you are looking at",
+   "detail": "Asking what a screen holds has always meant clicking it, which left the keyboard no way to ask at all. Press L and the list opens for the screen nearest the middle of the view, with the keyboard already inside it. The camera's name and its object count come first, then Tab walks the rows, Enter jumps to the object one names, and Escape closes the list and hands the keyboard back to where it came from. Nearest rather than dead centre on purpose: a path's grid of screens is mostly empty space, so insisting on the exact middle would have refused on half of them."
+  },
+  {
+   "date": "2026-08-22",
    "tag": "new",
    "flagship": true,
    "title": "The map says where it is, out loud",

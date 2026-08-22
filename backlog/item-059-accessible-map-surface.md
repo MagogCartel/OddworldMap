@@ -1,6 +1,6 @@
 # 59. Give the map an accessible surface
 
-**Status:** open · **Effort:** medium (accessibility) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
+**Status:** open — the By-the-numbers semantics and the minimap's keyboard; the announcer and the keyboard's route into a screen shipped 2026-08-22 · **Effort:** small-medium (accessibility) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -49,3 +49,21 @@ VoiceOver on macOS or NVDA on Windows: load the page, tab to the map, switch pat
 ## Ships with
 
 A README controls-list update and a `changelog.json` entry, tag `improved`, for the keyboard binding. The live region alone is arguably invisible to most, but it is still a user-facing capability — an entry is justified.
+
+## Shipped: the announcer and the keyboard's route into a screen, 2026-08-22
+
+`#a11yStatus` and [js/a11y.js](../public/js/a11y.js), in *The map says where it is, out loud*: a `.sr-only` `role="status"` region on `<body>` naming the game, the level, the path and its name, the object count, and that the path carries a note where it does, with `#cv` taking the same sentence as its `aria-label` under `role="img"`. And `l`, in *A key lists what is on the screen you are looking at*: the screen list opened on the view's centre with focus inside it.
+
+Four things the sketch did not know.
+
+**Aiming at the cell under the view centre would have refused on half the map.** `fitView` frames a path's whole `w × h` grid, and a path's cells are mostly empty — 91 of the 191 shipped paths have a camera under that centre and **100 do not**, and with the screens spaced apart only 8 of Oddysee's 74 do. A key that fails on a coin flip at the exact moment it will be pressed is not a route into anything, so `nearestCam` answers with the closest screen rather than demanding a hit. That disposed of the sketch's toast as well: there is nothing left to report, a path always having a camera somewhere. The click keeps the old rule and still dismisses on the void.
+
+**Dropping the panel's `aria-live` needed something to replace it, and the chip was the wrong something.** `i` is a global key pressed with focus on the body, so with the region gone it announced nothing whatever. Moving focus to `#placeBtn` looked like the answer and was worse than the disease: the chip's own label is rewritten on every selection change, and an accessible name that changes under the focus *is* announced, so parking there would have doubled every step of `[` and `]`. Focus goes onto the panel instead — `tabindex="-1"` and a `role="group"` of its own — which is the same treatment the screen list needed, and the two halves ended up agreeing rather than solving one problem in opposite directions.
+
+**The identity guard the sketch asked for is necessary and not sufficient.** A held `[` or `]` steps a path per autorepeat and every step is a real change of path, so nine announcements queue for one keypress and speak long after the key is up; and `applyHash` reaches a path in another level through that level's first path, so a permalink announced a place nobody chose before the one they asked for. The region settles for 250ms and says where the stepping stopped. Both were measured in a browser, before and after.
+
+**The sentence went into a DOM-free module of its own** — it is the only prose in the app no sighted check can read, and there is no DOM harness here. Its sweep pins that all 191 paths read as one well-formed sentence and, more usefully, that no two read alike: assistive tech does not re-announce a region rewritten with the text it already held, so two paths sharing a sentence would be a move that went unsaid.
+
+Dropping the `aria-live` also spent the deferral [39](item-039-where-am-i-surface.md) had built for it — `syncPlace` needs neither `panel.offsetParent` nor the call from `toggleMenu`, a panel nobody is listening to being safe to fill under cover — and it closed 39's other leftover, the `aria-hidden` note dot, by putting what the dot says into the announced sentence.
+
+**Still open:** the three under *Grown since filing*. `#numbersBtn`'s missing `aria-expanded`/`aria-controls` pair and the count grid's absent table semantics belong to the By-the-numbers surface and want one commit between them; the minimap's pointer-only scrubbing is a new interaction rather than a label, colliding head-on with arrows that already pan, and belongs with the roving-focus object cursor this item defers rather than bolted onto the end of it. That cursor is also why the *Verify* note above says "tab to the map" and cannot: with `role="img"` and no `tabindex` the canvas is reached by a virtual cursor, which is the deliberate choice, not an oversight.

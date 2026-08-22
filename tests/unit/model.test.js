@@ -4,6 +4,7 @@ import {
   camCell,
   camCenter,
   cellAt,
+  cellCentre,
   centerCam,
   computeConnections,
   computeEntryPaths,
@@ -18,6 +19,7 @@ import {
   offScreen,
   drawBox,
   markerCentre,
+  nearestCam,
   screenRuns,
   parseHash,
   patrolZone,
@@ -310,6 +312,28 @@ test("cellAt: draw-space point to grid cell, null anywhere outside the grid", ()
   assert.equal(cellAt(910, 20, P), null);
   assert.equal(cellAt(450, -5, P), null);
   assert.equal(cellAt(450, 301, P), null);
+});
+
+test("cellCentre: the middle of a cell's window, not of the cell", () => {
+  setGeometry(SYNTH_GEOMETRY); // 300x150 cells showing a 200x100 window at +40/+20
+  const P = path(1, [], [], 3, 2);
+  assert.deepEqual(cellCentre(0, P), [100, 50]);
+  assert.deepEqual(cellCentre(4, P), [400, 200]); // row 1, col 1
+});
+
+test("nearestCam: the screen nearest a point the keyboard did not aim", () => {
+  setGeometry(SYNTH_GEOMETRY);
+  const cam = (cell) => ({ cell, name: `C0${cell}` });
+  const P = path(1, [], [cam(0), cam(2), cam(5)], 3, 2);
+  // a point inside a camera's own cell picks it
+  assert.equal(nearestCam(110, 60, P).cell, 0);
+  // and a point over an empty cell still answers, with the screen it is closest to
+  assert.equal(nearestCam(400, 200, P).cell, 5); // cell 4 holds none; 5 is next door
+  assert.equal(nearestCam(100, 200, P).cell, 0); // cell 3 holds none; 0 is above it
+  // far outside the grid altogether
+  assert.equal(nearestCam(-9000, -9000, P).cell, 0);
+  assert.equal(nearestCam(9000, 9000, P).cell, 5);
+  assert.equal(nearestCam(0, 0, path(1, [], [], 3, 2)), null);
 });
 
 // AO's window is 368x240 at +256/+120 of a 1024x480 cell, so 656x240 of slack

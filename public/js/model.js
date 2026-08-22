@@ -341,6 +341,23 @@ export const cellCentre = (cell, path) => [
   Math.floor(cell / path.w) * CELL_H + GEO.visH / 2,
 ];
 
+// the camera whose screen centre is nearest a draw-space point. A path's grid is
+// mostly empty — the view's centre sits over no camera at all on half the paths
+// in either game — so a point that was not aimed needs a nearest, not a hit
+export function nearestCam(x, y, path) {
+  let best = null,
+    bd = Infinity;
+  for (const c of path.cams) {
+    const [cx, cy] = cellCentre(c.cell, path);
+    const d = (cx - x) ** 2 + (cy - y) ** 2;
+    if (d < bd) {
+      bd = d;
+      best = c;
+    }
+  }
+  return best;
+}
+
 // nearest snappable point within tol draw units of pt — a shown object's
 // center, or a collision-line endpoint when those are drawn — or null
 export function snapTarget(pt, path, tol, lines = false) {

@@ -13,7 +13,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 ## Controls
 
 - **AO / AE** buttons switch between the two games
-- **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom; **`[` / `]`** step through the level's paths, **`g` / `c` / `f` / `a`** flip the grid, collision lines, foreground masks and connection arrows, **`r`** / **`m`** arm the route planner and the ruler, and **`i`** says where you are — press **`?`** for the full shortcut list
+- **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom; **`[` / `]`** step through the level's paths, **`g` / `c` / `f` / `a`** flip the grid, collision lines, foreground masks and connection arrows, **`r`** / **`m`** arm the route planner and the ruler, **`i`** says where you are and **`l`** lists what is on the screen nearest the view's center — press **`?`** for the full shortcut list
 - **hover** any object for decoded details
   - the details open with what the thing *is*: one plain-English sentence per object type, the opening line of its encyclopedia entry (curated in [glossary_types.json](public/glossary_types.json))
   - door destinations (level/path/door#), path-transition targets, continue-point zones, Mudokon state (Oddysee job / Exoddus work state + mood), and enemy behaviour (a Slig's start state and how it attacks — `shoot_on_sight_delay=0` means it shoots the instant it sees Abe, no "FREEZE!" warning; whether a Slog starts asleep)
@@ -27,6 +27,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **click/tap** anywhere else on a screen to list everything on it, grouped by category
   - hover a row to outline that object on the map, click it to jump there
   - tapping an object opens the list scrolled to that object's highlighted row: on touch devices, where there is no hover, this is how you inspect an object
+  - **`l`** opens that list for the screen nearest the view's center and puts the keyboard inside it: Tab walks the rows, Enter jumps to the object one names, Escape closes it and gives the keyboard back to where it came from — with no mouse at all, this is how you inspect a screen
   - the **ⓘ** at a row's edge (also next to each type in the Fields panel) opens that type's encyclopedia card: the full curated entry, how many are placed in each game — counted live, with what the hidden demo paths hold noted apart — what its stored fields mean, and a link that finds every one of them with search
   - on phones the panel opens as a bottom sheet with the map staying visible above it; switch "List a screen's objects on click" off in Settings if you'd rather those clicks did nothing
 - level and path buttons top-left; object category filters with counts below — hover a filter for what falls inside it

@@ -231,7 +231,7 @@
       </div>
       <div id="placePanel" hidden tabindex="-1" role="group" aria-label="Path details"></div>
       <div id="tip"></div>
-      <div id="camPanel" hidden>
+      <div id="camPanel" hidden tabindex="-1" role="group" aria-labelledby="camPanelTitle">
         <div class="cp-head">
           <span id="camPanelTitle"></span>
           <button id="camPanelClose" class="closebtn" aria-label="Close">×</button>
@@ -317,6 +317,10 @@
           <div class="sc-row">
             <span class="sc-keys"><kbd>i</kbd></span
             >where you are: level, path and its note
+          </div>
+          <div class="sc-row">
+            <span class="sc-keys"><kbd>l</kbd></span
+            >list the objects on the screen nearest the view's center
           </div>
           <div class="sc-row">
             <span class="sc-keys"><kbd>s</kbd></span

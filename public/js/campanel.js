@@ -1,13 +1,14 @@
 // Per-camera object list: clicking a screen with nothing to follow under the
 // pointer lists everything on it. Hover doesn't exist on touch devices, so
-// this panel is also the mobile way to inspect a screen's objects.
+// this panel is also the mobile way to inspect a screen's objects, and `l`
+// the keyboard's only way.
 
 import { esc } from "./util.js";
 import { fieldEntries, fieldHelp } from "./fields.js";
 import { CATS, OFFSCREEN_NOTE, catOf } from "./config.js";
 import { $, narrowMQ } from "./dom.js";
 import { state } from "./state.js";
-import { cellAt, markerCentre, offScreen } from "./model.js";
+import { cellAt, markerCentre, nearestCam, offScreen } from "./model.js";
 import { setHighlight } from "./render.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
@@ -18,12 +19,25 @@ const panel = $("camPanel"),
 
 let listedPath = null; // the path the open panel was built from
 let lastOpen = null; // args of the current open, so a settings change can rebuild it
+let opener = null; // where focus returns when a panel holding it closes
 
 function closeCamPanel() {
+  // read before the hide: hiding a subtree holding the focus drops it to <body>
+  const held = panel.contains(document.activeElement);
   panel.hidden = true;
   listedPath = null;
   lastOpen = null;
   setHighlight(null);
+  // the opener may be gone or hidden by now (its surface re-rendered or closed)
+  if (held && opener?.isConnected && opener.offsetParent) opener.focus();
+  opener = null;
+}
+
+// the panel is named by its own title, so focus landing on it says which screen
+// and how much is on it before the rows do
+export function focusCamPanel() {
+  if (!panel.contains(document.activeElement)) opener = document.activeElement;
+  panel.focus();
 }
 
 // (x, y) in draw space: list the camera cell under it, all categories —
@@ -39,6 +53,23 @@ export function openCamPanel(x, y, focus = null) {
     closeCamPanel(); // clicked the void between/outside screens: dismiss
     return;
   }
+  opener = null; // a pointer brought no focus with it
+  list(cam, focus);
+}
+
+// the keyboard aims with the one point it has, the view's centre
+export function openCamPanelNear(x, y) {
+  const { path } = state;
+  if (!path) return false;
+  const cam = nearestCam(x, y, path);
+  if (!cam) return false;
+  list(cam, null);
+  return true;
+}
+
+function list(cam, focus) {
+  const { path } = state,
+    cell = cam.cell;
   // objects bucket by rect centre in draw space — an inventory rule; the
   // resolution logic (tlvCell) buckets by world top-left, which can differ
   // for an edge-straddling object
@@ -110,7 +141,7 @@ export function openCamPanel(x, y, focus = null) {
   }
   if (!n) body.innerHTML = `<div class="cp-none">no objects on this screen</div>`;
   listedPath = path;
-  lastOpen = { x, y, focus };
+  lastOpen = { cam, focus };
   panel.hidden = false;
   window.dispatchEvent(new CustomEvent("float-opened", { detail: { id: "camPanel" } }));
   body.querySelector(".active")?.scrollIntoView({ block: "nearest" }); // after unhide: needs layout
@@ -139,7 +170,7 @@ window.addEventListener("settings-changed", (e) => {
     !panel.hidden &&
     lastOpen
   )
-    openCamPanel(lastOpen.x, lastOpen.y, lastOpen.focus);
+    list(lastOpen.cam, lastOpen.focus);
 });
 
 window.addEventListener("keydown", (e) => {
