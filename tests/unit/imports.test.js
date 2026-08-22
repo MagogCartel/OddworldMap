@@ -18,6 +18,7 @@ test("pure modules import in bare Node", async () => {
     "pathorder",
     "glossary",
     "census",
+    "placesummary",
     "typeinfo",
   ]) {
     const m = await import(`../../public/js/${mod}.js`);

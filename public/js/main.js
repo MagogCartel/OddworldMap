@@ -12,6 +12,7 @@ import "./sidebar.js";
 import "./search.js";
 import { toggleMenu } from "./interaction.js";
 import { initFieldPanel } from "./fieldpanel.js";
+import "./a11y.js";
 import "./anchortip.js";
 import "./whatsnew.js";
 import "./about.js";

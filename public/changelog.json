@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-22",
+   "tag": "new",
+   "flagship": true,
+   "title": "The map says where it is, out loud",
+   "detail": "To a screen reader this map was an unnamed picture that never seemed to change: nothing said which game, which level or which path was on it. It now says so on arrival: the game, the level's full name, the path and the name it carries, how many objects are on it, and whether it carries one of the notes the map keeps about odd places. The map itself is named with that same line instead of being anonymous. It is said once wherever you arrived from, a path button, a door, a shared link or the shuffle button, and holding the path keys down no longer talks over itself. Pressing i now puts the keyboard inside the place panel, so the level's full name, its section, its nickname and its note can be read there."
+  },
+  {
    "date": "2026-08-21",
    "tag": "improved",
    "title": "Path buttons can follow the order you play",

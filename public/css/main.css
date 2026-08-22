@@ -43,6 +43,17 @@ select,
 textarea {
   font-family: inherit;
 }
+/* out of the layout, still in the accessibility tree: display: none and
+   visibility: hidden both leave that tree, and a region outside it is silent */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
 html,
 body {
   height: 100%;

@@ -15,10 +15,8 @@ const btn = $("placeBtn"),
   codeEl = $("placeCode"),
   nameEl = $("placeName");
 
-let shown = null; // the path the open panel describes; a re-selection must not re-announce
+let shown = null; // the path the open panel describes
 
-// the panel is a live region, and a live region announces only what is written
-// into it while it is visible — so every fill follows the unhide
 function fill() {
   const { data, lvl, path } = state;
   const name = pathDisplayName(data.id, lvl.short, path),
@@ -42,9 +40,17 @@ function fill() {
 
 function setOpen(open) {
   btn.setAttribute("aria-expanded", String(open));
-  panel.hidden = !open;
-  if (open) syncPlace();
-  else shown = null;
+  if (open) {
+    panel.hidden = false;
+    syncPlace();
+    // the prose is what the chip was pressed for, and nothing announces it
+    if (panel.offsetParent) panel.focus();
+    return;
+  }
+  const held = panel.contains(document.activeElement);
+  panel.hidden = true;
+  shown = null;
+  if (held) btn.focus();
 }
 
 export function togglePlace(open) {
@@ -52,11 +58,11 @@ export function togglePlace(open) {
   setOpen(open ?? panel.hidden);
 }
 
-// an open panel can be covered rather than closed — on narrow the drawer takes
-// the screen while the panel keeps its state — and a write made under the cover
-// is a write nothing announces, so it waits here until the cover lifts
-export function syncPlace() {
-  if (!panel.hidden && panel.offsetParent && state.path && state.path !== shown) fill();
+// a re-selection of the path the panel already describes must not rebuild it:
+// the pushed hash rewrite re-fires selection-changed on the same path constantly,
+// and a rebuild would throw away the reader's scroll position
+function syncPlace() {
+  if (!panel.hidden && state.path && state.path !== shown) fill();
 }
 
 btn.onclick = () => togglePlace();

@@ -64,7 +64,7 @@ import { typeSummary } from "./typeinfo.js";
 import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { openCamPanel } from "./campanel.js";
-import { syncPlace, togglePlace } from "./place.js";
+import { togglePlace } from "./place.js";
 import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
 import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 import { HAMBURGER_SVG, CLOSE_SVG, LINK_SVG, EXTERNAL_SVG } from "./icons.js";
@@ -92,7 +92,6 @@ export function toggleMenu(open) {
     open ?? !document.body.classList.contains("menu-open"),
   );
   syncMenu();
-  syncPlace();
 }
 syncMenu();
 menuBtn.onclick = () => toggleMenu();

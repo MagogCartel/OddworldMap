@@ -28,6 +28,6 @@ The obvious cheap fix does not work: `visibility: hidden` removes an element fro
 
 ## Shipped
 
-`js/place.js`, `#placeBtn` + `#placePanel`: the chip names the current level and path, wears an accent dot where the path carries a note, and click, tap or `i` discloses the game, the level's full name, the entry-point flag and the note as prose. Two traps are recorded in CLAUDE.md — the live-region fill order, and the route-bar step-down.
+`js/place.js`, `#placeBtn` + `#placePanel`: the chip names the current level and path, wears an accent dot where the path carries a note, and click, tap or `i` discloses the game, the level's full name, the entry-point flag and the note as prose. The route-bar step-down is recorded in CLAUDE.md; the live-region fill order was retired with the panel's `aria-live`.
 
-**Still open against it:** [59](item-059-accessible-map-surface.md)'s global `#a11yStatus` should take over the announcing when it lands, rather than leaving the panel to be its own live region and say the same thing twice. And the note dot is `aria-hidden`, so a screen-reader user gets no hint that a path carries a note at all — deferred to a full screen-reader sweep rather than patched here, since the dot is the whole invitation to open the panel.
+[59](item-059-accessible-map-surface.md)'s global `#a11yStatus` took the announcing over on 2026-08-22, and the panel gave up its `aria-live` along with the deferral built for it — a panel nobody is listening to can be filled under cover, so `syncPlace` needs neither `panel.offsetParent` nor the call from `toggleMenu`. What the dot says now reaches a screen reader with the rest of the place, and `i` puts the keyboard in the panel, since a disclosure nothing announces has to be somewhere focus can land.

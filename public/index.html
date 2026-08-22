@@ -55,6 +55,7 @@
     <link rel="preload" href="map_data_ae.json" as="fetch" crossorigin />
   </head>
   <body>
+    <div id="a11yStatus" class="sr-only" role="status" aria-live="polite"></div>
     <div id="scrim"></div>
     <div id="sidebar">
       <h1>
@@ -181,7 +182,7 @@
     </div>
     <div id="main">
       <noscript><div id="noscript">This interactive map requires JavaScript.</div></noscript>
-      <canvas id="cv"></canvas>
+      <canvas id="cv" role="img" aria-label="Oddworld map"></canvas>
       <button id="menuBtn" class="iconbtn" aria-label="Toggle menu" title="Toggle menu"></button>
       <!-- .chrome marks site furniture that embed mode hides -->
       <button
@@ -228,7 +229,7 @@
           title="Somewhere odd: jump to a random screen"
         ></button>
       </div>
-      <div id="placePanel" hidden aria-live="polite"></div>
+      <div id="placePanel" hidden tabindex="-1" role="group" aria-label="Path details"></div>
       <div id="tip"></div>
       <div id="camPanel" hidden>
         <div class="cp-head">
