@@ -364,6 +364,15 @@ const CLAIMS = {
       n(allOf(AE, "SecurityClaw")) === 2
     );
   },
+  ShadowZone: () => {
+    const ao = listed(AO, "ShadowZone");
+    const ae = listed(AE, "ShadowZone");
+    // ShadowZoneScale: 0 both, 1 half, 2 full
+    return (
+      count(ao, (r) => f(r, "scale") === 0) * 2 > n(ao) &&
+      count(ae, (r) => f(r, "scale") === 2) * 2 > n(ae)
+    );
+  },
   SligBoundRight: () =>
     n(listed(AO, "SligBoundRight")) < n(listed(AO, "SligBoundLeft")) &&
     n(listed(AE, "SligBoundRight")) < n(listed(AE, "SligBoundLeft")),

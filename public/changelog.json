@@ -4,6 +4,13 @@
    "date": "2026-08-23",
    "tag": "fixed",
    "tiny": true,
+   "title": "A shadow zone tints one plane, not every sprite",
+   "detail": "The shadow zone's card said it tints every sprite that crosses it. Each zone in fact names which depth plane it paints, and most of them pick one: of Exoddus's 1148 zones, 798 tint the foreground alone and 44 the background alone. A zone can pass straight over a background sprite without touching it. Oddysee leans the other way and mostly paints both. The card now says so, as the field's own description in the map already did."
+  },
+  {
+   "date": "2026-08-23",
+   "tag": "fixed",
+   "tiny": true,
    "title": "Oddysee's no-fire cover has a way around it",
    "detail": "The box that stops a background Slig sniping across the depth axis works as its card described in Exoddus. There, every route a Slig has to a depth shot looks for cover, the Slig's own and its target's alike. Oddysee has a route that looks for neither: a Slig that simply turns and finds you takes the shot whoever is standing in a box. The card said the protection held both ways without qualification, and now says which game means it."
   },
