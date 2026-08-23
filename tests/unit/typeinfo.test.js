@@ -105,6 +105,10 @@ const CLAIMS = {
       allOf(AO, "ChimeLock"),
       (r) => r.lv.short === "D2" && f(r, "password_switch_id") === 180,
     ) === 5,
+  ContinuePoint: () => {
+    const cp = listed(AE, "ContinuePoint");
+    return n(cp) === 107 && count(cp, (r) => f(r, "scale") === 0) === 83;
+  },
   ContinueZone: () => n(allOf(AO, "ContinueZone")) === 508,
   CrawlingSlig: () => {
     const cs = listed(AE, "CrawlingSlig");

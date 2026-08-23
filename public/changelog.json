@@ -4,6 +4,13 @@
    "date": "2026-08-23",
    "tag": "improved",
    "tiny": true,
+   "title": "A checkpoint can be picky about your plane",
+   "detail": "Exoddus's quicksave checkpoints carry a filter on which depth plane's Abe may trip them, so a checkpoint you walk through can quietly decline to save. Its card told that through the field's own value names, and went on to say a single screen could therefore checkpoint each plane separately, which no screen in the game does. The card now says what the filter is and how seldom it is set: 83 of the 107 checkpoints filter nobody."
+  },
+  {
+   "date": "2026-08-23",
+   "tag": "improved",
+   "tiny": true,
    "title": "A portal exit says where you land, not what size",
    "detail": "The card for a portal's far end said the exit decides which way Abe faces and at what scale he arrives. It does read a scale, and every one of the 48 exits across both games is set to full, so that field has never once changed anything. What the marker really does settle, and what the card now says, is where you come down: the landing spot is read off this rectangle."
   },
