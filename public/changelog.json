@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-08-23",
+   "tag": "fixed",
+   "tiny": true,
+   "title": "Oddysee's no-fire cover has a way around it",
+   "detail": "The box that stops a background Slig sniping across the depth axis works as its card described in Exoddus. There, every route a Slig has to a depth shot looks for cover, the Slig's own and its target's alike. Oddysee has a route that looks for neither: a Slig that simply turns and finds you takes the shot whoever is standing in a box. The card said the protection held both ways without qualification, and now says which game means it."
+  },
+  {
+   "date": "2026-08-23",
    "tag": "improved",
    "tiny": true,
    "title": "The temple boulder's card stops overclaiming",
