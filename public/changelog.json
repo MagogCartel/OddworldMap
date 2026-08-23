@@ -3,56 +3,8 @@
   {
    "date": "2026-08-23",
    "tag": "fixed",
-   "tiny": true,
-   "title": "A shadow zone tints one plane, not every sprite",
-   "detail": "The shadow zone's card said it tints every sprite that crosses it. Each zone in fact names which depth plane it paints, and most of them pick one: of Exoddus's 1148 zones, 798 tint the foreground alone and 44 the background alone. A zone can pass straight over a background sprite without touching it. Oddysee leans the other way and mostly paints both. The card now says so, as the field's own description in the map already did."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "fixed",
-   "tiny": true,
-   "title": "Oddysee's no-fire cover has a way around it",
-   "detail": "The box that stops a background Slig sniping across the depth axis works as its card described in Exoddus. There, every route a Slig has to a depth shot looks for cover, the Slig's own and its target's alike. Oddysee has a route that looks for neither: a Slig that simply turns and finds you takes the shot whoever is standing in a box. The card said the protection held both ways without qualification, and now says which game means it."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "improved",
-   "tiny": true,
-   "title": "The temple boulder's card stops overclaiming",
-   "detail": "The boulder's card said it crushes with no filter at all: no scale check, no type check, everything in the way. It is nearly that indiscriminate, swinging at everything the engine files as alive whose box it overlaps, asking neither its health nor whether it is drawn. A mine is filed there too, so the boulder does swing at one; the mine simply has no answer for a rolling ball and sits where it is. Not that the two ever meet: the temple keeps its boulders and its mines on different paths. The card also implied the boulder was unusual in ignoring which depth plane a victim stands on, and it is not. Oddysee's electric walls and trapdoors never ask either. The card now says what the boulder does rather than what it skips."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "improved",
-   "tiny": true,
-   "title": "A checkpoint can be picky about your plane",
-   "detail": "Exoddus's quicksave checkpoints carry a filter on which depth plane's Abe may trip them, so a checkpoint you walk through can quietly decline to save. Its card told that through the field's own value names, and went on to say a single screen could therefore checkpoint each plane separately, which no screen in the game does. The card now says what the filter is and how seldom it is set: 83 of the 107 checkpoints filter nobody."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "improved",
-   "tiny": true,
-   "title": "A portal exit says where you land, not what size",
-   "detail": "The card for a portal's far end said the exit decides which way Abe faces and at what scale he arrives. It does read a scale, and every one of the 48 exits across both games is set to full, so that field has never once changed anything. What the marker really does settle, and what the card now says, is where you come down: the landing spot is read off this rectangle."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "improved",
-   "tiny": true,
-   "title": "The plane stops being news on a mine",
-   "detail": "The mine's card explained that a background mine will not answer a foreground Abe, and the floor plate's that a background creature cannot press a foreground plate. Both are true, and both are true of very nearly everything in either game: what stands on one depth plane does not touch what stands on the other. The engine enforces it once, for almost every object there is. Saying it on these two marked them out as special for obeying the house rule. Both cards keep everything that is actually theirs."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "fixed",
-   "title": "What really holds a sack shut",
-   "detail": "Four cards describe the same throwable counter and all four described it as your hands. The meat sack and the bone bag gave nothing while your hands were full, the rock sack never while you still held any, the grenade machine dropped grenades while Abe's hands were empty. The gate is wider than anyone's hands: the game counts every rock, bone, meat and grenade in existence, wherever it happens to be. A bone you dropped two screens back keeps the next bag shut until you go and fetch it. All four now say so. The two sacks also said they serve only an Abe on its own plane, which is the rule for very nearly everything in either game rather than anything about sacks. In its place is the one thing that does set a sack apart: only Abe's own body can take from one, so walking a possessed Slig into it gets you nothing. The grenade machine asks nobody's identity at all, its lit button being the whole interface."
-  },
-  {
-   "date": "2026-08-23",
-   "tag": "fixed",
-   "title": "The Slig card had its depth shot backwards",
-   "detail": "A Slig's card said it shoots what it sees on its own plane of the world, which reads as an invitation: step onto the other plane and the guard on it cannot touch you. The opposite is nearer the truth. A Slig's rifle does only reach its own plane, but a background Slig carries a second shot along the depth axis and snipes into the foreground with it. That is the one its z_shoot_delay field times, and the reason both games scatter no-fire cover boxes about. The card now says so, and which way each game runs it: Exoddus only ever from the background into the foreground, Oddysee in either direction. Abe himself is immune to a depth shot whenever he is the one standing on the background plane."
+   "title": "The encyclopedia corrects twelve of its cards",
+   "detail": "Twelve object cards have been checked against the games' own code and corrected. Two change what you would do. A Slig's card said it shoots what it sees on its own plane, which reads as an invitation to step onto the other one. In fact a background Slig carries a second shot along the depth axis and snipes into the foreground, which is what the no-fire cover boxes are scattered about for. And the sacks and the grenade machine are not gated on what is in your hands but on every rock, bone, meat and grenade in existence, so a bone you dropped two screens back keeps the next bag shut. The rest were true but said too broadly: a shadow zone tints the plane it names rather than every sprite, a checkpoint can decline to save you, and several claimed a depth-plane rule the engine applies to almost everything."
   },
   {
    "date": "2026-08-22",
