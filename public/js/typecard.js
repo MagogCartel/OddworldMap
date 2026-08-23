@@ -22,7 +22,8 @@ const overlay = $("typeCardOverlay"),
 
 const GAME_SHORT = { AO: "Oddysee", AE: "Exoddus" };
 
-let opener = null; // where focus returns on close
+let opener = null, // where focus returns on close
+  shown = null; // the type on the card, for a re-render
 
 // a game's union of field names for a type, from the data itself
 const fieldsCache = new WeakMap(); // dataset -> Map(type -> Set(field))
@@ -122,6 +123,7 @@ function render(name) {
 function open(name) {
   if (!state.data) return;
   opener = document.activeElement;
+  shown = name;
   render(name);
   openDialog(overlay, close);
   body.scrollTop = 0;
@@ -129,6 +131,7 @@ function open(name) {
 }
 
 function close() {
+  shown = null;
   closeDialog(overlay);
   // the opener may be gone or hidden by now (its surface re-rendered or closed)
   if (opener?.isConnected && opener.offsetParent) opener.focus();
@@ -136,6 +139,17 @@ function close() {
 }
 
 window.addEventListener("typecard-open", (e) => open(e.detail.type));
+// the counts are per game, so a dataset landing behind the boot one changes
+// what an open card is claiming. The rebuild empties the scroller, so where the
+// reader had got to, and the keyboard if it was inside, are put back
+window.addEventListener("games-changed", () => {
+  if (!shown) return;
+  const top = body.scrollTop,
+    held = body.contains(document.activeElement);
+  render(shown);
+  body.scrollTop = top;
+  if (held) body.querySelector(".tc-find")?.focus();
+});
 closeBtn.onclick = close;
 overlay.onclick = (e) => {
   if (e.target === overlay) close();

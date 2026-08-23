@@ -2,7 +2,8 @@
 
 import { $ } from "./dom.js";
 import { resize } from "./render.js";
-import { initGames, selectGame, applyHash } from "./navigate.js";
+import { addGame, selectGame, applyHash } from "./navigate.js";
+import { GAME_IDS, bootGame, loadGame, loadJson } from "./data.js";
 import { setAnnotations } from "./annotations.js";
 import { setFieldTypes, setEnumLabels } from "./fields.js";
 import { setGlossary } from "./glossary.js";
@@ -34,52 +35,48 @@ if (embedded) {
   toggleMenu(false);
 }
 
-async function loadOne(file) {
-  try {
-    // no-cache revalidates (ETag/304) so rebuilds still show up immediately,
-    // but an unchanged dataset is not re-downloaded
-    const r = await fetch(file, { cache: "no-cache" });
-    if (r.ok) return await r.json();
-  } catch {
-    /* tolerate a missing dataset */
-  }
-  return null;
-}
+// the game this visit is looking at, in flight while the sidecars come down:
+// awaiting both games would spend the whole download budget of the one on
+// screen before a line of it is drawn
+const booting = loadGame(bootGame(location.hash, embedded ? null : storedLocationHash()));
 
 Promise.all([
-  loadOne("map_data_ao.json"),
-  loadOne("map_data_ae.json"),
-  loadOne("annotations.json"),
-  loadOne("field_types_ao.json"),
-  loadOne("field_types_ae.json"),
-  loadOne("enum_labels_ao.json"),
-  loadOne("enum_labels_ae.json"),
-  loadOne("glossary_fields.json"),
-  loadOne("glossary_types.json"),
-]).then(([ao, ae, annotations, ftAo, ftAe, elAo, elAe, glossary, types]) => {
+  loadJson("annotations.json"),
+  loadJson("field_types_ao.json"),
+  loadJson("field_types_ae.json"),
+  loadJson("enum_labels_ao.json"),
+  loadJson("enum_labels_ae.json"),
+  loadJson("glossary_fields.json"),
+  loadJson("glossary_types.json"),
+]).then(async ([annotations, ftAo, ftAe, elAo, elAe, glossary, types]) => {
   setAnnotations(annotations); // before the path buttons build their labels
   // before any tooltip/search prettifies
   setFieldTypes({ AO: ftAo || {}, AE: ftAe || {} });
   setEnumLabels({ AO: elAo || {}, AE: elAe || {} });
   setGlossary(glossary);
   setTypeInfo(types);
-  const games = [ao, ae].filter((d) => d && d.levels && d.levels.length);
-  if (!games.length) {
+  // a dataset that fails still leaves the other game a map to draw
+  let G = await booting;
+  for (const id of GAME_IDS) if (!G) G = await loadGame(id);
+  if (!G) {
     $("gameName").textContent = "Map data failed to load.";
     $("help").textContent =
       "map data failed to load — check that map_data_ao.json / map_data_ae.json are served";
     return;
   }
-  initGames(games);
+  addGame(G);
   resize();
-  if (!applyHash()) {
+  if (!(await applyHash())) {
     // no usable permalink in the URL: fall back to the remembered location
-    // (never in an embed, which gets the default view)
+    // (never in an embed, which gets the default view). It may name the game
+    // this boot did not fetch, which applyHash waits for rather than rejects
     const stored = embedded ? null : storedLocationHash();
     if (stored) history.replaceState(null, "", stored); // silent: no history entry, no hashchange
-    if (!stored || !applyHash()) {
+    if (!stored || !(await applyHash())) {
       if (stored) clearStoredLocation(); // its level or path no longer exists
-      selectGame(games[0]);
+      selectGame(G);
     }
   }
+  // the rest of the map, behind the first paint
+  for (const id of GAME_IDS) if (id !== G.id) loadGame(id, true).then(addGame);
 });

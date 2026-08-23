@@ -3,6 +3,7 @@
 // one go, so a place you have never opened still opens with no connection.
 
 import { CAM_FILE_BYTES } from "./config.js";
+import { GAME_FILES } from "./data.js";
 import { $ } from "./dom.js";
 import { camFiles } from "./model.js";
 import {
@@ -42,13 +43,15 @@ async function whenControlled() {
 
 // the worker stores only what passes through it, and a page from before it
 // loaded uncontrolled — so once the worker takes the page, re-fetch everything
-// it already pulled (the document included), and offline works from the
-// enabling visit onward
+// it already pulled, and offline works from the enabling visit onward. Named
+// outright: the document, which is no resource entry of its own, and the
+// datasets, one of which may still be in flight and so have no entry yet
 async function warmShell() {
   await markerReady();
   if (!(await whenControlled())) return;
   if (!getSettings().cacheMap) return; // toggled back off before the worker took the page
-  const urls = new Set([new URL("index.html", location.href).href]);
+  const named = ["index.html", ...Object.values(GAME_FILES)];
+  const urls = new Set(named.map((f) => new URL(f, location.href).href));
   for (const e of performance.getEntriesByType("resource")) {
     const u = new URL(e.name, location.href);
     if (u.origin === location.origin) urls.add(u.href);
@@ -285,5 +288,8 @@ window.addEventListener("settings-changed", (e) => {
 });
 
 window.addEventListener("settings-opened", sync);
+
+// a dataset landing behind the boot one brings a game's artwork with it
+window.addEventListener("games-changed", sync);
 
 sync();

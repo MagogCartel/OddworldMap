@@ -56,7 +56,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 ## Code and build
 
-- [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — first paint waits on both games when the visitor is looking at one. _Small-medium._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — one file carrying six unrelated concerns, none importable in isolation. _Medium._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 
@@ -98,6 +97,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — the map draws on the data of the game you opened, and the other arrives behind it; the sketch's `fetchpriority` advice was wrong, and deleting the second preload is what paid. _2026-08-23._
 - [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — every screen of a path in one image at the artwork's own resolution; the size budget turned out to be for the spaced pitch, and a blank canvas encodes fine, so the export probes before it paints. _2026-08-23._
 - [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the empty `levels` section and the two schema rules policing it are gone; the tooltip clause stays, a subset build being where it still fires. _2026-08-20._
 - [**15.** Path buttons in game order](item-015-path-buttons-game-order.md) — a level's paths listed in the order a player meets them: one walk of its own transitions out from the way in, each area kept whole, and the games' own numbering choosing between the branches. _2026-08-21._

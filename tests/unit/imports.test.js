@@ -7,6 +7,7 @@ test("pure modules import in bare Node", async () => {
   for (const mod of [
     "annotations",
     "config",
+    "data",
     "demo",
     "fields",
     "state",

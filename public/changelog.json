@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-08-23",
+   "tag": "improved",
+   "title": "The map draws without waiting for both games",
+   "detail": "Opening the map meant waiting for both games' data to arrive, all of it, before a single line was drawn. You were only ever looking at one of them. Exoddus alone is twice the size of Oddysee. The map now works out which game you are opening from the link and waits on that one, drawing as soon as it lands; the other downloads quietly behind it and its button appears when it arrives. On a slow mobile connection the blank canvas at the start is a little over half as long as it was. A search typed before the second game has landed says so on its summary line, and picks up the rest of the hits the moment they arrive."
+  },
+  {
+   "date": "2026-08-23",
    "tag": "new",
    "flagship": true,
    "title": "Save a whole path as one image",

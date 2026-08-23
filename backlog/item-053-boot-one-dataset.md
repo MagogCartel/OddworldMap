@@ -1,6 +1,6 @@
 # 53. Boot on one dataset, hydrate the other
 
-**Status:** open · **Effort:** small-medium (viewer, performance) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-23 · **Effort:** small-medium (viewer, performance) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -41,3 +41,31 @@ DevTools → Network → throttle to "Slow 4G", hard reload with an empty hash: 
 ## Ships with
 
 A `changelog.json` entry, tag `improved` — this one is squarely user-visible.
+
+## Shipped
+
+[js/data.js](../public/js/data.js) is the new home for which datasets there are and when each is fetched: `bootGame` reads the game out of the link's own text, `loadGame` memoizes one promise per dataset, and `pendingGames` is what lets a surface say a wait is still on. `initGames` became `addGame`, called once per dataset.
+
+**The measured payloads had moved since filing, and so had the advice.** Re-measured 2026-08-23 (gzip): `map_data_ao.json` 172 KB, `map_data_ae.json` 345 KB, and the sidecars **45 KB** rather than 7.8 — the two glossaries arrived after this item was written and are 36 KB of that. They stay on the critical path all the same: they feed the very first hover tooltip, which has no re-render to catch up with, and they are dwarfed by the 345 KB the change is actually about. `changelog.json` is a 22 KB boot fetch too, requested at import time by [js/whatsnew.js](../public/js/whatsnew.js) for the newest-entry dot, and is the one remaining candidate for the same treatment.
+
+**First paint, measured** — median of three runs, ±0.1 s, a local gzip-serving harness under Chrome CDP throttling, first paint being the frame where `state.path` is set. The absolute seconds are the harness's rather than the deployed site's, whose gzip is fatter, so treat the ratios as the finding:
+
+| entry point | today | shipped | no preload at all |
+| --- | --- | --- | --- |
+| slow 4G (400 kbps / 400 ms), hashless | 15.8 s | **8.8 s** | 10.2 s |
+| slow 4G, `#AE` permalink | 15.8 s | 15.9 s | 13.8 s |
+| regular 4G (1.6 Mbps / 150 ms), hashless | 4.1 s | **2.5 s** | 3.1 s |
+| regular 4G, `#AE` permalink | 4.1 s | 4.3 s | 3.9 s |
+
+**The sketch's advice on the preloads was the one thing it got wrong**, and only measurement said so. `fetchpriority="low"` on the second preload is not the lever: what pays is deleting it outright, which is not the "do not simply delete them" the sketch warns against, because the survivor is the dataset a hashless visit boots. The preload is genuinely consumed by the `cache: "no-cache"` fetch — one network request per file, initiator `parser`, no "preloaded but not used" warning — so it is worth keeping: dropping it too costs the hashless visit 1.4 s of its 7.0. The reason it buys so little is that a saturated pipe transfers the same bytes whatever their order, so a preload wins the module graph's latency and nothing more.
+
+That leaves an asymmetry the static tag cannot fix: a visit booting Exoddus, by permalink or by a remembered location, pulls Oddysee's 172 KB at high priority while first paint waits on the 345 KB it actually needs, and gains nothing from the change. Dropping both preloads would hand that visit 2.0 s and take 1.4 s off every hashless one, which is the better trade only if more than 40% of visits boot Exoddus. Only an inline classic script can preload the right one — a module in `<head>` cannot, `data.js` reaching eleven modules at depth four, so it starts no earlier than `main.js` does — and that script would restate the hash's game rule outside `parseHash`. Left undone, with the numbers above as the reason to revisit it.
+
+**What the gap costs, and who answers for it.** `addGame` dispatches `games-changed`, and the three surfaces that read more than the current game answer it: search re-runs an active query, an open type card re-renders its per-game counts (putting the reader's scroll position and the keyboard back), and the offline panel gains a row. The event fires for a dataset that *failed* as well, or a search rendered during the gap would promise a wait that had already ended for good. Shuffle needs nothing — a random jump is random either way. Nothing else in the viewer reads past the current game.
+
+**Two defects the sketch did not foresee**, both found by review before shipping:
+
+- The remembered-location fallback read "the stored hash names the game this boot did not fetch" as "its level or path no longer exists", and *deleted the remembered location*. `applyHash` is now async and waits for a dataset the hash names, which is also what the sketch asked for on the `hashchange` path — one mechanism serves both callers.
+- That wait needed the view writes held across it. A debounced `writeHash` firing mid-await replaces the very link being answered, and `replaceState` leaves no `hashchange` behind to recover it, so the pasted link vanished silently. The hold is `awaitingGame`, and a hash that changed during the wait is left to the newer link's own handler.
+
+The game buttons are appended as their datasets land rather than in a canonical order, so a visit arriving on an Exoddus link leads with Exoddus. That order reaches the search summary's per-game tally, the type card's census line and the offline rows as well; leading with the game the visitor came for is right in all four, and it is what keeps `addGame` from having to insert into an order.

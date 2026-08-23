@@ -4,6 +4,7 @@ import { esc, extrasText } from "./util.js";
 import { fieldEntries } from "./fields.js";
 import { parseQuery, queryTerms, matchesQuery, rankFor } from "./searchquery.js";
 import { matchPlaces } from "./placesearch.js";
+import { pendingGames } from "./data.js";
 import { searchInput, searchResults, scopeBar } from "./dom.js";
 import { pathVisible } from "./demo.js";
 import { state } from "./state.js";
@@ -240,9 +241,13 @@ function runSearch(q) {
     : searchScope === "all"
       ? none
       : `${none} in ${scopeLabel()}`;
+  // named only where a pending game is in scope: a scoped search is confined to
+  // the game in hand, which has landed by definition
+  const waiting = searchScope === "all" ? pendingGames() : [];
   // a hit the map won't take you to would look like a hit gone missing
   more.textContent =
     summary +
+    (waiting.length ? ` — ${waiting.join(", ")} still loading` : "") +
     (hidden ? ` — ${hidden} hidden in demo paths` : "") +
     (searchScope === "all" ? "" : " — ");
   if (searchScope !== "all") {
@@ -262,6 +267,13 @@ function runSearch(q) {
 searchInput.addEventListener("input", () => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(() => runSearch(searchInput.value), 160);
+});
+
+// a dataset landing behind the boot one brings hits of its own, which the
+// summary has been promising were still coming. The boot game is announced
+// before anything is selected, and runSearch groups its hits around a selection
+window.addEventListener("games-changed", () => {
+  if (state.path && searchInput.value.trim().length >= 2) runSearch(searchInput.value);
 });
 
 // field-display settings change what result rows show or how values render (raw

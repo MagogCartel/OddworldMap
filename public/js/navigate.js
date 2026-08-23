@@ -4,6 +4,7 @@
 import { clamp, esc } from "./util.js";
 import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
 import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
+import { knownGame, loadGame } from "./data.js";
 import { toast } from "./toast.js";
 import {
   state,
@@ -56,10 +57,13 @@ window.addEventListener("settings-changed", (e) => {
   for (const box of [gameBtns, levelBtns, pathBtns]) for (const b of box.children) setLabel(b);
 });
 
-// build the game buttons once the datasets are known
-export function initGames(games) {
-  state.games = games;
-  games.forEach((G) => {
+// the dataset that landed, or null where it did not: a game that never arrives
+// leaves no button behind to click, and either way the settle is announced,
+// since a wait reported to the reader has ended. Buttons are appended as their
+// datasets land, so the row leads with the game the visitor came for.
+export function addGame(G) {
+  if (G && !state.games.some((g) => g.id === G.id)) {
+    state.games.push(G);
     const b = document.createElement("button");
     b.dataset.code = G.id;
     b.dataset.full = G.game;
@@ -68,7 +72,16 @@ export function initGames(games) {
     b.dataset.key = G.id;
     b.onclick = () => selectGame(G);
     gameBtns.appendChild(b);
-  });
+  }
+  window.dispatchEvent(new CustomEvent("games-changed"));
+}
+
+// a dataset that never lands leaves the hash to be rejected as it would have
+// been anyway
+async function ensureGame(id) {
+  if (!knownGame(id)) return;
+  const d = await loadGame(id);
+  if (d) addGame(d);
 }
 
 export function selectGame(G, keepView) {
@@ -282,7 +295,8 @@ export function jumpToPlace(G, L, P, cam) {
 // ---- permalinks ---------------------------------------------------------
 let applyingHash = false,
   hashTimer = null,
-  hashPush = false; // a requested history entry survives later replace requests
+  hashPush = false, // a requested history entry survives later replace requests
+  awaitingGame = 0; // a hash waiting on its dataset holds the view writes
 
 // ---- pitch ---------------------------------------------------------------
 
@@ -344,7 +358,7 @@ function writeHash(push) {
 // fires, so a follow's history entry can't be downgraded by the quick silent
 // writes that ride on its heels
 export function scheduleHash(push) {
-  if (applyingHash || !state.path) return;
+  if (applyingHash || awaitingGame || !state.path) return;
   hashPush ||= push;
   clearTimeout(hashTimer);
   hashTimer = setTimeout(() => writeHash(hashPush), hashPush ? 0 : 350);
@@ -362,9 +376,24 @@ export function flushHash() {
 // press that closes it would undo a pan as well
 window.addEventListener("dialog-opened", flushHash);
 
-export function applyHash() {
+export async function applyHash() {
   const p = parseHash(location.hash);
   if (!p) return false;
+  if (!state.games.some((g) => g.id === p.game)) {
+    // a link into a game whose dataset is still in flight. The view writes are
+    // held across the wait: one landing on the address bar would replace the
+    // very link being answered, and would leave no hashchange to recover it
+    const asked = location.hash;
+    awaitingGame++;
+    clearTimeout(hashTimer);
+    hashTimer = null;
+    try {
+      await ensureGame(p.game);
+    } finally {
+      awaitingGame--;
+    }
+    if (location.hash !== asked) return false; // a newer link answers for itself
+  }
   const G = state.games.find((g) => g.id === p.game);
   if (!G) return false;
   const L = G.levels.find((l) => l.short === p.level);
@@ -403,6 +432,8 @@ export function applyHash() {
 
 window.addEventListener("hashchange", () => {
   if (applyingHash) return;
-  // back/forward retraces update the remembered spot; a rejected hash must not
-  if (applyHash() && !inEmbed()) rememberLocation(location.hash);
+  applyHash().then((ok) => {
+    // back/forward retraces update the remembered spot; a rejected hash must not
+    if (ok && !inEmbed()) rememberLocation(location.hash);
+  });
 });

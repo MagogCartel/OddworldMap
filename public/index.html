@@ -49,10 +49,11 @@
       content="Oddworld Map — interactive map of Abe's Oddysee & Exoddus"
     />
     <link rel="stylesheet" href="css/main.css" />
-    <!-- start the data downloads during HTML parse instead of after the module graph;
-     crossorigin matches fetch()'s cors/same-origin mode so the preload is consumed -->
+    <!-- start the default boot game's download during HTML parse instead of after the
+     module graph; crossorigin matches fetch()'s cors/same-origin mode so the preload
+     is consumed. One only: preloading both would spend the download budget of the game
+     on screen before a line of it is drawn -->
     <link rel="preload" href="map_data_ao.json" as="fetch" crossorigin />
-    <link rel="preload" href="map_data_ae.json" as="fetch" crossorigin />
   </head>
   <body>
     <div id="a11yStatus" class="sr-only" role="status" aria-live="polite"></div>
