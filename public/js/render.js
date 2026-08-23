@@ -67,6 +67,34 @@ function tintedImg(src) {
   return oc;
 }
 
+// draw() skips an image that has not arrived and repaints when it does; a
+// one-shot paint has no second chance. The masks are waited for whatever the
+// toggle says: a percent of the bytes, and one keypress from being wanted
+export function preloadPath(path) {
+  const srcs = [];
+  for (const c of path.cams) {
+    if (c.png) srcs.push(c.png);
+    if (c.fg) srcs.push(c.fg);
+  }
+  return Promise.all(
+    srcs.map((src) => {
+      let im = img(src);
+      // a load that failed reports itself complete with no width, so it would
+      // pass for arrived forever; drop it and let this attempt refetch
+      if (im.complete && !im.naturalWidth) {
+        delete images[src];
+        delete tintCache[src];
+        im = img(src);
+      }
+      if (im.complete) return null;
+      return new Promise((done) => {
+        im.addEventListener("load", done, { once: true });
+        im.addEventListener("error", done, { once: true });
+      });
+    }),
+  );
+}
+
 // a long browse would pin every visited cam's compressed PNG (and tint canvas)
 // for the session; once past the cap, drop what the new path doesn't reference
 window.addEventListener("selection-changed", () => {
@@ -206,7 +234,7 @@ new ResizeObserver(resize).observe($("main")); // the sidebar slide resizes the 
 // extended past the stamp so it reads at any zoom, with a solid foot pointing
 // into the pen where the type claims a side. It dots like a marker box when it
 // stands in the slack between windows
-function drawBarrier(t, dir, z) {
+function drawBarrier(ctx, t, dir, z) {
   const cx = dX(t.x1);
   const box = drawBox(t);
   const y1 = box.y - 26,
@@ -228,7 +256,7 @@ function drawBarrier(t, dir, z) {
 }
 
 // filled arrowhead at (tx, ty) pointing along (dx, dy), h long in draw units
-function arrowhead(tx, ty, dx, dy, h) {
+function arrowhead(ctx, tx, ty, dx, dy, h) {
   const l = Math.hypot(dx, dy) || 1;
   const ux = dx / l,
     uy = dy / l;
@@ -249,10 +277,18 @@ export function draw() {
     mm.hidden = true;
     return;
   }
-  const { cam, path, show, ruler, route } = state;
-  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  paint(ctx, state.cam, cv.clientWidth, cv.clientHeight, devicePixelRatio);
+  paintMinimap(state.cam, state.path);
+}
+
+// one frame of the map into any canvas: the live one at the view's zoom, or an
+// offscreen one sized to a whole path. The hover and navigation affordances are
+// the live view's alone — standing in an image they read as marks on the map
+export function paint(ctx, cam, w, h, dpr, transients = true) {
+  const { path, show, ruler, route } = state;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = COLOR.mapBg;
-  ctx.fillRect(0, 0, cv.clientWidth, cv.clientHeight);
+  ctx.fillRect(0, 0, w, h);
   ctx.save();
   ctx.scale(cam.z, cam.z);
   ctx.translate(-cam.x, -cam.y);
@@ -342,7 +378,7 @@ export function draw() {
     ctx.setLineDash([]);
   }
 
-  if (patrol) {
+  if (transients && patrol) {
     ctx.fillStyle = ENEMY_CAT.color + "22";
     ctx.fillRect(patrol.x1, patrol.y1 - 8, patrol.x2 - patrol.x1, patrol.y2 - patrol.y1 + 16);
   }
@@ -354,7 +390,7 @@ export function draw() {
     if (!markerShown(t)) continue;
     const dir = PENS.on ? barrierDir(t) : null; // pens off: barriers are plain meta boxes
     if (dir !== null) {
-      drawBarrier(t, dir, cam.z);
+      drawBarrier(ctx, t, dir, cam.z);
       if (showLabels) {
         ctx.fillStyle = ENEMY_CAT.color;
         ctx.fillText(t.name, dX(t.x1), dY(t.y1) - 3 / cam.z);
@@ -428,7 +464,8 @@ export function draw() {
     // the spotlight judges what is drawn: a hovered object whose wires are
     // all hidden must not dim the rest with nothing to show for it
     const drawn = computeWiring(path).edges.filter((e) => markerShown(e.src) && markerShown(e.dst));
-    const focusActive = wireFocus && drawn.some((e) => e.src === wireFocus || e.dst === wireFocus);
+    const focusActive =
+      transients && wireFocus && drawn.some((e) => e.src === wireFocus || e.dst === wireFocus);
     ctx.strokeStyle = ctx.fillStyle = WIRE_COLOR;
     const dash = [2.5 / cam.z, 4.5 / cam.z];
     ctx.setLineDash(dash);
@@ -446,7 +483,7 @@ export function draw() {
       ctx.stroke();
       if (focused) {
         ctx.setLineDash([]);
-        arrowhead(tx, ty, tx - sx, ty - sy, Math.min(10 / cam.z, 0.3 * len));
+        arrowhead(ctx, tx, ty, tx - sx, ty - sy, Math.min(10 / cam.z, 0.3 * len));
         ctx.setLineDash(dash);
       }
     }
@@ -462,7 +499,9 @@ export function draw() {
       connCache = { path, edges: computeConnections(state.lvl, path, GEO) };
     // focus only dims the rest when the hovered object actually has edges
     const focusActive =
-      connFocus && connCache.edges.some((e) => e.src === connFocus || e.dst === connFocus);
+      transients &&
+      connFocus &&
+      connCache.edges.some((e) => e.src === connFocus || e.dst === connFocus);
     const headLen = 12 / cam.z;
     const stubLen = Math.min(Math.max(56 / cam.z, 60), 150);
     const S = Math.SQRT1_2;
@@ -482,7 +521,7 @@ export function draw() {
         ctx.moveTo(sx, sy);
         ctx.lineTo(tx, ty);
         ctx.stroke();
-        arrowhead(tx, ty, S, -S, Math.min(headLen, 0.25 * stubLen));
+        arrowhead(ctx, tx, ty, S, -S, Math.min(headLen, 0.25 * stubLen));
         if (showLabels) {
           ctx.shadowColor = "rgba(0,0,0,.9)";
           ctx.shadowBlur = 3 / cam.z;
@@ -508,13 +547,13 @@ export function draw() {
       ctx.stroke();
       ctx.setLineDash([]);
       const h = Math.min(headLen, 0.25 * len);
-      arrowhead(tx, ty, tx - cpx, ty - cpy, h); // the curve's end tangent is P2 − C
-      if (e.twoWay) arrowhead(sx, sy, sx - cpx, sy - cpy, h);
+      arrowhead(ctx, tx, ty, tx - cpx, ty - cpy, h); // the curve's end tangent is P2 − C
+      if (e.twoWay) arrowhead(ctx, sx, sy, sx - cpx, sy - cpy, h);
     }
     ctx.globalAlpha = 1;
   }
 
-  if (highlight) {
+  if (transients && highlight) {
     // drawn even when the object's category is toggled off: the outline is
     // what locates a listed object whose marker is hidden
     const box = drawBox(highlight);
@@ -609,7 +648,7 @@ export function draw() {
     });
   }
 
-  if (flash) {
+  if (transients && flash) {
     const el = performance.now() - flash.t0;
     const a = flash.hold ? 1 : Math.max(0, 1 - el / FLASH_MS);
     ctx.strokeStyle = `rgba(${COLOR.accentRgb},${a})`;
@@ -621,7 +660,6 @@ export function draw() {
   }
 
   ctx.restore();
-  paintMinimap(cam, path);
 }
 
 // ---- minimap: the path's cell grid in a corner, the viewport drawn on it ----
