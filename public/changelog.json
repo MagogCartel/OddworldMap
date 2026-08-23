@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-08-23",
+   "tag": "improved",
+   "tiny": true,
+   "title": "The plane stops being news on a mine",
+   "detail": "The mine's card explained that a background mine will not answer a foreground Abe, and the floor plate's that a background creature cannot press a foreground plate. Both are true, and both are true of very nearly everything in either game: what stands on one depth plane does not touch what stands on the other. The engine enforces it once, for almost every object there is. Saying it on these two marked them out as special for obeying the house rule. Both cards keep everything that is actually theirs."
+  },
+  {
+   "date": "2026-08-23",
    "tag": "fixed",
    "title": "What really holds a sack shut",
    "detail": "Four cards describe the same throwable counter and all four described it as your hands. The meat sack and the bone bag gave nothing while your hands were full, the rock sack never while you still held any, the grenade machine dropped grenades while Abe's hands were empty. The gate is wider than anyone's hands: the game counts every rock, bone, meat and grenade in existence, wherever it happens to be. A bone you dropped two screens back keeps the next bag shut until you go and fetch it. All four now say so. The two sacks also said they serve only an Abe on its own plane, which is the rule for very nearly everything in either game rather than anything about sacks. In its place is the one thing that does set a sack apart: only Abe's own body can take from one, so walking a possessed Slig into it gets you nothing. The grenade machine asks nobody's identity at all, its lit button being the whole interface."
