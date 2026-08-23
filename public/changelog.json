@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-08-23",
+   "tag": "new",
+   "flagship": true,
+   "title": "Save a whole path as one image",
+   "detail": "Saving the map as a picture has always meant saving the window: cropped to what was on screen, at whatever zoom was set. Fitting a whole level in meant zooming out until the artwork was mush. A second button beside it now draws the entire path into one image. Every screen goes in edge to edge at the artwork's own resolution, whatever the view happens to be showing. The overlays, markers and plotted route you have on are drawn over the top. Rupture Farms' widest path comes out 4416 by 720 pixels with all twenty of its screens on it. The largest path either game has, deep in the Necrum Mines, comes out 4416 by 3360 with thirty-seven. Hover marks stay out of it. A highlight ring, or the wires dimmed around the one you were pointing at, is the pointer talking, and it has no business in a picture you are about to share. And where a path really is too large for one image, which takes turning on the gaps between screens, the export scales it down to fit and says what it scaled to."
+  },
+  {
+   "date": "2026-08-23",
    "tag": "fixed",
    "title": "The encyclopedia corrects twelve of its cards",
    "detail": "Twelve object cards have been checked against the games' own code and corrected. Two change what you would do. A Slig's card said it shoots what it sees on its own plane, which reads as an invitation to step onto the other one. In fact a background Slig carries a second shot along the depth axis and snipes into the foreground, which is what the no-fire cover boxes are scattered about for. And the sacks and the grenade machine are not gated on what is in your hands but on every rock, bone, meat and grenade in existence, so a bone you dropped two screens back keeps the next bag shut. The rest were true but said too broadly: a shadow zone tints the plane it names rather than every sprite, a checkpoint can decline to save you, and several claimed a depth-plane rule the engine applies to almost everything."

@@ -95,6 +95,22 @@ export function preloadPath(path) {
   );
 }
 
+// whether a paint of this path would reach a decoded image everywhere it draws
+// one. Waiting is not enough by itself: the cache's own eviction can drop this
+// path while another selection passes through, leaving img() to mint blanks the
+// paint silently skips
+export function artworkReady(path) {
+  const decoded = (src) => {
+    const im = images[src];
+    return !!im?.complete && im.naturalWidth > 0;
+  };
+  for (const c of path.cams) {
+    if (c.png && !decoded(c.png)) return false;
+    if (state.show.fg && c.fg && !decoded(c.fg)) return false;
+  }
+  return true;
+}
+
 // a long browse would pin every visited cam's compressed PNG (and tint canvas)
 // for the session; once past the cap, drop what the new path doesn't reference
 window.addEventListener("selection-changed", () => {

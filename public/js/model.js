@@ -10,6 +10,8 @@ import {
   FOCUS_ZOOM_MAX,
   FOCUS_SCREENS,
   MAX_ROUTE_PTS,
+  EXPORT_MAX_PX,
+  EXPORT_MAX_DIM,
   BARRIERS,
   PENS,
   markerShown,
@@ -340,6 +342,15 @@ export const cellCentre = (cell, path) => [
   (cell % path.w) * CELL_W + GEO.visW / 2,
   Math.floor(cell / path.w) * CELL_H + GEO.visH / 2,
 ];
+
+// a whole path as one image: scale 1 for every path either game packs, less
+// where the spaced pitch blows one past the budget
+export function pathImage(path, geo = LAYOUT, maxPx = EXPORT_MAX_PX, maxDim = EXPORT_MAX_DIM) {
+  const w = path.w * geo.cellW,
+    h = path.h * geo.cellH;
+  const scale = Math.min(1, maxDim / w, maxDim / h, Math.sqrt(maxPx / (w * h)));
+  return { w: Math.floor(w * scale), h: Math.floor(h * scale), scale };
+}
 
 // the camera whose screen centre is nearest a draw-space point. A path's grid is
 // mostly empty — the view's centre sits over no camera at all on half the paths

@@ -11,8 +11,11 @@ import {
   lineRuns,
   offScreen,
   screenRuns,
+  pathImage,
   pathIn,
 } from "../../public/js/model.js";
+import { EXPORT_MAX_DIM, EXPORT_MAX_PX } from "../../public/js/config.js";
+import { CELL_H, CELL_W, cellOrigin, setGeometry, setSpacing } from "../../public/js/state.js";
 import { isDemoPath } from "../../public/js/demo.js";
 import { AO_GEOMETRY, AE_GEOMETRY, pitches } from "./fixtures.js";
 
@@ -737,4 +740,98 @@ test("a marker's drawn box contains the screen it covers, packed or spaced", () 
           }
   }
   assert.deepEqual(bad, []);
+});
+
+// A whole-path export paints into one canvas, so what it asks for has to be
+// what a browser will allocate. Packed is the promise: every path in either
+// game comes out at 1:1. AO's cells are nearly three times the screen they
+// show, so spacing them is the only thing that puts a path past the budget,
+// and past it every image lands on the cap rather than at its own size.
+test("every path exports inside the canvas budget, packed at 1:1", () => {
+  const bad = [];
+  const scaled = {};
+  const biggest = {};
+  for (const [file, geometry] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    pitches(geometry).forEach((g, i) => {
+      const key = `${data.id} ${i ? "spaced" : "packed"}`;
+      scaled[key] = 0;
+      for (const L of data.levels)
+        for (const P of L.paths) {
+          const im = pathImage(P, g);
+          const where = `${key} ${L.short} P${P.id} ${im.w}x${im.h}`;
+          if (im.w > EXPORT_MAX_DIM || im.h > EXPORT_MAX_DIM) bad.push(`${where} outruns a side`);
+          if (im.w * im.h > EXPORT_MAX_PX) bad.push(`${where} outruns the area`);
+          if (im.scale < 1) scaled[key]++;
+          if (i) continue;
+          const [bw, bh] = (biggest[data.id] ?? "0x0").split("x");
+          if (im.w * im.h > bw * bh) biggest[data.id] = `${im.w}x${im.h}`;
+        }
+    });
+  }
+  assert.deepEqual(bad, []);
+  assert.deepEqual(scaled, { "AO packed": 0, "AE packed": 0, "AO spaced": 14, "AE spaced": 0 });
+  assert.deepEqual(biggest, { AO: "3680x2400", AE: "4416x3360" });
+});
+
+// The export frames the path's cell grid, so what the packed layout draws out
+// in the slack beyond the outermost screens lands outside the image. The frame
+// is exact rather than mean: nothing that covers a screen is cropped, and the
+// slack is where the spacing toggle hands out real canvas.
+test("the export frame crops nothing the game renders", () => {
+  const cropped = [];
+  const beyond = {};
+  for (const [file, geometry] of [
+    ["map_data_ao.json", AO_GEOMETRY],
+    ["map_data_ae.json", AE_GEOMETRY],
+  ]) {
+    const data = load(file);
+    for (const spaced of [false, true]) {
+      setGeometry(geometry);
+      setSpacing(spaced);
+      const key = `${data.id} ${spaced ? "spaced" : "packed"}`;
+      const [ox, oy] = cellOrigin();
+      const tally = (beyond[key] = { markers: 0, lines: 0 });
+      for (const L of data.levels)
+        for (const P of L.paths) {
+          const x2 = ox + P.w * CELL_W,
+            y2 = oy + P.h * CELL_H;
+          const out = (a, b, lo, hi) => Math.min(a, b) < lo - 1e-6 || Math.max(a, b) > hi + 1e-6;
+          const offX = (a, b) => out(a, b, ox, x2);
+          const offY = (a, b) => out(a, b, oy, y2);
+          const where = `${key} ${L.short} P${P.id}`;
+          for (const t of P.tlvs) {
+            const b = drawBox(t);
+            // measured at the minimum box size the render draws a marker at
+            if (
+              b.x + Math.max(b.w, 10) <= ox ||
+              b.x >= x2 ||
+              b.y + Math.max(b.h, 10) <= oy ||
+              b.y >= y2
+            )
+              tally.markers++;
+            const { xs, ys } = screenRuns(t);
+            if (xs.some(([a, c]) => offX(a, c)) || ys.some(([a, c]) => offY(a, c)))
+              cropped.push(`${where} ${t.name} (${t.x1},${t.y1}) covers screen outside the frame`);
+          }
+          for (const [x1, y1, xa, ya] of P.lines)
+            for (const r of lineRuns(x1, y1, xa, ya)) {
+              if (!offX(r.x1, r.x2) && !offY(r.y1, r.y2)) continue;
+              if (r.on) cropped.push(`${where} (${x1},${y1})\u2013(${xa},${ya}) drawn outside it`);
+              else tally.lines++;
+            }
+        }
+    }
+  }
+  setSpacing(false);
+  assert.deepEqual(cropped, []);
+  assert.deepEqual(beyond, {
+    "AO packed": { markers: 248, lines: 527 },
+    "AE packed": { markers: 0, lines: 46 },
+    "AO spaced": { markers: 0, lines: 2 },
+    "AE spaced": { markers: 0, lines: 0 },
+  });
 });

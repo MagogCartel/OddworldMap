@@ -16,6 +16,8 @@ export const KEY_PAN_PX = 75, KEY_ZOOM_STEP = 1.25;      // keyboard pan step (s
 export const GRID_UNIT = 25;                             // world units per in-game grid square
 export const PAGE_ZOOM_MIN = 1.02;                       // browser zoom counted as zoomed (a pinch settles a hair off 1)
 export const MAX_ROUTE_PTS = 512;                        // route waypoints a permalink may carry (parser sanity cap)
+export const EXPORT_MAX_PX = 4096 * 4096;                // whole-path export: canvas area cap, past which the image scales to fit
+export const EXPORT_MAX_DIM = 8192;                      // whole-path export: canvas side cap, past which the image scales to fit
 
 // what an object anchored between camera windows has to say for itself, on the
 // hover tooltip and on its screen-list row

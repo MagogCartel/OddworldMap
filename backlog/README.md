@@ -43,7 +43,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Map-native features
 
 - [**12.** Curated path names](item-012-curated-path-names.md) — the remaining curation: the still-unnamed AO paths, and one AE name that stands by elimination. _Content pass, anywhere._
-- [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — the artifact people actually want from a map site. _Medium, anywhere._
 - [**59.** Give the map an accessible surface](item-059-accessible-map-surface.md) — the count grid carries no table semantics, `#numbersBtn` names nothing it opens, and the minimap scrubs by pointer alone; the announcer and the keyboard's route into a screen shipped. _Small-medium, anywhere._
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
@@ -99,6 +98,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — every screen of a path in one image at the artwork's own resolution; the size budget turned out to be for the spaced pitch, and a blank canvas encodes fine, so the export probes before it paints. _2026-08-23._
 - [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the empty `levels` section and the two schema rules policing it are gone; the tooltip clause stays, a subset build being where it still fires. _2026-08-20._
 - [**15.** Path buttons in game order](item-015-path-buttons-game-order.md) — a level's paths listed in the order a player meets them: one walk of its own transitions out from the way in, each area kept whole, and the games' own numbering choosing between the branches. _2026-08-21._
 - [**17.** Field glossary](item-017-field-glossary.md) — every shipped field now resolves a definition, coverage pinned by test; the long tail fell to the decomp research in one sitting, 44 entries to 565. _2026-08-13._

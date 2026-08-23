@@ -312,6 +312,7 @@ body.fullnames .btnrow button {
   color: var(--accent);
 }
 #exportBtn,
+#exportPathBtn,
 #numbersBtn {
   margin: 6px 12px 2px;
   background: var(--panel2);
@@ -323,13 +324,19 @@ body.fullnames .btnrow button {
   font-size: 12px;
   width: calc(100% - 24px);
 }
-#exportBtn {
+#exportBtn,
+#exportPathBtn {
   margin: 6px 0 2px;
   width: 100%;
 }
 #exportBtn:hover,
+#exportPathBtn:not(:disabled):hover,
 #numbersBtn:hover {
   border-color: var(--accent);
+}
+#exportPathBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 #sbFooter {
   margin-top: auto;

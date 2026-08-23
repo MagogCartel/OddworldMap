@@ -1,6 +1,6 @@
 # 61. Export the whole path, not the viewport
 
-**Status:** open · **Effort:** medium (viewer, product) · **Where:** anywhere, but test the size limits on a real iPhone · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-23 · **Effort:** medium (viewer, product) · **Where:** anywhere, but test the size limits on a real iPhone · **Filed:** 2026-07-24/25 review
 
 ## What the current button actually does
 
@@ -47,6 +47,28 @@ The median is trivial; the tail is not. Historical iOS Safari caps canvas area n
 ## Verify
 
 Export AO R1 P15 and confirm 4416×720 with all 20 screens present and no missing tiles — that is what the preload step is being tested for. Export AE MI P4 on desktop Chrome, Firefox, Safari and a real iPhone, and record what actually happens on iOS in the commit message. Toggle collision, foreground and connection arrows on and re-export. Plot a route and confirm it and its leg labels appear.
+
+## Shipped
+
+**The size budget exists for the spaced pitch, which the table above does not measure.** Packed, the largest path in either game is the 14.8 MP `AE MI P4` and nothing needs scaling at all. "Gaps between screens" lays AO's screens at the cell's own 1024×480 pitch instead, which takes the Credits path to 10240×4800 — 49.2 MP, 197 MB of backing store — and fourteen AO paths past what a canvas is asked for. The export follows the pitch that is on screen rather than always packing, an image that disagrees with the map it was taken from being worth less than a scaled one, and `pathImage` is where the two bounds are answered.
+
+**The frame is the cell grid, and what the packed layout draws beyond it is cropped.** 248 AO markers and 527 collision-line pieces fall outside a packed export, and not one of them covers a screen: every one is the hollow dotted treatment the map paints to disown ground the games never render. Spaced, where that ground is canvas of its own, it is 0 markers and 2 pieces, and AE loses no markers at either pitch. A margin wide enough to take AO's overhang in would spend the 1:1 promise on the largest packed path, the overhang reaching 269 px past a marker box and 313 px past a collision line (`D1 P3` holds both maxima) where a uniform margin of 121 px is already enough to put `AE MI P4` past the area bound, at 4658×3602. So the frame stays the grid the minimap and the grid overlay already draw. A top-row marker's label, drawn three pixels above its box, is sliced by the image's top edge as it is by the window's.
+
+**Three things move under a one-shot paint.** `paint` draws the path that is standing while the canvas is sized for the one whose artwork was preloaded, so the identity check sits immediately before the paint with nothing awaiting in between: a held `]` autorepeats through the window listener with the button disabled, and thirty milliseconds is enough to paint `R1 P16` into a canvas cut for `R1 P15`. `preloadPath` gives up asking `show.fg` for the same reason and waits for every mask whatever the toggle says, the masks being a percent of the artwork's bytes. `artworkReady` is asked in that same stretch, waiting not being sufficient: a load that failed reports itself complete with no width, and the image cache's own eviction can drop this path while another selection passes through. And the filename is read before the encode rather than after, an encode at this size being long enough for the place it names to move.
+
+**`flash` and `highlight` are not the whole list of transients, and are not the ones that would have shown.** A hover spotlight dims everything it is *not* focused on, a wire to 0.12 alpha and an arrow to 0.15, so exporting with the pointer resting on a wired object would have baked in a near-invisible overlay rather than a stray ring; a hovered Slig's shaded pen is the third. `paint`'s `transients` flag answers for all five at once, and the ruler and the route render as the sketch promised.
+
+**A `null` from `toBlob` is not the only way this fails.** A canvas past a browser's limit ignores what is drawn into it, or quietly clamps the size it was asked for, and a blank canvas encodes to a perfectly valid multi-megabyte PNG — exactly the blank download the *Watch out* above is about. `sizedCanvas` paints one pixel and reads it back before the real paint runs, quartering the area and halving the side until one sticks or the side falls under 1024.
+
+**[49](item-049-png-export-revoke-race.md) asked for its revoke to move into whatever shared download helper this item introduced**, and it has: one `exportUrl` in [js/export.js](../public/js/export.js), released when the next export of either kind replaces it.
+
+**No label scale, and the running signal is the button rather than a toast.** At 1:1 an 11 px label sits on a 368 px screen exactly as it does at 100% zoom in the browser; doubling it would draw labels larger than the map ever draws them, and at fit-to-window sizes the artwork is illegible anyway, so bigger labels rescue nothing. `imageSmoothingEnabled` needed no change either — off at scale 1 for the pixel art, on when the budget forces a downscale, which is what it was already saying. And a toast is fixed at three seconds, which would leave it standing long after the 207 ms `AE MI P4` takes; `Rendering…` on the disabled button starts and ends with the work.
+
+**Both exports name themselves**, `oddworld-ao-R1-P15-view.png` and `-full.png`. The bare name the viewport export used to take belongs to neither.
+
+**Measured.** `AO R1 P15` exports 4416×720 and is pixel-identical to its twenty cam PNGs tiled edge to edge; `AE MI P4` exports 4416×3360 in 207 ms as a 7.4 MB PNG; `AO C1 P1` spaced scales to 58%, at 5982×2804. Both bounds and the packed-at-1:1 promise are swept over every path at both pitches in `tests/unit/map-data.test.js`.
+
+**iOS is the one thing this could not check.** The probe is what it is designed for and the two bounds in [js/config.js](../public/js/config.js) are there to be retuned, but what a real iPhone does with a 14.8 MP canvas is still unrecorded.
 
 ## Ships with
 
