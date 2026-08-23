@@ -4,6 +4,13 @@
    "date": "2026-08-23",
    "tag": "improved",
    "tiny": true,
+   "title": "The temple boulder's card stops overclaiming",
+   "detail": "The boulder's card said it crushes with no filter at all: no scale check, no type check, everything in the way. It is nearly that indiscriminate, swinging at everything the engine files as alive whose box it overlaps, asking neither its health nor whether it is drawn. A mine is filed there too, so the boulder does swing at one; the mine simply has no answer for a rolling ball and sits where it is. Not that the two ever meet: the temple keeps its boulders and its mines on different paths. The card also implied the boulder was unusual in ignoring which depth plane a victim stands on, and it is not. Oddysee's electric walls and trapdoors never ask either. The card now says what the boulder does rather than what it skips."
+  },
+  {
+   "date": "2026-08-23",
+   "tag": "improved",
+   "tiny": true,
    "title": "A checkpoint can be picky about your plane",
    "detail": "Exoddus's quicksave checkpoints carry a filter on which depth plane's Abe may trip them, so a checkpoint you walk through can quietly decline to save. Its card told that through the field's own value names, and went on to say a single screen could therefore checkpoint each plane separately, which no screen in the game does. The card now says what the filter is and how seldom it is set: 83 of the 107 checkpoints filter nobody."
   },
