@@ -10,6 +10,7 @@ import { setTypeInfo } from "./typeinfo.js";
 import { initSettings, storedLocationHash, clearStoredLocation } from "./settings.js";
 import "./sidebar.js";
 import "./search.js";
+import "./export.js";
 import { toggleMenu } from "./interaction.js";
 import { initFieldPanel } from "./fieldpanel.js";
 import "./a11y.js";
