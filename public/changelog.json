@@ -3,6 +3,12 @@
   {
    "date": "2026-08-23",
    "tag": "fixed",
+   "title": "What really holds a sack shut",
+   "detail": "Four cards describe the same throwable counter and all four described it as your hands. The meat sack and the bone bag gave nothing while your hands were full, the rock sack never while you still held any, the grenade machine dropped grenades while Abe's hands were empty. The gate is wider than anyone's hands: the game counts every rock, bone, meat and grenade in existence, wherever it happens to be. A bone you dropped two screens back keeps the next bag shut until you go and fetch it. All four now say so. The two sacks also said they serve only an Abe on its own plane, which is the rule for very nearly everything in either game rather than anything about sacks. In its place is the one thing that does set a sack apart: only Abe's own body can take from one, so walking a possessed Slig into it gets you nothing. The grenade machine asks nobody's identity at all, its lit button being the whole interface."
+  },
+  {
+   "date": "2026-08-23",
+   "tag": "fixed",
    "title": "The Slig card had its depth shot backwards",
    "detail": "A Slig's card said it shoots what it sees on its own plane of the world, which reads as an invitation: step onto the other plane and the guard on it cannot touch you. The opposite is nearer the truth. A Slig's rifle does only reach its own plane, but a background Slig carries a second shot along the depth axis and snipes into the foreground with it. That is the one its z_shoot_delay field times, and the reason both games scatter no-fire cover boxes about. The card now says so, and which way each game runs it: Exoddus only ever from the background into the foreground, Oddysee in either direction. Abe himself is immune to a depth shot whenever he is the one standing on the background plane."
   },
