@@ -2,7 +2,7 @@
 // Fires a "selection-changed" window event (detail.fromHash) whenever a path is picked.
 
 import { clamp, esc } from "./util.js";
-import { ZOOM_MIN, ZOOM_MAX } from "./config.js";
+import { DEMO_NOTE, ENTRY_NOTE, ZOOM_MIN, ZOOM_MAX } from "./config.js";
 import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
 import { knownGame, loadGame } from "./data.js";
 import { toast } from "./toast.js";
@@ -129,9 +129,9 @@ function buildPathButtons() {
     if (named) tip.push(named);
     if (state.entry[L.short] && state.entry[L.short].has(P.id)) {
       b.classList.add("entry");
-      tip.push("entry point (arrived at from another level)");
+      tip.push(ENTRY_NOTE);
     }
-    if (isDemoPath(P)) tip.push("demo path (only the title-screen demos play here)");
+    if (isDemoPath(P)) tip.push(DEMO_NOTE);
     if (tip.length) b.title = tip.join(" — ");
     b.onclick = () => selectPath(P);
     pathBtns.appendChild(b);

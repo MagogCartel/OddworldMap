@@ -3,7 +3,7 @@
 // portal and transition between two of them an edge. A node is a button, so a
 // click travels there and the keyboard reaches every path in the game.
 
-import { CONN_COLORS, GRAPH, KEY_PAN_PX } from "./config.js";
+import { CONN_COLORS, DEMO_NOTE, ENTRY_NOTE, GRAPH, KEY_PAN_PX } from "./config.js";
 import { $, cv, menuBtn } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
@@ -43,8 +43,8 @@ function nodeLines(n, links) {
     `${n.L.name} — ${pathDisplayName(id, n.lv, n.P) || `path ${n.pa}`}`,
     n.P.section,
     pathNickname(id, n.lv, n.P),
-    state.entry[n.lv]?.has(n.pa) && "entry point — arrived at from another level",
-    isDemoPath(n.P) && "demo path — only the title-screen demos play here",
+    state.entry[n.lv]?.has(n.pa) && ENTRY_NOTE,
+    isDemoPath(n.P) && DEMO_NOTE,
     `${count} object${count === 1 ? "" : "s"}`,
     way("both", "both ways with"),
     way("to", "leads to"),

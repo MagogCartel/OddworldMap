@@ -1,9 +1,7 @@
 // Where the map is: a chip in the map chrome naming the current level and path,
-// and the panel it discloses — the level's full name, which half of it the path
-// belongs to, the nickname players gave it where the map has adopted one,
-// whether the path is arrived at from another level or one the demos alone play,
-// and the curated note the odd places carry.
+// and the panel it discloses, which carries what the chip has no room for.
 
+import { DEMO_NOTE, ENTRY_NOTE } from "./config.js";
 import { $ } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
@@ -28,12 +26,8 @@ function fill() {
     (path.section ? `<div class="pl-section">${esc(path.section)}</div>` : "") +
     `<div>Path ${path.id}${name ? ` — ${esc(name)}` : ""}</div>` +
     (nickname ? `<div class="pl-nickname">${esc(nickname)}</div>` : "") +
-    (state.entry[lvl.short]?.has(path.id)
-      ? `<div class="pl-entry">entry point — arrived at from another level</div>`
-      : "") +
-    (isDemoPath(path)
-      ? `<div class="pl-demo">demo path — the game only plays this in its title-screen demos</div>`
-      : "") +
+    (state.entry[lvl.short]?.has(path.id) ? `<div class="pl-entry">${esc(ENTRY_NOTE)}</div>` : "") +
+    (isDemoPath(path) ? `<div class="pl-demo">${esc(DEMO_NOTE)}</div>` : "") +
     (note ? `<div class="pl-note">${esc(note)}</div>` : "");
   shown = path;
 }
