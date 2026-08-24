@@ -608,6 +608,7 @@ body.graph-fit .gv-nm {
   max-height: calc(100vh - 12px);
 }
 #anchorTip .detail {
+  white-space: pre-line;
   color: var(--dim);
   margin-top: 3px;
 }
