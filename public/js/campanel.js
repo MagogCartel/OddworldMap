@@ -152,6 +152,12 @@ window.addEventListener("float-opened", (e) => {
   if (narrowMQ.matches && e.detail.id !== "camPanel" && !panel.hidden) closeCamPanel();
 });
 
+// the world graph stands over the map this describes, and it is unusable and
+// out of date by the time the mode closes
+window.addEventListener("graph-changed", () => {
+  if (state.graph) closeCamPanel();
+});
+
 $("camPanelClose").onclick = closeCamPanel;
 // close when the listed path is gone; same-path re-selections (every pushed
 // hash write re-applies the hash) keep the panel, so a row jump doesn't

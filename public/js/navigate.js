@@ -232,8 +232,17 @@ function centerOn(fx, fy, z) {
   attempt();
 }
 
+// the world graph stands over the map, so anything that aims the map at a point
+// puts it away first — a follow, a search hit, a jump to a screen
+function leaveGraph() {
+  if (!state.graph) return;
+  state.graph = false;
+  window.dispatchEvent(new CustomEvent("graph-changed"));
+}
+
 // center on (fx, fy) zoomed to a few screens across, flash the spot
 function focusOn(fx, fy) {
+  leaveGraph();
   centerOn(fx, fy, null);
   flashAt(fx, fy);
   scheduleHash(true);
@@ -338,7 +347,15 @@ const inEmbed = () => document.body.classList.contains("embed");
 // debounced hash write lands)
 export function viewHash() {
   const v = camCenter(state.cam, cv.clientWidth, cv.clientHeight);
-  return formatHash(state.data.id, state.lvl.short, state.path.id, v, null, state.route);
+  return formatHash(
+    state.data.id,
+    state.lvl.short,
+    state.path.id,
+    v,
+    null,
+    state.route,
+    state.graph,
+  );
 }
 
 function writeHash(push) {
@@ -421,6 +438,10 @@ export async function applyHash() {
     toast(t ? `marker on ${t.name}` : `no ${p.obj.name} at that spot`);
   }
   state.route = route; // the hash is the source of truth: absent means no route
+  if (state.graph !== p.graph) {
+    state.graph = p.graph; // the hash is the source of truth here too
+    window.dispatchEvent(new CustomEvent("graph-changed"));
+  }
   if (p.routeLost) {
     const arrived = p.route.reduce((n, s) => n + s.pts.length, 0);
     toast(`route link cut short: ${arrived} of ${arrived + p.routeLost} waypoints`);

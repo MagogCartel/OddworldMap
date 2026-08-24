@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-24",
+   "tag": "new",
+   "flagship": true,
+   "title": "The whole game, drawn as one diagram",
+   "detail": "The map has always been able to say where one door leads. What it could never show you is the shape of the whole thing. A World graph button under the path list, or the v key, puts the map away and draws the game as a diagram. A column per level in the order you play them, and a box per path in the order you meet them. Between them runs a line for every door, express well, bird portal, teleporter and transition. Oddysee comes out at 74 boxes and 77 lines, Exoddus at 92 and 97. The lines wear the connection arrows' own colours, with an arrowhead where a link runs only one way, forty-one of them in all. What the games are built out of stops being a thing you have to remember. The Scrabanian Temple's Trials hall fans out to eight rooms, FeeCo Depot is a lobby and five terminals, and the SoulStorm Brewery is three hubs with fourteen zulags hanging off them. Exoddus turns out to be two games that never touch, nothing in the mines and the vaults connecting to anything in the depot, the barracks or the brewery. Hover a box for the place's full name, its note and every path it leads to, hover a line for what it is made of, and click a box to travel there. Fit scales the whole game into the window, and the address bar carries the diagram, so you can send somebody the shape of a game."
+  },
+  {
    "date": "2026-08-23",
    "tag": "improved",
    "title": "The map draws without waiting for both games",

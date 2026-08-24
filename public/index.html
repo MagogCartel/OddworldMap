@@ -81,6 +81,14 @@
       <div class="btnrow" id="levelBtns"></div>
       <h2>Path</h2>
       <div class="btnrow" id="pathBtns"></div>
+      <button
+        id="graphBtn"
+        title="the whole game as one diagram: every path, and every way between them"
+        aria-expanded="false"
+        aria-controls="graphView"
+      >
+        World graph
+      </button>
       <h2>
         Display
         <span class="h2tools"><button id="tReset" class="linkbtn">reset</button></span>
@@ -190,6 +198,20 @@
     <div id="main">
       <noscript><div id="noscript">This interactive map requires JavaScript.</div></noscript>
       <canvas id="cv" role="img" aria-label="Oddworld map"></canvas>
+      <div id="graphView" hidden role="region" aria-labelledby="graphTitle">
+        <div id="graphBar">
+          <span id="graphTitle"></span>
+          <span id="graphLegend" aria-hidden="true"></span>
+          <button id="graphFit" class="linkbtn">fit</button>
+          <button id="graphClose" class="closebtn" aria-label="Close">×</button>
+        </div>
+        <div id="graphScroll">
+          <div id="graphFrame"><div id="graphPlane"></div></div>
+        </div>
+        <div id="graphHelp">
+          drag / arrows = pan · click a box = go there · Esc = back to the map
+        </div>
+      </div>
       <button id="menuBtn" class="iconbtn" aria-label="Toggle menu" title="Toggle menu"></button>
       <!-- .chrome marks site furniture that embed mode hides -->
       <button
@@ -328,6 +350,10 @@
           <div class="sc-row">
             <span class="sc-keys"><kbd>l</kbd></span
             >list the objects on the screen nearest the view's center
+          </div>
+          <div class="sc-row">
+            <span class="sc-keys"><kbd>v</kbd></span
+            >the world graph: every path and the ways between them
           </div>
           <div class="sc-row">
             <span class="sc-keys"><kbd>s</kbd></span

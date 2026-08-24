@@ -66,6 +66,7 @@ import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { focusCamPanel, openCamPanel, openCamPanelNear } from "./campanel.js";
 import { togglePlace } from "./place.js";
+import { toggleGraph } from "./graphview.js";
 import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
 import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 import { HAMBURGER_SVG, CLOSE_SVG, LINK_SVG, EXTERNAL_SVG } from "./icons.js";
@@ -101,6 +102,17 @@ window.addEventListener("selection-changed", (e) => {
   if (isNarrow() && !e.detail.fromHash) toggleMenu(false); // reveal the map after picking
 });
 
+// the graph takes the whole surface, so the drawer has to come off it
+window.addEventListener("graph-changed", () => {
+  if (state.graph && isNarrow()) toggleMenu(false);
+  // clicking a box closes the diagram, which hands the rest of that gesture to
+  // the canvas underneath: the second click of a double-click would land on the
+  // map, adding a route waypoint or opening a screen list nobody asked for. The
+  // next press that begins its own sequence clears it, so nothing is timed
+  else graphHandover = true;
+});
+let graphHandover = false;
+
 // ---- page zoom -----------------------------------------------------------
 // #cv's touch-action: none would swallow the pinch that ends a page zoom, so while
 // one is in effect the canvas hands two-finger gestures over instead of zooming the map.
@@ -128,6 +140,7 @@ function ptrXY(e) {
 }
 
 cv.addEventListener("pointerdown", (e) => {
+  if (e.detail <= 1) graphHandover = false; // a press of its own, not a gesture's tail
   const p = ptrXY(e);
   pointers.set(e.pointerId, p);
   try {
@@ -240,7 +253,7 @@ cv.addEventListener("pointerleave", () => {
 });
 
 cv.addEventListener("click", () => {
-  if (panMoved || state.show.ruler) return;
+  if (panMoved || graphHandover || state.show.ruler) return;
   if (state.show.route) {
     updateHover(); // taps arrive without a preceding hover move
     // a followed object seams the route: the segment closes on it, the ride
@@ -385,6 +398,10 @@ window.addEventListener("keydown", (e) => {
   }
   if (e.key === "i") {
     togglePlace();
+    return;
+  }
+  if (e.key === "v") {
+    if (!e.repeat) toggleGraph(); // a held key autorepeats; the mode must not
     return;
   }
   if (e.key === "l") {

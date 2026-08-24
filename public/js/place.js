@@ -81,6 +81,12 @@ window.addEventListener("selection-changed", () => {
   syncPlace();
 });
 
+// the world graph stands over the chip that opens this, and names the place in
+// its own boxes
+window.addEventListener("graph-changed", () => {
+  if (state.graph) togglePlace(false);
+});
+
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !panel.hidden && !e.target.matches?.("input, textarea, select"))
     togglePlace(false);

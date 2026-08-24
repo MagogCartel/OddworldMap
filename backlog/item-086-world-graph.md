@@ -1,6 +1,6 @@
 # 86. World graph
 
-**Status:** open · **Effort:** large (viewer, product) · **Where:** anywhere · **Filed:** 2026-08-07 feature-ideation sweep
+**Status:** shipped 2026-08-24 · **Effort:** large (viewer, product) · **Where:** anywhere · **Filed:** 2026-08-07 feature-ideation sweep
 
 ## Why
 
@@ -18,3 +18,30 @@ Every cross-path and cross-level link is already computed and trusted ([40](item
 - Demo paths sit outside the reachable graph; follow the setting and the entry-path rules rather than inventing reachability of its own.
 - Ender levels make the AE graph honest but strange (the same geography appears twice under two ids); label sections the way the path buttons do rather than merging what the game keeps distinct.
 - The graph must not contradict the pinned link counts in `tests/unit/map-data.test.js` — those tests are the aggregation's oracle, and a mismatch is a bug in the graph, not in the pins.
+
+## Shipped
+
+The whole graph, not the per-level phase: the layout turned out to be free, so the sketch's "smaller layout problem" bought nothing. `data.levels` is already progression order and `levelOrder` is already the within-column order, which left only the routing to design — and once that was written, one level cost the same as fourteen.
+
+- **The rows are the play-order walk whatever the setting says.** It is the diagram's own geometry rather than a listing preference: summing |row(a) - row(b)| over the 62 and 86 undirected pairs inside a column, on the rows the diagram draws, the walk comes to 125 against the stored order's 181 in Oddysee and 227 against 406 in Exoddus, and leaves one interleaved pair of arcs per game. A diagram laid out on the stored order by default would have been the worse one by default.
+- **The columns are `data.levels` order, and the backward edges are drawn backwards.** A minimum-feedback-arc-set search over every column ordering gets both games down to 4 backward crossings against `data.levels`' 6 and 5, and the orderings that manage it are progression nonsense (Paramonia Escape before the temple it escapes). Six lines pointing left is information; a reordered column strip is a second answer to a question the sidebar has already answered.
+- **Straight lines lose on the count that matters.** Centre to centre they pass through a box belonging to neither of their ends on 36 of Oddysee's 77 lines and 54 of Exoddus' 97; the lane-packed orthogonal routes do it on none, pinned on both axes. Crossings barely move — 76 to 41 in Oddysee, 27 to 29 in Exoddus — which is why the boxes are what was worth measuring. A tally of boxes rather than of lines is not worth quoting: it moves by one or two with the crossing predicate, which is how three people came to three answers for it. `tests/unit/worldgraph.test.js` sweeps the shipped data for a route that leaves the diagram, crosses a box, bends off-axis or shares a line with another.
+- **Nodes are DOM buttons and edges are SVG**, which is what buys the keyboard, the ellipsis, the focus ring and `data-tip` for nothing. At a 190px box no gameplay path's name is cut in either game; thirteen of the demo copies' are, their names carrying the `[Demo] ` mark on top of the name they copy, and the tooltip carries those whole.
+- **It rides the hash** as a bare `graph` token in the tail — the item's claim about the artifact being shareable is worth nothing otherwise, and it is what makes the back button close the mode. Older deployed viewers drop an unknown tail token and open the map at the view the link names.
+- The aggregation is the same `destOf` + `destTrusted` + `pathIn` walk, so the pinned cross-level follows in `tests/unit/map-data.test.js` are its oracle and the new test expands the graph's crossings back to exactly those strings.
+
+- **An arrowhead marks a one-way link and nothing else.** A head on each end a pair can be travelled towards is 307 of them across the two games, 266 of which say "ordinary"; marking the 41 one-way pairs alone spends the mark on the fact worth a glance. The tooltip states the direction either way.
+- **Every edge leaves its box on a line of its own.** Departing at the box's middle put 154 pairs of Oddysee segments and 235 of Exoddus' exactly on top of each other, each pair a stretch of line whose colour was whichever edge painted last. Three quarters of Exoddus' sat at the nine nodes of degree seven and up that the diagram exists to show, while Oddysee's split about evenly with the rest — so the fix is every box's business rather than the hubs'. Spreading the departures across the box's height, up-bound above down-bound, takes both counts to zero and leaves the crossings, the lanes and the diagram's size untouched.
+
+## Ruled out
+
+- **Bundling a hub's spokes into one trunk.** It would take the Scrabanian Temple's Trials hall from eight lanes to two, but the arcs are already laminar — one interleaved pair per game — and once the departures are spread, a fan reads as a fan without it.
+- **A drawn marker for Exoddus' two halves.** `{MI, NE, PV, SV}` and `{FD, BA, BW, BR, BM}` share no edge, and it is tempting to caption the seam. But three of the ten Exoddus gutters carry no cross-column edge, so "nothing crosses here" cannot single out the one that matters; the absence of lines is what an absence should look like, and the README says it in words.
+- **A dot on a box that carries a note.** The place chip has one, the path buttons do not, and the diagram's face answers to the buttons; the note is in the tooltip.
+- **A per-level view of its own.** The current level's column is where the diagram opens, so the phase-1 surface is a scroll position rather than a mode.
+- **Reordering rows to cut crossings.** A barycentre sweep saves 14 cross-column crossings in Oddysee and moves 44 of its 74 paths off the row the path buttons list them on. Two surfaces disagreeing about the order of a level's paths is the defect, not the crossings.
+- **Wrapping the columns into bands** to fill the 29%/40% of the grid the short columns leave empty. It wraps a third of the cross-level edges across a band boundary and gives up left-to-right-is-progression, which is the column axis's whole content.
+
+## Still open
+
+Edge bundling for the long hauls, a clickable list of the objects an edge aggregates, PNG export of the diagram, and a Places-group answer for "graph".

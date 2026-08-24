@@ -13,7 +13,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 ## Controls
 
 - **AO / AE** buttons switch between the two games
-- **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom; **`[` / `]`** step through the level's paths, **`g` / `c` / `f` / `a`** flip the grid, collision lines, foreground masks and connection arrows, **`r`** / **`m`** arm the route planner and the ruler, **`i`** says where you are and **`l`** lists what is on the screen nearest the view's center — press **`?`** for the full shortcut list
+- **drag** or **arrow keys** to pan, **mouse wheel** (anchored at the cursor) or **`+` / `-`** to zoom; **`[` / `]`** step through the level's paths, **`g` / `c` / `f` / `a`** flip the grid, collision lines, foreground masks and connection arrows, **`r`** / **`m`** arm the route planner and the ruler, **`i`** says where you are, **`l`** lists what is on the screen nearest the view's center and **`v`** opens the world graph — press **`?`** for the full shortcut list
 - **hover** any object for decoded details
   - the details open with what the thing *is*: one plain-English sentence per object type, the opening line of its encyclopedia entry (curated in [glossary_types.json](public/glossary_types.json))
   - door destinations (level/path/door#), path-transition targets, continue-point zones, Mudokon state (Oddysee job / Exoddus work state + mood), and enemy behaviour (a Slig's start state and how it attacks — `shoot_on_sight_delay=0` means it shoots the instant it sees Abe, no "FREEZE!" warning; whether a Slog starts asleep)
@@ -39,6 +39,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
 - **where you are**: a chip at the top-left corner of the map names the level and path you are looking at
   - click it (or press **`i`**) for the level's full name, which half of it the path belongs to where the game says, the nickname players gave the place where it has one, whether the path is one the game arrives at from another level or one only the title-screen demos play, and the path's note where it has one — a remark on something odd about the place, marked by a dot on the chip
 - **somewhere odd**: the shuffle button beside the chip jumps to a random screen — either game, any level — for when you'd rather the map did the choosing
+- **world graph**: the **World graph** button under the path list (or **`v`**) puts the map away and draws the whole game as one diagram — every path a box, every way between two of them a line; click a box to travel there
 - **minimap**: when a path outgrows the window, a small overview appears in the lower-right corner — the path's grid with the viewport drawn on it; click or drag inside it to move the view (it steps aside while a panel takes the same corner, and hides once the whole path fits on screen)
 - **reset** in the Display and Objects headers puts that section back to its defaults
 - **search** (`/` to focus) matches object names and decoded fields across both games — try `mudokon`, `lcdstatusboard` or `switch_id=70`
@@ -98,6 +99,24 @@ Every toggle in the Display section explains itself: hover it for a short note o
 - counting reads the data rather than the display (a type whose category filter is off still counts, the way search still finds it) and follows the demo-paths setting, noting below the table what the hidden demo copies hold
 - click a type's name in the table to stop counting it
 - the table holds six types at once; with six picked the rest of the list greys out until you drop one
+
+### World graph
+
+The **World graph** button under the path buttons (or **`v`**) puts the map away and draws the whole game as one diagram. The button stays lit while it is up. The sidebar stays, so the game buttons, search and Settings all still work; pressing the button again, **Escape**, the ×, or the browser's back button bring the map back.
+
+- one column per level, in the games' own level order, and inside each column one box per path in the order a player meets them — the same walk "Paths in play order" lists, whether that setting is on or not, because the walk is what keeps the lines short
+- a line gathers every door, express well, bird portal, teleporter, path transition and level loader running between the same two paths, and takes the colour the connection arrows give its kind: doors and the level loader yellow, wells pink, bird portals lavender, teleporters teal, path transitions white
+- an arrowhead marks a one-way link and nothing else — 13 of Oddysee's 77 lines and 28 of Exoddus' 97 — so what is worth noticing is what carries a mark; hover a line for what it is made of (`Door ×6`) and which way it runs
+- each line leaves its box on a line of its own, so a hub reads as an interchange: the Scrabanian Temple's Trials hall fans out to eight rooms, and the Mudomo and Mudanchee Vaults are that same shape twice more
+- where the game files half a level under a name of its own — the five Exoddus areas the endgame returns to — that half sits at the foot of its column under its own caption
+- lines inside a level run in the channel beside their column, a line to the next level along drops through the gutter between them, and one reaching further travels the band above the columns — so nothing is ever drawn across a box
+- the box you are standing on is outlined, and the diagram opens scrolled to it with the keyboard already on it: Tab walks the boxes level by level, Enter travels to the one you are on, and **`[`** / **`]`** still step through the level's paths with the outline following
+- hover a box for the level's full name, the section and nickname where the place has them, whether the game arrives there from another level or only the title-screen demos play there, how many objects are on it, its note, and every path it links to — the one thing a diagram can only be asked in words, and the only way a screen reader gets the lines at all
+- a box the game arrives at from another level wears the same `▸` its path button does
+- drag the diagram to move it, or use the arrow keys; **fit** scales the whole game into the window and **actual size** puts it back, and **`−`** and **`+`** do the same: Oddysee's diagram is 3491 × 809, Exoddus' 2799 × 896. At the fit the path names drop out and the level codes are scaled back to the size they were, since they are the only labels an overview that small can carry
+- the diagram makes one thing plain that no amount of browsing does: Exoddus is two halves that never touch. Nothing in the Necrum Mines, Necrum or either vault connects to anything in FeeCo Depot, the Barracks, Bonewerkz or the Brewery — 38 paths and 51 with no line between them, because the one crossing the game has (the Necrum Vaults to FeeCo Terminal 1) happens in a cutscene and no well pairs for it
+- the "Show demo paths" setting moves the diagram, the way it moves the path buttons — Exoddus is 92 paths and 97 links without its demo copies, 117 and 120 with them
+- the link in the address bar carries the diagram, so the chain button and a copied URL open on it rather than on the map
 
 ### Sharing and embedding
 

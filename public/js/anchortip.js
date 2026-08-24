@@ -49,6 +49,10 @@ function hide() {
   el.hidden = true;
   anchor = null;
 }
+// a surface that takes its own anchor away has to say so: a tap shows the
+// tooltip and then activates what it sits on, so a control that replaces the
+// page it was on would strand one over whatever came next
+export { hide as hideAnchorTip };
 
 // a touch fires pointerover before its own tap and pointerout after it, so
 // hover has to be the mouse's alone or a tap would flash the tooltip away

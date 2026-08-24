@@ -87,5 +87,6 @@ export const state = {
   cam: { x: 0, y: 0, z: 0.3 }, // view offset + zoom (px per draw unit)
   show: {}, // display toggles, mirrored from the sidebar checkboxes
   ruler: null, // {x1, y1, x2, y2} in draw space
+  graph: false, // the world graph is on screen in place of the map
   route: null, // route segments [{lv, pa, pts: [{x, y}, …]}, …], pts in draw space; drawn whenever set (show.route only gates editing)
 };

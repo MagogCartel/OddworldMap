@@ -900,9 +900,19 @@ test("parseHash round-trips a formatted hash (against the rounded values)", () =
     obj: null,
     route: null,
     routeLost: 0,
+    graph: false,
   });
   // the world point the link names, back in the space the renderer works in
   assert.deepEqual(hashToDraw(p).view, { x: 177, y: 55, z: 2.23 });
+});
+
+// deliberately a bare word at the tail, where an older viewer's parse ignores it
+// and opens the map at the view the link names
+test("the world graph rides the hash as a token of its own", () => {
+  const h = formatHash("AO", "R2", 1, { x: 177.4, y: 54.6, z: 2.234 }, null, null, true);
+  assert.equal(h, "#AO/R2/1/433/175/2.23/graph");
+  assert.equal(parseHash(h).graph, true);
+  assert.equal(parseHash("#AO/R2/1/433/175/2.23").graph, false);
 });
 
 test("permalinks can carry an object, identified by name and origin", () => {
@@ -930,6 +940,7 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     obj: null,
     route: null,
     routeLost: 0,
+    graph: false,
   });
   assert.deepEqual(parseHash("#AO"), {
     game: "AO",
@@ -939,6 +950,7 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     obj: null,
     route: null,
     routeLost: 0,
+    graph: false,
   });
   // x/y without z: the view is ignored as a whole
   assert.deepEqual(parseHash("#AO/R2/1/10/20"), {
@@ -949,6 +961,7 @@ test("parseHash: case-insensitive, partial and garbage inputs", () => {
     obj: null,
     route: null,
     routeLost: 0,
+    graph: false,
   });
   assert.ok(Number.isNaN(parseHash("#AO/R2/junk").path));
 });

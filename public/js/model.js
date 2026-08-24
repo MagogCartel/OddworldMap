@@ -642,19 +642,24 @@ export const focusZoom = (cw, ch) =>
     FOCUS_ZOOM_MAX,
   );
 
-// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/route=…] -
+// - permalinks: #GAME/LEVEL/PATH/cx/cy/zoom[/Name@x1,y1][/graph][/route=…] -
 // cx/cy is the view's center, not the corner the renderer works in, so a link
 // lands on the same spot whatever the size of the window it opens in. Trailing
 // segments are matched by shape, not position, and unknown ones are ignored.
 // A route is a list of per-path segments {lv, pa, pts}, and its token is
 // "route=nCOUNT;sLV.PA;x,y;…;end": every segment names its path, so no
-// waypoint can ever rebind to artwork it was not plotted on.
+// waypoint can ever rebind to artwork it was not plotted on. The world graph
+// reads as a place of its own, so a bare word carries it.
+//
 // Every coordinate a link carries is a world coordinate, the object segment's
 // included: draw space is a packing of the world that a change of pitch would
 // slide under a link, while a world point names a place in the game.
-export function formatHash(gameId, levelShort, pathId, view, obj, route) {
+const GRAPH_TOKEN = "graph";
+
+export function formatHash(gameId, levelShort, pathId, view, obj, route, graph) {
   let h = `#${gameId}/${levelShort}/${pathId}/${Math.round(wX(view.x))}/${Math.round(wY(view.y))}/${view.z.toFixed(2)}`;
   if (obj) h += `/${obj.name}@${obj.x1},${obj.y1}`;
+  if (graph) h += `/${GRAPH_TOKEN}`;
   const count = route?.reduce((n, s) => n + s.pts.length, 0);
   if (count) {
     const pair = (p) => `${Math.round(wX(p.x))},${Math.round(wY(p.y))}`;
@@ -748,6 +753,7 @@ export function parseHash(hash) {
     obj: om ? { name: om[1], x1: +om[2], y1: +om[3] } : null,
     route: route ? route.segs : null,
     routeLost: route ? route.lost : 0,
+    graph: tail.includes(GRAPH_TOKEN),
   };
 }
 

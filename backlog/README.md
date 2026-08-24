@@ -28,7 +28,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
-- [86. World graph](item-086-world-graph.md) — feeds on the wiring overlay's aggregation experience.
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 - [5. LCD marquee text](item-005-lcd-marquee-text.md) — disc machine, and only after the spike says the strings are reachable.
@@ -47,7 +46,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
-- [**86.** World graph](item-086-world-graph.md) — every path a node, every transition an edge: the metro map of each game. _Large, anywhere._
 - [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md). Per-screen counts tally a marker under the screen it was folded onto; the collision lines and the marker boxes shipped. _Small, anywhere; the counting half needs a verdict on what a count is for._
 
 ## Content depth
@@ -97,6 +95,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**86.** World graph](item-086-world-graph.md) — every path a box, every way between two of them a line: the whole game as one diagram, in place of the map. The layout turned out to be free — `data.levels` order by `levelOrder` — so the per-level phase the sketch offered was never built. _2026-08-24._
 - [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — the map draws on the data of the game you opened, and the other arrives behind it; the sketch's `fetchpriority` advice was wrong, and deleting the second preload is what paid. _2026-08-23._
 - [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — every screen of a path in one image at the artwork's own resolution; the size budget turned out to be for the spaced pitch, and a blank canvas encodes fine, so the export probes before it paints. _2026-08-23._
 - [**79.** Retire the level annotations, keep the off-map clause](item-079-off-map-level-branch.md) — the empty `levels` section and the two schema rules policing it are gone; the tooltip clause stays, a subset build being where it still fires. _2026-08-20._

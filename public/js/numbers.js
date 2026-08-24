@@ -147,6 +147,12 @@ window.addEventListener("float-opened", (e) => {
   if (narrowMQ.matches && e.detail.id !== "numbersPanel") closeNumbers();
 });
 
+// the world graph stands over the map this describes, and it is unusable and
+// out of date by the time the mode closes
+window.addEventListener("graph-changed", () => {
+  if (state.graph) closeNumbers();
+});
+
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !panel.hidden && !e.target.matches?.("input, textarea, select"))
     closeNumbers();
