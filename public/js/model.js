@@ -142,6 +142,15 @@ export function destOf(t, lvl = state.lvl, path = state.path, geo = GEO, data = 
   return d && d.target != null && d.target.field === "well#" ? { ...d, target: null } : d;
 }
 
+// a hand stone's view names no partner, so destTrusted believes it wherever it
+// points — unguarded, a sight reads as a way through. Whether the path it names
+// is one the map holds stays the caller's question.
+export function wayThrough(t, lvl = state.lvl, path = state.path, geo = GEO, data = state.data) {
+  if ((t.extra || {}).view1_cam != null) return null;
+  const d = destOf(t, lvl, path, geo, data);
+  return d && destTrusted(d, lvl, data, geo) ? d : null;
+}
+
 // every artwork file a game ships, background and foreground alike: what a
 // copy of it held on the device has to hold
 export const camFiles = (data) =>
@@ -496,9 +505,8 @@ export function computeConnections(
   const stubs = [];
   const partner = new Map();
   for (const t of path.tlvs) {
-    if ((t.extra || {}).view1_cam != null) continue;
-    const d = destOf(t, lvl, path, geo, data);
-    if (!d || !destTrusted(d, lvl, data, geo) || isLoopback(t, lvl, path, geo, data)) continue;
+    const d = wayThrough(t, lvl, path, geo, data);
+    if (!d || isLoopback(t, lvl, path, geo, data)) continue;
     if (d.lv !== lvl.short || d.pa !== path.id) {
       stubs.push({ src: t, label: `${d.lv} P${d.pa}` });
       continue;

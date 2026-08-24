@@ -448,7 +448,10 @@ shortcutsOverlay.onclick = (e) => {
 trapDialogKeys(() => shortcutsOverlay.classList.contains("open"), $("shortcuts"), closeShortcuts);
 
 // where an object may be said to lead: destOf's answer, less the links whose
-// named partner isn't at the destination to receive them
+// named partner isn't at the destination to receive them. Deliberately not
+// wayThrough, which is this with a hand stone's view excluded as well: that
+// guard is the level graph's, and a click is not the level graph — clicking a
+// stone follows it to the camera it shows.
 const shownDest = (t) => {
   const d = destOf(t);
   return d && destTrusted(d) ? d : null;

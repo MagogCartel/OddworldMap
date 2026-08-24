@@ -10,6 +10,7 @@ import {
   computeEntryPaths,
   destOf,
   destTrusted,
+  wayThrough,
   findTlv,
   focusZoom,
   formatHash,
@@ -230,6 +231,22 @@ test("destOf: hand stone views follow the first viewed camera", () => {
   // a viewed camera the path no longer has, or no selection: nothing to follow
   assert.equal(destOf(tlv("HandStone", { view1_cam: 4 }), { short: "R1" }, P), null);
   assert.equal(destOf(ae, null, null), null);
+});
+
+// the only thing holding this guard: no stone view survives the rest of the
+// gauntlet on either game's shipped data, so nothing in the sweeps would fail
+// if a caller dropped it
+test("wayThrough: a hand stone's view is not a way through", () => {
+  const [lvl, , geo, data] = HERE;
+  const ao = tlv("HandStone", { view1_level: "F1", view1_path: 2, view1_cam: 5 });
+  assert.deepEqual(destOf(ao, ...HERE), { lv: "F1", pa: 2, ca: 5, target: null });
+  assert.equal(destTrusted(destOf(ao, ...HERE), lvl, data, geo), true);
+  assert.equal(wayThrough(ao, ...HERE), null);
+  // a real transition comes back, and one the map cannot believe does not
+  const go = tlv("PathTransition", { to_level: "R1", to_path: 15, to_cam: 1 });
+  assert.deepEqual(wayThrough(go, ...HERE), { lv: "R1", pa: 15, ca: 1, target: null });
+  const dead = tlv("Door", { to_level: "R2", to_path: 9, to_cam: 1, "target_door#": 7 });
+  assert.equal(wayThrough(dead, ...HERE), null);
 });
 
 test("computeEntryPaths: hand stone views are not arrivals", () => {

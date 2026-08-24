@@ -4,7 +4,7 @@
 
 import { GRAPH } from "./config.js";
 import { pathVisible } from "./demo.js";
-import { destOf, destTrusted, pathIn } from "./model.js";
+import { pathIn, wayThrough } from "./model.js";
 import { levelOrder } from "./pathorder.js";
 
 const key = (lv, pa) => `${lv} P${pa}`;
@@ -27,10 +27,8 @@ export function worldGraph(data) {
   for (const L of data.levels)
     for (const P of L.paths)
       for (const t of P.tlvs) {
-        if ((t.extra || {}).view1_cam != null) continue; // a sight, not a way through
-        const d = destOf(t, L, P, data.geometry, data);
+        const d = wayThrough(t, L, P, data.geometry, data);
         if (!d || !pathIn(data, d.lv, d.pa)) continue;
-        if (!destTrusted(d, L, data, data.geometry)) continue;
         if (d.lv === L.short && d.pa === P.id) continue; // a ride inside one path
         const from = key(L.short, P.id),
           to = key(d.lv, d.pa);

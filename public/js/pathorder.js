@@ -4,7 +4,7 @@
 // to take first. Importable in bare Node: no DOM.
 
 import { pathDisplayName } from "./annotations.js";
-import { destOf, destTrusted, pathIn } from "./model.js";
+import { pathIn, wayThrough } from "./model.js";
 
 const DEMO = "[Demo] ";
 
@@ -67,10 +67,8 @@ function transitions(data, level) {
     const here = [];
     let leaves = false;
     for (const t of P.tlvs) {
-      if ((t.extra || {}).view1_cam != null) continue; // a sight, not a way through
-      const d = destOf(t, level, P, data.geometry, data);
+      const d = wayThrough(t, level, P, data.geometry, data);
       if (!d || !pathIn(data, d.lv, d.pa)) continue;
-      if (!destTrusted(d, level, data, data.geometry)) continue;
       if (d.lv !== level.short) leaves = true;
       else if (d.pa !== P.id) here.push(d.pa);
     }
@@ -206,10 +204,8 @@ export function levelEntry(data) {
     for (const P of L.paths)
       for (const t of P.tlvs) {
         if (t.name === "AbeStart") keep(start, L.short, P.id);
-        if ((t.extra || {}).view1_cam != null) continue; // a sight, not a way in
-        const d = destOf(t, L, P, data.geometry, data);
+        const d = wayThrough(t, L, P, data.geometry, data);
         if (!d || d.lv === L.short || !pathIn(data, d.lv, d.pa)) continue;
-        if (!destTrusted(d, L, data, data.geometry)) continue;
         keep(order.get(d.lv) > order.get(L.short) ? fwd : back, d.lv, d.pa);
       }
   e = {};
