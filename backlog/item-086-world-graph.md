@@ -41,7 +41,8 @@ The whole graph, not the per-level phase: the layout turned out to be free, so t
 - **A per-level view of its own.** The current level's column is where the diagram opens, so the phase-1 surface is a scroll position rather than a mode.
 - **Reordering rows to cut crossings.** A barycentre sweep saves 14 cross-column crossings in Oddysee and moves 44 of its 74 paths off the row the path buttons list them on. Two surfaces disagreeing about the order of a level's paths is the defect, not the crossings.
 - **Wrapping the columns into bands** to fill the 29%/40% of the grid the short columns leave empty. It wraps a third of the cross-level edges across a band boundary and gives up left-to-right-is-progression, which is the column axis's whole content.
+- **A Places-group answer for "graph".** The diagram is a view of the map, not a place inside it, and search answers for the places.
 
 ## Still open
 
-Edge bundling for the long hauls, a clickable list of the objects an edge aggregates, PNG export of the diagram, and a Places-group answer for "graph".
+Edge bundling for the long hauls, and a clickable list of the objects an edge aggregates. Saving the diagram as an image turned out to be a question of its own and is [90](item-090-export-the-world-graph.md).

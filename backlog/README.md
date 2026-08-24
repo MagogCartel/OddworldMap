@@ -28,6 +28,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
+- [90. Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram ships shareable by link alone; pick the serialisation route first.
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 - [5. LCD marquee text](item-005-lcd-marquee-text.md) — disc machine, and only after the spike says the strings are reachable.
@@ -46,6 +47,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md) — frames, percentages and grids for the untyped numerics; the seconds tier waits on a measured logic rate. _Medium; the seconds tier needs an emulator session._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
+- [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram is the most shareable thing here and the only way to share it is a link; the nodes being DOM makes it a serialisation question rather than a second painter. _Medium, anywhere._
 - [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md). Per-screen counts tally a marker under the screen it was folded onto; the collision lines and the marker boxes shipped. _Small, anywhere; the counting half needs a verdict on what a count is for._
 
 ## Content depth
