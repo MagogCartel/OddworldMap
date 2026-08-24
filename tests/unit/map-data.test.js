@@ -17,7 +17,7 @@ import {
 import { EXPORT_MAX_DIM, EXPORT_MAX_PX } from "../../public/js/config.js";
 import { CELL_H, CELL_W, cellOrigin, setGeometry, setSpacing } from "../../public/js/state.js";
 import { isDemoPath } from "../../public/js/demo.js";
-import { AO_GEOMETRY, AE_GEOMETRY, pitches } from "./fixtures.js";
+import { AO_GEOMETRY, AE_GEOMETRY, CROSS_LEVEL_FOLLOWS, pitches } from "./fixtures.js";
 
 // Schema sanity over the shipped data: the invariants the viewer relies on.
 // Referential integrity of to_/alt_ links and LINE_NAMES coverage of all line
@@ -226,43 +226,7 @@ test("cross-level follows in the shipped data are exactly the level graph", () =
         }
     found[data.id] = [...seen].sort();
   }
-  assert.deepEqual(found, {
-    AO: [
-      "D1 P9 -> D2 P1",
-      "D2 P10 -> D7 P11",
-      "D7 P11 -> D2 P10",
-      "D7 P11 -> L1 P5",
-      "E1 P4 -> L1 P1",
-      "E1 P6 -> R1 P20",
-      "E2 P2 -> R2 P19",
-      "F1 P9 -> F2 P1",
-      "F2 P8 -> F4 P9",
-      "F4 P9 -> F2 P8",
-      "F4 P9 -> L1 P5",
-      "L1 P1 -> S1 P1",
-      "L1 P6 -> D1 P1",
-      "L1 P6 -> E2 P4",
-      "L1 P6 -> F1 P1",
-      "R1 P19 -> S1 P1",
-      "R1 P20 -> E1 P6",
-      "R2 P11 -> R6 P6",
-      "R6 P6 -> R2 P11",
-    ],
-    AE: [
-      "BA P16 -> FD P2",
-      "BR P25 -> BM P1",
-      "BW P1 -> FD P4",
-      "BW P12 -> FD P2",
-      "FD P3 -> BA P1",
-      "FD P4 -> BW P1",
-      "FD P5 -> BR P16",
-      "MI P6 -> NE P2",
-      "NE P5 -> PV P1",
-      "NE P5 -> SV P6",
-      "PV P13 -> NE P5",
-      "SV P11 -> NE P5",
-    ],
-  });
+  assert.deepEqual(found, CROSS_LEVEL_FOLLOWS);
 });
 
 // the three express wells behind that rule: one with a live side to prefer, one

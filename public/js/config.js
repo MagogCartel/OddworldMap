@@ -155,3 +155,9 @@ export const HUB_FIELDS = ["hub_1_id","hub_2_id","hub_3_id","hub_4_id",
 
 // wires carry the switch signal, so they take the switches category's green
 export const WIRE_COLOR = CATS.find(c => c.key === "switch").color;
+
+// world graph geometry: the node box, the row pitch and the gutter right of a
+// column that every edge routes in — `lane` apart, `laneGap` clear of whatever
+// they hug, and `bandLane` apart in the band above the columns
+export const GRAPH = { nodeW:190, nodeH:26, rowPitch:38, secGap:18, fan:4,
+                       gutter:56, lane:7, laneGap:8, bandLane:9, pad:24, headH:26 };
