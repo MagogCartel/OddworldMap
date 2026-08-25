@@ -5,6 +5,7 @@
 
 import { esc } from "./util.js";
 import { fieldEntries, fieldHelp } from "./fields.js";
+import { DARK_NOTE, objectMessages } from "./messages.js";
 import { CATS, OFFSCREEN_NOTE, catOf } from "./config.js";
 import { $, narrowMQ } from "./dom.js";
 import { state } from "./state.js";
@@ -137,6 +138,22 @@ function list(cam, focus) {
         window.dispatchEvent(new CustomEvent("typecard-open", { detail: { type: t.name } }));
       wrap.append(info);
       body.appendChild(wrap);
+      // the whole rotation, outside the row so a board with a pool doesn't
+      // grow the jump-to target
+      const says = objectMessages(state.data.id, t);
+      if (says) {
+        const said = document.createElement("div");
+        said.className = "cp-said";
+        said.innerHTML = says.length
+          ? says
+              .map(
+                ({ text, note }) =>
+                  `<div class="said">${note ? `<span class="note">${esc(note)}</span> ` : ""}${esc(`“${text}”`)}</div>`,
+              )
+              .join("")
+          : `<div class="e">${esc(DARK_NOTE)}</div>`;
+        body.appendChild(said);
+      }
     }
   }
   if (!n) body.innerHTML = `<div class="cp-none">no objects on this screen</div>`;

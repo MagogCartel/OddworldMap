@@ -7,6 +7,7 @@ import { GAME_IDS, bootGame, loadGame, loadJson } from "./data.js";
 import { setAnnotations } from "./annotations.js";
 import { setFieldTypes, setEnumLabels } from "./fields.js";
 import { setGlossary } from "./glossary.js";
+import { setMessages } from "./messages.js";
 import { setTypeInfo } from "./typeinfo.js";
 import { initSettings, storedLocationHash, clearStoredLocation } from "./settings.js";
 import "./sidebar.js";
@@ -49,13 +50,16 @@ Promise.all([
   loadJson("enum_labels_ae.json"),
   loadJson("glossary_fields.json"),
   loadJson("glossary_types.json"),
-]).then(async ([annotations, ftAo, ftAe, elAo, elAe, glossary, types]) => {
+  loadJson("messages_ao.json"),
+  loadJson("messages_ae.json"),
+]).then(async ([annotations, ftAo, ftAe, elAo, elAe, glossary, types, msgAo, msgAe]) => {
   setAnnotations(annotations); // before the path buttons build their labels
   // before any tooltip/search prettifies
   setFieldTypes({ AO: ftAo || {}, AE: ftAe || {} });
   setEnumLabels({ AO: elAo || {}, AE: elAe || {} });
   setGlossary(glossary);
   setTypeInfo(types);
+  setMessages({ AO: msgAo, AE: msgAe });
   // a dataset that fails still leaves the other game a map to draw
   let G = await booting;
   for (const id of GAME_IDS) if (!G) G = await loadGame(id);

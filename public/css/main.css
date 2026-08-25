@@ -597,6 +597,10 @@ body.graph-fit .gv-nm {
 #tip .f {
   color: var(--accent);
 }
+#tip .said {
+  display: inline-block;
+  margin-top: 2px;
+}
 #tip .f.loop {
   color: var(--dim);
 }
@@ -946,6 +950,13 @@ body.page-zoomed #minimap {
   flex: 1;
   min-width: 0;
 }
+/* what a sign in the world says */
+.said {
+  color: var(--text);
+}
+.said .note {
+  color: var(--dim);
+}
 /* a quiet icon button at a row's edge */
 .rowtool {
   flex: none;
@@ -960,6 +971,10 @@ body.page-zoomed #minimap {
 .rowtool:hover {
   background: var(--panel2);
   color: var(--text);
+}
+.cp-said {
+  padding: 1px 8px 4px 18px;
+  font-size: 11px;
 }
 .cp-none {
   color: var(--dim);

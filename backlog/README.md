@@ -31,12 +31,11 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [90. Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram ships shareable by link alone; pick the serialisation route first.
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
-- [5. LCD marquee text](item-005-lcd-marquee-text.md) — disc machine, and only after the spike says the strings are reachable.
 - [28. Readable units](item-028-readable-units.md), the seconds tier — disc machine, and only after a measured logic rate.
 
 **Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. The open branches are numeric units ([28](item-028-readable-units.md), which needs a measured logic rate), inherited-field typing ([41](item-041-inherited-field-types.md)), and upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing).
 
-**Machine constraint:** everything under _Content depth_ (and the extraction half of [5](item-005-lcd-marquee-text.md)) needs builder changes and a data rebuild, which needs the disc images. Batch those for a disc-machine session; one rebuild ships them all. Everything else can be built anywhere.
+**Machine constraint:** a builder change that reads new data off the discs needs a rebuild, which needs the disc images. Batch those for a disc-machine session; one rebuild ships them all. Everything else can be built anywhere.
 
 ---
 
@@ -49,10 +48,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
 - [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram is the most shareable thing here and the only way to share it is a link; the nodes being DOM makes it a serialisation question rather than a second painter. _Medium, anywhere._
 - [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md). Per-screen counts tally a marker under the screen it was folded onto; the collision lines and the marker boxes shipped. _Small, anywhere; the counting half needs a verdict on what a count is for._
-
-## Content depth
-
-- [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — a marquee's actual scrolling text, if the string tables turn out to be extractable. _Spike first, effort unknown._
 
 ## Code and build
 
@@ -97,6 +92,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — every marquee reads out what it scrolls, and Oddysee's hint flies what they spell; the tables turned out to live in the level overlays rather than the executable, and the decomp's copies are the PC build's, so the discs are still the source. _2026-08-25._
 - [**86.** World graph](item-086-world-graph.md) — every path a box, every way between two of them a line: the whole game as one diagram, in place of the map. The layout turned out to be free — `data.levels` order by `levelOrder` — so the per-level phase the sketch offered was never built. _2026-08-24._
 - [**53.** Boot on one dataset, hydrate the other](item-053-boot-one-dataset.md) — the map draws on the data of the game you opened, and the other arrives behind it; the sketch's `fetchpriority` advice was wrong, and deleting the second preload is what paid. _2026-08-23._
 - [**61.** Export the whole path, not the viewport](item-061-export-whole-path.md) — every screen of a path in one image at the artwork's own resolution; the size budget turned out to be for the spaced pitch, and a blank canvas encodes fine, so the export probes before it paints. _2026-08-23._

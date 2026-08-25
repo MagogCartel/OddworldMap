@@ -2,6 +2,7 @@
 
 import { esc, extrasText } from "./util.js";
 import { fieldEntries } from "./fields.js";
+import { objectMessages } from "./messages.js";
 import { parseQuery, queryTerms, matchesQuery, rankFor } from "./searchquery.js";
 import { matchPlaces } from "./placesearch.js";
 import { pendingGames } from "./data.js";
@@ -25,11 +26,13 @@ const searchTextCache = { raw: new WeakMap(), pretty: new WeakMap() };
 // any field is findable even when it isn't shown by default. The game keys each
 // value transform by the field's per-game type; raw follows the display setting
 // so a query matches whichever representation the user sees (raw ints or words).
+// A sign's own words join the blob, so a remembered slogan finds the board.
 function tlvSearchText(t, game, raw) {
   const cache = raw ? searchTextCache.raw : searchTextCache.pretty;
   let s = cache.get(t);
   if (s === undefined) {
-    s = (t.name + " " + extrasText(t, " ", { mode: "all", game, raw })).toLowerCase();
+    const says = (objectMessages(game, t) ?? []).map((m) => m.text).join(" ");
+    s = (t.name + " " + extrasText(t, " ", { mode: "all", game, raw }) + " " + says).toLowerCase();
     cache.set(t, s);
   }
   return s;

@@ -62,6 +62,7 @@ import {
   viewHash,
 } from "./navigate.js";
 import { typeSummary } from "./typeinfo.js";
+import { DARK_NOTE, objectMessages } from "./messages.js";
 import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { focusCamPanel, openCamPanel, openCamPanelNear } from "./campanel.js";
@@ -533,6 +534,19 @@ function updateHover() {
           const ex = fieldEntries(t, fieldPrefsFor(state.data.id))
             .map(([k, v]) => `<span>${esc(k)}=<span class="v">${esc(String(v))}</span></span>`)
             .join(" ");
+          // what the sign says, capped: a tooltip has no room for a whole
+          // rotation. A board that can only ever run dark says so, since
+          // silence would read as the map not knowing
+          const says = objectMessages(state.data.id, t);
+          const said = (says ?? []).map(
+            ({ text, note }) =>
+              `<br><span class="said">${note ? `<span class="note">${esc(note)}</span> ` : ""}${esc(`“${text}”`)}</span>`,
+          );
+          const messages =
+            says?.length === 0
+              ? `<br><span class="e">${esc(DARK_NOTE)}</span>`
+              : said.slice(0, 3).join("") +
+                (said.length > 3 ? `<br><span class="e">+${said.length - 3} more</span>` : "");
           const d = shownDest(t);
           let follow = "";
           if (d && isLoopback(t)) {
@@ -587,6 +601,7 @@ function updateHover() {
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
             (offScreen(t) ? `<br><span class="e offscreen">${esc(OFFSCREEN_NOTE)}</span>` : "") +
             (about ? `<br><span class="e about">${esc(about)}</span>` : "") +
+            messages +
             (ex ? `<br><span class="kv">${ex}</span>` : "") +
             wireInfo +
             follow +
