@@ -128,6 +128,61 @@ class ObjectFields(unittest.TestCase):
         self.assertIsNone(self.fields(struct.pack("<hh", 0, 0), t=3))
 
 
+class StringTableParse(unittest.TestCase):
+    """the overlay string-table reader, over a synthetic overlay"""
+
+    BASE = 0x80000000
+    # varied lengths, so the run of gaps between them is a real signature
+    WORDS = ["alpha", "bee", "gamma sun", "delta", "ep", "zeta rain", "eta",
+             "theta", "iota moon", "kappa", "lambda", "mu", "nu sky", "xi"]
+
+    def overlay(self, strings, extra=()):
+        """`strings` 4-byte aligned as the linker lays them, then a pointer to each
+        plus any `extra` slots, closed by the unrelated word that follows a table"""
+        blob, offsets = bytearray(), []
+        for s in strings:
+            offsets.append(len(blob))
+            blob += s.encode("latin1") + b"\x00"
+            blob += b"\x00" * (-len(blob) % 4)
+        for off in list(offsets) + list(extra):
+            blob += struct.pack("<I", self.BASE + off)
+        return bytes(blob) + struct.pack("<I", 0)
+
+    def test_reads_the_strings_the_pointers_name(self):
+        got = bm.string_table(self.overlay(self.WORDS), "alpha", 0, len(self.WORDS))
+        self.assertEqual(got, self.WORDS)
+
+    def test_the_anchor_need_not_be_the_first_entry(self):
+        words = [""] + self.WORDS
+        got = bm.string_table(self.overlay(words), "alpha", 1, len(words))
+        self.assertEqual(got[:2], ["", "alpha"])
+
+    def test_a_missing_anchor_finds_nothing(self):
+        self.assertIsNone(bm.string_table(self.overlay(self.WORDS), "omega", 0, 14))
+
+    def test_slots_sharing_one_pointer_all_read_as_that_string(self):
+        """the empty entries of a real table all point at one shared string"""
+        words = [""] + self.WORDS
+        blob = self.overlay(words, extra=[0] * 3)
+        got = bm.string_table(blob, "alpha", 1, len(words) + 3)
+        self.assertEqual(got[-4:], ["xi", "", "", ""])
+
+    def test_a_table_that_runs_on_past_its_length_is_refused(self):
+        """the slot after the last must point nowhere, or the length is a guess"""
+        self.assertIsNone(bm.string_table(self.overlay(self.WORDS), "alpha", 0, 10))
+
+    def test_a_pointer_out_of_the_overlay_is_refused(self):
+        blob = self.overlay(self.WORDS, extra=[1 << 20])
+        self.assertIsNone(bm.string_table(blob, "alpha", 0, len(self.WORDS) + 1))
+
+
+class MessageJson(unittest.TestCase):
+    def test_a_button_code_is_written_as_an_escape_not_as_whitespace(self):
+        text = bm.message_json({"lcd": ["hold \x0a then \x09"]})
+        self.assertIn("hold \\u000a then \\u0009", text)
+        self.assertEqual(json.loads(text)["lcd"], ["hold \x0a then \x09"])
+
+
 DECOMP = bm.REPO
 needs_decomp = unittest.skipUnless(DECOMP.exists(), f"no alive_reversing checkout at {DECOMP}")
 
