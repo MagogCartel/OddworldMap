@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sanitizeTypeInfo, setTypeInfo, typeProse, typeSummary } from "../../public/js/typeinfo.js";
+import { objectMessages, setMessages } from "../../public/js/messages.js";
 
 const load = (name) =>
   JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
@@ -69,6 +70,8 @@ function gameRows(file) {
 }
 const AO = gameRows("map_data_ao.json");
 const AE = gameRows("map_data_ae.json");
+// a claim about what a board says needs the tables the viewer resolves through
+setMessages({ AO: load("messages_ao.json"), AE: load("messages_ae.json") });
 const allOf = (rows, name) => rows.filter((r) => r.t.name === name);
 const listed = (rows, name) => allOf(rows, name).filter((r) => !r.demo);
 const f = (r, k) => (r.t.fields || {})[k];
@@ -197,6 +200,14 @@ const CLAIMS = {
       count(allOf(AO, "HandStone"), crossesPath) === 0
     );
   },
+  HintFly: () => {
+    const placed = new Set(allOf(AO, "HintFly").map((r) => f(r, "message_id")));
+    const table = load("messages_ao.json").hintfly;
+    const unplaced = table.filter((_, id) => !placed.has(id));
+    return (
+      unplaced.length === 11 && unplaced.includes("ABE WAS HERE") && unplaced.includes("TEST THREE")
+    );
+  },
   Honey: () => {
     const h = allOf(AO, "Honey");
     const sackLevels = levels(allOf(AO, "HoneySack"));
@@ -214,16 +225,20 @@ const CLAIMS = {
   LaughingGas: () => every(allOf(AE, "LaughingGas"), (r) => f(r, "is_laughing_gas") === 1),
   LCD: () => {
     const boards = listed(AE, "LCD").filter((r) => f(r, "toggle_message_switch_id") === 110);
+    const says = (r, note, re) =>
+      objectMessages("AE", r.t).some((m) => m.note === note && re.test(m.text));
     return (
       n(boards) === 7 &&
       within(boards, "MI") &&
-      count(boards, (r) => f(r, "message_1_id") === 80 && f(r, "message_2_id") === 6) === 1
+      count(
+        boards,
+        (r) => says(r, "switch off", /turn all the wheels/i) && says(r, "switch on", /vacation/i),
+      ) === 1
     );
   },
   LCDScreen: () => {
     const r2 = allOf(AO, "LCDScreen").filter((r) => r.lv.short === "R2");
-    const speaks = (r) => [68, 69].includes(f(r, "message_1_id"));
-    return n(r2) === 22 && count(r2, speaks) === 2;
+    return n(r2) === 22 && count(r2, (r) => objectMessages("AO", r.t).length > 0) === 2;
   },
   LCDStatusBoard: () => {
     const sb = listed(AE, "LCDStatusBoard");
