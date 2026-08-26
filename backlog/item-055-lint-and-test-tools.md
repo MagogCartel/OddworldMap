@@ -26,7 +26,7 @@ Adding Python tests must not drag `tools/` into the Prettier or ESLint globs; ch
 
 ## Found while doing it
 
-Three things the sketch predates. **Ruff's default selection is no longer just the defect rules** — 0.16 flags the parsers' one-line `if`s, `re.S` aliases and `l` as a name, all deliberate style — so `ruff.toml` selects `E4,E9,F` and the version is pinned in CI the way Prettier's is. **The 3.8 floor cannot be checked in CI at all**: it is EOL and gone from the runner images, so only a modern version runs there and the floor is a local check. And **`positional_rows`, along with the enum value/label loop, is nested inside its parser and unreachable from a test** — that coverage waits on [56](item-056-split-build-map.md)'s split.
+Three things the sketch predates. **Ruff's default selection is no longer just the defect rules** — 0.16 flags the parsers' one-line `if`s, `re.S` aliases and `l` as a name, all deliberate style — so `ruff.toml` selects `E4,E9,F` and the version is pinned in CI the way Prettier's is. **The 3.8 floor cannot be checked in CI at all**: it is EOL and gone from the runner images, so only a modern version runs there and the floor is a local check. And **`positional_rows`, along with the enum value/label loop, is nested inside its parser and unreachable from a test** — that coverage waits on hoisting them, which the package split ([56](item-056-split-build-map.md)) moved past without doing: a nested helper is out of reach whatever file it sits in.
 
 Tests are stdlib `unittest`, not pytest, so the suite needs no install step on the runner or the disc machine.
 

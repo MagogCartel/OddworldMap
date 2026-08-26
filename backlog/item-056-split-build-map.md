@@ -1,6 +1,6 @@
 # 56. Split `build_map.py` into a package
 
-**Status:** open · **Effort:** medium (builder refactor) · **Where:** anywhere for the split; verifying it needs a disc · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-27 · **Effort:** medium (builder refactor) · **Where:** anywhere for the split; verifying it needs a disc · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -53,3 +53,21 @@ The pipeline is byte-deterministic: build into a scratch dir with `--out` and `c
 ## Ships with
 
 CLAUDE.md edits in the same commit. No changelog entry.
+
+## Shipped 2026-08-27
+
+Ten modules under `tools/oddmap/`, one concern each, with `build_map.py` left holding argparse and the build loop. The import graph is acyclic and five of the ten are leaves; `games` is the module that reaches furthest, naming the decomp parsers, the schema loader, the TLV decoders and the static tables.
+
+**Both predicted cycles were real and both fixes were needed**, which is the part of the sketch worth having written down: `emit.py` and `tables.py` exist for no other reason.
+
+**Defining the roots once is necessary and not sufficient.** The *Watch out* note has `HERE` computed from a module inside the package pointing one directory too deep, and the fix it recommends is a single definition. A single definition sitting one level down is still one level down: `REPO` resolved to a path inside this repo rather than beside it, and the decomp reads failed on a path that looks almost right. `paths.py` climbs to `tools/` explicitly.
+
+**The `OXIPNG` trap did not need the remedy the item proposed.** The hazard is a reader in one module holding a stale binding of a name the setter rebinds elsewhere, so keeping `ensure_tools` and `write_png` in the same module removes it outright. Converting it to a function-local lookup, the suggested fix, would have run `shutil.which` once per PNG.
+
+**`_FIELD_TYPE_OVERRIDES` went to `emit.py` rather than `schema.py`.** Both its users are the sidecar writers, and it is applied at emission so the schema cache stays faithful to the source. Filing it with the parsers would have made it a private name read across a module edge.
+
+**The builder tests were passing through a facade.** Every symbol they reached resolved because `build_map.py` happened to import it, so the first move that stopped importing a name broke them and the rest kept working by accident. They now name the owning module in each case, which is the addressability this item was actually about. `build_map` itself is imported for nothing but the loading: it is the CLI's only automated coverage, and without it a name the CLI asks the package for and misses passes lint and the whole suite, surfacing only when the CLI is run.
+
+**`write_messages` takes its destination where the other two emitters take an output directory.** That asymmetry is what keeps the message decoder a leaf: resolving the filename itself would mean importing the game profile, and with it the six modules behind it, into a module that otherwise takes everything it reads as a parameter.
+
+**Verification was the whole safety argument, and it was available.** Every one of the nine moves was checked by rebuilding both games from the disc images into a scratch tree and comparing the two data files, both message sidecars and all 2,871 PNGs (1,758 camera backgrounds and their 1,113 foreground masks) against the committed ones, plus a disc-free re-emit of the four field-data sidecars. Nothing needed a fix that the byte comparison caught; the two failures along the way were caught by ruff and by the unit tests, which is where the split's own edges show up.

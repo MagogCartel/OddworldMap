@@ -18,6 +18,6 @@ Give the enum sweep the same cache discipline as `pathdata` and `objects`: a `to
 
 It adds two more committed cache files to a project that already carries four, in exchange for closing a drift window that has not actually bitten yet. The counter-argument is that it also makes the sidecars *verifiable by anyone without the decomp*, which is a real property for a public repo.
 
-Worth doing at the same time as [56](item-056-split-build-map.md), since both touch the same builder region — or not at all.
+The region it touches is now `oddmap/schema.py`, which holds `parse_enum_labels`, and `oddmap/emit.py`, which writes both sidecars: the cache would sit beside the two the schema parsers already keep.
 
 Note that [55](item-055-lint-and-test-tools.md) shipped a partial version of this: the field-types pair is re-emitted and byte-compared in CI already, and the enum-label pair skips without a checkout. So what remains is specifically closing the enum half.

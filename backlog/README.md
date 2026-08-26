@@ -49,7 +49,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 ## Code and build
 
-- [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — one file carrying six unrelated concerns, none importable in isolation. _Medium._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 
 ## Moonshot
@@ -90,6 +89,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — ten modules, one concern each, with the CLI left holding the build loop; the sketch's own layout had two circular imports in it, and defining the roots once was not enough while the one definition sat a directory too deep. _2026-08-27._
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md): a bare number says what it measures, a timer reading `15 frames ≈ 0.5s`. The seconds tier turned out not to need the emulator the item made its gate; the engine's own clock is in the decomp, and the curated field-to-unit list was mostly already written as glossary prose. _2026-08-26._
 - [**5.** LCD marquee text](item-005-lcd-marquee-text.md) — every marquee reads out what it scrolls, and Oddysee's hint flies what they spell; the tables turned out to live in the level overlays rather than the executable, and the decomp's copies are the PC build's, so the discs are still the source. _2026-08-25._
 - [**86.** World graph](item-086-world-graph.md) — every path a box, every way between two of them a line: the whole game as one diagram, in place of the map. The layout turned out to be free — `data.levels` order by `levelOrder` — so the per-level phase the sketch offered was never built. _2026-08-24._

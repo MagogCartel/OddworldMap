@@ -2,7 +2,7 @@
 
 **Status:** open — Phase 1 ready now, Phases 2–3 parked · **Effort:** Phase 1 medium (a `tools/` exporter plus a diff); Phases 2–3 large · **Where:** builder-only, no disc — only Phase 2's FG1 layer split would need a rebuild
 
-**Outcome: what the site should produce is a *description* of a path, not a level — and the write path belongs in `tools/`, not on the page.** AliveTeam's level editor already exists, is released for Windows and Linux, and pins the exact decomp tree [tools/build_map.py](../tools/build_map.py) already parses; it reads the user's own LVL files and can patch them from a JSON. So the site's job is not to be an editor but to emit that JSON — and the first thing that JSON buys is not modding at all, it is a **cross-check of our extraction against AliveTeam's**, object for object, over 16,225 objects and 9,540 collision lines (measured 2026-08-26).
+**Outcome: what the site should produce is a *description* of a path, not a level — and the write path belongs in `tools/`, not on the page.** AliveTeam's level editor already exists, is released for Windows and Linux, and pins the exact decomp tree the builder's parsers already read; it reads the user's own LVL files and can patch them from a JSON. So the site's job is not to be an editor but to emit that JSON — and the first thing that JSON buys is not modding at all, it is a **cross-check of our extraction against AliveTeam's**, object for object, over 16,225 objects and 9,540 collision lines (measured 2026-08-26).
 
 **Scheduling is carried by the phase split, not by a section of the backlog.** **Phase 1 is ready now:** no disc image, no site change, and — for the exporter itself — nothing beyond the committed data and the decomp headers the builder already parses. Only its verification step adds a local prerequisite, a `relive_api` build, which that project's own CI does on macOS. **Phases 2 and 3 are the moonshot it earns** — a download button, then editing in the browser — and neither should start before Phase 1's diff comes back clean.
 
@@ -67,7 +67,7 @@ The rest is assembly: `map`'s required scalars, `collisions.items`, and `cameras
 
 ### How to verify it
 
-**Diff against the reference reader on a PS1-extracted LVL.** `relive_api` builds on macOS in `alive_reversing`'s own CI, and `Lvl` in [tools/build_map.py](../tools/build_map.py) can already write out a `R1.LVL` byte-for-byte from the disc image. Point `ExportPathBinaryToJson` at that file and diff its `map_objects` and `collisions.items` against ours for the same path.
+**Diff against the reference reader on a PS1-extracted LVL.** `relive_api` builds on macOS in `alive_reversing`'s own CI, and the builder's `Lvl` can already write out a `R1.LVL` byte-for-byte from the disc image. Point `ExportPathBinaryToJson` at that file and diff its `map_objects` and `collisions.items` against ours for the same path.
 
 The reason this works without a PC copy of the games: a PS1 `.CAM` uses the **same chunk container** with the same `Bits` tag (`decode_cam`), only a different payload framing, and `CamConverter` never throws — it carries a bare `// todo: throw` (`CamConverter.cpp:202`). So the camera base64 comes out as garbage while the objects and collisions come out right, which is precisely the half the diff reads. **Time-box this step**: it is the one part of Phase 1 not established by reading code, and if it does not hold, the fallback is a GOG copy, which is a purchase rather than a redesign.
 

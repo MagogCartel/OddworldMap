@@ -18,7 +18,7 @@ Most enum fields now render as words, but bare-int numeric fields still show raw
 - **Middle — "N frames":** label timer/delay fields `N frames`. Accurate (they *are* frame counts), no FPS needed; costs a *reviewed* list of which untyped fields are frame-timers (name heuristics `*_delay`/`*_time`/`*_timeout` get most, but a blanket rule mislabels the `*_time` fields that are counts).
 - **Full — timers → seconds:** the marquee, blocked on the real logic rate. **Disc-machine spike:** in DuckStation, watch a timer that is *also* labelled `(Seconds)` (the mine countdown) decrement and derive frames-per-second from it, then convert. A guessed factor would ship "silently wrong" seconds — the thing the exporter now fails loudly to prevent.
 
-**Plumbing (reuses the architecture):** untyped fields get a synthetic unit type via an override table `(game, object, field) → "Frames"/"Percent"/"Grid"`, mirroring `_FIELD_TYPE_OVERRIDES` in `build_map.py`; add a `TRANSFORM` *function* per unit in [js/fields.js](../public/js/fields.js) (`Percent: n => `${n}%``). The `resolve` map-or-function path already supports functions (unit-tested), so the code is small — the work is the curated field→unit table and, for seconds, the measured FPS.
+**Plumbing (reuses the architecture):** untyped fields get a synthetic unit type via an override table `(game, object, field) → "Frames"/"Percent"/"Grid"`, mirroring `_FIELD_TYPE_OVERRIDES`; add a `TRANSFORM` *function* per unit in [js/fields.js](../public/js/fields.js) (`Percent: n => `${n}%``). The `resolve` map-or-function path already supports functions (unit-tested), so the code is small — the work is the curated field→unit table and, for seconds, the measured FPS.
 
 ## Shipped
 
