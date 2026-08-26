@@ -8,7 +8,7 @@ import { cellAt, markerCentre } from "./model.js";
 import { pathVisible } from "./demo.js";
 
 // a screen's objects bucket by rect center in draw space — the screen list's
-// inventory rule, so the two surfaces agree on what a screen holds
+// inventory rule, so the surfaces agree on what a screen holds
 const inCell = (t, P, cell) => cellAt(...markerCentre(t), P) === cell;
 
 // one row per name, in the order given; screen is null when no cell is named

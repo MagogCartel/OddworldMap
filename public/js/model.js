@@ -485,7 +485,7 @@ export function isLoopback(t, lvl = state.lvl, path = state.path, geo = GEO, dat
   );
 }
 
-// consolidated connection edges for the circulation overlay, three shapes:
+// consolidated connection edges for the circulation overlay:
 //   {src, dst, twoWay} — resolved same-path pair (dst is the partner TLV)
 //   {src, cell}        — same-path destination without a resolvable partner
 //   {src, label}       — off-path destination, labelled "LV Pn"
