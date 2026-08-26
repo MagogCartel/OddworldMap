@@ -7,6 +7,7 @@ import {
   resolve,
   fieldEntries,
   fieldHelp,
+  unitNote,
   onBackgroundPlane,
   defaultVisible,
   setFieldTypes,
@@ -171,6 +172,8 @@ test("prettify: a bare int reads in the unit the glossary gives it", () => {
   assert.equal(prettify("G", "Slig", "pause_time", 300), "300\u00a0frames ≈ 10s"); // no trailing .0
   assert.equal(prettify("G", "Slig", "pause_time", 0), "0\u00a0frames"); // no "≈ 0s"
   assert.equal(prettify("G", "Slig", "pause_time", 1), "1\u00a0frame"); // singular, and rounds away
+  // one shipped Alarm reads -536: a u16 duration taken as s16, so no reading is owed
+  assert.equal(prettify("G", "Slig", "pause_time", -536), -536);
   assert.equal(prettify("G", "Slig", "noise_wake_up_distance", 6), "6\u00a0grid");
   assert.equal(prettify("G", "Slig", "percent_say_what", 100), "100%");
   assert.equal(prettify("G", "ColourfulMeter", "mines_alarm_countdown", 90), "90s");
@@ -474,5 +477,15 @@ test("fieldHelp: a timer's help states the rate its seconds are derived at", () 
   );
   // a stored unit needs no factor, so nothing is appended
   assert.equal(fieldHelp("G", "Fleech", "patrol_range"), "A leash.");
+  // a surface showing every field at once opts out and states the rate itself
+  assert.equal(
+    fieldHelp("G", "Slig", "pause_time", { unitNote: false }),
+    "How long it waits, in frames.",
+  );
+  assert.equal(
+    unitNote("G", "Slig", "pause_time"),
+    "The engine counts thirty frames to the second.",
+  );
+  assert.equal(unitNote("G", "Fleech", "patrol_range"), null);
   setGlossary(null);
 });

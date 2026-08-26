@@ -1656,6 +1656,10 @@ kbd {
   padding: 12px 0 3px;
   border-bottom: 1px solid var(--line);
 }
+.tc-fnote {
+  margin-top: 7px;
+  font-size: 12px;
+}
 .tc-field {
   margin: 7px 0;
   font-size: 12px;

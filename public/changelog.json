@@ -3,6 +3,12 @@
   {
    "date": "2026-08-26",
    "tag": "improved",
+   "title": "Timers read in seconds, not just frame counts",
+   "detail": "Every delay, pause and countdown an object stores is a count of frames, and until now the map showed you the bare number. A Slig's patrol pause said 30. It now says 30 frames ≈ 1s. Its panic timer says 300 frames ≈ 10s, its listening window 90 frames ≈ 3s. The exact count is still there for anyone who cares about the frame, and the reading is there for everyone who just wants to know how long. A hundred and twenty-six timer fields carry it, spread over forty-two kinds of object: sligs, scrabs, paramites, fleeches and slogs, the drills and saws and timed mines, the alarms, the gas countdown, the timers and switch delays. The rate is the engine's own. Exoddus multiplies the mine countdown, the one value the developers themselves labelled in seconds, by thirty, and both games divide their gas-countdown clock by thirty to put a number on screen. Hover a timer's name in a screen list and it says so."
+  },
+  {
+   "date": "2026-08-26",
+   "tag": "improved",
    "tiny": true,
    "title": "A number now says what it measures",
    "detail": "Object fields that are plain numbers have always shown as plain numbers, whatever they counted. A few now say what they are measured in. A sleeping Slig's hearing reads 6 grid rather than 6, so it lines up with what the ruler already tells you in grid squares. The chance of a Slig saying \"what?\" reads 100% rather than 100. A Colourful Meter's mine countdown reads in seconds, the unit the game itself stores it in. One field named for a percentage stays bare, a Slig's chance of beating a Mudokon: it is rolled against 255, so it is not one. \"Show raw field values\" still gives the bare numbers."

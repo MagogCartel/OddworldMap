@@ -9,7 +9,7 @@ import { esc } from "./util.js";
 import { state } from "./state.js";
 import { catOf } from "./config.js";
 import { census } from "./census.js";
-import { fieldHelp } from "./fields.js";
+import { fieldHelp, unitNote } from "./fields.js";
 import { typeProse } from "./typeinfo.js";
 import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
 import { toggleMenu } from "./interaction.js";
@@ -83,17 +83,27 @@ function render(name) {
   }
   body.append(counts);
 
-  // the fields the glossary has meanings for, in the current game's terms
+  // the fields the glossary has meanings for, in the current game's terms. The
+  // card shows every field at once, so the frame rate is stated under the
+  // heading rather than repeated on each of the type's timers.
   const defs = [];
+  let rate = null;
   for (const k of fieldKeys(state.data, name)) {
-    const help = fieldHelp(state.data.id, name, k);
+    const help = fieldHelp(state.data.id, name, k, { unitNote: false });
     if (help) defs.push([k, help]);
+    rate ||= unitNote(state.data.id, name, k);
   }
   if (defs.length) {
     const head = document.createElement("div");
     head.className = "listhead tc-fhead";
     head.textContent = "Fields";
     body.append(head);
+    if (rate) {
+      const note = document.createElement("div");
+      note.className = "e tc-fnote";
+      note.textContent = rate;
+      body.append(note);
+    }
     for (const [k, help] of defs) {
       const [def, ...rest] = help.split("\n");
       const row = document.createElement("div");

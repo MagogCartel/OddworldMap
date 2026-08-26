@@ -175,6 +175,9 @@ export const TRANSFORM = {
 // enough that forcing it onto one line would overflow the sidebar instead.
 export const UNITS = {
   frames: (n) => {
+    // a frame count cannot run backwards, so a negative one is the payload being
+    // read at the wrong signedness and the value is not ours to build a reading on
+    if (!(n >= 0)) return n;
     // a stored frame count keeps its exact value and gains the reading; the
     // second is dropped where it rounds away, rather than saying "0s"
     const s = Math.round((n / LOGIC_FPS) * 10) / 10;
@@ -188,6 +191,10 @@ export const UNITS = {
 // the one unit whose reading is derived rather than stored, so the one that
 // owes the reader its factor
 const FRAME_RATE_NOTE = "The engine counts thirty frames to the second.";
+
+// what a field's unit owes the reader, or null
+export const unitNote = (game, type, key) =>
+  fieldUnit(type, key, FIELD_TYPES[game]?.[type]?.[key]) === "frames" ? FRAME_RATE_NOTE : null;
 
 // object -> field -> game type, and the generated enum labels (type -> value ->
 // text), both per game; the boot loads the sidecars and hands them over. Empty
@@ -219,7 +226,7 @@ export const prettify = (game, type, key, value) => {
 // field's full value list where it's an enum/Choice/Scale, or the frame rate
 // where it's a timer. null when no prose is curated — the display affordance
 // means "there's an explanation here".
-export const fieldHelp = (game, type, key) => {
+export const fieldHelp = (game, type, key, { unitNote: withNote = true } = {}) => {
   const t = FIELD_TYPES[game]?.[type]?.[key];
   const prose = glossaryProse(type, key, t);
   if (!prose) return null;
@@ -231,8 +238,8 @@ export const fieldHelp = (game, type, key) => {
       .join(", ");
     if (vals) return `${prose}\nValues: ${vals}`;
   }
-  if (fieldUnit(type, key, t) === "frames") return `${prose}\n${FRAME_RATE_NOTE}`;
-  return prose;
+  const note = withNote && unitNote(game, type, key);
+  return note ? `${prose}\n${note}` : prose;
 };
 
 // whether an object sits on the half-scale background plane. scale's raw value
