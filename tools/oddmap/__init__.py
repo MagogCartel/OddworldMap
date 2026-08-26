@@ -1,2 +1,5 @@
-"""Builder internals for the Oddworld map: disc access, the decomp parsers,
-TLV and image decoding, and the emitters that write the viewer's data files."""
+"""Builder internals for the Oddworld map.
+
+One module per concern, imported one way only: the parsers do not reach the
+emitters and the static data does not reach the profile that reads it, which
+is what keeps the graph acyclic."""

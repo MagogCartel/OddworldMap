@@ -17,8 +17,12 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-import build_map as bm  # noqa: E402
-from oddmap import decomp, image, messages, paths, schema, tlv  # noqa: E402
+from oddmap import decomp, disc, emit, games, image, messages, schema, tlv  # noqa: E402
+from oddmap.paths import HERE, REPO, SITE  # noqa: E402
+
+# the CLI has no test of its own and lint cannot resolve a cross-module import,
+# so loading it here is what catches a name it asks the package for and misses
+import build_map  # noqa: E402,F401
 
 
 def chunk(tag, rid, payload, size=None):
@@ -31,21 +35,21 @@ def chunk(tag, rid, payload, size=None):
 class ParseChunks(unittest.TestCase):
     def test_keys_by_tag_and_id(self):
         data = chunk("Path", 1, b"abcd") + chunk("Path", 2, b"efgh") + chunk("End!", 0, b"")
-        self.assertEqual(bm.parse_chunks(data), {("Path", 1): b"abcd", ("Path", 2): b"efgh"})
+        self.assertEqual(disc.parse_chunks(data), {("Path", 1): b"abcd", ("Path", 2): b"efgh"})
 
     def test_first_of_a_repeated_key_wins(self):
         data = chunk("Path", 1, b"first") + chunk("Path", 1, b"second")
-        self.assertEqual(bm.parse_chunks(data), {("Path", 1): b"first"})
+        self.assertEqual(disc.parse_chunks(data), {("Path", 1): b"first"})
 
     def test_stops_at_the_end_marker(self):
         data = chunk("Path", 1, b"abcd") + chunk("End!", 0, b"") + chunk("Path", 2, b"never")
-        self.assertNotIn(("Path", 2), bm.parse_chunks(data))
+        self.assertNotIn(("Path", 2), disc.parse_chunks(data))
 
     def test_a_garbage_header_terminates(self):
         # a size that doesn't advance, or one that runs past the buffer, must end
         # the walk: both spun forever or read out of bounds before the guards
-        self.assertEqual(bm.parse_chunks(chunk("Path", 1, b"abcd", size=8)), {})
-        self.assertEqual(bm.parse_chunks(chunk("Path", 1, b"abcd", size=4096)), {})
+        self.assertEqual(disc.parse_chunks(chunk("Path", 1, b"abcd", size=8)), {})
+        self.assertEqual(disc.parse_chunks(chunk("Path", 1, b"abcd", size=4096)), {})
 
 
 class IntRows(unittest.TestCase):
@@ -184,14 +188,14 @@ class MessageJson(unittest.TestCase):
         self.assertEqual(json.loads(text)["lcd"], ["hold \x0a then \x09"])
 
 
-DECOMP = paths.REPO
+DECOMP = REPO
 needs_decomp = unittest.skipUnless(DECOMP.exists(), f"no alive_reversing checkout at {DECOMP}")
 
 
 class PathDiscovery(unittest.TestCase):
     """the grid a path carries when the decomp tabulates none for it"""
 
-    FMT = {k: v for k, v in bm.GAMES["AO"]["tlv"].items() if k != "extra_fn"}
+    FMT = {k: v for k, v in games.GAMES["AO"]["tlv"].items() if k != "extra_fn"}
     CELL_W, CELL_H = 1024, 480
 
     def chunk(self, slots, objects, tail=b""):
@@ -234,7 +238,7 @@ class PathDiscovery(unittest.TestCase):
     def test_one_level_is_tabulated_nothing_at_all(self):
         """level scope is as far as this reaches without a disc: spotting a
         partially tabulated level needs the chunks to say which path is missing"""
-        empty = {gk: {short for short, paths in bm.game_setup(gk)["tables"].items() if not paths}
+        empty = {gk: {short for short, paths in games.game_setup(gk)["tables"].items() if not paths}
                  for gk in ("AO", "AE")}
         self.assertEqual(empty, {"AO": {"S1"}, "AE": set()},
                          "a table for S1 would retire the discovery")
@@ -255,19 +259,19 @@ class CacheStamp(unittest.TestCase):
     def test_bytes_and_path_both_reach_the_stamp(self):
         with tempfile.TemporaryDirectory() as tmp:
             sw, cams = self.worker(tmp, {"ao/L/A.png": b"a", "ae/L/B.png": b"b"})
-            base = bm.stamp_cache_name(sw, cams)
-            self.assertEqual(base, bm.stamp_cache_name(sw, cams))
+            base = emit.stamp_cache_name(sw, cams)
+            self.assertEqual(base, emit.stamp_cache_name(sw, cams))
             (cams / "ao/L/A.png").write_bytes(b"c")
-            self.assertNotEqual(base, bm.stamp_cache_name(sw, cams))
+            self.assertNotEqual(base, emit.stamp_cache_name(sw, cams))
             (cams / "ao/L/A.png").write_bytes(b"a")
-            self.assertEqual(base, bm.stamp_cache_name(sw, cams))  # content, not a counter
+            self.assertEqual(base, emit.stamp_cache_name(sw, cams))  # content, not a counter
             (cams / "ao/L/A.png").rename(cams / "ao/L/Z.png")
-            self.assertNotEqual(base, bm.stamp_cache_name(sw, cams))
+            self.assertNotEqual(base, emit.stamp_cache_name(sw, cams))
 
     def test_it_rewrites_the_one_line(self):
         with tempfile.TemporaryDirectory() as tmp:
             sw, cams = self.worker(tmp, {"ao/L/A.png": b"a"})
-            name = bm.stamp_cache_name(sw, cams)
+            name = emit.stamp_cache_name(sw, cams)
             self.assertIn(f'const CACHE_NAME = "{name}";', sw.read_text())
             self.assertIn('const ENABLED = "cams-on";', sw.read_text())
 
@@ -278,13 +282,13 @@ class CacheStamp(unittest.TestCase):
             sw, cams = self.worker(tmp, {"ao/L/A.png": b"a"})
             sw.write_text("const CACHE_NAME = 'cams-v1';\n")  # not the shape it writes
             with self.assertRaises(SystemExit):
-                bm.require_stampable(sw)
+                emit.require_stampable(sw)
             with self.assertRaises(SystemExit):
-                bm.stamp_cache_name(sw, cams)
+                emit.stamp_cache_name(sw, cams)
 
     def test_the_committed_worker_names_the_committed_artwork(self):
-        self.assertIn(f'const CACHE_NAME = "{bm.cams_stamp(paths.SITE / "cams")}";',
-                      (paths.SITE / "sw.js").read_text(),
+        self.assertIn(f'const CACHE_NAME = "{emit.cams_stamp(SITE / "cams")}";',
+                      (SITE / "sw.js").read_text(),
                       "sw.js and public/cams disagree — commit the stamped line with the artwork")
 
 
@@ -299,28 +303,28 @@ class Sidecars(unittest.TestCase):
     def assertReproduces(self, writer, game_key, filename):
         self.assertEqual(
             self.emit(writer, game_key),
-            (paths.SITE / filename).read_bytes(),
+            (SITE / filename).read_bytes(),
             f"{filename} differs from a fresh emit — rebuild it or fix the emitter",
         )
 
     def test_field_types_ao(self):
-        self.assertReproduces(bm.write_field_types, "AO", "field_types_ao.json")
+        self.assertReproduces(emit.write_field_types, "AO", "field_types_ao.json")
 
     def test_field_types_ae(self):
-        self.assertReproduces(bm.write_field_types, "AE", "field_types_ae.json")
+        self.assertReproduces(emit.write_field_types, "AE", "field_types_ae.json")
 
     @needs_decomp
     def test_enum_labels_ao(self):
-        self.assertReproduces(bm.write_enum_labels, "AO", "enum_labels_ao.json")
+        self.assertReproduces(emit.write_enum_labels, "AO", "enum_labels_ao.json")
 
     @needs_decomp
     def test_enum_labels_ae(self):
-        self.assertReproduces(bm.write_enum_labels, "AE", "enum_labels_ae.json")
+        self.assertReproduces(emit.write_enum_labels, "AE", "enum_labels_ae.json")
 
     def test_a_stale_field_type_override_fails_the_emit(self):
         stale = {("AO", "Door", "no_such_field"): "Choice_short"}
-        with mock.patch.dict(bm._FIELD_TYPE_OVERRIDES, stale), self.assertRaises(RuntimeError):
-            self.emit(bm.write_field_types, "AO")
+        with mock.patch.dict(emit._FIELD_TYPE_OVERRIDES, stale), self.assertRaises(RuntimeError):
+            self.emit(emit.write_field_types, "AO")
 
 
 class SchemaCaches(unittest.TestCase):
@@ -328,15 +332,15 @@ class SchemaCaches(unittest.TestCase):
         """a (tid, layout) pair the parser derives on its own, so an override of
         it has nothing left to add. Read from the cache rather than from
         game_setup, whose schema already carries the overrides."""
-        cache = paths.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
-        names = bm.game_setup(game_key)["tlv_names"]
+        cache = HERE / "data" / games.GAMES[game_key]["schema_cache"]
+        names = games.game_setup(game_key)["tlv_names"]
         return next((int(k), v) for k, v in json.loads(cache.read_text()).items()
                     if int(k) in names)
 
     def assertOverrideFails(self, game_key, tid, layout):
         entry = {(game_key, tid): layout}
         with mock.patch.dict(schema._SCHEMA_LAYOUT_OVERRIDES, entry), self.assertRaises(RuntimeError):
-            bm.game_setup(game_key)
+            games.game_setup(game_key)
 
     def test_a_layout_override_for_an_unknown_type_fails_the_build(self):
         self.assertOverrideFails("AO", 9999, [])
@@ -351,7 +355,7 @@ class SchemaCaches(unittest.TestCase):
 
     def test_cached_layouts_are_word_and_name_pairs(self):
         for game_key in ("AO", "AE"):
-            cache = paths.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
+            cache = HERE / "data" / games.GAMES[game_key]["schema_cache"]
             for tid, rows in json.loads(cache.read_text()).items():
                 for row in rows:
                     self.assertIn(len(row), (2, 3), f"{cache.name} type {tid}: {row}")
