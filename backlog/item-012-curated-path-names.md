@@ -8,14 +8,14 @@ The plumbing, the AO batch and all of AE are live. What remains is content, land
 
 ## Sketch
 
-- **AO gaps (14 paths, no citable source yet):** all of Monsaic Lines (L1 P1/P2/P3/P5/P6 — the entrance, the chant gate, the nexus with the temple doors), Paramonia interiors (F1 P2/P5/P6/P7), Scrabania interiors (D1 P3/P4/P6/P8), Credits (C1 P1). The list is derived rather than a count to trust: it is exactly the paths carrying neither a curated name in [annotations.json](../public/annotations.json) nor a disc `name` in `map_data_ao.json`, so recompute it instead of reading it.
+- **AO gaps (15 paths, no citable source yet):** all of Monsaic Lines (L1 P1/P2/P3/P5/P6 — the entrance, the chant gate, the nexus with the temple doors), Paramonia interiors (F1 P2/P5/P6/P7), Scrabania interiors (D1 P3/P4/P6/P8), Credits (C1 P1), the menu level (S1 P1). The list is derived rather than a count to trust: it is exactly the paths carrying neither a curated name in [annotations.json](../public/annotations.json) nor a disc `name` in `map_data_ao.json`, so recompute it instead of reading it.
 - **AE follow-up (one path):** FeeCo `P3` is the level's only inferred name. Terminals 1, 2, 4 and 5 are each fixed by their own artwork, and the Slig Barracks terminal shows no number anywhere in its fifteen cameras, so `Terminal 3: Slig Barracks` stands by elimination. Downgrade it to `Slig Barracks Terminal` if that reading is ever contradicted.
 
 ## Findings
 
 The sources used so far, credited in full in the [README](../README.md#credits--licensing): New 'n' Tasty chapter names (official), community walkthrough path names cross-checked against the map data's own TLV contents, and for AE the game's own zulag/tunnel/block/terminal signage read off the camera art.
 
-Coverage, measured 2026-07-31: AO 41 of 73 paths curated, AE 114 of 117, and no AE path carries a disc `name` at all since the section split moved the thirteen ender labels out of it. Any older figure quoting AE at 0 curated predates both the AE batch and that split; read the shipped data rather than a written count.
+Coverage, measured 2026-08-26: AO 41 of 74 paths curated, AE 114 of 117, and no AE path carries a disc `name` at all since the section split moved the thirteen ender labels out of it. Any older figure quoting AE at 0 curated predates both the AE batch and that split; read the shipped data rather than a written count.
 
 ## Shipped
 

@@ -4,7 +4,7 @@
 
 ## Symptom
 
-[tools/build_map.py](../tools/build_map.py) is 1,260 lines carrying six unrelated concerns: ISO9660/LVL disc access, three separate C++-source parsers against the decomp, TLV payload decoding, MDEC/FG1 image assembly, PNG encoding, and the CLI. Navigating it means scrolling past four subsystems, and nothing can be imported in isolation.
+[tools/build_map.py](../tools/build_map.py) is 1,536 lines (measured 2026-08-26) carrying seven unrelated concerns: ISO9660/LVL disc access, three separate C++-source parsers against the decomp, TLV payload decoding, the message-table extraction, MDEC/FG1 image assembly, PNG encoding, and the CLI. Navigating it means scrolling past four subsystems, and nothing can be imported in isolation.
 
 ## Why now
 
@@ -22,6 +22,7 @@ tools/
     schema.py           # parse_member_types, parse_object_schema, parse_enum_labels, _derive_label,
                         #   load_object_schema, write_field_types, write_enum_labels, the override tables
     tlv.py              # tlv_extra_{ao,ae}, object_fields, walk_obj_region, GAMEPLAY_FIELD_TYPES
+    messages.py         # string_table, message_json, write_messages
     image.py            # write_png, decompress_4or5, rgb555, decode_fg1, decode_cam, ensure_tools
     games.py            # the GAMES table, AO_LEVELS, AO_TLV_NAMES, AE_LEVEL_*, game_setup
 ```

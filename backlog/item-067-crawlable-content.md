@@ -4,7 +4,7 @@
 
 ## What it is
 
-`sitemap.xml` contains exactly one URL, and the site renders entirely client-side from JSON. So a search for "Oddworld Paramonia map" or "Scrabanian Temple layout" has nothing to land on except the root, and the site's actual depth — 190 paths, 16,217 catalogued objects, ~2,850 screens — is invisible to indexing.
+`sitemap.xml` contains exactly one URL, and the site renders entirely client-side from JSON. So a search for "Oddworld Paramonia map" or "Scrabanian Temple layout" has nothing to land on except the root, and the site's actual depth (191 paths, 16,225 catalogued objects, 1,761 screens, measured 2026-08-26) is invisible to indexing.
 
 A generated static index — one lightweight HTML page per level, or one page listing every path with its permalink and object counts, linked from the root and listed in the sitemap — would make that depth findable, and each page would deep-link into the real viewer. The builder already has every fact needed to emit it.
 

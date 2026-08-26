@@ -6,7 +6,7 @@ Recorded in full because the reasoning may change, and because [57](item-057-mod
 
 ## The gap
 
-`render`, `interaction`, `navigate`, `search`, `sidebar`, `campanel`, `fieldpanel`, `route`, `whatsnew`, `dialog` — roughly 2,000 lines — have ESLint as their only pre-runtime check. [CLAUDE.md](../CLAUDE.md) states the risk plainly: there is no JS build step, the modules are served as-is, so lint is the only pre-runtime error check. A stale reference or a broken listener wiring is a production bug that nothing catches.
+`render`, `interaction`, `navigate`, `search`, `sidebar`, `campanel`, `fieldpanel`, `route`, `whatsnew`, `dialog` (3,008 lines, and 4,603 across every module the DOM-free suite cannot reach, measured 2026-08-26) have ESLint as their only pre-runtime check. [CLAUDE.md](../CLAUDE.md) states the risk plainly: there is no JS build step, the modules are served as-is, so lint is the only pre-runtime error check. A stale reference or a broken listener wiring is a production bug that nothing catches.
 
 ## Why it is smaller than it looks
 
