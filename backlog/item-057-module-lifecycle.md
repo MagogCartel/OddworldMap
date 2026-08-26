@@ -15,7 +15,15 @@ The alternative — everything self-wires at import — is internally consistent
 
 ## Current state, for the person doing this
 
-Explicit `init`: `settings`, `fieldpanel`. Self-wiring at import: `sidebar`, `search`, `whatsnew`, `campanel`, `route`, `interaction`, `render`. Pure leaves, no change needed: `config`, `util`, `state`, `model`, `fields`, `searchquery`, `annotations`, `dialog`, `icons`.
+Counted 2026-08-26 over the 43 modules in [public/js](../public/js), and cheap to recount: a module self-wires if it registers a listener or touches the DOM at import.
+
+**Explicit `init`: 2.** `settings`, `fieldpanel`.
+
+**Self-wiring at import: 19.** `a11y`, `about`, `anchortip`, `campanel`, `export`, `graphview`, `interaction`, `minimap`, `navigate`, `numbers`, `offline`, `place`, `render`, `route`, `search`, `shuffle`, `sidebar`, `typecard`, `whatsnew`.
+
+**Pure leaves, no change needed: 20**, of which [tests/unit/imports.test.js](../tests/unit/imports.test.js) covers 17. Its eighteenth entry is `settings`, which qualifies by keeping its DOM inside `initSettings()`: the shape this item wants everywhere. `dialog` and `icons` are DOM-free today and could join that list without any of this work. `toast` is DOM-free in its own body but imports `dom.js`, so it cannot join until the exception below is settled; that is the one place the exception costs coverage rather than only churn.
+
+`main.js` is the entry point and already does what this item asks of everything else: two `init` calls, then the data setters behind one `Promise.all`.
 
 ## The one sanctioned exception: `js/dom.js`
 
@@ -25,21 +33,25 @@ It resolves every static element with `getElementById` at import time. That is s
 
 One module per commit, each mechanical: wrap each self-wiring module's top-level statements in an exported `initX()`, call them from `main.js` in an explicit commented order, and widen `imports.test.js` to cover every module and assert each exports its `init`.
 
-Recommended boot order, encoding the constraints already written in the prose comments: `initSettings()` → `setAnnotations` / `setFieldTypes` / `setEnumLabels` → `initRender()` → `initSidebar()` → `initInteraction()` → `initSearch()` → `initFieldPanel()` → `initCamPanel()` → `initRoute()` → `initWhatsNew()` → `initGames(...)` → `applyHash()`.
+Boot is two phases, and a flat call list hides that the second waits on a fetch. Synchronously: the `init` calls. Once the sidecars land: `setAnnotations` / `setFieldTypes` / `setEnumLabels` / `setGlossary` / `setTypeInfo` / `setMessages`, then `addGame(...)`, `resize()` and `applyHash()`.
+
+Only two orderings inside the first phase are real, and both are worth a comment rather than a convention. `initSettings()` precedes `initSidebar()`, which reads the view snapshot through it. And everything seeding draw state precedes the first `draw()`, which the second phase triggers: `initSidebar()` populates `state.show` and `PENS.on`, `initRender()` reads the colour tokens, `initInteraction()` sets `menu-open` before the first paint. Every other surface can init in any order after those.
 
 ## Watch out
 
-**Module-level `const` DOM references** in `campanel.js`, `route.js` and `fieldpanel.js` can stay as they are — they go through `dom.js`, the sanctioned exception. Only the listener registration and DOM mutation needs to move into `init`. Moving the consts too is churn for nothing.
+**`main.js` does not import `campanel`, `route` or `place`.** They are reached through `interaction.js`, which imports them for the functions it calls. An explicit call list in `main.js` needs those three imported there, which is the one place the split is not a pure wrap-and-move.
 
-**`sidebar.js` does real work at import**: it reads the snapshot, mutates `CATS[].on`, builds the filter checkboxes and seeds `state.show` from the HTML `checked` attributes. All of that must move wholesale into `initSidebar()`, and `state.show` must be populated before the first `draw()`.
+**Module-level `const` DOM references** in `campanel.js`, `route.js`, `fieldpanel.js` and `place.js` can stay as they are: they go through `dom.js`, the sanctioned exception. Only the listener registration and DOM mutation needs to move into `init`. Moving the consts too is churn for nothing.
 
-**`render.js`'s `COLOR` block** reads CSS custom properties at import. That is a `getComputedStyle` call, not a DOM mutation; it can stay at import or move into `initRender()`. Moving it is slightly more honest; either is defensible — pick one and be consistent with the `dom.js` decision.
+**`sidebar.js` does the most work at import** of any module here: it reads the view snapshot, mutates `CATS[].on`, builds the filter checkboxes, seeds `state.show` from the HTML `checked` attributes, and sets `PENS.on` from it. All of that must move wholesale into `initSidebar()`, ahead of the first `draw()`.
+
+**`render.js`'s `COLOR` block** reads CSS custom properties at import. That is a `getComputedStyle` call, not a DOM mutation; it can stay at import or move into `initRender()`. Moving it is slightly more honest; either is defensible. Pick one and be consistent with the `dom.js` decision.
 
 **`whatsnew.js` calls `init()` at import already**, and it is `async`. Export it instead of self-calling; `main.js` should not await it, since the panel appearing late is fine and already how it behaves.
 
 ## Verify
 
-`npm test` with the widened import test, `npm run lint`, then a full click-through: every setting, every toggle, search, cam panel, field panel, route, ruler, What's New, embed mode, and a cold load with a permalink. This is the item where a browser smoke test would pay for itself — if [69](item-069-browser-smoke-tests.md) gets un-deferred, doing it *before* this is the better order.
+`npm test` with the widened import test, `npm run lint`, then a click-through of the surface each self-wiring module above owns, plus embed mode and a cold load with a permalink. This is the item where a browser smoke test would pay for itself — if [69](item-069-browser-smoke-tests.md) gets un-deferred, doing it *before* this is the better order.
 
 ## Ships with
 
