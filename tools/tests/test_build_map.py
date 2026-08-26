@@ -18,7 +18,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import build_map as bm  # noqa: E402
-from oddmap import decomp  # noqa: E402
+from oddmap import decomp, paths, schema  # noqa: E402
 
 
 def chunk(tag, rid, payload, size=None):
@@ -60,39 +60,39 @@ class IntRows(unittest.TestCase):
 class MatchBrace(unittest.TestCase):
     def test_returns_past_the_matching_close(self):
         text = "enum E { a, b } trailing"
-        self.assertEqual(text[: bm._match_brace(text, text.index("{"))], "enum E { a, b }")
+        self.assertEqual(text[: schema._match_brace(text, text.index("{"))], "enum E { a, b }")
 
     def test_skips_nested_braces(self):
         text = "struct S { enum E { a } m; } after"
-        self.assertEqual(text[bm._match_brace(text, text.index("{")) :], " after")
+        self.assertEqual(text[schema._match_brace(text, text.index("{")) :], " after")
 
     def test_unbalanced_ends_at_the_text(self):
         text = "struct S { enum E { a }"
-        self.assertEqual(bm._match_brace(text, text.index("{")), len(text))
+        self.assertEqual(schema._match_brace(text, text.index("{")), len(text))
 
 
 class StripComments(unittest.TestCase):
     def test_removes_line_and_block_comments(self):
-        self.assertEqual(bm._strip_comments("a /* b */ c // d\ne"), "a  c \ne")
+        self.assertEqual(schema._strip_comments("a /* b */ c // d\ne"), "a  c \ne")
 
     def test_a_commented_enum_does_not_swallow_the_next_definition(self):
         src = "// enum Ignored {\nenum Real { a, b };"
-        self.assertEqual(bm._strip_comments(src), "\nenum Real { a, b };")
+        self.assertEqual(schema._strip_comments(src), "\nenum Real { a, b };")
 
     def test_a_comma_in_a_comment_mints_no_enumerator(self):
         src = "enum E { a, /* one, two */ b };"
-        self.assertEqual(bm._strip_comments(src).count(","), 1)
+        self.assertEqual(schema._strip_comments(src).count(","), 1)
 
 
 class DeriveLabel(unittest.TestCase):
     def test_drops_the_value_suffix_and_e_prefix_and_splits_camel_case(self):
-        self.assertEqual(bm._derive_label("eChaseAndDisappear_4"), "Chase And Disappear")
+        self.assertEqual(schema._derive_label("eChaseAndDisappear_4"), "Chase And Disappear")
 
     def test_keeps_an_e_that_is_part_of_the_word(self):
-        self.assertEqual(bm._derive_label("end_3"), "End")
+        self.assertEqual(schema._derive_label("end_3"), "End")
 
     def test_leaves_an_all_caps_run_alone(self):
-        self.assertEqual(bm._derive_label("eTLVSpawn_1"), "TLVSpawn")
+        self.assertEqual(schema._derive_label("eTLVSpawn_1"), "TLVSpawn")
 
 
 class Decompress4or5(unittest.TestCase):
@@ -184,7 +184,7 @@ class MessageJson(unittest.TestCase):
         self.assertEqual(json.loads(text)["lcd"], ["hold \x0a then \x09"])
 
 
-DECOMP = bm.REPO
+DECOMP = paths.REPO
 needs_decomp = unittest.skipUnless(DECOMP.exists(), f"no alive_reversing checkout at {DECOMP}")
 
 
@@ -283,8 +283,8 @@ class CacheStamp(unittest.TestCase):
                 bm.stamp_cache_name(sw, cams)
 
     def test_the_committed_worker_names_the_committed_artwork(self):
-        self.assertIn(f'const CACHE_NAME = "{bm.cams_stamp(bm.SITE / "cams")}";',
-                      (bm.SITE / "sw.js").read_text(),
+        self.assertIn(f'const CACHE_NAME = "{bm.cams_stamp(paths.SITE / "cams")}";',
+                      (paths.SITE / "sw.js").read_text(),
                       "sw.js and public/cams disagree — commit the stamped line with the artwork")
 
 
@@ -299,7 +299,7 @@ class Sidecars(unittest.TestCase):
     def assertReproduces(self, writer, game_key, filename):
         self.assertEqual(
             self.emit(writer, game_key),
-            (bm.SITE / filename).read_bytes(),
+            (paths.SITE / filename).read_bytes(),
             f"{filename} differs from a fresh emit — rebuild it or fix the emitter",
         )
 
@@ -328,14 +328,14 @@ class SchemaCaches(unittest.TestCase):
         """a (tid, layout) pair the parser derives on its own, so an override of
         it has nothing left to add. Read from the cache rather than from
         game_setup, whose schema already carries the overrides."""
-        cache = bm.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
+        cache = paths.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
         names = bm.game_setup(game_key)["tlv_names"]
         return next((int(k), v) for k, v in json.loads(cache.read_text()).items()
                     if int(k) in names)
 
     def assertOverrideFails(self, game_key, tid, layout):
         entry = {(game_key, tid): layout}
-        with mock.patch.dict(bm._SCHEMA_LAYOUT_OVERRIDES, entry), self.assertRaises(RuntimeError):
+        with mock.patch.dict(schema._SCHEMA_LAYOUT_OVERRIDES, entry), self.assertRaises(RuntimeError):
             bm.game_setup(game_key)
 
     def test_a_layout_override_for_an_unknown_type_fails_the_build(self):
@@ -351,7 +351,7 @@ class SchemaCaches(unittest.TestCase):
 
     def test_cached_layouts_are_word_and_name_pairs(self):
         for game_key in ("AO", "AE"):
-            cache = bm.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
+            cache = paths.HERE / "data" / bm.GAMES[game_key]["schema_cache"]
             for tid, rows in json.loads(cache.read_text()).items():
                 for row in rows:
                     self.assertIn(len(row), (2, 3), f"{cache.name} type {tid}: {row}")
