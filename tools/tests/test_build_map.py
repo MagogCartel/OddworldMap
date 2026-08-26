@@ -18,6 +18,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import build_map as bm  # noqa: E402
+from oddmap import decomp  # noqa: E402
 
 
 def chunk(tag, rid, payload, size=None):
@@ -53,7 +54,7 @@ class IntRows(unittest.TestCase):
             { 0, 1, -2, kNullThing, 0x10, 3 },
             { 4, "name", 5 },
         """
-        self.assertEqual(bm.int_rows(body), [[0, 1, -2, 3], [4, 5]])
+        self.assertEqual(decomp.int_rows(body), [[0, 1, -2, 3], [4, 5]])
 
 
 class MatchBrace(unittest.TestCase):
