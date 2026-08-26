@@ -1,0 +1,65 @@
+"""Per-game profile: which levels a build walks, which decoders and tables it
+uses, and where its outputs go."""
+from oddmap.decomp import load_cache, parse_pathdata_cpp_ae, parse_pathdata_cpp_ao
+from oddmap.schema import load_object_schema
+from oddmap.tables import AO_LEVELS, AO_TLV_NAMES
+from oddmap.tlv import tlv_extra_ae, tlv_extra_ao
+
+GAMES = {
+    "AO": {
+        "title": "Oddworld: Abe's Oddysee",
+        "data_file": "map_data_ao.json",
+        "cams_dir": "cams/ao",
+        "cache": "pathdata_ao.json",
+        "schema_cache": "objects_ao.json",
+        "field_types_file": "field_types_ao.json",
+        "enum_labels_file": "enum_labels_ao.json",
+        "messages_file": "messages_ao.json",
+        "env": "ODDWORLD_DISC_AO",
+        "geometry": {"cellW": 368, "cellH": 240, "worldW": 1024, "worldH": 480,
+                     "winX": 256, "winY": 120, "visW": 368, "visH": 240},
+        "tlv": {"header_len": 0x18, "rect_off": 0x10, "min_len": 24, "max_len": 480,
+                "max_type": 115, "check_flags": True, "extra_fn": tlv_extra_ao},
+        "fg1_bitmask": False,
+        "parse_tables": parse_pathdata_cpp_ao,
+    },
+    "AE": {
+        "title": "Oddworld: Abe's Exoddus",
+        "data_file": "map_data_ae.json",
+        "cams_dir": "cams/ae",
+        "cache": "pathdata_ae.json",
+        "schema_cache": "objects_ae.json",
+        "field_types_file": "field_types_ae.json",
+        "enum_labels_file": "enum_labels_ae.json",
+        "messages_file": "messages_ae.json",
+        "env": "ODDWORLD_DISC_AE",
+        "geometry": {"cellW": 368, "cellH": 240, "worldW": 375, "worldH": 260,
+                     "winX": 0, "winY": 0, "visW": 368, "visH": 240},
+        "tlv": {"header_len": 0x10, "rect_off": 0x08, "min_len": 16, "max_len": 512,
+                "max_type": 150, "check_flags": False, "extra_fn": tlv_extra_ae},
+        "fg1_bitmask": True,
+        "parse_tables": parse_pathdata_cpp_ae,
+    },
+}
+
+def game_setup(game_key):
+    """resolve per-game level list, tlv names and tables (loading the cache)"""
+    game = dict(GAMES[game_key])
+    cache = load_cache(game)
+    if game_key == "AO":
+        game["levels"] = AO_LEVELS
+        game["tlv_names"] = AO_TLV_NAMES
+        game["tables"] = {short: {int(k): v for k, v in paths.items()} for short, paths in cache.items()}
+    else:
+        game["levels"] = [tuple(l) for l in cache["levels"]]
+        game["tlv_names"] = {int(k): v for k, v in cache["tlv_names"].items()}
+        game["tables"] = {short: {int(k): v for k, v in paths.items()} for short, paths in cache["tables"].items()}
+        game["tlv"] = dict(game["tlv"])
+        game["tlv"]["max_type"] = max(game["tlv_names"])
+    # TLV destinations name ender level ids too, so the id map must cover every
+    # id, not just the one kept per archive in the level list
+    game["level_short"] = {lid: s for lid, s, _ in game["levels"]} if game_key == "AO" \
+        else {int(k): v for k, v in cache["id_to_short"].items()}
+    # the layout overrides are checked against tlv_names, so the schema resolves after it
+    game["schema"] = load_object_schema(game_key, game)
+    return game
