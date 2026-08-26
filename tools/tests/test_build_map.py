@@ -18,7 +18,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import build_map as bm  # noqa: E402
-from oddmap import decomp, paths, schema  # noqa: E402
+from oddmap import decomp, paths, schema, tlv  # noqa: E402
 
 
 def chunk(tag, rid, payload, size=None):
@@ -111,7 +111,7 @@ class ObjectFields(unittest.TestCase):
     def fields(self, payload, length=None, t=1):
         blob = bytes(16) + payload
         length = 16 + len(payload) if length is None else length
-        return bm.object_fields(self.schema, t, blob, 0, length, 16)
+        return tlv.object_fields(self.schema, t, blob, 0, length, 16)
 
     def test_reads_each_word_as_s16(self):
         self.assertEqual(self.fields(struct.pack("<hh", 5, -1)), {"first": 5, "second": -1})
@@ -206,7 +206,7 @@ class PathDiscovery(unittest.TestCase):
     def discover(self, blob):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            meta = bm.discover_path_meta(blob, self.FMT, self.CELL_W, self.CELL_H)
+            meta = tlv.discover_path_meta(blob, self.FMT, self.CELL_W, self.CELL_H)
         return meta, out.getvalue()
 
     def test_the_slot_run_ends_at_the_first_thing_that_is_not_a_name(self):
@@ -219,7 +219,7 @@ class PathDiscovery(unittest.TestCase):
 
     def test_the_region_end_is_where_the_records_stop(self):
         blob = self.chunk([1] * 4, [(0, 0), (3, 0)], tail=b"\xff" * 16)
-        end, origins = bm.contiguous_objects(blob, 32, self.FMT)
+        end, origins = tlv.contiguous_objects(blob, 32, self.FMT)
         self.assertEqual(end, 32 + 48)  # the -1 tail is an index table, not a record
         self.assertEqual(origins, [(0, 0), (3 * 1024, 0)])
         meta, note = self.discover(blob)
