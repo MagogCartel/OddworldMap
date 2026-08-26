@@ -123,6 +123,52 @@ test("glossary_fields.json: every unit is one the renderer formats", () => {
       assert.ok(UNITS[v], `units.${section} "${k}" names a unit UNITS formats, not "${v}"`);
 });
 
+// The phrase a definition uses when it declares a unit. This is a completeness
+// alarm in both directions, never the source of truth: a field's unit is what
+// the units section says, and the prose stays free to be reworded. "per frame"
+// is excluded: it marks a rate where the unit measures a count, the speeds this
+// layer leaves raw.
+const DECLARES = {
+  frames: { says: /\bframes?\b/i, not: /per frame/i },
+  grid: { says: /\bgrid squares?\b/i },
+  percent: { says: /\b(a real|as a) percentage\b/i },
+  seconds: { says: /\bin seconds\b|\bthe seconds\b/i },
+};
+
+test("glossary_fields.json: a field's unit and its definition say the same thing", () => {
+  setGlossary(load("glossary_fields.json"));
+  const fieldTypes = { ao: load("field_types_ao.json"), ae: load("field_types_ae.json") };
+  const pairs = new Map(); // "Type.field" -> game type, or undefined where untyped
+  for (const game of ["ao", "ae"])
+    for (const lv of load(`map_data_${game}.json`).levels)
+      for (const p of lv.paths)
+        for (const t of p.tlvs)
+          for (const k of Object.keys(t.fields || {}))
+            if (!pairs.get(`${t.name}.${k}`))
+              pairs.set(`${t.name}.${k}`, fieldTypes[game][t.name]?.[k]);
+
+  const missing = [],
+    mismatched = [];
+  for (const [key, gameType] of pairs) {
+    if (gameType) continue; // a typed field resolves a label, which outranks any unit
+    const [type, field] = key.split(".");
+    const prose = glossaryProse(type, field, gameType) || "";
+    const unit = fieldUnit(type, field, gameType);
+    for (const [name, { says, not }] of Object.entries(DECLARES)) {
+      const declares = says.test(prose) && !(not && not.test(prose));
+      if (declares && unit !== name) missing.push(`${key} declares ${name}, carries ${unit}`);
+    }
+    if (unit) {
+      const { says, not } = DECLARES[unit];
+      if (!(says.test(prose) && !(not && not.test(prose))))
+        mismatched.push(`${key} carries ${unit}, its def never says so`);
+    }
+  }
+  setGlossary(null);
+  assert.deepEqual(missing, [], "a def that names a unit carries it");
+  assert.deepEqual(mismatched, [], "a unit is stated by the def it sits beside");
+});
+
 // full coverage: a rebuild that surfaces a new field fails here until the
 // glossary covers it
 test("every shipped field resolves a definition", () => {
