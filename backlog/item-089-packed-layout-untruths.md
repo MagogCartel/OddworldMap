@@ -18,7 +18,7 @@ The slack is not level the player ever occupies. A camera change teleports the c
 
 **Ruled out: laying the screens out at their true world pitch as the default.** Measured 2026-08-14 over the shipped data: AO's largest path, `C1 P1`, goes from 3680x2400 draw units to 10240x4800, 5.6x the area, nearly all of it empty. AE barely moves, 1.1x, its slack being 7x20 against AO's 656x240. A default that makes Oddysee five times emptier to browse buys back space no one can stand in.
 
-It shipped as a Display toggle instead, off by default. See *See the gaps the games leave between screens* below.
+It shipped as a Display toggle instead, off by default. See *Shipped: the spacing toggle* below.
 
 ## Sketch
 
@@ -31,9 +31,9 @@ The two halves want different answers and should not be bundled into one change.
 
 The counting rule is load-bearing for two surfaces that are pinned against each other, and the screen list is the touch device's only inspection surface. Changing what a screen holds changes what a phone user is shown, so the tag and the count should end up saying the same thing rather than a third one.
 
-## Shipped: the lines and the marker boxes, 2026-08-15
+## Shipped: the lines 2026-08-15, the marker boxes 2026-08-18
 
-`lineRuns` in [js/model.js](../public/js/model.js), in *Collision lines stop pretending the gap is floor*. A line is cut wherever it crosses a window edge on either axis, each piece drawn solid or dotted by whether its midpoint is on screen. 1740 of AO's 2895 lines are dotted somewhere, and 812 of AE's 6645.
+`lineRuns` in [js/model.js](../public/js/model.js), in *Collision lines dot where they leave the screen*, `87e4f57`. A line is cut wherever it crosses a window edge on either axis, each piece drawn solid or dotted by whether its midpoint is on screen. 1740 of AO's 2895 lines are dotted somewhere, and 812 of AE's 6645.
 
 Three things the sketch guessed at turned out differently.
 
@@ -43,7 +43,7 @@ Three things the sketch guessed at turned out differently.
 
 **A line crossing the slack whole needs nothing dotted**, and the fold that says so has to be read off the neighbouring spans rather than off the points bounding it. A line ending exactly on a window edge touches that screen at one point and covers none of it, so what it leaves is an overhang; asking the endpoint instead collapses 352 AE lines' overhangs into nothing. The merge that follows also keeps a background line's dash pattern from restarting mid-line.
 
-The marker boxes went with them, in *A marker box in the slack keeps its own extent* and then *A marker box is framed by the screen it covers*. `drawSpan` gives a box the leading overhang, the screen it covers and the trailing overhang, framed by that screen. It is the same rule `lineRuns` follows, and stating it once for both is what makes it a rule rather than a pair of guards: what lies in the slack has no draw position of its own, so it answers to the frame of the screen it hangs off.
+The marker boxes went with them, in *A marker box in the slack keeps its own extent*, `c060c2a`, and then *Frame a marker box by the screen it covers, not by its own ends*, `9a4b65d`, three days later. `drawSpan` gives a box the leading overhang, the screen it covers and the trailing overhang, framed by that screen. It is the same rule `lineRuns` follows, and stating it once for both is what makes it a rule rather than a pair of guards: what lies in the slack has no draw position of its own, so it answers to the frame of the screen it hangs off.
 
 Every surface anchored on the box reads the same helper, `drawBox`, or its centre. A wire, a hover test, a highlight ring or a screen tally derived from the ends separately agrees with the box only while nothing folds, which is why it read as correct for as long as it did.
 
@@ -55,7 +55,7 @@ The sweep that pins it calls the same helper the renderer does. An invariant tes
 
 ## Shipped: the spacing toggle, 2026-08-15
 
-"Gaps between screens", off by default, in *See the gaps the games leave between screens*. `setSpacing` in [js/state.js](../public/js/state.js) swaps the pitch for the cell's own, and `setPitch` in [js/navigate.js](../public/js/navigate.js) carries the view, the ruler and the route across it.
+"Gaps between screens", off by default, in *Spread the screens onto the grid the games address them on*, `e4dffbd`. `setSpacing` in [js/state.js](../public/js/state.js) swaps the pitch for the cell's own, and `setPitch` in [js/navigate.js](../public/js/navigate.js) carries the view, the ruler and the route across it.
 
 It cost far less than the estimate, because three things the sketch expected to pay for were already true. The transform degenerates to `dX(wx) = wx - winX` rather than needing a second one. `col * CELL_W` is where the window's corner lands at either pitch, so the artwork needed only its drawn *size* corrected from the cell to the window, which is a no-op packed. And permalinks needed nothing at all: coordinates were already world, and zoom is px per world unit inside a screen in both, so a link means the same place at the same magnification either way. That last one is the world-coordinate change paying for itself.
 
