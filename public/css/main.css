@@ -590,6 +590,7 @@ body.graph-fit .gv-nm {
 #tip .kv > span {
   display: inline-block;
   word-spacing: normal;
+  overflow-wrap: anywhere;
 }
 #tip .v {
   color: var(--text);
@@ -791,6 +792,7 @@ body.page-zoomed #minimap {
 #camPanel .e {
   color: var(--dim);
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 /* the cue that a field name has a glossary definition; data-tip carries it */
 .gloss {
@@ -1016,6 +1018,7 @@ body.page-zoomed #minimap {
 }
 #searchResults .hit .ex {
   color: var(--dim);
+  overflow-wrap: anywhere;
 }
 #searchResults .more {
   color: var(--dim);

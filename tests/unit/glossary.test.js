@@ -1,7 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { sanitizeGlossary, setGlossary, glossaryProse } from "../../public/js/glossary.js";
+import {
+  sanitizeGlossary,
+  setGlossary,
+  glossaryProse,
+  fieldUnit,
+} from "../../public/js/glossary.js";
+import { UNITS } from "../../public/js/fields.js";
 
 const load = (name) =>
   JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
@@ -12,14 +18,18 @@ test("sanitizeGlossary: keeps only string entries in the known sections", () => 
     byGameType: { "T::X": "ok" },
     byType: { "A.b": "ok", "C.d": null },
     junk: { x: "dropped" },
+    units: { byField: { delay: "frames", bad: 3 }, byType: { "A.b": "grid" }, junk: 1 },
   });
   assert.deepEqual(g, {
     byField: { scale: "ok" },
     byGameType: { "T::X": "ok" },
     byType: { "A.b": "ok" },
+    units: { byField: { delay: "frames" }, byGameType: {}, byType: { "A.b": "grid" } },
   });
   // garbage / missing input never throws and yields empty sections
-  assert.deepEqual(sanitizeGlossary(null), { byType: {}, byGameType: {}, byField: {} });
+  const bare = { byType: {}, byGameType: {}, byField: {} };
+  assert.deepEqual(sanitizeGlossary(null), { ...bare, units: bare });
+  assert.deepEqual(sanitizeGlossary({ units: "nonsense" }), { ...bare, units: bare });
 });
 
 test("glossaryProse: resolves most-specific tier first, null on miss", () => {
@@ -35,6 +45,26 @@ test("glossaryProse: resolves most-specific tier first, null on miss", () => {
   assert.equal(glossaryProse("Slig", "scale", "Scale_short"), "plane"); // global
   assert.equal(glossaryProse("Slig", "unknown_field", undefined), null);
   setGlossary(null); // reset for other tests importing this module
+});
+
+test("fieldUnit: the same three tiers over the units section, null on a miss", () => {
+  setGlossary({
+    byField: { delay: "A delay." },
+    units: {
+      byField: { delay: "frames", reach: "grid" },
+      byGameType: { "Path_Slig::Delay": "seconds" },
+      byType: { "Slig.delay": "percent" },
+    },
+  });
+  assert.equal(fieldUnit("Slig", "delay", "Path_Slig::Delay"), "percent"); // specific wins
+  assert.equal(fieldUnit("Scrab", "delay", "Path_Slig::Delay"), "seconds"); // group next
+  assert.equal(fieldUnit("Scrab", "delay", undefined), "frames"); // global by name
+  assert.equal(fieldUnit("Scrab", "reach", undefined), "grid");
+  assert.equal(fieldUnit("Scrab", "untouched", undefined), null);
+  // prose and unit are independent: a defined field need carry no unit
+  setGlossary({ byField: { delay: "A delay." } });
+  assert.equal(fieldUnit("Scrab", "delay", undefined), null);
+  setGlossary(null);
 });
 
 test("glossary_fields.json: every key names a real field / type / game type", () => {
@@ -55,18 +85,24 @@ test("glossary_fields.json: every key names a real field / type / game type", ()
     for (const byField of Object.values(load(`field_types_${game}.json`)))
       for (const gt of Object.values(byField)) gameTypes.add(gt);
 
-  for (const k of Object.keys(g.byField || {}))
-    assert.ok(fieldNames.has(k), `byField "${k}" is a real field name`);
-  for (const k of Object.keys(g.byGameType || {}))
-    assert.ok(gameTypes.has(k), `byGameType "${k}" is a real game type`);
-  for (const k of Object.keys(g.byType || {})) {
-    // exactly one dot: glossaryProse looks up the full "Type.field" string, so a
-    // stray "Type.field.x" would validate on its first two parts yet never resolve
-    const parts = k.split(".");
-    assert.ok(
-      parts.length === 2 && typeFields[parts[0]]?.has(parts[1]),
-      `byType "${k}" is a real "Type.field"`,
-    );
+  // the units section repeats the three tiers, so it is held to the same keys
+  for (const [label, tiers] of [
+    ["", g],
+    ["units.", g.units || {}],
+  ]) {
+    for (const k of Object.keys(tiers.byField || {}))
+      assert.ok(fieldNames.has(k), `${label}byField "${k}" is a real field name`);
+    for (const k of Object.keys(tiers.byGameType || {}))
+      assert.ok(gameTypes.has(k), `${label}byGameType "${k}" is a real game type`);
+    for (const k of Object.keys(tiers.byType || {})) {
+      // exactly one dot: the tier walk looks up the full "Type.field" string, so a
+      // stray "Type.field.x" would validate on its first two parts yet never resolve
+      const parts = k.split(".");
+      assert.ok(
+        parts.length === 2 && typeFields[parts[0]]?.has(parts[1]),
+        `${label}byType "${k}" is a real "Type.field"`,
+      );
+    }
   }
 
   // a def is prose among labels: it opens capitalized and closes punctuated,
@@ -76,6 +112,15 @@ test("glossary_fields.json: every key names a real field / type / game type", ()
       assert.match(v, /^[A-Z].*[.!?]$/, `${section} "${k}" reads as prose`);
       assert.ok(!/\b0 = |\b1 = /.test(v), `${section} "${k}" leaves the value list to fieldHelp`);
     }
+});
+
+// a unit outside the closed set finds no formatter and renders as the bare int,
+// which is a typo shipping as if nothing were wrong
+test("glossary_fields.json: every unit is one the renderer formats", () => {
+  const units = load("glossary_fields.json").units || {};
+  for (const section of ["byType", "byGameType", "byField"])
+    for (const [k, v] of Object.entries(units[section] || {}))
+      assert.ok(UNITS[v], `units.${section} "${k}" names a unit UNITS formats, not "${v}"`);
 });
 
 // full coverage: a rebuild that surfaces a new field fails here until the

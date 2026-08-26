@@ -154,6 +154,34 @@ test("prettify: resolves a value by the field's game type, grouping and collisio
   assert.equal(prettify("XX", "Slig", "start_state", 1), 1);
 });
 
+test("prettify: a bare int reads in the unit the glossary gives it", () => {
+  setGlossary({
+    units: {
+      byField: { pause_time: "frames", noise_wake_up_distance: "grid" },
+      byType: {
+        "Slig.percent_say_what": "percent",
+        "ColourfulMeter.mines_alarm_countdown": "seconds",
+        "Slig.start_state": "frames", // a typed field: the label must still win
+        "Slig.bogus_unit": "furlongs", // outside the closed set -> no formatter
+      },
+    },
+  });
+  // the number is bound to its unit word, so a pair never breaks across lines
+  assert.equal(prettify("G", "Slig", "pause_time", 15), "15\u00a0frames ≈ 0.5s");
+  assert.equal(prettify("G", "Slig", "pause_time", 300), "300\u00a0frames ≈ 10s"); // no trailing .0
+  assert.equal(prettify("G", "Slig", "pause_time", 0), "0\u00a0frames"); // no "≈ 0s"
+  assert.equal(prettify("G", "Slig", "pause_time", 1), "1\u00a0frame"); // singular, and rounds away
+  assert.equal(prettify("G", "Slig", "noise_wake_up_distance", 6), "6\u00a0grid");
+  assert.equal(prettify("G", "Slig", "percent_say_what", 100), "100%");
+  assert.equal(prettify("G", "ColourfulMeter", "mines_alarm_countdown", 90), "90s");
+  // the label layer wins: a unit can never relabel a field that resolves a value
+  assert.equal(prettify("G", "Slig", "start_state", 1), "patrol");
+  // an unformattable unit, and a field with none at all, leave the int alone
+  assert.equal(prettify("G", "Slig", "bogus_unit", 7), 7);
+  assert.equal(prettify("G", "Slig", "shoot_on_sight_delay", 8), 8);
+  setGlossary(null);
+});
+
 test("resolve: a lookup map, a function for open-ended ranges, and a miss", () => {
   assert.equal(resolve({ 0: "a", 1: "b" }, 1), "b");
   assert.equal(
@@ -433,4 +461,18 @@ test("fieldHelp: glossary prose plus the field's value list, null when uncurated
   assert.equal(fieldHelp("G", "Door", "start_state"), null);
   assert.equal(fieldHelp("G", "Slog", "asleep"), null);
   setGlossary(null); // leave module state clean for any later importer
+});
+
+test("fieldHelp: a timer's help states the rate its seconds are derived at", () => {
+  setGlossary({
+    byField: { pause_time: "How long it waits, in frames.", patrol_range: "A leash." },
+    units: { byField: { pause_time: "frames", patrol_range: "grid" } },
+  });
+  assert.equal(
+    fieldHelp("G", "Slig", "pause_time"),
+    "How long it waits, in frames.\nThe engine counts thirty frames to the second.",
+  );
+  // a stored unit needs no factor, so nothing is appended
+  assert.equal(fieldHelp("G", "Fleech", "patrol_range"), "A leash.");
+  setGlossary(null);
 });

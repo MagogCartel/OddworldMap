@@ -567,5 +567,19 @@
   "WorkWheel.off_time": "Keep cranking past this and the switch goes back off; zero means it can't be overturned.",
   "WorkWheel.turn_off_when_stopped": "Whether letting go drops the switch again; most wheels latch instead.",
   "ZzzSpawner.zzz_interval": "Frames between sleep-Zs."
+ },
+ "units": {
+  "byField": {
+   "noise_wake_up_distance": "grid",
+   "percent_say_what": "percent"
+  },
+  "byGameType": {},
+  "byType": {
+   "ColourfulMeter.mines_alarm_countdown": "seconds",
+   "ExplosionSet.grid_spacing": "grid",
+   "ExplosionSet.increasing_grid_spacing": "grid",
+   "Fleech.patrol_range": "grid",
+   "Glukkon.scale_percent": "percent"
+  }
  }
 }

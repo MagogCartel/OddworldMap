@@ -1,13 +1,15 @@
 // What object fields to show, and how to render them.
 //
 // The builder ships every field of a gameplay object raw in `t.fields`; this
-// module owns which ones show and maps enum ints to text. The one indirection —
-// visibleFields() — is what "default", "show more", and the picker all resolve
-// through, so callers never change.
+// module owns which ones show, maps enum ints to text and gives a bare int the
+// unit it is measured in. The one indirection — visibleFields() — is what
+// "default", "show more", and the picker all resolve through, so callers never
+// change.
 //
 // Leaf module: no DOM/state imports, importable in bare Node for tests.
 
-import { glossaryProse } from "./glossary.js";
+import { LOGIC_FPS } from "./config.js";
+import { fieldUnit, glossaryProse } from "./glossary.js";
 
 // shown by default for any type that carries it: a signal dozens of unrelated
 // types across every group share. A field only one type or one creature
@@ -165,6 +167,28 @@ export const TRANSFORM = {
   Scale_int: SCALE,
 };
 
+// how a bare-int value reads once the glossary says what it measures. The
+// vocabulary is closed: a unit with no entry here leaves the value raw.
+// A number is bound to its unit word with a non-breaking space, since the
+// surfaces lay field pairs out as flowing text and a value broken across lines
+// reads as a second field. The derived reading stays breakable, being long
+// enough that forcing it onto one line would overflow the sidebar instead.
+export const UNITS = {
+  frames: (n) => {
+    // a stored frame count keeps its exact value and gains the reading; the
+    // second is dropped where it rounds away, rather than saying "0s"
+    const s = Math.round((n / LOGIC_FPS) * 10) / 10;
+    return `${n}\u00a0${Math.abs(n) === 1 ? "frame" : "frames"}${s ? ` ≈ ${s}s` : ""}`;
+  },
+  grid: (n) => `${n}\u00a0grid`,
+  percent: (n) => `${n}%`,
+  seconds: (n) => `${n}s`,
+};
+
+// the one unit whose reading is derived rather than stored, so the one that
+// owes the reader its factor
+const FRAME_RATE_NOTE = "The engine counts thirty frames to the second.";
+
 // object -> field -> game type, and the generated enum labels (type -> value ->
 // text), both per game; the boot loads the sidecars and hands them over. Empty
 // until then, so prettify degrades to raw (bare tests).
@@ -183,14 +207,18 @@ export function setEnumLabels(byGame) {
 export const resolve = (entry, value) =>
   entry == null ? undefined : typeof entry === "function" ? entry(value) : entry[value];
 
+// a value's text: its label where the field's game type carries one, else its
+// unit where the glossary names one, else the raw int
 export const prettify = (game, type, key, value) => {
   const t = FIELD_TYPES[game]?.[type]?.[key];
-  return resolve(TRANSFORM[t] ?? ENUM_LABELS[game]?.[t], value) ?? value;
+  const label = resolve(TRANSFORM[t] ?? ENUM_LABELS[game]?.[t], value);
+  return label ?? resolve(UNITS[fieldUnit(type, key, t)], value) ?? value;
 };
 
 // a "what is this field" for the tooltip: the curated glossary prose plus the
-// field's full value list where it's an enum/Choice/Scale. null when no prose
-// is curated — the display affordance means "there's an explanation here".
+// field's full value list where it's an enum/Choice/Scale, or the frame rate
+// where it's a timer. null when no prose is curated — the display affordance
+// means "there's an explanation here".
 export const fieldHelp = (game, type, key) => {
   const t = FIELD_TYPES[game]?.[type]?.[key];
   const prose = glossaryProse(type, key, t);
@@ -203,6 +231,7 @@ export const fieldHelp = (game, type, key) => {
       .join(", ");
     if (vals) return `${prose}\nValues: ${vals}`;
   }
+  if (fieldUnit(type, key, t) === "frames") return `${prose}\n${FRAME_RATE_NOTE}`;
   return prose;
 };
 

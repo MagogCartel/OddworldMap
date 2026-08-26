@@ -20,6 +20,7 @@ One grid cell = one in-game camera: the viewer lays the games' camera screens ou
   - each object type surfaces its own notable fields too — a door's lock state, a trap door's or electric wall's on/off, a bird portal's type, a Glukkon's or Crawling Slig's type/state
   - Settings → "Show more object fields" picks which of the game's stored fields each object type shows; the picker never limits what search reads, and what is out of both is the values the map drops as dead (a zero that means nothing is set, and a field the game reads only on other placements)
   - a marquee reads out what it actually scrolls, lifted from the game's own message table: Rupture Farms' slogans ("The profits justify the means."), the SoulStorm Brew ads, the control tutorials, and in Oddysee the phrases its hint-fly swarms spell in mid-air. An Exoddus board names both states of the switch that turns it over, and a board whose messages are all blank says that too: 20 of Oddysee's boards run dark, every one a Rupture Farms Return copy of a board the first visit taught with. Search reads them, so a half-remembered slogan finds the sign
+  - a number that is measured in something says so: a sleeper's hearing in grid squares, a chance as a percentage, a countdown in seconds
   - in the screen list and the Fields picker, every field name carries a definition, marked by a dotted underline — what it means and its possible values, curated in [glossary_fields.json](public/glossary_fields.json); hover it with a mouse or tap it on a touch screen, where the tap still does what it would have done anyway (tick the field, jump to the object)
 - **click** a door, path transition, travel portal, express well, teleporter, level loader or hand stone to follow it to its destination (for hand stones, the camera they show), including across levels
   - while hovering one, its partner — the object you'd come out of — gets a dashed outline whenever the pair sits on the current path
@@ -149,7 +150,7 @@ The gear button at the top of the sidebar opens them, in three groups. A setting
 - **Objects and fields**
   - "List a screen's objects on click" (on by default) opens the screen-inventory panel when a click/tap finds nothing to follow
   - "Show more object fields" (off by default) reveals a "Fields" panel in the sidebar where you pick, per object type, which of its fields show in tooltips and the screen list (the notable ones pre-checked) — a ⚙ next to an object in a screen's list opens that type's row in the panel; with it off, only the notable fields show and the panel stays hidden
-  - "Show raw field values" (off by default) shows field values as the raw numbers the game stores (1/0, 15, …) instead of the translated text (left/right, patrol, true/false); search matches whichever representation you're viewing
+  - "Show raw field values" (off by default) shows field values as the raw numbers the game stores (1/0, 15, …) instead of the translated text (left/right, patrol, true/false) and the units a bare number is measured in (`6 grid`, `100%`); search matches whichever representation you're viewing
 
 ## Rebuilding from a disc image
 

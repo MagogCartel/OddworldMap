@@ -4,15 +4,19 @@
 //   byGameType["GameType"] — every object whose field has that game type (the
 //                            group; Slig/SligSpawner/SligGetPants share one)
 //   byField["field"]       — same meaning wherever the name appears (globals)
+// The units section repeats those tiers, so the unit a value is measured in sits
+// in the same file as the sentence asserting it and at the same specificity.
 // The caller supplies the field's game type (from field_types), so this module
 // needs no other. Leaf module: no imports, importable in bare Node.
 
-let gloss = { byType: {}, byGameType: {}, byField: {} };
+const emptyTiers = () => ({ byType: {}, byGameType: {}, byField: {} });
 
-// keep only string->string entries in each known section; anything else is
+let gloss = { ...emptyTiers(), units: emptyTiers() };
+
+// keep only string->string entries in each known tier; anything else is
 // dropped, so a missing, garbage or future-shaped file can never break the viewer
-export function sanitizeGlossary(raw) {
-  const out = { byType: {}, byGameType: {}, byField: {} };
+function sanitizeTiers(raw) {
+  const out = emptyTiers();
   if (!raw || typeof raw !== "object") return out;
   for (const section of ["byType", "byGameType", "byField"]) {
     const src = raw[section];
@@ -22,16 +26,27 @@ export function sanitizeGlossary(raw) {
   return out;
 }
 
+export function sanitizeGlossary(raw) {
+  return { ...sanitizeTiers(raw), units: sanitizeTiers(raw && raw.units) };
+}
+
 export function setGlossary(raw) {
   gloss = sanitizeGlossary(raw);
 }
 
+const resolveTier = (tiers, type, field, gameType) =>
+  tiers.byType[`${type}.${field}`] ??
+  (gameType ? tiers.byGameType[gameType] : undefined) ??
+  tiers.byField[field] ??
+  null;
+
 // the meaning for a field, most-specific tier first, or null
 export function glossaryProse(type, field, gameType) {
-  return (
-    gloss.byType[`${type}.${field}`] ??
-    (gameType ? gloss.byGameType[gameType] : undefined) ??
-    gloss.byField[field] ??
-    null
-  );
+  return resolveTier(gloss, type, field, gameType);
+}
+
+// the unit a field's value is measured in, or null. The vocabulary belongs to
+// the renderer, so a word it doesn't format leaves the value raw.
+export function fieldUnit(type, field, gameType) {
+  return resolveTier(gloss.units, type, field, gameType);
 }
