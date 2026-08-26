@@ -35,7 +35,7 @@ Keep `build_map.py` as the entry point so every existing invocation, the README,
 
 **`HERE` / `ROOT` / `REPO`** are derived from `__file__`. After the split, `HERE` computed from `oddmap/disc.py` points one directory too deep. Define them once in the package and import from there — do not recompute per module.
 
-**CLAUDE.md's "Source vs generated" section is dense with function and constant names** — `parse_enum_labels`, `parse_member_types`, `parse_object_schema`, `object_fields`, `write_field_types`, `_FIELD_TYPE_OVERRIDES`, `_SCHEMA_LAYOUT_OVERRIDES`, `GAMEPLAY_FIELD_TYPES` — several with "correct it here, in the builder" instructions that must now point at a file. Updating that section is part of this commit, not a follow-up. Items here name the same functions in prose — [42](item-042-level-editor.md) leans on `parse_object_schema`, `parse_pathdata_cpp_{ao,ae}`, `positional_rows`, `decode_cam` and `Disc.sector`, and [75](item-075-stale-schema-layout-override.md) on both override tables — so the sweep covers `backlog/` too.
+**CLAUDE.md's "Source vs generated" section is dense with function and constant names**, several with "correct it here, in the builder" instructions that must now point at a file. Updating that section is part of this commit, not a follow-up. Items here name the same symbols in prose, [42](item-042-level-editor.md) and [75](item-075-stale-schema-layout-override.md) among them, so the sweep covers `backlog/` too. Grep for each moved symbol.
 
 **The caches must keep their paths.** `tools/data/{pathdata,objects}_{ao,ae}.json` are the delete-to-refresh contract described in CLAUDE.md. The split must not move them.
 
