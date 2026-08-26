@@ -18,7 +18,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import build_map as bm  # noqa: E402
-from oddmap import decomp, paths, schema, tlv  # noqa: E402
+from oddmap import decomp, image, paths, schema, tlv  # noqa: E402
 
 
 def chunk(tag, rid, payload, size=None):
@@ -98,11 +98,11 @@ class DeriveLabel(unittest.TestCase):
 class Decompress4or5(unittest.TestCase):
     def test_literal_run_then_overlapping_back_copy(self):
         stream = struct.pack("<I", 5) + bytes([1]) + b"AB" + bytes([0x80, 1])
-        self.assertEqual(bm.decompress_4or5(stream), b"ABABA")
+        self.assertEqual(image.decompress_4or5(stream), b"ABABA")
 
     def test_stops_at_the_declared_length(self):
         stream = struct.pack("<I", 2) + bytes([1]) + b"AB" + bytes([1]) + b"CD"
-        self.assertEqual(bm.decompress_4or5(stream), b"AB")
+        self.assertEqual(image.decompress_4or5(stream), b"AB")
 
 
 class ObjectFields(unittest.TestCase):
