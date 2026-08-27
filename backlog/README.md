@@ -49,6 +49,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 ## Code and build
 
+- [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — the README states the apportionment per tree; the root `LICENSE` and `package.json` still carry none of it. _Small, anywhere._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 
 ## Moonshot
@@ -64,7 +65,6 @@ Each needs a verdict before anyone builds it.
 - [**64.** CI check that the committed sidecars match a re-emit](item-064-sidecar-reemit-check.md) — half of it shipped with [55](item-055-lint-and-test-tools.md); the enum half needs a cache.
 - [**66.** Add a `404.html`](item-066-404-page.md) — nice to have, never urgent.
 - [**67.** Crawlable content for search engines](item-067-crawlable-content.md) — the site renders client-side, so every path and screen is invisible to indexing.
-- [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — three kinds of content under three claims, and the repo metadata says less than the app does.
 
 ## Deferred
 
