@@ -10,9 +10,6 @@ Thumbs.db
 
 # build artifacts (cam2rgba is compiled on demand by build_map.py)
 tools/cam2rgba
-tools/.tmp/
-*.rgba
-*.bits
 
 # disc images never belong here
 *.bin

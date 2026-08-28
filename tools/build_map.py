@@ -18,6 +18,7 @@ import json
 import os
 import re
 import struct
+import tempfile
 from pathlib import Path
 
 from oddmap.disc import Disc, Lvl, parse_chunks
@@ -26,7 +27,7 @@ from oddmap.emit import (print_build_summary, require_stampable, stamp_cache_nam
 from oddmap.games import GAMES, game_setup
 from oddmap.image import decode_cam, ensure_tools
 from oddmap.messages import write_messages
-from oddmap.paths import HERE, SITE
+from oddmap.paths import SITE
 from oddmap.tables import AE_LEVEL_DISPLAY, AO_R2_ZULAGS
 from oddmap.tlv import discover_path_meta, walk_obj_region
 
@@ -60,8 +61,8 @@ def main():
     if (out / "sw.js").exists():
         require_stampable(out / "sw.js")
     (out / game["cams_dir"]).mkdir(parents=True, exist_ok=True)
-    tmpdir = HERE / ".tmp"
-    tmpdir.mkdir(exist_ok=True)
+    tmp = tempfile.TemporaryDirectory(prefix="oddmap-")
+    tmpdir = Path(tmp.name)
 
     only = set(s.strip().upper() for s in args.levels.split(",") if s.strip())
     discs = [Disc(p) for p in discs_arg]
@@ -214,6 +215,7 @@ def main():
     sw_file = out / "sw.js"
     # a scratch --out holds no worker, so a verification build stamps nothing
     cache_name = stamp_cache_name(sw_file, out / "cams") if sw_file.exists() else None
+    tmp.cleanup()
     print(f"\ndone -> {data_file}")
     print_build_summary(args.game, built_this_run, data_file, data["levels"], cam_stats, cache_name)
 
