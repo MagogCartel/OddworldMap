@@ -1,3 +1,12 @@
+Oddworld Map - https://oddworldmap.com
+Copyright (C) 2026 mariobob
+
+This notice covers the code written for this project. The vendored MDEC decoder
+under tools/ carries its own authors' copyright under this same licence, stated in
+its file header, and the extracted game imagery is under neither, never having been
+this project's to license. The Credits & licensing section of README.md states the
+apportionment per tree.
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 

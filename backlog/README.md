@@ -49,7 +49,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 ## Code and build
 
-- [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — the README states the apportionment per tree; the root `LICENSE` and `package.json` still carry none of it. _Small, anywhere._
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 
 ## Moonshot
@@ -89,6 +88,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — `LICENSE` names the holder and carries the same per-tree scope the README publishes, above a verbatim licence body; the `package.json` half evaporated on inspection, the package being private, and GPL-2.0 turned out to be inherited from the vendored decoder rather than chosen. _2026-08-29._
 - [**91.** Two builds in one checkout corrupt each other's artwork](item-091-concurrent-build-tmpdir.md) — a scratch directory per run instead of one per checkout; the collision needed each build to have its own directory, not each camera its own filename. _2026-08-28._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — ten modules, one concern each, with the CLI left holding the build loop; the sketch's own layout had two circular imports in it, and defining the roots once was not enough while the one definition sat a directory too deep. _2026-08-27._
 - [**28.** Readable units for raw numeric fields](item-028-readable-units.md): a bare number says what it measures, a timer reading `15 frames ≈ 0.5s`. The seconds tier turned out not to need the emulator the item made its gate; the engine's own clock is in the decomp, and the curated field-to-unit list was mostly already written as glossary prose. _2026-08-26._

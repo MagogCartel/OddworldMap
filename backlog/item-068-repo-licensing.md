@@ -1,6 +1,6 @@
 # 68. Say what the repo is licensed as
 
-**Status:** open — the decision landed in the README 2026-08-18; the repo metadata still does not carry it · **Effort:** tiny to write, which is not the hard part · **Where:** anywhere · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-29 · **Effort:** tiny to write, which is not the hard part · **Where:** anywhere · **Filed:** 2026-07-24/25 review
 
 ## What it is
 
@@ -33,3 +33,17 @@ The About dialog links the repo from inside the app, so a reader who wonders abo
 The first of the three shapes won, in *Say what the licence does and does not cover*, `e3ad1c0`. [README.md](../README.md)'s credits state the apportionment per tree: the code written here under GPL-2.0 with `mariobob` as the holder, the vendored decoder under its own GPL-2.0 header, and the extracted imagery under neither, "which was never this project's to license".
 
 **Still open: the repository metadata says none of it.** The root `LICENSE` carries the FSF's own copyright lines and the template's unfilled `<name of author>` placeholders, and `package.json` has no `license` field. A hosting platform reads those, not the README, so the gap this item exists to close is the half that is left. The About dialog still states no terms, which stays deliberate and is recorded in [CLAUDE.md](../CLAUDE.md).
+
+## Shipped: the holder line, 2026-08-29
+
+`LICENSE` gains a scoped copyright notice above the licence text, naming `mariobob` as the README already does and carrying the same per-tree apportionment, so the file states who grants the terms rather than leaving the FSF's own lines to stand for it. The canonical GPL-2.0 body below is verbatim and byte-identical to what it replaced; the notice sits above it rather than filling the appendix placeholders, which are template text for a program header and not a declaration.
+
+**Why the licence file and not the README alone.** Code travels without READMEs. A vendored module carries `LICENSE` with it and nothing else, and a licence file naming no holder makes the grant untraceable at the one moment it is needed.
+
+**A notice above the text is ordinary practice, checked rather than assumed.** Of twelve well-known GPL projects read from their own repositories, five open with a preamble and seven are verbatim: the Linux kernel, git, MAME, KeePassXC and Notepad++ against VLC, QEMU, OBS Studio, RetroArch, Audacity, Wireshark and FFmpeg (checked 2026-08-29). KeePassXC's is this one's shape exactly, a project line then the holder then the notice; MAME's is its situation exactly, stating that the work as a whole is GPL while individual files carry their own terms in their headers. It is not, however, something the FSF recommends: its maintainer guidance covers source files and says nothing about `COPYING` either way, so common practice is the whole of the claim.
+
+**Deliberately no `SPDX-License-Identifier` line.** The kernel can carry one because the kernel as a whole is GPL-2.0. Three claims sit in this tree and the artwork is under none of them, so a bare identifier at the top would assert what the paragraph beneath it denies.
+
+**The `package.json` half evaporated on inspection.** The package is `"private": true` and is never published, so a missing `license` field has no consumer; adding it is SPDX tidiness rather than the gap this item names. Recorded so the next reader does not re-derive it.
+
+**What the decision section asked to confirm rather than assume.** `tools/PSXMDECDecoder.cpp` is GPL-2.0-**or-later** by its own header, and it arrived in the initial commit `b032c25` three days before `LICENSE` did in `217bdd2`. It compiles into `cam2rgba` beside code written here, so GPL-2.0 for that combined work is a consequence of vendoring it rather than a preference that could be revisited while it stays. The two facts are related, and this is the direction.
