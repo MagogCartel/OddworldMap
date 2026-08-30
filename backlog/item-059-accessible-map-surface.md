@@ -1,6 +1,6 @@
 # 59. Give the map an accessible surface
 
-**Status:** open — the By-the-numbers semantics and the minimap's keyboard; the announcer and the keyboard's route into a screen shipped 2026-08-22 · **Effort:** small-medium (accessibility) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-08-22 · **Effort:** small-medium (accessibility) · **Where:** anywhere, viewer-only · **Filed:** 2026-07-24/25 review
 
 ## Symptom
 
@@ -66,4 +66,4 @@ Four things the sketch did not know.
 
 Dropping the `aria-live` also spent the deferral [39](item-039-where-am-i-surface.md) had built for it — `syncPlace` needs neither `panel.offsetParent` nor the call from `toggleMenu`, a panel nobody is listening to being safe to fill under cover — and it closed 39's other leftover, the `aria-hidden` note dot, by putting what the dot says into the announced sentence.
 
-**Still open:** the three under *Grown since filing*. `#numbersBtn`'s missing `aria-expanded`/`aria-controls` pair and the count grid's absent table semantics belong to the By-the-numbers surface and want one commit between them; the minimap's pointer-only scrubbing is a new interaction rather than a label, colliding head-on with arrows that already pan, and belongs with the roving-focus object cursor this item defers rather than bolted onto the end of it. That cursor is also why the *Verify* note above says "tab to the map" and cannot: with `role="img"` and no `tabindex` the canvas is reached by a virtual cursor, which is the deliberate choice, not an oversight.
+**Released rather than carried:** the three under *Grown since filing* arrived here after both symptoms above were answered, and a surface that grew onto an item is not a reason to hold it open. `#numbersBtn`'s missing `aria-expanded`/`aria-controls` pair and the count grid's absent table semantics belong to the By-the-numbers surface and want one commit between them; the minimap's pointer-only scrubbing is a new interaction rather than a label, colliding head-on with arrows that already pan, and belongs with the roving-focus object cursor this item defers rather than bolted onto the end of it. That cursor is also why the *Verify* note above says "tab to the map" and cannot: with `role="img"` and no `tabindex` the canvas is reached by a virtual cursor, which is the deliberate choice, not an oversight.
