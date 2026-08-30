@@ -61,7 +61,6 @@ Each needs a verdict before anyone builds it.
 
 - [**63.** Automate the alignment anchors as a screenshot diff](item-063-alignment-anchor-diff.md) — two manual eyeball checks that are a pixel test written in prose.
 - [**64.** CI check that the committed sidecars match a re-emit](item-064-sidecar-reemit-check.md) — half of it shipped with [55](item-055-lint-and-test-tools.md); the enum half needs a cache.
-- [**66.** Add a `404.html`](item-066-404-page.md) — nice to have, never urgent.
 - [**67.** Crawlable content for search engines](item-067-crawlable-content.md) — the site renders client-side, so every path and screen is invisible to indexing.
 
 ## Deferred
@@ -87,6 +86,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**66.** Add a `404.html`](item-066-404-page.md) — a missing address lands on a page of the map's own with the way back; self-contained, every URL on it root-absolute, since Pages serves it at whatever address was asked. _2026-08-30._
 - [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — `LICENSE` names the holder and carries the same per-tree scope the README publishes, above a verbatim licence body; the `package.json` half evaporated on inspection, the package being private, and GPL-2.0 turned out to be inherited from the vendored decoder rather than chosen. _2026-08-29._
 - [**91.** Two builds in one checkout corrupt each other's artwork](item-091-concurrent-build-tmpdir.md) — a scratch directory per run instead of one per checkout; the collision needed each build to have its own directory, not each camera its own filename. _2026-08-28._
 - [**56.** Split `build_map.py` into a package](item-056-split-build-map.md) — ten modules, one concern each, with the CLI left holding the build loop; the sketch's own layout had two circular imports in it, and defining the roots once was not enough while the one definition sat a directory too deep. _2026-08-27._

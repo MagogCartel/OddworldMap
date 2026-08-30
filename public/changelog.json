@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-08-30",
+   "tag": "new",
+   "tiny": true,
+   "title": "A wrong address gets a proper 404 page",
+   "detail": "A stale or mistyped link used to land on GitHub's stock error page. It now lands on a small page of the map's own, which says nothing lives there and offers the way back. The map itself was never the problem: every level, path and screen travels after the # in its link, so a missing page only ever means the address in front of it."
+  },
+  {
    "date": "2026-08-26",
    "tag": "improved",
    "title": "Timers read in seconds, not just frame counts",
