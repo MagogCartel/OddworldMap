@@ -8,8 +8,8 @@ import { fieldEntries, fieldHelp } from "./fields.js";
 import { DARK_NOTE, objectMessages } from "./messages.js";
 import { CATS, OFFSCREEN_NOTE, catOf } from "./config.js";
 import { $, narrowMQ } from "./dom.js";
-import { state } from "./state.js";
-import { cellAt, markerCentre, nearestCam, offScreen } from "./model.js";
+import { GEO, state } from "./state.js";
+import { cellAt, nearestCam, offScreen, tlvCell } from "./model.js";
 import { setHighlight } from "./render.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
@@ -71,10 +71,9 @@ export function openCamPanelNear(x, y) {
 function list(cam, focus) {
   const { path } = state,
     cell = cam.cell;
-  // objects bucket by rect centre in draw space — an inventory rule; the
-  // resolution logic (tlvCell) buckets by world top-left, which can differ
-  // for an edge-straddling object
-  const inCell = (t) => cellAt(...markerCentre(t), path) === cell;
+  // the cell an object is authored in, never where it is drawn: what a screen
+  // holds must not move with the pitch
+  const inCell = (t) => tlvCell(t, path, GEO) === cell;
   const byCat = new Map(CATS.map((c) => [c, []]));
   let n = 0;
   for (const t of path.tlvs)
@@ -104,8 +103,6 @@ function list(cam, focus) {
             : `<span class="e">${kv}</span>`;
         })
         .join(" ");
-      // the list buckets by where a marker is drawn, so one anchored between
-      // windows is listed under the screen it was folded onto, not its own
       const off = offScreen(t)
         ? ` <span class="e gloss" data-tip="${esc(OFFSCREEN_NOTE)}">· offscreen</span>`
         : "";

@@ -1,10 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { census } from "../../public/js/census.js";
-import { setGeometry } from "../../public/js/state.js";
 import { AO_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
 
-// an object placed inside cell's visible window, off world units in
+// an object authored in cell, off world units into its visible window
 const obj = (name, cell, off = 50) => ({
   ...tlv(name),
   x1: cell * 1024 + 256 + off,
@@ -22,7 +21,6 @@ const L1 = level("L1", P1, P2);
 const DATA = dataset([L1, level("L2", P3)], AO_GEOMETRY);
 
 test("census: one row per name, tiers nested, demo paths tallied apart", () => {
-  setGeometry(AO_GEOMETRY);
   const { rows, demo } = census(["Slig", "Door"], DATA, L1, P1, 0);
   assert.deepEqual(rows, [
     { name: "Slig", screen: 1, path: 2, level: 3, game: 3 },
@@ -32,7 +30,19 @@ test("census: one row per name, tiers nested, demo paths tallied apart", () => {
 });
 
 test("census: no cell means no screen tier", () => {
-  setGeometry(AO_GEOMETRY);
   const { rows } = census(["Door"], DATA, L1, P1, null);
   assert.deepEqual(rows, [{ name: "Door", screen: null, path: 1, level: 1, game: 1 }]);
+});
+
+test("census: an object buckets by its authored cell, not where the packing draws it", () => {
+  // authored in cell 0's trailing slack (window 256..624), drawn over cell 1
+  const slack = { ...tlv("Slig"), x1: 634, y1: 170, x2: 644, y2: 180 };
+  // authored in cell 1's slack, drawn centre outside the grid entirely
+  const edge = { ...tlv("Door"), x1: 1724, y1: 170, x2: 1734, y2: 180 };
+  const P = path(1, [slack, edge], [], 2, 1);
+  const L = level("L1", P);
+  const D = dataset([L], AO_GEOMETRY);
+  const at = (cell) => census(["Slig", "Door"], D, L, P, cell).rows.map((r) => r.screen);
+  assert.deepEqual(at(0), [1, 0]);
+  assert.deepEqual(at(1), [0, 1]);
 });

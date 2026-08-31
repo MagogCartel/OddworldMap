@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-08-31",
+   "tag": "fixed",
+   "title": "A screen lists the objects that belong to it",
+   "detail": "Both games place objects on a grid slightly larger than the screen you see, and some objects sit in the leftover gap. The screen list and the By-the-numbers screen column used to file those under whichever screen the map happened to draw them over, or under no screen at all. Not one of Oddysee's 111 death-drop zones was filed under its own screen. Every object now counts under the screen it really belongs to, and the counts no longer shift when \"Gaps between screens\" is flipped. An object drawn over a neighbouring screen still says so: its row keeps the offscreen tag, and its outline stays dotted."
+  },
+  {
    "date": "2026-08-30",
    "tag": "new",
    "tiny": true,

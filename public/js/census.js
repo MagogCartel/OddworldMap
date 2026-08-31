@@ -4,12 +4,12 @@
 // and what the hidden paths hold comes back beside the rows, the way search
 // reports what it dropped. No DOM.
 
-import { cellAt, markerCentre } from "./model.js";
+import { tlvCell } from "./model.js";
 import { pathVisible } from "./demo.js";
 
-// a screen's objects bucket by rect center in draw space — the screen list's
-// inventory rule, so the surfaces agree on what a screen holds
-const inCell = (t, P, cell) => cellAt(...markerCentre(t), P) === cell;
+// the cell an object is authored in, never where it is drawn: what a screen
+// holds must not move with the pitch
+const inCell = (t, P, cell, geo) => tlvCell(t, P, geo) === cell;
 
 // one row per name, in the order given; screen is null when no cell is named
 export function census(names, data, lvl, path, cell) {
@@ -37,7 +37,7 @@ export function census(names, data, lvl, path, cell) {
         r.level++;
         if (P !== path) continue;
         r.path++;
-        if (r.screen != null && inCell(t, P, cell)) r.screen++;
+        if (r.screen != null && inCell(t, P, cell, data.geometry)) r.screen++;
       }
     }
   return { rows, demo };

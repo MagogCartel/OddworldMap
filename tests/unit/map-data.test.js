@@ -52,7 +52,10 @@ for (const [file, id, geometry] of [
           assert.equal(typeof t.name, "string");
           assert.ok(t.x1 <= t.x2 && t.y1 <= t.y2, `${L.short} P${P.id} ${t.name} rect ordered`);
           assert.ok(
-            Math.floor(t.x1 / geometry.worldW) < P.w && Math.floor(t.y1 / geometry.worldH) < P.h,
+            t.x1 >= 0 &&
+              t.y1 >= 0 &&
+              Math.floor(t.x1 / geometry.worldW) < P.w &&
+              Math.floor(t.y1 / geometry.worldH) < P.h,
             `${L.short} P${P.id} ${t.name} origin inside the grid (tlvCell must not alias)`,
           );
         }
