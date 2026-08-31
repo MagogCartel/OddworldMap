@@ -105,7 +105,7 @@ function list(cam, focus) {
         })
         .join(" ");
       const off = offScreen(t)
-        ? ` <span class="e gloss" data-tip="${esc(OFFSCREEN_NOTE)}">· offscreen</span>`
+        ? ` <span class="e">· <span class="gloss" data-tip="${esc(OFFSCREEN_NOTE)}">offscreen</span></span>`
         : "";
       b.innerHTML = esc(t.name) + off + (ex ? " " + ex : "");
       b.onclick = () => jumpToTlv(state.data, state.lvl, state.path, t);
