@@ -43,15 +43,16 @@ export function focusCamPanel() {
 
 // (x, y) in draw space: list the camera cell under it, all categories —
 // the panel is an inventory of the screen, not a view of the filters.
-// A focus object gets its row marked and scrolled into view, so tapping an
-// object reads as inspecting it (touch has no hover tooltip)
+// A focus object redirects the open to its own screen and gets its row
+// marked and scrolled into view, so tapping an object reads as inspecting
+// it (touch has no hover tooltip)
 export function openCamPanel(x, y, focus = null) {
   const { path } = state;
   if (!path) return;
-  const cell = cellAt(x, y, path);
-  const cam = cell != null && path.cams.find((c) => c.cell === cell);
+  const camAt = (cell) => (cell != null && path.cams.find((c) => c.cell === cell)) || null;
+  const cam = (focus && camAt(tlvCell(focus, path, GEO))) || camAt(cellAt(x, y, path));
   if (!cam) {
-    closeCamPanel(); // clicked the void between/outside screens: dismiss
+    closeCamPanel();
     return;
   }
   opener = null; // a pointer brought no focus with it

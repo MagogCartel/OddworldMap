@@ -1,6 +1,6 @@
 # 89. What the packed layout still misreports
 
-**Status:** open — the counting half; the lines and the marker boxes shipped 2026-08-15 · **Effort:** small (viewer) · **Where:** anywhere, no disc · **Filed:** 2026-08-14, out of the camera-window work
+**Status:** shipped 2026-08-31 — the counting half last; the lines 2026-08-15, the marker boxes 2026-08-18 · **Effort:** small (viewer) · **Where:** anywhere, no disc · **Filed:** 2026-08-14, out of the camera-window work
 
 ## What it is
 
@@ -62,3 +62,15 @@ It cost far less than the estimate, because three things the sketch expected to 
 The one part that did need building is the round trip, because it is the only place a bug could stand a user's own work: a route plotted, the pitch flipped, the waypoints landing somewhere else. It is pinned both ways in `tests/unit/state.test.js` and checked end to end in the browser, where packed to spaced and back returns the permalink byte for byte.
 
 **Ruled out: making the ruler report the true distance.** Left measuring the packed distance. The number it gives is the distance along the map as drawn, and the alternative charges for ground the engine teleports across. Dotting the lines makes the fold visible, which makes that behaviour discoverable rather than more wrong, so the case for changing it got weaker rather than stronger.
+
+## Shipped: the counts, 2026-08-31
+
+In *Bucket a screen's objects by the cell they are authored in*, with the tap rule beside it in *A tap on an object opens the screen it belongs to*. The verdict is a third answer the sketch never weighed: not the drawn centre and not coverage but the world cell. A screen is a cell — the camera window plus the slack around it — and an object belongs to the cell its authored top-left sits in, which is `tlvCell`, the same cell rule destination resolution has always used. Every marker resolves to exactly one cell, so the double-counting fork the sketch worried over never existed to need a verdict.
+
+Re-measured 2026-08-30 against the shipped helpers, the swap moves 631 of AO's 5623 markers and 869 of AE's 10602, and gives the 415 whose drawn centre lands outside the grid the home they never had — a different predicate from the figure above, which counts markers listed under a screen they cover no part of. Not one of AO's 111 DeathDrops was filed under its own screen; 108 now are. The count also stops moving with the pitch: the old rule re-bucketed 631 AO markers whenever the spacing toggle flipped, where `tlvCell` reads only world units.
+
+The tag and the count now say the same thing, which is what the *Watch out* asked for: a row is filed under the screen its object belongs to, and `offscreen` says why nothing of it is visible there.
+
+What the rule costs is stated rather than smoothed over. An object authored in a cell holding no camera — 6 in AO, 387 in AE, every AE DeathDrop among them — belongs to a cell that is no screen, so no screen lists it; search, the tooltip and the numbers panel still reach it, and most were unlistable before too, their drawn centre landing in the same empty cell.
+
+The tap rode along because the counting change would otherwise have broken it: tapping a marker opens the screen it belongs to rather than the screen under the finger, the whole point of the tap being to inspect the object, and falls back to the screen clicked when the object's cell holds no camera. That retires the rule that any click dismisses on the void — a click carrying no object still does, but one landing on a marker drawn over the slack now answers, which spaced out is the only way touch can inspect one.

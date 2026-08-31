@@ -44,7 +44,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
 - [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram is the most shareable thing here and the only way to share it is a link; the nodes being DOM makes it a serialisation question rather than a second painter. _Medium, anywhere._
-- [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md). Per-screen counts tally a marker under the screen it was folded onto; the collision lines and the marker boxes shipped. _Small, anywhere; the counting half needs a verdict on what a count is for._
 
 ## Code and build
 
@@ -86,6 +85,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md) — the collision lines, the marker boxes, and last the counts: a screen lists the objects authored on it, the third answer the sketch never weighed, so the tag and the tally finally agree. _2026-08-31._
 - [**66.** Add a `404.html`](item-066-404-page.md) — a missing address lands on a page of the map's own with the way back; self-contained, every URL on it root-absolute, since Pages serves it at whatever address was asked. _2026-08-30._
 - [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — `LICENSE` names the holder and carries the same per-tree scope the README publishes, above a verbatim licence body; the `package.json` half evaporated on inspection, the package being private, and GPL-2.0 turned out to be inherited from the vendored decoder rather than chosen. _2026-08-29._
 - [**91.** Two builds in one checkout corrupt each other's artwork](item-091-concurrent-build-tmpdir.md) — a scratch directory per run instead of one per checkout; the collision needed each build to have its own directory, not each camera its own filename. _2026-08-28._
