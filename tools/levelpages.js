@@ -152,6 +152,11 @@ const SCREEN_OVERRIDES = {
   "AO R6": "R6P06C08",
   "AO C1": "C1P01C24",
   "AO S1": "S1P01C01",
+  "AE MI": "MIP01C04",
+  "AE NE": "NEP02C01",
+  "AE FD": "FDP01C01",
+  "AE BW": "BWP01C01",
+  "AE ST": "STP01C01",
 };
 
 function pageScreen(data, L, entry, pins) {
