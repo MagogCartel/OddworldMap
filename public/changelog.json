@@ -2,6 +2,12 @@
  "entries": [
   {
    "date": "2026-09-01",
+   "tag": "new",
+   "title": "Every level has a plain page of its own",
+   "detail": "A search for a place by name (Paramonia, the Scrabanian Temple, the SoulStorm Brewery) used to have nowhere to land but the map's front door. Each of the 25 levels now has a plain page under /levels/. It carries what the level is, a screen of its way in, and its paths in the order you meet them, every one a link that opens the interactive map in the right place. The pages are built from the same data the map draws, so a name or a count can never disagree with it."
+  },
+  {
+   "date": "2026-09-01",
    "tag": "improved",
    "tiny": true,
    "title": "Wells say which plane they sit on",

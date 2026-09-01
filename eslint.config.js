@@ -5,7 +5,7 @@ import js from "@eslint/js";
 import globals from "globals";
 
 export default [
-  { ignores: ["node_modules/", "tools/"] },
+  { ignores: ["node_modules/", "tools/*", "!tools/levelpages.js"] },
   js.configs.recommended,
   {
     files: ["public/js/**/*.js", "eslint.config.js"],
@@ -13,6 +13,14 @@ export default [
       ecmaVersion: 2024,
       sourceType: "module",
       globals: globals.browser,
+    },
+  },
+  {
+    files: ["tools/levelpages.js"],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: "module",
+      globals: globals.node,
     },
   },
   {

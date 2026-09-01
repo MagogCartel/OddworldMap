@@ -1,5 +1,7 @@
 # Hand-aligned data tables; keep the columnar layout
 public/js/config.js
+# generated pages keep the emitter's bytes (tools/levelpages.js)
+public/levels/
 # JSON keeps its committed formats
 *.json
 # prose Markdown is never wrapped
