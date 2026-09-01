@@ -32,7 +32,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 
-**Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The open branch is upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing).
+**Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The open branches are upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing) and the member-type parser's blind spots ([92](item-092-member-type-parser-blind-spots.md)).
 
 **Machine constraint:** a builder change that reads new data off the discs needs a rebuild, which needs the disc images. Batch those for a disc-machine session; one rebuild ships them all. Everything else can be built anywhere.
 
@@ -47,6 +47,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Code and build
 
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
+- [**92.** The member-type parser's remaining blind spots](item-092-member-type-parser-blind-spots.md) — a sub-struct arm, a `class`-declared data struct and an uppercase member all escape it, so eleven objects still render `scale` raw; none is an upstream fault. _Small to medium (builder), anywhere._
 
 ## Moonshot
 
