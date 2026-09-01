@@ -115,7 +115,7 @@ test("what the data names is escaped on its way into the page, at every site", (
       },
     },
   };
-  for (const [rel, text] of emitFiles({ games: [game], annotations }))
+  for (const [rel, text] of emitFiles({ games: [game], annotations, pins: {} }))
     if (rel.endsWith(".html")) {
       assert.ok(!text.includes(evil), `${rel} carries an unescaped string`);
       assert.ok(text.includes(escaped), `${rel} dropped the string instead of escaping it`);

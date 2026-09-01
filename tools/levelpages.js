@@ -139,7 +139,40 @@ function pathItem(data, L, P) {
 const demoFootnote = (n, of = "these areas") =>
   `      <p class="foot">Counts leave out ${count(n, "copy", "copies")} of ${of} that only the title-screen demos play.</p>`;
 
-function levelPage(data, L, canonical) {
+// a pinned page screen where the default pick (the entry path's first stored
+// camera) is not the level's face
+const SCREEN_OVERRIDES = {
+  "AO L1": "L1P01C14",
+  "AO F2": "F2P08C01",
+  "AO F4": "F4P09C13",
+  "AO D2": "D2P10C01",
+  "AO D7": "D7P11C12",
+  "AO E2": "E2P04C07",
+  "AO R2": "R2P19C03",
+  "AO R6": "R6P06C08",
+  "AO C1": "C1P01C24",
+  "AO S1": "S1P01C01",
+};
+
+function pageScreen(data, L, entry, pins) {
+  const pin = pins[`${data.id} ${L.short}`];
+  let shot = { cam: entry.cams[0], path: entry };
+  if (pin) {
+    const path = L.paths.find((P) => P.cams.some((c) => c.name === pin));
+    if (!path) throw new Error(`${data.id} ${L.short}: pinned screen ${pin} not found`);
+    const cam = path.cams.find((c) => c.name === pin);
+    if (cam === entry.cams[0])
+      throw new Error(`${data.id} ${L.short}: pin ${pin} is the default pick; retire the entry`);
+    shot = { cam, path };
+  }
+  if (!shot.cam?.png)
+    throw new Error(
+      `${data.id} ${L.short}: page screen ${shot.cam?.name ?? "(none)"} has no artwork; pin one that does`,
+    );
+  return shot;
+}
+
+function levelPage(data, L, canonical, pins) {
   const byId = new Map(L.paths.map((P) => [P.id, P]));
   const kept = levelOrder(data, L)
     .map((id) => byId.get(id))
@@ -151,8 +184,13 @@ function levelPage(data, L, canonical) {
   const disc = data.id === "AE" ? "discs" : "disc";
 
   const entry = byId.get(levelEntry(data)[L.short]);
-  const cam = entry.cams[0];
-  const entryLabel = displayLabel(`P${entry.id}`, pathDisplayName(data.id, L.short, entry), true);
+  const shot = pageScreen(data, L, entry, pins);
+  const shotLabel = displayLabel(
+    `P${shot.path.id}`,
+    pathDisplayName(data.id, L.short, shot.path),
+    true,
+  );
+  const onEntry = shot.path === entry;
 
   // up to three named areas, play order, for the description sentence
   const areas = [];
@@ -199,8 +237,8 @@ function levelPage(data, L, canonical) {
         the interactive map</a>.
       </p>
       <figure>
-        <img src="/${cam.png}" alt="Screen ${cam.name}, on the way into ${esc(L.name)}" width="368" height="240" />
-        <figcaption>A screen of the entry path, ${esc(entryLabel)}.</figcaption>
+        <img src="/${shot.cam.png}" alt="Screen ${shot.cam.name}, ${onEntry ? "on the entry path of" : "in"} ${esc(L.name)}" width="368" height="240" />
+        <figcaption>A screen of ${onEntry ? "the entry path, " : ""}${esc(shotLabel)}.</figcaption>
       </figure>
 ${lists}${demo ? `\n${demoFootnote(demo)}` : ""}`;
 
@@ -281,8 +319,12 @@ const sitemap = (locs) =>
 export function emitFiles({
   games = [load("map_data_ao.json"), load("map_data_ae.json")],
   annotations = load("annotations.json"),
+  pins = SCREEN_OVERRIDES,
 } = {}) {
   setAnnotations(annotations);
+  const known = new Set(games.flatMap((d) => d.levels.map((L) => `${d.id} ${L.short}`)));
+  for (const key of Object.keys(pins))
+    if (!known.has(key)) throw new Error(`screen pin ${JSON.stringify(key)} names no level`);
   const files = new Map();
   const locs = [`${ORIGIN}/`, `${ORIGIN}/levels/`];
   for (const data of games) {
@@ -293,7 +335,7 @@ export function emitFiles({
         throw new Error(`${data.id} ${L.short}: unusable slug ${JSON.stringify(slug)}`);
       seen.add(slug);
       const rel = `levels/${data.id.toLowerCase()}/${slug}.html`;
-      files.set(rel, levelPage(data, L, `${ORIGIN}/${rel}`));
+      files.set(rel, levelPage(data, L, `${ORIGIN}/${rel}`, pins));
       locs.push(`${ORIGIN}/${rel}`);
     }
   }
