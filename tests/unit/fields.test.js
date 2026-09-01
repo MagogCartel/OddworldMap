@@ -349,9 +349,9 @@ test("onBackgroundPlane: background is where the scale resolves to half, inversi
   assert.ok(onBackgroundPlane("G", { name: "DoorFlame", fields: { scale: 1 } }));
   assert.ok(onBackgroundPlane("G", { name: "DoorFlame", fields: { scale: 2 } }));
   assert.ok(!onBackgroundPlane("G", { name: "DoorFlame", fields: { scale: 0 } }));
-  // a bare-int scale (no enum, e.g. wells/Teleporter) follows the plain convention
-  assert.ok(onBackgroundPlane("G", { name: "WellExpress", fields: { scale: 1 } }));
-  assert.ok(!onBackgroundPlane("G", { name: "WellExpress", fields: { scale: 0 } }));
+  // a bare-int scale (no enum, e.g. Teleporter) follows the plain convention
+  assert.ok(onBackgroundPlane("G", { name: "Teleporter", fields: { scale: 1 } }));
+  assert.ok(!onBackgroundPlane("G", { name: "Teleporter", fields: { scale: 0 } }));
   // no scale field at all is never background
   assert.ok(!onBackgroundPlane("G", { name: "MusicTrigger", fields: {} }));
 });

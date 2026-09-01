@@ -32,7 +32,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 
-**Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The open branches are inherited-field typing ([41](item-041-inherited-field-types.md)) and upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing).
+**Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The open branch is upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing).
 
 **Machine constraint:** a builder change that reads new data off the discs needs a rebuild, which needs the disc images. Batch those for a disc-machine session; one rebuild ships them all. Everything else can be built anywhere.
 
@@ -42,7 +42,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [**12.** Curated path names](item-012-curated-path-names.md) — the remaining curation: the still-unnamed AO paths, and one AE name that stands by elimination. _Content pass, anywhere._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
-- [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — the wells' `scale` reaches the layout with no game type and renders raw. _Small (builder), needs care._
 - [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram is the most shareable thing here and the only way to share it is a link; the nodes being DOM makes it a serialisation question rather than a second painter. _Medium, anywhere._
 
 ## Code and build
@@ -85,6 +84,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — a member resolves through its base chain, so the wells' `scale` reads full/half; the union the AO wells inherit stays untyped, a type without labels having no business in the sidecar. _2026-09-01._
 - [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md) — the collision lines, the marker boxes, and last the counts: a screen lists the objects authored on it, the third answer the sketch never weighed, so the tag and the tally finally agree. _2026-08-31._
 - [**66.** Add a `404.html`](item-066-404-page.md) — a missing address lands on a page of the map's own with the way back; self-contained, every URL on it root-absolute, since Pages serves it at whatever address was asked. _2026-08-30._
 - [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — `LICENSE` names the holder and carries the same per-tree scope the README publishes, above a verbatim licence body; the `package.json` half evaporated on inspection, the package being private, and GPL-2.0 turned out to be inherited from the vendored decoder rather than chosen. _2026-08-29._

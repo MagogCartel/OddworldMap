@@ -805,7 +805,8 @@
  "23": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1563,7 +1564,8 @@
  "8": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2818,7 +2820,8 @@
  "102": [
   [
    0,
-   "scrab_scale"
+   "scrab_scale",
+   "Scale_short"
   ],
   [
    1,
@@ -2854,11 +2857,13 @@
   ],
   [
    9,
-   "scrab_roar_randamly"
+   "scrab_roar_randamly",
+   "Choice_short"
   ],
   [
    10,
-   "scrab_persistant"
+   "scrab_persistant",
+   "Choice_short"
   ],
   [
    11,
@@ -2870,7 +2875,8 @@
   ],
   [
    13,
-   "scrab_kill_enemy"
+   "scrab_kill_enemy",
+   "Choice_short"
   ],
   [
    14,

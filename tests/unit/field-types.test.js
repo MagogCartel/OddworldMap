@@ -46,6 +46,22 @@ test("field types: value-type fields key by their shared C type", () => {
   assert.equal(AE.Mudokon.emotion, "Mud_TLV_Emotion");
 });
 
+test("field types: a base struct's member carries its declared type", () => {
+  // the wells' scale is declared Scale_short on Path_WellBase; ScrabSpawner
+  // inherits Path_Scrab's members
+  assert.equal(AO.WellLocal.scale, "Scale_short");
+  assert.equal(AO.WellExpress.scale, "Scale_short");
+  assert.equal(AE.LocalWell.scale, "Scale_short");
+  assert.equal(AE.WellExpress.scale, "Scale_short");
+  assert.equal(AE.ScrabSpawner.scrab_scale, "Scale_short");
+  assert.equal(AE.ScrabSpawner.scrab_persistant, "Choice_short");
+  // AO's wells also inherit a union-typed member; an aggregate is no enum, so
+  // the fields reading its arms stay untyped rather than shipping a type no
+  // label can serve
+  assert.ok(!("disabled_xpos" in AO.WellLocal));
+  assert.ok(!("off_level" in AO.WellExpress));
+});
+
 test("field types: decomp quirks are overridden at emission", () => {
   // upstream declares this boolean as a direction (copy-paste from the member
   // below it); left/right would be nonsense, so the emit corrects it to Choice

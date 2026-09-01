@@ -99,6 +99,40 @@ class DeriveLabel(unittest.TestCase):
         self.assertEqual(schema._derive_label("eTLVSpawn_1"), "TLVSpawn")
 
 
+class InheritMemberTypes(unittest.TestCase):
+    def test_a_base_members_type_reaches_the_derived_struct(self):
+        flat = schema._inherit_member_types(
+            {("Base", "scale"): "Scale_short"}, {"Derived": "Base"}, {("Base", "scale")})
+        self.assertEqual(flat[("Derived", "scale")], "Scale_short")
+
+    def test_the_derived_structs_own_declaration_wins(self):
+        types = {("Base", "m"): "A", ("Derived", "m"): "B"}
+        flat = schema._inherit_member_types(types, {"Derived": "Base"},
+                                            {("Base", "m"), ("Derived", "m")})
+        self.assertEqual(flat[("Derived", "m")], "B")
+
+    def test_an_own_declaration_hides_the_base_even_where_a_filter_left_it_untyped(self):
+        flat = schema._inherit_member_types({("Base", "m"): "A"}, {"Derived": "Base"},
+                                            {("Base", "m"), ("Derived", "m")})
+        self.assertNotIn(("Derived", "m"), flat)
+
+    def test_a_chain_resolves_through_every_base(self):
+        flat = schema._inherit_member_types({("Top", "m"): "A"}, {"Mid": "Top", "Bottom": "Mid"},
+                                            {("Top", "m")})
+        self.assertEqual(flat[("Bottom", "m")], "A")
+
+    def test_an_untyped_declaration_midway_hides_the_top_of_the_chain(self):
+        flat = schema._inherit_member_types({("Top", "m"): "A"}, {"Mid": "Top", "Bottom": "Mid"},
+                                            {("Top", "m"), ("Mid", "m")})
+        self.assertNotIn(("Mid", "m"), flat)
+        self.assertNotIn(("Bottom", "m"), flat)
+
+    def test_a_cycle_terminates(self):
+        flat = schema._inherit_member_types({("A", "m"): "T"}, {"A": "B", "B": "A"},
+                                            {("A", "m")})
+        self.assertEqual(flat[("B", "m")], "T")
+
+
 class Decompress4or5(unittest.TestCase):
     def test_literal_run_then_overlapping_back_copy(self):
         stream = struct.pack("<I", 5) + bytes([1]) + b"AB" + bytes([0x80, 1])
@@ -290,6 +324,19 @@ class CacheStamp(unittest.TestCase):
         self.assertIn(f'const CACHE_NAME = "{emit.cams_stamp(SITE / "cams")}";',
                       (SITE / "sw.js").read_text(),
                       "sw.js and public/cams disagree — commit the stamped line with the artwork")
+
+
+class MemberTypes(unittest.TestCase):
+    @needs_decomp
+    def test_a_base_structs_member_carries_its_declared_type(self):
+        types = schema.parse_member_types("AE")
+        self.assertEqual(types[("Path_WellLocal", "field_0_scale")], "Scale_short")
+
+    @needs_decomp
+    def test_a_union_typed_member_carries_no_type(self):
+        types = schema.parse_member_types("AO")
+        self.assertEqual(types[("Path_WellLocal", "field_18_scale")], "Scale_short")
+        self.assertNotIn(("Path_WellLocal", "field_24_off_level_or_dx"), types)
 
 
 class Sidecars(unittest.TestCase):

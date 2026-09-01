@@ -68,6 +68,24 @@ def _derive_label(enumerator):
     n = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", n)
     return n[:1].upper() + n[1:] if n else enumerator
 
+def _inherit_member_types(types, bases, declared):
+    """a derived struct answers for its base chain's members; the nearest
+    declaration wins, typed or not, the way C++ name hiding reads"""
+    flat = dict(types)
+    for struct, base in bases.items():
+        hidden = {m for s, m in declared if s == struct}
+        seen = set()
+        while base and base not in seen:
+            seen.add(base)
+            for s, m in declared:
+                if s == base and m not in hidden:
+                    ty = types.get((base, m))
+                    if ty:
+                        flat[(struct, m)] = ty
+                    hidden.add(m)
+            base = bases.get(base)
+    return flat
+
 def parse_member_types(game_key):
     """(data-struct, member) -> its declared game type, across the Tlvs header
     and the AliveLib data-struct headers it includes. A field's game type is what
@@ -76,18 +94,24 @@ def parse_member_types(game_key):
     unrelated same-named fields apart (a Door's start_state is DoorStates). Enum
     leaf names repeat across the decomp (StartState is both a Slig enum and a
     MeatSaw enum), so a nested enum is qualified with its owning struct; the
-    decomp's own qualified references carry the cross-object sharing. Primitives
-    and sub-struct-valued fields carry no type."""
+    decomp's own qualified references carry the cross-object sharing. A derived
+    struct answers for its base chain's members (the wells' scale is declared on
+    Path_WellBase). Primitives and aggregate-valued fields carry no type — a
+    union's arms stay unresolved even where the CTOR reads one."""
     paths = _relive_headers(game_key)
 
-    struct_names, raw = set(), []
+    aggregates, bases, declared, raw = set(), {}, set(), []
     for p in paths:
         src = p.read_text(errors="replace")
+        for am in re.finditer(r'(?<!enum )\b(?:struct|union)\s+([A-Za-z_]\w*)\b[^{;]*\{', src):
+            aggregates.add(am.group(1))
         for sm in re.finditer(r'\bstruct\s+(Path_[A-Za-z0-9_]+)\b([^{;]*)\{', src):
             struct = sm.group(1)
-            struct_names.add(struct)
             if "TlvObjectBase" in sm.group(2):  # a viewer-API wrapper, not a data struct
                 continue
+            bm = re.search(r':\s*public\s+(Path_\w+)', sm.group(2))
+            if bm:
+                bases[struct] = bm.group(1)
             body = src[sm.end():_match_brace(src, sm.end() - 1) - 1]
             nested = set(re.findall(_ENUM_RE, body))
             # cut nested enum bodies so their enumerators aren't read as members
@@ -100,6 +124,7 @@ def parse_member_types(game_key):
                     r'(?m)^\s*([A-Za-z_]\w*(?:::[A-Za-z_]\w*)*)\s+'
                     r'(field_[0-9A-Fa-f]+_\w+|[a-z_]\w*)\s*(?:=\s*[^;]+)?;', "".join(kept)):
                 ty, member = mm.group(1), mm.group(2)
+                declared.add((struct, member))
                 if ty in _SKIP_TYPES:
                     continue
                 if "::" not in ty and ty in nested:
@@ -107,14 +132,13 @@ def parse_member_types(game_key):
                 raw.append((struct, member, ty))
 
     types = {}
-    for struct, member, ty in raw:  # second pass: now that every struct name is known
-        base = ty.split("::")[0]
-        if ty in struct_names or (base in struct_names and "::" not in ty):
-            continue  # a sub-struct-valued field, not an enum
+    for struct, member, ty in raw:  # second pass: now that every aggregate name is known
+        if "::" not in ty and ty in aggregates:
+            continue  # an aggregate-valued field (struct or union), not an enum
         if ty.split("::")[-1].endswith(("_data", "_Data")):
             continue
         types[(struct, member)] = ty
-    return types
+    return _inherit_member_types(types, bases, declared)
 
 def _lib_headers(game_key):
     """every header of one game's AliveLib tree plus AliveLibCommon. Enum

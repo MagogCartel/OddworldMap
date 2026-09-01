@@ -256,10 +256,12 @@
  },
  "WellExpress": {
   "emit_leaves": "Choice_short",
-  "on_level": "LevelIds"
+  "on_level": "LevelIds",
+  "scale": "Scale_short"
  },
  "WellLocal": {
-  "emit_leaves": "Choice_short"
+  "emit_leaves": "Choice_short",
+  "scale": "Scale_short"
  },
  "ZBall": {
   "scale": "Scale_short",

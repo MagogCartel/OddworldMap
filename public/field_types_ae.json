@@ -156,7 +156,8 @@
   "start_point": "Choice_short"
  },
  "LocalWell": {
-  "emit_leaves": "Choice_short"
+  "emit_leaves": "Choice_short",
+  "scale": "Scale_short"
  },
  "MeatSack": {
   "meat_fall_direction": "XDirection_short",
@@ -237,6 +238,10 @@
   "scale": "Scale_short"
  },
  "ScrabSpawner": {
+  "scrab_kill_enemy": "Choice_short",
+  "scrab_persistant": "Choice_short",
+  "scrab_roar_randamly": "Choice_short",
+  "scrab_scale": "Scale_short",
   "scrab_spawn_direction": "ScrabSpawnDirection"
  },
  "SecurityClaw": {
@@ -327,7 +332,8 @@
  "WellExpress": {
   "disabled_well_level": "LevelIds",
   "emit_leaves": "Choice_short",
-  "enabled_well_level": "LevelIds"
+  "enabled_well_level": "LevelIds",
+  "scale": "Scale_short"
  },
  "WheelSyncer": {
   "output_requirement": "WheelSyncerOutputRequirement"

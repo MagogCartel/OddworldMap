@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-09-01",
+   "tag": "improved",
+   "tiny": true,
+   "title": "Wells say which plane they sit on",
+   "detail": "A well's scale used to read a bare 0 or 1; it now reads full or half, the way a Slig's or a Mudokon's does. Exoddus's Scrab spawner gains the same reading: its spawned Scrab's scale is a plane, and three of its yes/no flags read as words. The games declare these fields on a shared base record the map's builder never looked inside; now it does."
+  },
+  {
    "date": "2026-08-31",
    "tag": "fixed",
    "title": "A screen lists the objects that belong to it",
