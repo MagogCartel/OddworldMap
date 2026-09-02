@@ -10,6 +10,7 @@ import { state } from "./state.js";
 import { pathDisplayName, pathNickname, pathNote } from "./annotations.js";
 import { hideAnchorTip } from "./anchortip.js";
 import { isDemoPath } from "./demo.js";
+import { marker, wirePath } from "./graphsvg.js";
 import { jumpToPlace, scheduleHash } from "./navigate.js";
 import { graphLayout, worldGraph } from "./worldgraph.js";
 
@@ -74,27 +75,17 @@ const edgeTip = (e) =>
     .map((k) => `${k} ×${e.kinds[k]}`)
     .join(", ");
 
-const marker = (kind) =>
-  `<marker id="gvh-${kind}" viewBox="0 0 7 6" refX="6.5" refY="3" markerWidth="7" markerHeight="6"` +
-  ` orient="auto-start-reverse"><path d="M0 0 L7 3 L0 6 z" fill="${CONN_COLORS[kind] || "#fff"}"/></marker>`;
-
-// the line, plus one fat invisible leg per segment to point at. Per segment
-// because a tooltip is placed against its anchor's box, and a route's whole box
-// can be most of the diagram; the group is what still lights the line entire.
-// A head marks a one-way link and nothing else: nearly every pair runs both
-// ways, so a head on each travelable end would spend the mark on "ordinary"
+// the drawn line, plus one fat invisible leg per segment to point at. Per
+// segment because a tooltip is placed against its anchor's box, and a route's
+// whole box can be most of the diagram; the group is what still lights the
+// line entire.
 function wire({ e, pts }) {
   const seg = (a, b) => `M${a[0]} ${a[1]} L${b[0]} ${b[1]}`;
   const legs = pts
     .slice(1)
     .map((p, i) => `<path class="gv-hit" d="${seg(pts[i], p)}" data-tip="${esc(edgeTip(e))}"/>`)
     .join("");
-  const head = e.fwd && e.rev ? "" : ` marker-${e.fwd ? "end" : "start"}="url(#gvh-${e.kind})"`;
-  return (
-    `<g class="gv-edge">${legs}` +
-    `<path class="gv-wire" d="${pts.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ")}"` +
-    ` stroke="${CONN_COLORS[e.kind] || "#fff"}"${head}/></g>`
-  );
+  return `<g class="gv-edge">${legs}${wirePath({ e, pts }, ' class="gv-wire"')}</g>`;
 }
 
 // a level's paths, grouped so a reader is told which level they are walking
