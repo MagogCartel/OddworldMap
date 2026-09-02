@@ -73,6 +73,24 @@ export async function settle(page, { game, level, path }) {
   );
 }
 
+// the same settle for wherever boot lands, when the test pins no place
+export async function settleAny(page) {
+  await page.evaluate(async () => {
+    const u = (m) => new URL("js/" + m, location.href).href;
+    const st = await import(u("state.js"));
+    const render = await import(u("render.js"));
+    const cv = document.getElementById("cv");
+    const deadline = Date.now() + 30000;
+    while (!(st.state.path && cv.clientWidth > 0)) {
+      if (Date.now() > deadline) throw new Error("settle timeout");
+      await new Promise(requestAnimationFrame);
+    }
+    await render.preloadPath(st.state.path);
+    if (!render.artworkReady(st.state.path)) throw new Error("artwork did not load");
+    render.draw();
+  });
+}
+
 export async function probeAnchor(page, anchor) {
   return await page.evaluate(async (a) => {
     const u = (m) => new URL("js/" + m, location.href).href;
