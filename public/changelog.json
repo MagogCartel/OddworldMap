@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-09-02",
+   "tag": "new",
+   "title": "The world graph saves as an image",
+   "detail": "The whole-game diagram now leaves the site as a file: save svg and save png sit beside fit in its own bar. The SVG stays sharp at any size (print it, put it on a wiki) and the PNG pastes anywhere at twice the diagram's actual size. Both carry the diagram with every name on it, plus the title and colour legend across the top, and the filename says which diagram it is: oddworld-ae-graph.svg without the demo copies, oddworld-ae-graph-demos.svg with them."
+  },
+  {
    "date": "2026-09-01",
    "tag": "new",
    "title": "Every level has a plain page of its own",

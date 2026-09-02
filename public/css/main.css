@@ -412,6 +412,10 @@ body.graph #routeBar {
   border-bottom: 1px solid var(--line);
   background: var(--panel);
 }
+#graphBar .linkbtn {
+  flex: none;
+  white-space: nowrap;
+}
 #graphTitle {
   min-width: 0;
   overflow: hidden;
@@ -422,7 +426,8 @@ body.graph #routeBar {
 #graphLegend {
   flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  min-width: 0;
   gap: 10px;
   overflow: hidden;
   color: var(--dim);
@@ -1732,8 +1737,9 @@ kbd {
   body.menu-open #placePanel {
     display: none;
   }
-  /* the bar keeps the title and its controls; the legend wants a width it hasn't got */
-  #graphLegend {
+  #graphLegend,
+  #graphSvgBtn,
+  #graphPngBtn {
     display: none;
   }
   /* prose needs the width more than the anchoring does */

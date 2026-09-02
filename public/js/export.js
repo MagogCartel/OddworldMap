@@ -1,7 +1,9 @@
-// PNG export: the visible area, or the whole path at native resolution.
+// Export: the visible area or the whole path as PNG, and the world graph as
+// a standalone SVG or a PNG rasterized from it.
 
 import { EXPORT_MAX_DIM, EXPORT_MAX_PX } from "./config.js";
 import { $, cv } from "./dom.js";
+import { graphName, graphSvg } from "./graphsvg.js";
 import { pathImage } from "./model.js";
 import { artworkReady, paint, preloadPath } from "./render.js";
 import { LAYOUT, cellOrigin, state } from "./state.js";
@@ -104,5 +106,60 @@ pathBtn.onclick = async () => {
   } finally {
     pathBtn.disabled = false;
     pathBtn.textContent = PATH_LABEL;
+  }
+};
+
+$("graphSvgBtn").onclick = () => {
+  const { svg, demo } = graphSvg(state.data, { entry: state.entry });
+  const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+  download(blob, graphName(state.data.id, demo, "svg"));
+};
+
+const gPngBtn = $("graphPngBtn");
+const GPNG_LABEL = gPngBtn.textContent.trim();
+
+gPngBtn.onclick = async () => {
+  gPngBtn.disabled = true;
+  gPngBtn.textContent = "rendering…";
+  let canvas, sized;
+  try {
+    // 2x for the pixel densities the file will be read at, the diagram's own
+    // size where a canvas that big is refused
+    for (const z of [2, 1]) {
+      sized = graphSvg(state.data, { entry: state.entry, scale: z });
+      canvas = sizedCanvas(sized.w * z, sized.h * z);
+      if (canvas) {
+        if (z < 2) toast("too large at double size: saved at actual size");
+        break;
+      }
+    }
+    if (!canvas) {
+      toast("export failed");
+      return;
+    }
+    const name = graphName(state.data.id, sized.demo, "png");
+    const url = URL.createObjectURL(new Blob([sized.svg], { type: "image/svg+xml;charset=utf-8" }));
+    const img = new Image();
+    try {
+      await new Promise((res, rej) => {
+        img.onload = res;
+        img.onerror = rej;
+        img.src = url;
+      });
+    } finally {
+      // the loaded image holds its own copy; only download() needs a URL kept
+      URL.revokeObjectURL(url);
+    }
+    const [ecv, ectx] = canvas;
+    ectx.drawImage(img, 0, 0, ecv.width, ecv.height);
+    const blob = await new Promise((r) => ecv.toBlob(r, "image/png"));
+    ecv.width = ecv.height = 0; // the backing store must not wait on the GC
+    download(blob, name);
+  } catch {
+    if (canvas) canvas[0].width = canvas[0].height = 0;
+    toast("export failed");
+  } finally {
+    gPngBtn.disabled = false;
+    gPngBtn.textContent = GPNG_LABEL;
   }
 };

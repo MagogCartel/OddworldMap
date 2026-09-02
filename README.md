@@ -119,6 +119,7 @@ The **World graph** button under the path buttons (or **`v`**) puts the map away
 - the diagram makes one thing plain that no amount of browsing does: Exoddus is two halves that never touch. Nothing in the Necrum Mines, Necrum or either vault connects to anything in FeeCo Depot, the Barracks, Bonewerkz or the Brewery — 38 paths and 51 with no line between them, because the one crossing the game has (the Necrum Vaults to FeeCo Terminal 1) happens in a cutscene and no well pairs for it
 - the "Show demo paths" setting moves the diagram, the way it moves the path buttons — Exoddus is 92 paths and 97 links without its demo copies, 117 and 120 with them
 - the link in the address bar carries the diagram, so the chain button and a copied URL open on it rather than on the map
+- **save svg** and **save png** in the diagram's own bar put it in a file: the SVG stays sharp at any size — a poster, a wiki, print — and the PNG pastes anywhere at twice the diagram's actual size. Both carry the bar's title and colour legend across the top, every name on it however the diagram was being viewed, and the filename says which diagram it is: `oddworld-ae-graph.svg` without the demo copies, `oddworld-ae-graph-demos.svg` with them. On phones the bar keeps to **fit** — save from a wider window
 
 ### Sharing and embedding
 
@@ -133,6 +134,7 @@ The **World graph** button under the path buttons (or **`v`**) puts the map away
   - **Export whole path** puts every screen of the path in one image, laid out edge to edge at the artwork's own resolution however far the view is zoomed out — Rupture Farms' widest path comes out as a 4416 × 720 `oddworld-ao-R1-P15-full.png` with all twenty of its screens on it, and the largest path either game has, Necrum Mines P4, as a 4416 × 3360 one with thirty-seven; turning on "Gaps between screens" can take a path past what a browser will hand back as a single image, and the export scales it to fit and says what it scaled to
   - the image is framed on the path's screens, so an object or a collision line the map draws out in the gap beyond the outermost ones can fall outside it: 248 dotted Oddysee markers do, and nothing that covers a screen ever does. Turning on "Gaps between screens" takes that ground in, since there it is canvas of its own
   - **Export view** saves what the canvas is showing, the visible area at the current zoom, as `oddworld-ao-R1-P15-view.png`
+  - both act on the map, so the world graph is put away while they are, and it saves from its own bar instead — see [World graph](#world-graph)
 
 ### Settings
 

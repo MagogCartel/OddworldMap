@@ -28,7 +28,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 **Next up**:
 
-- [90. Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram ships shareable by link alone; pick the serialisation route first.
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 - [42. Level editor, Phase 1](item-042-level-editor.md) — the extraction cross-check is the payoff; the later phases stay parked.
 
@@ -42,7 +41,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [**12.** Curated path names](item-012-curated-path-names.md) — the remaining curation: the still-unnamed AO paths, and one AE name that stands by elimination. _Content pass, anywhere._
 - [**29.** Decomp label-correctness sweep](item-029-decomp-label-sweep.md) — confirmed `scale` and `level` misdeclarations, batched into one upstream PR, then a sidecar regen. _Ongoing._
-- [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — the diagram is the most shareable thing here and the only way to share it is a link; the nodes being DOM makes it a serialisation question rather than a second painter. _Medium, anywhere._
 
 ## Code and build
 
@@ -80,6 +78,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — save svg / save png in the diagram's own bar, both from one serializer: a self-contained SVG built from the same layout the screen draws, and the PNG that string rasterized at twice the screen. The route the sketch ranked first is the one that shipped, and it made the second painter unnecessary. _2026-09-02._
 - [**69.** Browser-level smoke tests](item-069-browser-smoke-tests.md) — the six assertions over boot, permalinks, follows, embed mode, search and settings, on the harness [63](item-063-alignment-anchor-diff.md) brought; the round-trip had to assert `viewHash()` reproduction, a plain view hash never being rewritten at all. _2026-09-02._
 - [**63.** Automate the alignment anchors as a screenshot diff](item-063-alignment-anchor-diff.md) — the four anchors as a CI gate with no reference images: geometry pinned as hand-verified literals, pixels probed against the committed artwork; a scale error moves the pins at any cell, and the deep-cell anchors carry the pitch class that does cancel at the original anchor's cell (0,0). _2026-09-02._
 - [**64.** CI check that the committed sidecars match a re-emit](item-064-sidecar-reemit-check.md) — the enum sweep joined the other parsers' cache discipline, so the emit runs from the committed tree and CI byte-compares all four sidecars; the "emit + cmp" half turned out to already exist as the unittest. _2026-09-02._

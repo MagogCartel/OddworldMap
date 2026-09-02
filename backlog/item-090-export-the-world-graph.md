@@ -1,6 +1,6 @@
 # 90. Export the world graph as an image
 
-**Status:** open · **Effort:** medium (viewer) · **Where:** anywhere · **Filed:** 2026-08-24, from [86](item-086-world-graph.md) shipping without it
+**Status:** shipped 2026-09-02 · **Effort:** medium (viewer) · **Where:** anywhere · **Filed:** 2026-08-24, from [86](item-086-world-graph.md) shipping without it
 
 ## Why
 
@@ -27,3 +27,13 @@ Whichever wins, the button belongs beside the diagram's own `fit`, not in the si
 - The diagram is not the map, so the export budget in [js/config.js](../public/js/config.js) (`EXPORT_MAX_PX`, `EXPORT_MAX_DIM`) is the map's own and reasoning from it needs care — but a raster export still has to answer what a browser will hand back, and the probe-before-paint lesson from [61](item-061-export-whole-path.md) applies whole.
 - The demo-paths setting changes the diagram, so the file has to say which one it is or two exports of "Exoddus" differ by 25 nodes with nothing to tell them apart. The map's export names its place in the filename and can do the same here.
 - What the hover produces has no business in a file, which is the rule `paint`'s `transients` flag already states for the map.
+
+## Shipped
+
+- **The first route won, and it carried the third inside it.** `js/graphsvg.js` serializes the same `worldGraph` + `graphLayout` the screen draws into one self-contained SVG string, and the PNG button rasterizes that string through the browser — a blob-URL `<img>` into a `sizedCanvas`-probed canvas — so both files come from one renderer and the second painter was never written. `save svg` and `save png` sit beside `fit` in the diagram's own bar, as sketched — except on phones, where the pair yields with the legend: the title is the bar's one caption, and two wrapped labels were what crushed it.
+- **The sketch's resolution list, answered.** The font stack is embedded by name and substitution accepted, the clip capping what drifting metrics can do — only the demo copies' names are long enough to feel it, and they lose the ellipsis for a hard cut. Every `var()` became a hand-resolved literal, pinned against the stylesheet by a test in `tests/unit/graphsvg.test.js` rather than trusted. The node boxes became rect plus clipped text, the bulk of the work as predicted. The counter-scaled level codes evaporated: a file is always 1:1, so the fit view's problem never reaches it.
+- **The arrow markers dropped `auto-start-reverse`, and the screen inherited the fix.** librsvg — the thumbnailer behind the wikis this item names — gained the SVG2 value only in 2.51.3, and a build predating that draws every reverse-only head pointing 180° wrong. `wirePath` emits a reverse-only route backwards under a plain `orient="auto"` `marker-end` instead; browsers draw the same pixels either way. The edge markup moved whole into the serializer and graphview imports it, so the one-way head rule exists once — [61](item-061-export-whole-path.md)'s divergence worry answered in code where it could be, by the stylesheet pin where it could not.
+- **The raster scale lives in the SVG root, not in `drawImage`.** Safari has a history of rasterizing an SVG image at its intrinsic size and bitmap-scaling the rest of the way; serializing with the root `width`/`height` at 2× over a constant `viewBox` makes the intrinsic size the target, so even that engine is crisp. 2× Oddysee is 6982 × 1706 — inside the ceilings [61](item-061-export-whole-path.md) probed — and a refused canvas falls to actual size with a toast.
+- **The filename marker is read off the built nodes, never the setting**: `-demos` when the diagram actually lists a demo copy, so Oddysee never wears it and a session-revealed copy marks the file that really differs from the canonical one. The strip's title states it too.
+- **The file explains itself.** A 44-pixel strip carries the bar's title, the legend as kind names each painted its own colour — SVG cannot measure text, so a chip beside a caption became the caption in the chip's colour — and the site's name, since a shared image leaves behind the page that would have said all three.
+- **What the hover produces stays out, and so does the standing-here outline**, so two exports of one game are byte-identical whatever box was selected. Entry marks stay: they are the data's, not the visit's.
