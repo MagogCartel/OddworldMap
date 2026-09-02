@@ -1,9 +1,9 @@
 """Unit tests for the builder's pure functions: python3 -m unittest discover -s tools/tests
 
 Stdlib only, and nothing here needs a disc image. The committed sidecars must
-reproduce from the committed caches, and the enum cache from a fresh sweep of
-the checkout — the checkout-probing tests (the member-type parser pair and the
-enum-cache freshness check) skip where it is absent (as it is in CI).
+reproduce from the committed caches, and the caches from a fresh parse of the
+alive_reversing checkout — the checkout-probing tests (the member-type parser
+pair and the cache freshness checks) skip where it is absent (as it is in CI).
 """
 
 import contextlib
@@ -407,6 +407,28 @@ class SchemaCaches(unittest.TestCase):
                     self.assertIn(len(row), (2, 3), f"{cache.name} type {tid}: {row}")
                     self.assertIsInstance(row[0], int)
                     self.assertRegex(row[1], r"^[a-z0-9_]+$")
+
+    @needs_decomp
+    def test_the_committed_cache_matches_a_fresh_parse(self):
+        for game_key in ("AO", "AE"):
+            cache = HERE / "data" / games.GAMES[game_key]["schema_cache"]
+            self.assertEqual(
+                cache.read_text(),
+                json.dumps(schema.parse_object_schema(game_key), indent=1),
+                f"{cache.name} is stale against a fresh parse — delete it to regenerate",
+            )
+
+
+class PathdataCache(unittest.TestCase):
+    @needs_decomp
+    def test_the_committed_cache_matches_a_fresh_parse(self):
+        for game_key in ("AO", "AE"):
+            game = games.GAMES[game_key]
+            self.assertEqual(
+                (HERE / "data" / game["cache"]).read_text(),
+                json.dumps(game["parse_tables"](), indent=1),
+                f"{game['cache']} is stale against a fresh parse — delete it to regenerate",
+            )
 
 
 class EnumCache(unittest.TestCase):
