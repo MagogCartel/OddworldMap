@@ -6,10 +6,12 @@
     "format": "prettier --write \"**/*.{js,css,html}\"",
     "format:check": "prettier --check \"**/*.{js,css,html}\"",
     "lint": "eslint .",
-    "test": "node --test"
+    "test": "node --test",
+    "test:browser": "playwright test -c tests/browser"
   },
   "devDependencies": {
     "@eslint/js": "^9",
+    "@playwright/test": "1.62.1",
     "eslint": "^9",
     "globals": "^15",
     "prettier": "3.9.5"

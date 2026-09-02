@@ -1,6 +1,6 @@
 # 63. Automate the alignment anchors as a screenshot diff
 
-**Status:** undecided — needs a decision before anyone builds it · **Effort:** medium (CI) · **Where:** CI · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-09-02 · **Effort:** medium (CI) · **Where:** CI · **Filed:** 2026-07-24/25 review
 
 ## What it is
 
@@ -21,4 +21,12 @@ It costs a headless-browser dependency in CI and two reference images in a repo 
 Both anchors sit at moderate depth, where that error is a couple of pixels across and about twelve down. The AE anchor's HandStone box is 24px tall, so it still overlapped the QuikSave stone and still read as aligned. An anchor only falsifies a scale error near a screen's far edge, which is why [CLAUDE.md](../CLAUDE.md) now names two scale anchors beside the two alignment ones.
 
 That doubles the prose this item exists to replace, and it is evidence for the conditional above rather than against it: [69](item-069-browser-smoke-tests.md) has stayed deferred, and the cost of it staying deferred has now been paid once.
+
+## Shipped
+
+Folded into [69](item-069-browser-smoke-tests.md)'s harness, as the recommendation above conditioned — read the other way around: once the harness existed for this item, 69's six assertions were the cheap half, so both shipped together.
+
+The mechanism drifted from the title. No committed reference images and no pixel-delta threshold: each anchor is pinned twice in `tests/browser/anchors.spec.js`, its geometry as literals — where the marker draws inside its own 368×240 screen, verified by eye against the artwork once and then frozen, so the model is compared against history rather than against itself — and its pixels colour-agnostically, the screen's canvas region matching the committed cam PNG away from the markers and differing from it on the pinned outlines. The two halves cover each other's blind spots: a transform regression moves the numbers at zero tolerance while the pixels stay self-consistent, and a painter regression (a one-pixel artwork shift is enough) moves pixels the numbers cannot see.
+
+The set is the four anchors [CLAUDE.md](../CLAUDE.md) carries now, not the two this item was filed on, and both error classes were exercised rather than argued. A within-screen scale error — the 2026-08-14 class, which the old transform's `cellW/visW` factor applied to every screen alike — moves the pinned offsets at any cell, the original AO anchor's (0,0) included; that anchor survived the real failure only because the bad declaration lived in `map_data_ae.json` alone, Oddysee's window having been declared right from the start. A pitch error is the class that does cancel at cell (0,0), and replaying one fails the three deep-cell anchors while leaving the AO anchor green — which is why the far-cell anchors are load-bearing rather than redundant.
 

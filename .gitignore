@@ -11,6 +11,9 @@ Thumbs.db
 # build artifacts (cam2rgba is compiled on demand by build_map.py)
 tools/cam2rgba
 
+# Playwright failure artifacts
+test-results/
+
 # disc images never belong here
 *.bin
 *.cue

@@ -29,3 +29,15 @@ jobs:
       - run: python3 -m compileall -q tools/
       - run: pipx run ruff==0.16.0 check tools/
       - run: python3 -m unittest discover -s tools/tests
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser

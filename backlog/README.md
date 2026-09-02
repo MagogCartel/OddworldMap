@@ -58,8 +58,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 Each needs a verdict before anyone builds it.
 
-- [**63.** Automate the alignment anchors as a screenshot diff](item-063-alignment-anchor-diff.md) — two manual eyeball checks that are a pixel test written in prose.
-
 ## Deferred
 
 Decided not now, with the reason recorded.
@@ -83,6 +81,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**63.** Automate the alignment anchors as a screenshot diff](item-063-alignment-anchor-diff.md) — the four anchors as a CI gate with no reference images: geometry pinned as hand-verified literals, pixels probed against the committed artwork; a scale error moves the pins at any cell, and the deep-cell anchors carry the pitch class that does cancel at the original anchor's cell (0,0). _2026-09-02._
 - [**64.** CI check that the committed sidecars match a re-emit](item-064-sidecar-reemit-check.md) — the enum sweep joined the other parsers' cache discipline, so the emit runs from the committed tree and CI byte-compares all four sidecars; the "emit + cmp" half turned out to already exist as the unittest. _2026-09-02._
 - [**67.** Crawlable content for search engines](item-067-crawlable-content.md) — every level has a plain page under `/levels/`, its paths in play order linking into the viewer, and the sitemap names them all; emitted from the committed data by a Node script that reuses the viewer's own modules, and byte-checked against a fresh emit in CI. _2026-09-01._
 - [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — a member resolves through its base chain, so the wells' `scale` reads full/half; the union the AO wells inherit stays untyped, a type without labels having no business in the sidecar. _2026-09-01._

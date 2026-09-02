@@ -39,4 +39,13 @@ export default [
       globals: globals.node,
     },
   },
+  {
+    // Playwright specs: Node test files whose page.evaluate bodies run in the browser
+    files: ["tests/browser/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: "module",
+      globals: { ...globals.node, ...globals.browser },
+    },
+  },
 ];
