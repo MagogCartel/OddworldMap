@@ -7,7 +7,7 @@ import re
 import sys
 
 from oddmap.games import game_setup
-from oddmap.schema import parse_enum_labels
+from oddmap.schema import load_enum_labels
 
 # decomp quirks corrected when emitting field_types (the schema cache stays
 # faithful to the source): a field whose declared type contradicts its meaning
@@ -45,15 +45,16 @@ def write_field_types(game_key, out):
 
 def write_enum_labels(game_key, out):
     """the viewer's enum-value labels sidecar for one game: {type: {value: label}}.
-    Generated from the decomp (no disc) so the viewer renders enum ints as words
-    without hand-maintaining them; keyed by the same game type as field_types and
-    limited to the types some field is actually declared as, so it ships only
-    labels the viewer can use (the decomp defines many enums that aren't fields)."""
+    Generated from the decomp's enum sweep (cached, no disc) so the viewer renders
+    enum ints as words without hand-maintaining them; keyed by the same game type
+    as field_types and limited to the types some field is actually declared as, so
+    it ships only labels the viewer can use (the decomp defines many enums that
+    aren't fields)."""
     game = game_setup(game_key)
     used = {r[2] for tid, rows in game["schema"].items() if game["tlv_names"].get(tid)
             for r in rows if len(r) > 2}
     used |= {ty for (gk, _, _), ty in _FIELD_TYPE_OVERRIDES.items() if gk == game_key}
-    labels, bad = parse_enum_labels(game_key)
+    labels, bad = load_enum_labels(game_key, game)
     broken = used & bad
     if broken:  # a used type must never ship silently unlabelled or mislabelled
         raise RuntimeError(f"{game_key}: field types with unlabelable enums: {sorted(broken)}")

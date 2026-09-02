@@ -1,8 +1,9 @@
 """Unit tests for the builder's pure functions: python3 -m unittest discover -s tools/tests
 
-Stdlib only, and nothing here needs a disc image. The parsers that read the
-alive_reversing checkout are covered by the reproducibility tests at the bottom,
-which skip when the checkout is absent (as it is in CI).
+Stdlib only, and nothing here needs a disc image. The committed sidecars must
+reproduce from the committed caches, and the enum cache from a fresh sweep of
+the checkout — the checkout-probing tests (the member-type parser pair and the
+enum-cache freshness check) skip where it is absent (as it is in CI).
 """
 
 import contextlib
@@ -360,11 +361,9 @@ class Sidecars(unittest.TestCase):
     def test_field_types_ae(self):
         self.assertReproduces(emit.write_field_types, "AE", "field_types_ae.json")
 
-    @needs_decomp
     def test_enum_labels_ao(self):
         self.assertReproduces(emit.write_enum_labels, "AO", "enum_labels_ao.json")
 
-    @needs_decomp
     def test_enum_labels_ae(self):
         self.assertReproduces(emit.write_enum_labels, "AE", "enum_labels_ae.json")
 
@@ -408,6 +407,33 @@ class SchemaCaches(unittest.TestCase):
                     self.assertIn(len(row), (2, 3), f"{cache.name} type {tid}: {row}")
                     self.assertIsInstance(row[0], int)
                     self.assertRegex(row[1], r"^[a-z0-9_]+$")
+
+
+class EnumCache(unittest.TestCase):
+    def cache_file(self, game_key):
+        return HERE / "data" / games.GAMES[game_key]["enum_cache"]
+
+    def test_cached_labels_are_numeric_value_to_label_maps(self):
+        for game_key in ("AO", "AE"):
+            raw = json.loads(self.cache_file(game_key).read_text())
+            self.assertEqual(set(raw), {"labels", "bad"})
+            for ty, vals in raw["labels"].items():
+                self.assertTrue(vals, ty)
+                for v, label in vals.items():
+                    self.assertRegex(v, r"^-?\d+$", f"{ty}: {v}")
+                    self.assertTrue(label and isinstance(label, str), f"{ty} {v}: {label!r}")
+            for ty in raw["bad"]:
+                self.assertIsInstance(ty, str)
+
+    @needs_decomp
+    def test_the_committed_cache_matches_a_fresh_sweep(self):
+        for game_key in ("AO", "AE"):
+            labels, bad = schema.parse_enum_labels(game_key)
+            self.assertEqual(
+                self.cache_file(game_key).read_text(),
+                json.dumps({"labels": labels, "bad": sorted(bad)}, indent=1),
+                f"{self.cache_file(game_key).name} is stale against a fresh sweep — delete it to regenerate",
+            )
 
 
 if __name__ == "__main__":

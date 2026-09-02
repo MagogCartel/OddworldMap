@@ -1,6 +1,6 @@
 # 64. CI check that the committed sidecars match a re-emit
 
-**Status:** undecided — needs a decision before anyone builds it · **Effort:** small (builder + CI) · **Where:** builder and CI, no disc · **Filed:** 2026-07-24/25 review
+**Status:** shipped 2026-09-02 · **Effort:** small (builder + CI) · **Where:** builder and CI, no disc · **Filed:** 2026-07-24/25 review
 
 ## What it is
 
@@ -21,3 +21,11 @@ It adds two more committed cache files to a project that already carries four, i
 The region it touches is now `oddmap/schema.py`, which holds `parse_enum_labels`, and `oddmap/emit.py`, which writes both sidecars: the cache would sit beside the two the schema parsers already keep.
 
 Note that [55](item-055-lint-and-test-tools.md) shipped a partial version of this: the field-types pair is re-emitted and byte-compared in CI already, and the enum-label pair skips without a checkout. So what remains is specifically closing the enum half.
+
+## Shipped
+
+The cache landed as the sketch proposed, with the discipline the other caches keep (re-parsed only when deleted), and the CI half turned out to already exist: the byte comparison was the `Sidecars` unittest all along, so "emit into a temp dir and `cmp`" reduced to deleting the two `@needs_decomp` decorators.
+
+Where the sketch guessed wrong: the cache is `tools/data/enums_{ao,ae}.json` holding `{labels, bad}`, not `enum_defs_*` holding raw definitions — the raw defs never leave `parse_enum_labels`, and caching them would still need the checkout at emit time for the `AddEnum` curation. It caches every swept type (~260 per game) rather than the used subset, because pruning would make the cache a function of the schema cache and the override table, and an override edit would then need a checkout to re-emit — the exact drift window this item closes.
+
+Two guards shipped alongside: a checkout-only freshness test pins the committed cache against a fresh sweep, so a stale cache after an upstream re-pin fails on any machine that has the checkout; and `_lib_headers` now refuses a missing tree instead of `rglob`ing it into a quietly thinner sweep — either game's cache reads both trees (the sibling fill-only fallback), so a partial checkout regenerating one was a real hazard.

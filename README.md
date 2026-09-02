@@ -169,7 +169,7 @@ export ODDWORLD_DISC_AO="$HOME/games/Abe's Oddysee.bin"
 export ODDWORLD_DISC_AE="$HOME/games/Exoddus (Disc 1).bin:$HOME/games/Exoddus (Disc 2).bin"
 ```
 
-The script needs Python 3.8 or newer, compiles `tools/cam2rgba` automatically on first run (needs a C++17 compiler) and requires [oxipng](https://github.com/oxipng/oxipng) — every emitted PNG is losslessly recompressed so rebuilds stay byte-identical to the committed images. Level/path table layouts are cached in [tools/data/pathdata_ao.json](tools/data/pathdata_ao.json); they only need regenerating (which requires an [alive_reversing](https://github.com/AliveTeam/alive_reversing) checkout as a sibling directory) if that cache is deleted.
+The script needs Python 3.8 or newer, compiles `tools/cam2rgba` automatically on first run (needs a C++17 compiler) and requires [oxipng](https://github.com/oxipng/oxipng) — every emitted PNG is losslessly recompressed so rebuilds stay byte-identical to the committed images. Everything the builder parses from the [alive_reversing](https://github.com/AliveTeam/alive_reversing) decompilation — level/path tables, object field layouts, enum labels — is cached under [tools/data/](tools/data/); a cache only needs regenerating (which requires the checkout as a sibling directory) if it is deleted.
 
 A rebuild that changes any committed cam PNG also rewrites `CACHE_NAME` in [sw.js](public/sw.js), which the build summary prints — commit that line with the artwork. It is a content hash of the images, and visitors who opted into artwork caching serve cams cache-first from a service worker and never revalidate them, so it is what stops them keeping the old images indefinitely.
 

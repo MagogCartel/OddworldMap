@@ -1,8 +1,9 @@
 """Per-object field layouts and enum labels, swept from the decomp's headers, with
 the override tables carrying what the source gets wrong or cannot express.
 
-The layout cache under tools/data/ is re-parsed only when deleted; the enum sweep
-reads the checkout every time."""
+The caches under tools/data/ are re-parsed only when deleted, so builds and the
+sidecar emit run from the committed tree alone; only regenerating a cache needs
+the checkout."""
 import json
 import re
 
@@ -145,6 +146,9 @@ def _lib_headers(game_key):
     definitions aren't always reachable through includes (SwitchOp is only
     forward-declared where fields use it), so definitions are swept by directory."""
     dirs = [REPO / f"Source/AliveLib{game_key}", REPO / "Source/AliveLibCommon"]
+    for d in dirs:
+        if not d.is_dir():  # rglob on a missing dir yields [], a quietly thinner sweep
+            raise FileNotFoundError(f"no decomp tree at {d}")
     return [h for d in dirs for h in sorted(d.rglob("*.hpp"))]
 
 def _strip_comments(src):
@@ -286,3 +290,15 @@ def load_object_schema(game_key, game):
             raise RuntimeError(f"spent schema layout correction: {game_key} type {tid} no longer derives as pinned")
         schema[tid] = corrected
     return schema
+
+def load_enum_labels(game_key, game):
+    cache = HERE / "data" / game["enum_cache"]
+    if cache.exists():
+        raw = json.loads(cache.read_text())
+    else:
+        labels, bad = parse_enum_labels(game_key)
+        raw = {"labels": labels, "bad": sorted(bad)}
+        cache.parent.mkdir(exist_ok=True)
+        cache.write_text(json.dumps(raw, indent=1))
+    return ({t: {int(v): lb for v, lb in vals.items()} for t, vals in raw["labels"].items()},
+            set(raw["bad"]))
