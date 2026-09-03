@@ -21,6 +21,8 @@ jobs:
 
   python:
     runs-on: ubuntu-latest
+    env:
+      ODDWORLD_DECOMP: ${{ github.workspace }}/../alive_reversing
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
@@ -28,6 +30,14 @@ jobs:
           python-version: "3.12"
       - run: python3 -m compileall -q tools/
       - run: pipx run ruff==0.16.0 check tools/
+      # the checkout-probing tests parse the decomp at its pinned revision; AO's path tables come
+      # from a commit far below it that a shallow clone would not hold, so both are fetched by SHA
+      - run: |
+          pins=$(cd tools && python3 -c 'from oddmap.paths import DECOMP_COMMIT, AO_COMMIT; print(DECOMP_COMMIT, AO_COMMIT)')
+          read -r pin ao <<< "$pins"
+          git init -q "$ODDWORLD_DECOMP"
+          git -C "$ODDWORLD_DECOMP" fetch -q --depth 1 https://github.com/AliveTeam/alive_reversing "$pin" "$ao"
+          git -C "$ODDWORLD_DECOMP" checkout -q "$pin"
       - run: python3 -m unittest discover -s tools/tests
 
   browser:

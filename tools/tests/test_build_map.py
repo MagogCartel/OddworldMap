@@ -4,7 +4,8 @@ Stdlib only, and nothing here needs a disc image. The committed sidecars must
 reproduce from the committed caches, and the caches from a fresh parse of the
 alive_reversing checkout — the checkout-probing tests (the member-type parser
 pair and the cache freshness checks) skip where none is found, beside the repo or
-at $ODDWORLD_DECOMP (as in CI); a variable naming no checkout fails them instead.
+at $ODDWORLD_DECOMP, which CI points at a clone of the pin; a variable naming no
+checkout fails them instead.
 """
 
 import contextlib
