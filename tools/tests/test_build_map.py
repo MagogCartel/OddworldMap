@@ -492,9 +492,15 @@ class Sidecars(unittest.TestCase):
         self.assertReproduces(emit.write_enum_labels, "AE", "enum_labels_ae.json")
 
     def test_a_stale_field_type_override_fails_the_emit(self):
-        stale = {("AO", "Door", "no_such_field"): "Choice_short"}
+        stale = {("AO", "Door", "no_such_field"): (None, "Choice_short")}
         with mock.patch.dict(emit._FIELD_TYPE_OVERRIDES, stale), self.assertRaises(RuntimeError):
             self.emit(emit.write_field_types, "AO")
+
+    def test_a_spent_field_type_override_fails_the_emit(self):
+        for entry in (("DoorStates", "DoorStates"), (None, "Choice_short")):
+            spent = {("AO", "Door", "start_state"): entry}
+            with mock.patch.dict(emit._FIELD_TYPE_OVERRIDES, spent), self.assertRaisesRegex(RuntimeError, "spent"):
+                self.emit(emit.write_field_types, "AO")
 
 
 class SchemaCaches(unittest.TestCase):

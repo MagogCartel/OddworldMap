@@ -11,12 +11,14 @@ from oddmap.schema import load_enum_labels
 
 # decomp quirks corrected when emitting field_types (the schema cache stays
 # faithful to the source): a field whose declared type contradicts its meaning
-# gets the type it behaves as, keyed (game, object, field)
+# gets the type it behaves as, keyed (game, object, field) to (the type the
+# schema derives today, None for a bare word, and the type to emit), so an
+# upstream move spends the entry the way a layout correction's does
 _FIELD_TYPE_OVERRIDES = {
     # a boolean declared as a direction instead of choice
-    ("AE", "SligSpawner", "chase_abe_when_spotted"): "Choice_short",
+    ("AE", "SligSpawner", "chase_abe_when_spotted"): ("XDirection_short", "Choice_short"),
     # an enum the member-type parser can't reach: Path_Drill_Data sits outside the Tlvs include graph
-    ("AE", "Drill", "start_direction"): "DrillDirection",
+    ("AE", "Drill", "start_direction"): (None, "DrillDirection"),
 }
 
 def write_field_types(game_key, out):
@@ -32,11 +34,18 @@ def write_field_types(game_key, out):
         if name and typed:
             ft[name] = {k: typed[k] for k in sorted(typed)}
     names = {game["tlv_names"].get(tid): rows for tid, rows in game["schema"].items()}
-    for (gk, obj, fld), ty in _FIELD_TYPE_OVERRIDES.items():
-        if gk == game_key:
-            if all(r[1] != fld for r in names.get(obj) or []):
-                raise RuntimeError(f"stale field-type override: {gk} {obj}.{fld}")
-            ft.setdefault(obj, {})[fld] = ty
+    for (gk, obj, fld), (derived, ty) in _FIELD_TYPE_OVERRIDES.items():
+        if gk != game_key:
+            continue
+        row = next((r for r in names.get(obj) or [] if r[1] == fld), None)
+        if row is None:
+            raise RuntimeError(f"stale field-type override: {gk} {obj}.{fld}")
+        actual = row[2] if len(row) > 2 else None
+        if actual == ty:
+            raise RuntimeError(f"spent field-type override: the schema types {gk} {obj}.{fld} as {ty} itself")
+        if actual != derived:
+            raise RuntimeError(f"spent field-type override: {gk} {obj}.{fld} derives as {actual}, not {derived}")
+        ft.setdefault(obj, {})[fld] = ty
     dst = out / game["field_types_file"]
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text(json.dumps({k: ft[k] for k in sorted(ft)}, indent=1))
@@ -53,7 +62,7 @@ def write_enum_labels(game_key, out):
     game = game_setup(game_key)
     used = {r[2] for tid, rows in game["schema"].items() if game["tlv_names"].get(tid)
             for r in rows if len(r) > 2}
-    used |= {ty for (gk, _, _), ty in _FIELD_TYPE_OVERRIDES.items() if gk == game_key}
+    used |= {ty for (gk, _, _), (_, ty) in _FIELD_TYPE_OVERRIDES.items() if gk == game_key}
     labels, bad = load_enum_labels(game_key, game)
     broken = used & bad
     if broken:  # a used type must never ship silently unlabelled or mislabelled
