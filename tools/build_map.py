@@ -12,6 +12,8 @@ Supports both games:
   python3 build_map.py --game AE --disc "Exoddus (Disc 1).bin" "Exoddus (Disc 2).bin"
 
 --disc defaults to $ODDWORLD_DISC_AO (AO) / $ODDWORLD_DISC_AE (AE, os.pathsep-separated).
+A deleted tools/data cache is regenerated from the checkout $ODDWORLD_DECOMP names, else
+the alive_reversing checkout beside this repo.
 """
 import argparse
 import json

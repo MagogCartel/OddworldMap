@@ -17,7 +17,7 @@ def int_rows(body):
 
 def parse_pathdata_cpp_ao():
     src = subprocess.run(["git", "-C", str(REPO), "show", f"{AO_COMMIT}:Source/AliveLibAO/PathData.cpp"],
-                         capture_output=True, text=True, check=True).stdout
+                         stdout=subprocess.PIPE, text=True, check=True).stdout
 
     path_arrays = {}
     for m in re.finditer(r"PathData\s+(\w+)\[\]\s*=\s*\{(.*?)\n\};", src, re.S):

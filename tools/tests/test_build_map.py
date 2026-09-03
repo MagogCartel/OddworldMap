@@ -3,12 +3,14 @@
 Stdlib only, and nothing here needs a disc image. The committed sidecars must
 reproduce from the committed caches, and the caches from a fresh parse of the
 alive_reversing checkout — the checkout-probing tests (the member-type parser
-pair and the cache freshness checks) skip where it is absent (as it is in CI).
+pair and the cache freshness checks) skip where none is found, beside the repo or
+at $ODDWORLD_DECOMP (as in CI); a variable naming no checkout fails them instead.
 """
 
 import contextlib
 import io
 import json
+import os
 import struct
 import sys
 import tempfile
@@ -19,7 +21,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from oddmap import decomp, disc, emit, games, image, messages, schema, tlv  # noqa: E402
-from oddmap.paths import HERE, REPO, SITE  # noqa: E402
+from oddmap.paths import DECOMP_ENV, HERE, REPO, SITE  # noqa: E402
 
 # the CLI has no test of its own and lint cannot resolve a cross-module import,
 # so loading it here is what catches a name it asks the package for and misses
@@ -224,7 +226,8 @@ class MessageJson(unittest.TestCase):
 
 
 DECOMP = REPO
-needs_decomp = unittest.skipUnless(DECOMP.exists(), f"no alive_reversing checkout at {DECOMP}")
+needs_decomp = unittest.skipUnless(os.environ.get(DECOMP_ENV) or DECOMP.exists(),
+                                   f"no alive_reversing checkout at {DECOMP}: clone it there or set ${DECOMP_ENV}")
 
 
 class PathDiscovery(unittest.TestCase):
