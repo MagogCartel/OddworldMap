@@ -12,6 +12,7 @@ import io
 import json
 import os
 import struct
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -21,7 +22,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from oddmap import decomp, disc, emit, games, image, messages, schema, tlv  # noqa: E402
-from oddmap.paths import DECOMP_ENV, HERE, REPO, SITE  # noqa: E402
+from oddmap.paths import AO_COMMIT, DECOMP_COMMIT, DECOMP_ENV, HERE, REPO, SITE  # noqa: E402
 
 # the CLI has no test of its own and lint cannot resolve a cross-module import,
 # so loading it here is what catches a name it asks the package for and misses
@@ -230,6 +231,18 @@ needs_decomp = unittest.skipUnless(os.environ.get(DECOMP_ENV) or DECOMP.exists()
                                    f"no alive_reversing checkout at {DECOMP}: clone it there or set ${DECOMP_ENV}")
 
 
+def stale(cache):
+    """a cache differing from a fresh parse is usually the checkout having moved, not the cache"""
+    head = subprocess.run(["git", "-C", str(DECOMP), "rev-parse", "--short", "HEAD"],
+                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True).stdout.strip()
+    if head and DECOMP_COMMIT.startswith(head):
+        return (f"{cache} does not reproduce from the pinned checkout ({head}): regenerate it there, "
+                f"or move DECOMP_COMMIT to the revision it was parsed from")
+    return (f"{cache} does not reproduce from the checkout at {head or 'an unknown revision'}; the caches are pinned to "
+            f"{DECOMP_COMMIT[:9]}: check that out, or re-pin (move DECOMP_COMMIT, delete the cache, "
+            f"regenerate, re-emit the sidecars)")
+
+
 class PathDiscovery(unittest.TestCase):
     """the grid a path carries when the decomp tabulates none for it"""
 
@@ -418,7 +431,7 @@ class SchemaCaches(unittest.TestCase):
             self.assertEqual(
                 cache.read_text(),
                 json.dumps(schema.parse_object_schema(game_key), indent=1),
-                f"{cache.name} is stale against a fresh parse — delete it to regenerate",
+                stale(cache.name),
             )
 
 
@@ -430,7 +443,7 @@ class PathdataCache(unittest.TestCase):
             self.assertEqual(
                 (HERE / "data" / game["cache"]).read_text(),
                 json.dumps(game["parse_tables"](), indent=1),
-                f"{game['cache']} is stale against a fresh parse — delete it to regenerate",
+                stale(game["cache"]),
             )
 
 
@@ -457,8 +470,15 @@ class EnumCache(unittest.TestCase):
             self.assertEqual(
                 self.cache_file(game_key).read_text(),
                 json.dumps({"labels": labels, "bad": sorted(bad)}, indent=1),
-                f"{self.cache_file(game_key).name} is stale against a fresh sweep — delete it to regenerate",
+                stale(self.cache_file(game_key).name),
             )
+
+
+class PinnedRevision(unittest.TestCase):
+    def test_the_readme_names_both_pins(self):
+        readme = (HERE.parent / "README.md").read_text()
+        self.assertIn(DECOMP_COMMIT[:9], readme)
+        self.assertIn(AO_COMMIT[:9], readme)
 
 
 if __name__ == "__main__":
