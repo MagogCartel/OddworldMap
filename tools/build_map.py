@@ -13,7 +13,7 @@ Supports both games:
 
 --disc defaults to $ODDWORLD_DISC_AO (AO) / $ODDWORLD_DISC_AE (AE, os.pathsep-separated).
 A deleted tools/data cache is regenerated from the checkout $ODDWORLD_DECOMP names, else
-the alive_reversing checkout beside this repo.
+the alive_reversing checkout beside this repo, and only from one at the pinned revision.
 """
 import argparse
 import json

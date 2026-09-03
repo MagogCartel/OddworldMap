@@ -1,10 +1,12 @@
 """The decomp's own tables, parsed out of C++ source: per-level path metadata and
-the TLV type names. Cached under tools/data/ and re-parsed only when deleted."""
+the TLV type names. Cached under tools/data/ and re-parsed only when deleted, and
+only from a checkout sitting at the pin."""
 import json
 import re
 import subprocess
+from pathlib import Path
 
-from oddmap.paths import AO_COMMIT, HERE, REPO
+from oddmap.paths import AO_COMMIT, DECOMP_COMMIT, DECOMP_ENV, HERE, REPO
 from oddmap.tables import AE_LEVEL_DISPLAY, AE_LEVEL_ORDER
 
 def int_rows(body):
@@ -144,11 +146,58 @@ def parse_pathdata_cpp_ae():
             unique.append([lid, short, display])
     return {"levels": unique, "id_to_short": id_to_short, "tlv_names": tlv_names, "tables": tables}
 
-def load_cache(game):
-    cache = HERE / "data" / game["cache"]
+def pinned_checkout():
+    """the checkout a cache may be regenerated from: a git checkout at REPO, sitting
+    on DECOMP_COMMIT, holding AO_COMMIT, with nothing under Source/ that the pinned
+    tree does not have: no tracked edit, none hidden behind skip-worktree or a sparse
+    checkout, no untracked file, and no ignored header, since the header sweep globs
+    the tree rather than asking git what it tracks"""
+    def git(*args):
+        return subprocess.run(["git", "-C", str(REPO), *args],
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    top = git("rev-parse", "--show-toplevel")
+    if top.returncode or not Path(top.stdout.strip()).samefile(REPO):
+        raise RuntimeError(f"no git checkout of alive_reversing at {REPO}: clone it there or point ${DECOMP_ENV} at one")
+    head = git("rev-parse", "HEAD")
+    if head.returncode:
+        raise RuntimeError(f"the checkout at {REPO} has no commit checked out")
+    head = head.stdout.strip()
+    if head != DECOMP_COMMIT:
+        raise RuntimeError(f"the checkout at {REPO} is at {head[:9]} but the caches are pinned to {DECOMP_COMMIT[:9]}: "
+                           "check that out, or re-pin (move DECOMP_COMMIT, delete the caches, regenerate, re-emit the sidecars)")
+    if git("cat-file", "-e", f"{AO_COMMIT}^{{commit}}").returncode:
+        raise RuntimeError(f"the checkout at {REPO} lacks {AO_COMMIT[:9]}, the commit AO's path tables are read from: "
+                           "fetch it (git fetch --unshallow, or that commit by SHA)")
+    thin = [line for line in git("ls-files", "-v", "--", "Source").stdout.splitlines() if not line.startswith("H")]
+    if thin:
+        raise RuntimeError(f"the checkout at {REPO} does not hold Source/ in full (skip-worktree, sparse, "
+                           f"assume-unchanged or unmerged entries), and a cache must reproduce from the pinned tree alone:\n"
+                           + "\n".join(thin))
+    entries = git("status", "--porcelain", "-z", "--untracked-files=all", "--ignored", "--", "Source").stdout.split("\0")
+    dirty, i = [], 0
+    while i < len(entries):
+        entry, i = entries[i], i + 1
+        if not entry:
+            continue
+        code, path = entry[:2], entry[3:]
+        if code[0] in "RC":  # the rename's source follows as an entry of its own
+            i += 1
+        if code != "!!" or path.endswith(".hpp"):
+            dirty.append(entry)
+    if dirty:
+        raise RuntimeError(f"the checkout at {REPO} has local changes under Source/, and a cache must reproduce "
+                           f"from the pinned tree alone:\n" + "\n".join(dirty))
+    return REPO
+
+def cached(cache, parse):
+    """a tools/data cache: read as committed, else parsed from the pinned checkout and written"""
     if cache.exists():
         return json.loads(cache.read_text())
-    out = game["parse_tables"]()
+    pinned_checkout()
+    out = parse()
     cache.parent.mkdir(exist_ok=True)
     cache.write_text(json.dumps(out, indent=1))
     return out
+
+def load_cache(game):
+    return cached(HERE / "data" / game["cache"], game["parse_tables"])

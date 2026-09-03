@@ -4,9 +4,9 @@ the override tables carrying what the source gets wrong or cannot express.
 The caches under tools/data/ are re-parsed only when deleted, so builds and the
 sidecar emit run from the committed tree alone; only regenerating a cache needs
 the checkout."""
-import json
 import re
 
+from oddmap.decomp import cached
 from oddmap.paths import HERE, REPO
 
 _SKIP_TYPES = {"s8", "s16", "s32", "s64", "u8", "u16", "u32", "u64", "int", "short", "char",
@@ -266,13 +266,7 @@ def parse_object_schema(game_key):
     return schema
 
 def load_object_schema(game_key, game):
-    cache = HERE / "data" / game["schema_cache"]
-    if cache.exists():
-        raw = json.loads(cache.read_text())
-    else:
-        raw = parse_object_schema(game_key)
-        cache.parent.mkdir(exist_ok=True)
-        cache.write_text(json.dumps(raw, indent=1))
+    raw = cached(HERE / "data" / game["schema_cache"], lambda: parse_object_schema(game_key))
     schema = {int(k): v for k, v in raw.items()}
     for (gk, tid), layout in _SCHEMA_LAYOUT_OVERRIDES.items():
         if gk != game_key:
@@ -292,13 +286,9 @@ def load_object_schema(game_key, game):
     return schema
 
 def load_enum_labels(game_key, game):
-    cache = HERE / "data" / game["enum_cache"]
-    if cache.exists():
-        raw = json.loads(cache.read_text())
-    else:
+    def sweep():
         labels, bad = parse_enum_labels(game_key)
-        raw = {"labels": labels, "bad": sorted(bad)}
-        cache.parent.mkdir(exist_ok=True)
-        cache.write_text(json.dumps(raw, indent=1))
+        return {"labels": labels, "bad": sorted(bad)}
+    raw = cached(HERE / "data" / game["enum_cache"], sweep)
     return ({t: {int(v): lb for v, lb in vals.items()} for t, vals in raw["labels"].items()},
             set(raw["bad"]))
