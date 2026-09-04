@@ -125,6 +125,7 @@ def parse_pathdata_cpp_ae():
                 "w_units": pd[2], "h_units": pd[3],
                 "obj_off": pd[8], "idx_off": pd[9],
                 "coll_off": cd[4], "coll_count": cd[5],
+                "abe_x": pd[10], "abe_y": pd[11],
             }
         if paths:
             tables[short] = paths
@@ -136,6 +137,10 @@ def parse_pathdata_cpp_ae():
     for nm in re.finditer(r"(\w+?)_(\d+)\s*=\s*(\d+)", em.group(1)):
         tlv_names[int(nm.group(3))] = nm.group(1)
 
+    # per-level mudokon totals: each ArrayOf99 row broadcasts one constant per level id
+    mm = re.search(r"ArrayOf99 sMudsInLevelCount\w*\[\d*\]\s*=\s*\{(.*?)\};", src, re.S)
+    muds = [int(t) for t in re.findall(r"ArrayOf99\((\d+)\)", mm.group(1))]
+
     order = {lid: i for i, lid in enumerate(AE_LEVEL_ORDER)}
     levels.sort(key=lambda l: order.get(l[0], 99))
     # ender level ids reuse their base level's archive; keep one entry per archive
@@ -144,7 +149,8 @@ def parse_pathdata_cpp_ae():
         if short not in seen:
             seen.add(short)
             unique.append([lid, short, display])
-    return {"levels": unique, "id_to_short": id_to_short, "tlv_names": tlv_names, "tables": tables}
+    return {"levels": unique, "id_to_short": id_to_short, "tlv_names": tlv_names,
+            "tables": tables, "muds_in_level": muds}
 
 def pinned_checkout():
     """the checkout a cache may be regenerated from: a git checkout at REPO, sitting

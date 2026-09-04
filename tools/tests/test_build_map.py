@@ -569,6 +569,16 @@ class PathdataCache(unittest.TestCase):
                 stale(game["cache"]),
             )
 
+    def test_the_ae_cache_carries_abe_start_and_the_mud_table(self):
+        raw = json.loads((HERE / "data" / games.GAMES["AE"]["cache"]).read_text())
+        self.assertEqual(len(raw["muds_in_level"]), 15)
+        for v in raw["muds_in_level"]:
+            self.assertIsInstance(v, int)
+        for short, paths in raw["tables"].items():
+            for pid, row in paths.items():
+                self.assertIsInstance(row.get("abe_x"), int, f"{short} P{pid}")
+                self.assertIsInstance(row.get("abe_y"), int, f"{short} P{pid}")
+
 
 class EnumCache(unittest.TestCase):
     def cache_file(self, game_key):
