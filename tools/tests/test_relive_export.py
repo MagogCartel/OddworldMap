@@ -264,5 +264,104 @@ class ExportSweep(unittest.TestCase):
             self.assertEqual(fallbacks, self.FALLBACKS[game_key], game_key)
 
 
+class ReliveDiff(unittest.TestCase):
+    """the structural diff over mutated copies of a real export: what must read
+    clean, what lands in the tolerated classes, what is a real divergence"""
+
+    @classmethod
+    def setUpClass(cls):
+        sys.path.insert(0, str(HERE))
+        import relive_diff
+        cls.diff = staticmethod(relive_diff.diff_documents)
+        cls.doc, _ = export("AO", "R1", 15)
+
+    def copy(self):
+        return json.loads(json.dumps(self.doc))
+
+    def test_identical_documents_are_clean(self):
+        result = self.diff(self.doc, self.copy())
+        self.assertEqual(result, {"diffs": [], "links": [], "known": [], "warnings": []})
+
+    def test_a_changed_property_names_the_object_and_key(self):
+        other = self.copy()
+        cam = next(c for c in other["map"]["cameras"] if c["map_objects"])
+        cam["map_objects"][0]["properties"]["xpos"] += 1
+        result = self.diff(self.doc, other)
+        self.assertEqual(len(result["diffs"]), 1)
+        self.assertIn(".xpos:", result["diffs"][0])
+
+    def test_a_missing_camera_is_named_by_grid_cell(self):
+        other = self.copy()
+        gone = other["map"]["cameras"].pop()
+        result = self.diff(self.doc, other)
+        self.assertTrue(any(f"({gone['x']}, {gone['y']})" in d for d in result["diffs"]))
+
+    def test_link_fields_divert_until_strict_promotes_them(self):
+        other = self.copy()
+        other["map"]["collisions"]["items"][0]["Next"] = 42
+        lax = self.diff(self.doc, other)
+        self.assertEqual((len(lax["diffs"]), len(lax["links"])), (0, 1))
+        strict = self.diff(self.doc, other, strict_links=True)
+        self.assertEqual((len(strict["diffs"]), len(strict["links"])), (1, 0))
+
+    def test_the_references_mud_indexing_is_held_known_divergent(self):
+        ae, _ = export("AE", "MI", 2)
+        other = json.loads(json.dumps(ae))
+        other["map"]["num_muds_in_path"] = muds_in_level()[2]
+        result = self.diff(ae, other)
+        self.assertEqual(result["diffs"], [])
+        self.assertEqual(len(result["known"]), 1)
+        strict_ao = self.copy()
+        strict_ao["map"]["num_muds_in_path"] = 5
+        self.assertEqual(len(self.diff(self.doc, strict_ao)["diffs"]), 1)
+
+    def test_a_fallback_value_is_held_known_divergent(self):
+        other = self.copy()
+        zone = next(o for c in other["map"]["cameras"] for o in c["map_objects"]
+                    if o["object_structures_type"] == "ShadowZone")
+        zone["properties"]["R"] = 4096
+        result = self.diff(self.doc, other)
+        self.assertEqual(result["diffs"], [])
+        self.assertEqual(len(result["known"]), 1)
+
+    def test_reference_side_orderings_stay_clean(self):
+        other = self.copy()
+        for enum in other["schema"]["object_structure_property_enums"]:
+            enum["values"].reverse()
+        other["schema"]["object_structures"].reverse()
+        other["map"]["cameras"][0]["image"] = "bm90IGEgcG5n"
+        result = self.diff(self.doc, other)
+        self.assertEqual(result["diffs"], [])
+
+    def test_reordered_objects_are_a_warning_not_a_diff(self):
+        other = self.copy()
+        cam = next(c for c in other["map"]["cameras"] if len(c["map_objects"]) > 1)
+        cam["map_objects"].reverse()
+        result = self.diff(self.doc, other)
+        self.assertEqual(result["diffs"], [])
+        self.assertTrue(any("different order" in w for w in result["warnings"]))
+
+    def test_a_reorder_still_counts_the_known_divergences(self):
+        other = self.copy()
+        cam = next(c for c in other["map"]["cameras"]
+                   if len(c["map_objects"]) > 1
+                   and any(o["object_structures_type"] == "ShadowZone" for o in c["map_objects"]))
+        zone = next(o for o in cam["map_objects"] if o["object_structures_type"] == "ShadowZone")
+        zone["properties"]["R"] = 4096
+        cam["map_objects"].reverse()
+        result = self.diff(self.doc, other)
+        self.assertEqual(result["diffs"], [])
+        self.assertTrue(any("different order" in w for w in result["warnings"]))
+        self.assertEqual(len(result["known"]), 1)
+
+    def test_a_renamed_instance_is_a_warning(self):
+        other = self.copy()
+        cam = next(c for c in other["map"]["cameras"] if c["map_objects"])
+        cam["map_objects"][0]["name"] = "Renamed_9"
+        result = self.diff(self.doc, other)
+        self.assertEqual(result["diffs"], [])
+        self.assertEqual(len(result["warnings"]), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
