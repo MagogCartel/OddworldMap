@@ -6,7 +6,10 @@ runs from the committed tree.
 """
 
 import json
+import shutil
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -14,8 +17,9 @@ from unittest import mock
 sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parent)]
 
 from oddmap import games, relive, schema  # noqa: E402
-from oddmap.paths import HERE, SITE  # noqa: E402
+from oddmap.paths import DECOMP_COMMIT, HERE, SITE  # noqa: E402
 from decomp_checkout import needs_decomp, stale  # noqa: E402
+import relive_verify  # noqa: E402
 
 def relive_cache(game_key):
     return json.loads((HERE / "data" / games.GAMES[game_key]["relive_cache"]).read_text())
@@ -361,6 +365,80 @@ class ReliveDiff(unittest.TestCase):
         result = self.diff(self.doc, other)
         self.assertEqual(result["diffs"], [])
         self.assertEqual(len(result["warnings"]), 1)
+
+
+class Harness(unittest.TestCase):
+    """ensure_harness's refusals and its build-dir stamp, with git and cmake stood in for"""
+
+    def harness(self, status="", stamp=None, prebuilt=False, build_ok=True, pin_error=None, home=None, build=None):
+        build = build or self.build_dir()
+        if prebuilt:
+            home = home or relive_verify.HERE / "relive_check"
+            (build / "CMakeCache.txt").write_text(f"CMAKE_HOME_DIRECTORY:INTERNAL={home}\n")
+        if stamp:
+            (build / "decomp_head").write_text(stamp + "\n")
+        calls = []
+
+        def run(args, **kwargs):
+            calls.append(args)
+            if args[0] == "git":
+                return subprocess.CompletedProcess(args, 0, stdout=status, stderr="")
+            build.mkdir(exist_ok=True)
+            return subprocess.CompletedProcess(args, 0 if build_ok else 1, stdout="", stderr="")
+
+        pin = mock.Mock(side_effect=pin_error) if pin_error else mock.Mock(return_value=Path("/pin"))
+        with mock.patch.object(relive_verify, "pinned_checkout", pin), \
+             mock.patch.object(relive_verify, "BUILD", build), \
+             mock.patch.object(relive_verify.shutil, "which", return_value="/usr/bin/cmake"), \
+             mock.patch.object(relive_verify.subprocess, "run", side_effect=run):
+            binary = relive_verify.ensure_harness()
+        return binary, build, calls
+
+    def build_dir(self):
+        build = Path(tempfile.mkdtemp(prefix="rc-"))
+        self.addCleanup(shutil.rmtree, build, ignore_errors=True)
+        return build
+
+    OK = " 1111111 3rdParty/googletest (v1)\n 2222222 3rdParty/json (v3)\n 3333333 3rdParty/jsonxx (v1)\n" \
+         " 4444444 3rdParty/lodepng (x)\n 5555555 3rdParty/magic_enum (v0)\n"
+
+    def test_a_refused_checkout_names_the_harness_first(self):
+        with self.assertRaises(SystemExit) as cm:
+            self.harness(pin_error=RuntimeError("the checkout at /pin is at 0000000 but the caches are pinned"))
+        self.assertRegex(str(cm.exception), r"^the harness builds against the pinned checkout: the checkout at /pin")
+
+    def test_submodules_off_their_commit_are_named(self):
+        off = self.OK.replace(" 3333333", "-3333333").replace(" 5555555", "+5555555")
+        with self.assertRaises(SystemExit) as cm:
+            self.harness(status=off)
+        self.assertIn("3rdParty/jsonxx, 3rdParty/magic_enum", str(cm.exception))
+
+    def test_the_build_is_configured_against_the_pinned_checkout_and_stamped(self):
+        binary, build, calls = self.harness(status=self.OK)
+        self.assertEqual(binary, build / "relive_check")
+        self.assertIn("-DALIVE_DIR=/pin", calls[1])
+        self.assertEqual((build / "decomp_head").read_text().strip(), DECOMP_COMMIT)
+
+    def test_a_build_dir_stamped_with_another_revision_is_wiped_first(self):
+        _, build, _ = self.harness(status=self.OK, stamp="f" * 40, prebuilt=True)
+        self.assertFalse((build / "CMakeCache.txt").exists())
+        self.assertEqual((build / "decomp_head").read_text().strip(), DECOMP_COMMIT)
+
+    def test_a_build_dir_configured_from_another_checkout_is_wiped_first(self):
+        _, build, _ = self.harness(status=self.OK, stamp=DECOMP_COMMIT, prebuilt=True,
+                                   home="/elsewhere/OddworldMap/tools/relive_check")
+        self.assertFalse((build / "CMakeCache.txt").exists())
+
+    def test_an_unstamped_or_matching_build_dir_is_kept(self):
+        for stamp in (None, DECOMP_COMMIT):
+            _, build, _ = self.harness(status=self.OK, stamp=stamp, prebuilt=True)
+            self.assertTrue((build / "CMakeCache.txt").exists())
+
+    def test_a_failed_build_leaves_no_stamp(self):
+        build = self.build_dir()
+        with self.assertRaises(SystemExit):
+            self.harness(status=self.OK, build_ok=False, build=build)
+        self.assertFalse((build / "decomp_head").exists())
 
 
 if __name__ == "__main__":
