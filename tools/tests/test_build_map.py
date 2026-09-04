@@ -21,10 +21,11 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parent)]
 
-from oddmap import decomp, disc, emit, games, image, messages, schema, tlv  # noqa: E402
-from oddmap.paths import AO_COMMIT, DECOMP_COMMIT, DECOMP_ENV, HERE, REPO, SITE  # noqa: E402
+from oddmap import decomp, disc, emit, games, image, messages, relive, schema, tlv  # noqa: E402
+from oddmap.paths import AO_COMMIT, DECOMP_COMMIT, HERE, SITE  # noqa: E402
+from decomp_checkout import needs_decomp, stale  # noqa: E402
 
 # the CLI has no test of its own and lint cannot resolve a cross-module import,
 # so loading it here is what catches a name it asks the package for and misses
@@ -228,23 +229,6 @@ class MessageJson(unittest.TestCase):
         self.assertEqual(json.loads(text)["lcd"], ["hold \x0a then \x09"])
 
 
-DECOMP = REPO
-needs_decomp = unittest.skipUnless(os.environ.get(DECOMP_ENV) or DECOMP.exists(),
-                                   f"no alive_reversing checkout at {DECOMP}: clone it there or set ${DECOMP_ENV}")
-
-
-def stale(cache):
-    """a cache differing from a fresh parse is usually the checkout having moved, not the cache"""
-    head = subprocess.run(["git", "-C", str(DECOMP), "rev-parse", "--short", "HEAD"],
-                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True).stdout.strip()
-    if head and DECOMP_COMMIT.startswith(head):
-        return (f"{cache} does not reproduce from the pinned checkout ({head}): regenerate it there, "
-                f"or move DECOMP_COMMIT to the revision it was parsed from")
-    return (f"{cache} does not reproduce from the checkout at {head or 'an unknown revision'}; the caches are pinned to "
-            f"{DECOMP_COMMIT[:9]}: check that out, or re-pin (move DECOMP_COMMIT, delete the cache, "
-            f"regenerate, re-emit the sidecars)")
-
-
 class PinnedCheckout(unittest.TestCase):
     """a cache regenerates from the pinned tree or not at all"""
 
@@ -336,10 +320,12 @@ class PinnedCheckout(unittest.TestCase):
         self.addCleanup(shutil.rmtree, data)
         (data / "data").mkdir()
         parsed = mock.Mock(side_effect=AssertionError("parsed past the guard"))
-        game = {"cache": "p.json", "schema_cache": "o.json", "enum_cache": "e.json", "parse_tables": parsed}
+        game = {"cache": "p.json", "schema_cache": "o.json", "enum_cache": "e.json", "relive_cache": "r.json",
+                "parse_tables": parsed}
         loaders = [(decomp, None, lambda: decomp.load_cache(game)),
                    (schema, "parse_object_schema", lambda: schema.load_object_schema("AO", game)),
-                   (schema, "parse_enum_labels", lambda: schema.load_enum_labels("AO", game))]
+                   (schema, "parse_enum_labels", lambda: schema.load_enum_labels("AO", game)),
+                   (relive, "parse_relive_schema", lambda: relive.load_relive_schema("AO", game))]
         for module, parser, load in loaders:
             with contextlib.ExitStack() as patched:
                 patched.enter_context(mock.patch.object(module, "HERE", data))

@@ -61,6 +61,12 @@ _SCHEMA_LAYOUT_CORRECTIONS = {
     ),
 }
 
+def norm(label):
+    """a display string down to the archive's key: parens and apostrophes out,
+    everything non-alphanumeric to one underscore, lowercased"""
+    label = re.sub(r"\([^)]*\)", "", label).replace("'", "")
+    return re.sub(r"[^A-Za-z0-9]+", "_", label).strip("_").lower()
+
 def _derive_label(enumerator):
     """a readable label from an enumerator name: drop the value suffix and the
     decomp's `e` prefix, split CamelCase (eChaseAndDisappear_4 -> Chase And Disappear)"""
@@ -235,10 +241,6 @@ def parse_object_schema(game_key):
     base = 0x18 if game_key == "AO" else 0x10
     ctor = f"CTOR_{game_key}"
     member_types = parse_member_types(game_key)
-
-    def norm(label):
-        label = re.sub(r"\([^)]*\)", "", label).replace("'", "")
-        return re.sub(r"[^A-Za-z0-9]+", "_", label).strip("_").lower()
 
     schema = {}
     for m in re.finditer(rf"{ctor}\([^)]*\)\s*\{{(.*?)\n    \}}", src, re.S):

@@ -1,0 +1,5056 @@
+{
+ "structures": {
+  "90": {
+   "name": "MenuController",
+   "properties": []
+  },
+  "113": {
+   "name": "KillUnsavedMuds",
+   "properties": []
+  },
+  "104": {
+   "name": "SwitchStateBooleanLogic",
+   "properties": [
+    {
+     "name": "Input Switch ID 1",
+     "key": "input_switch_id_1",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Input Switch ID 2",
+     "key": "input_switch_id_2",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Output Switch ID",
+     "key": "output_switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Operator",
+     "key": "operator",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_BooleanOperatorType",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "84": {
+   "name": "DoorFlame",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_DoorFlame_Scale",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Colour",
+     "key": "colour",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_DoorFlame_Colour",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "115": {
+   "name": "ResetPath",
+   "properties": [
+    {
+     "name": "clear_ids",
+     "key": "clear_ids",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "from",
+     "key": "from",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "to",
+     "key": "to",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "exclude",
+     "key": "exclude",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "clear_objects",
+     "key": "clear_objects",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "path",
+     "key": "path",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "101": {
+   "name": "CreditsController",
+   "properties": []
+  },
+  "112": {
+   "name": "BackgroundGlukkon",
+   "properties": [
+    {
+     "name": "Scale Percent",
+     "key": "scale_percent",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "pal_id",
+     "key": "pal_id",
+     "word": 1,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "target_id",
+     "key": "target_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "voice_adjust",
+     "key": "voice_adjust",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "110": {
+   "name": "GasEmitter",
+   "properties": []
+  },
+  "108": {
+   "name": "GasCountDown",
+   "properties": [
+    {
+     "name": "Start Switch ID",
+     "key": "start_switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "51": {
+   "name": "MovieStone",
+   "properties": [
+    {
+     "name": "FMV ID",
+     "key": "fmv_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "54": {
+   "name": "BellSongStone",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Type",
+     "key": "type",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_BellsongTypes",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "100": {
+   "name": "HandStone",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Camera 1 Level",
+     "key": "camera_1_level",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Camera 1 Path",
+     "key": "camera_1_path",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera 1 Camera",
+     "key": "camera_1_camera",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera 2 Level",
+     "key": "camera_2_level",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Camera 2 Path",
+     "key": "camera_2_path",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera 2 Camera",
+     "key": "camera_2_camera",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera 3 Level",
+     "key": "camera_3_level",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Camera 3 Path",
+     "key": "camera_3_path",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera 3 Camera",
+     "key": "camera_3_camera",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "6": {
+   "name": "Door",
+   "properties": [
+    {
+     "name": "Level",
+     "key": "level",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Path",
+     "key": "path",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera",
+     "key": "camera",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Door Number",
+     "key": "door_number",
+     "word": 4,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Target Door Number",
+     "key": "target_door_number",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_DoorStates",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Door Closed",
+     "key": "door_closed",
+     "word": 8,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Hub 1 ID",
+     "key": "hub_1_id",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 2 ID",
+     "key": "hub_2_id",
+     "word": 10,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 3 ID",
+     "key": "hub_3_id",
+     "word": 11,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 4 ID",
+     "key": "hub_4_id",
+     "word": 12,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 5 ID",
+     "key": "hub_5_id",
+     "word": 13,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 6 ID",
+     "key": "hub_6_id",
+     "word": 14,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 7 ID",
+     "key": "hub_7_id",
+     "word": 15,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hub 8 ID",
+     "key": "hub_8_id",
+     "word": 16,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Wipe Effect",
+     "key": "wipe_effect",
+     "word": 17,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Movie Number",
+     "key": "movie_number",
+     "word": 18,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "X Offset",
+     "key": "x_offset",
+     "word": 19,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Y Offset",
+     "key": "y_offset",
+     "word": 20,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Wipe X Org (Unused?)",
+     "key": "wipe_x_org",
+     "word": 21,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Wipe Y Org (Unused?)",
+     "key": "wipe_y_org",
+     "word": 22,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Abe Direction On Exit",
+     "key": "abe_direction_on_exit",
+     "word": 23,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "0": {
+   "name": "ContinuePoint",
+   "properties": [
+    {
+     "name": "Zone Number",
+     "key": "zone_number",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Clear From Id",
+     "key": "clear_from_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Clear To Id",
+     "key": "clear_to_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Elum Restarts",
+     "key": "elum_restarts",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Abe Spawn Direction",
+     "key": "abe_spawn_direction",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_ContinuePointSpawnDirection",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "3": {
+   "name": "Hoist",
+   "properties": [
+    {
+     "name": "Hoist Type",
+     "key": "hoist_type",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_HoistType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Grab Direction",
+     "key": "grab_direction",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_HoistGrabDirection",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID (Unused?)",
+     "key": "switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "1": {
+   "name": "PathTransition",
+   "properties": [
+    {
+     "name": "Level",
+     "key": "level",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Path",
+     "key": "path",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera",
+     "key": "camera",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Movie",
+     "key": "movie",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Wipe",
+     "key": "wipe",
+     "word": 4,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Next Path Scale",
+     "key": "next_path_scale",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "26": {
+   "name": "Lever",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Action",
+     "key": "action",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_SwitchOp",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "On Sound",
+     "key": "on_sound",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_LeverSoundType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Off Sound",
+     "key": "off_sound",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_LeverSoundType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Sound Direction",
+     "key": "sound_direction",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_LeverSoundDirection",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "106": {
+   "name": "LightEffect",
+   "properties": [
+    {
+     "name": "Type",
+     "key": "type",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_LightType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Size",
+     "key": "size",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Direction",
+     "key": "direction",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "67": {
+   "name": "ElectricWall",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_ElectricWallStartState",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "2": {
+   "name": "ContinueZone",
+   "properties": [
+    {
+     "name": "Zone Number",
+     "key": "zone_number",
+     "word": 0,
+     "size": 4,
+     "type": "SInt32",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "28": {
+   "name": "StartController",
+   "properties": []
+  },
+  "4": {
+   "name": "Edge",
+   "properties": [
+    {
+     "name": "Grab Direction",
+     "key": "grab_direction",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_EdgeGrabDirection",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Can Grab",
+     "key": "can_grab",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "11": {
+   "name": "WellLocal",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Other Well ID",
+     "key": "other_well_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "Animation ID",
+     "key": "animation_id",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Exit X",
+     "key": "exit_x",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Exit Y",
+     "key": "exit_y",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled XPos",
+     "key": "disabled_xpos",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled YPos",
+     "key": "disabled_ypos",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Enabled XPos",
+     "key": "enabled_xpos",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Enabled YPos",
+     "key": "enabled_ypos",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Emit Leaves",
+     "key": "emit_leaves",
+     "word": 10,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Leaf X",
+     "key": "leaf_x",
+     "word": 11,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Leaf Y",
+     "key": "leaf_y",
+     "word": 12,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "45": {
+   "name": "WellExpress",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Other Well ID",
+     "key": "other_well_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Animation ID",
+     "key": "animation_id",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Exit X",
+     "key": "exit_x",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Exit Y",
+     "key": "exit_y",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Off Level",
+     "key": "off_level",
+     "word": 6,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Off Path",
+     "key": "off_path",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Off Camera",
+     "key": "off_camera",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Off Other Well ID",
+     "key": "off_other_well_id",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "On Level",
+     "key": "on_level",
+     "word": 10,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "On Path",
+     "key": "on_path",
+     "word": 11,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "On Camera",
+     "key": "on_camera",
+     "word": 12,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "On Other Well ID",
+     "key": "on_other_well_id",
+     "word": 13,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Emit Leaves",
+     "key": "emit_leaves",
+     "word": 14,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Leaf X",
+     "key": "leaf_x",
+     "word": 15,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Leaf Y",
+     "key": "leaf_y",
+     "word": 16,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Movie ID",
+     "key": "movie_id",
+     "word": 17,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "58": {
+   "name": "InvisibleZone",
+   "properties": []
+  },
+  "79": {
+   "name": "EnemyStopper",
+   "properties": [
+    {
+     "name": "Stop Direction",
+     "key": "stop_direction",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_StopDirection",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "24": {
+   "name": "Slig",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_SligStartState",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Pause Time",
+     "key": "pause_time",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Left Min",
+     "key": "pause_left_min",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Left Max",
+     "key": "pause_left_max",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Right Min",
+     "key": "pause_right_min",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Right Max",
+     "key": "pause_right_max",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Shoot Possessed Sligs",
+     "key": "shoot_possessed_sligs",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_ShootPossessedSligs",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Shoot On Sight Delay",
+     "key": "shoot_on_sight_delay",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Bullet Shoot Count",
+     "key": "bullet_shoot_count",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "unknown",
+     "key": "unknown",
+     "word": 10,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 11,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 12,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Chase Abe When Spotted",
+     "key": "chase_abe_when_spotted",
+     "word": 13,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 14,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Panic Timeout",
+     "key": "panic_timeout",
+     "word": 15,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Amount Of Panic Sounds (Unused?)",
+     "key": "amount_of_panic_sounds",
+     "word": 16,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Panic Sound Timeout (Unused?)",
+     "key": "panic_sound_timeout",
+     "word": 17,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Stop Chase Delay",
+     "key": "stop_chase_delay",
+     "word": 18,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Time To Wait Before Chase",
+     "key": "time_to_wait_before_chase",
+     "word": 19,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Slig Bound/Persist ID",
+     "key": "slig_bound_persist_id",
+     "word": 20,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Alerted Listen Time",
+     "key": "alerted_listen_time",
+     "word": 21,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Percent Say What",
+     "key": "percent_say_what",
+     "word": 22,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Percent Beat Mudokon",
+     "key": "percent_beat_mudokon",
+     "word": 23,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Talk To Abe (Unused?)",
+     "key": "talk_to_abe",
+     "word": 24,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "Don't Shoot (Unused?)",
+     "key": "dont_shoot",
+     "word": 25,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Z Shoot Delay",
+     "key": "z_shoot_delay",
+     "word": 26,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Stay Awake",
+     "key": "stay_awake",
+     "word": 27,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 28,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Noise Wake Up Distance (Grids)",
+     "key": "noise_wake_up_distance",
+     "word": 29,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Slig Spawner Switch ID",
+     "key": "slig_spawner_switch_id",
+     "word": 30,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "5": {
+   "name": "DeathDrop",
+   "properties": [
+    {
+     "name": "animation",
+     "key": "animation",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "sound",
+     "key": "sound",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "id",
+     "key": "id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "action",
+     "key": "action",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "set_value",
+     "key": "set_value",
+     "word": 4,
+     "size": 4,
+     "type": "SInt32",
+     "enum": false,
+     "visible": false
+    }
+   ]
+  },
+  "57": {
+   "name": "SligLeftBound",
+   "properties": [
+    {
+     "name": "Slig ID",
+     "key": "slig_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 1,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "76": {
+   "name": "SligRightBound",
+   "properties": [
+    {
+     "name": "Slig ID",
+     "key": "slig_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 1,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "77": {
+   "name": "SligPersist",
+   "properties": [
+    {
+     "name": "Slig ID",
+     "key": "slig_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 1,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "29": {
+   "name": "SecurityOrb",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "15": {
+   "name": "FallingItem",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Fall Interval",
+     "key": "fall_interval",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Max Falling Items",
+     "key": "max_falling_items",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Reset Switch ID After Use",
+     "key": "reset_switch_id_after_use",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "46": {
+   "name": "Mine",
+   "properties": [
+    {
+     "name": "Num Patterns (Unused?)",
+     "key": "num_patterns",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "Pattern (Unused?)",
+     "key": "pattern",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Persist Offscreen",
+     "key": "persist_offscreen",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "12": {
+   "name": "Dove",
+   "properties": [
+    {
+     "name": "Dove Count",
+     "key": "dove_count",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pixel Perfect",
+     "key": "pixel_perfect",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "47": {
+   "name": "UXB",
+   "properties": [
+    {
+     "name": "Pattern Length (Max 4)",
+     "key": "pattern_length",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pattern",
+     "key": "pattern",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 3,
+     "size": 2,
+     "type": "UXBStartState",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 4,
+     "size": 4,
+     "type": "SInt32",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "92": {
+   "name": "HintFly",
+   "properties": [
+    {
+     "name": "Message ID",
+     "key": "message_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "49": {
+   "name": "Bat",
+   "properties": [
+    {
+     "name": "Ticks Before Moving",
+     "key": "ticks_before_moving",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Attack Duration",
+     "key": "attack_duration",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "7": {
+   "name": "ShadowZone",
+   "properties": [
+    {
+     "name": "Centre W",
+     "key": "centre_w",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Centre H",
+     "key": "centre_h",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "R",
+     "key": "r",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true,
+     "id_str": "RGB_R_Half_FP"
+    },
+    {
+     "name": "G",
+     "key": "g",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true,
+     "id_str": "RGB_G_Half_FP"
+    },
+    {
+     "name": "B",
+     "key": "b",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true,
+     "id_str": "RGB_B_Half_FP"
+    },
+    {
+     "name": "ID (Unused?)",
+     "key": "id",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 6,
+     "size": 2,
+     "type": "Enum_ShadowZoneScale",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "27": {
+   "name": "BellHammer",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Action",
+     "key": "action",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_SwitchOp",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Direction",
+     "key": "direction",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "94": {
+   "name": "TimerTrigger",
+   "properties": [
+    {
+     "name": "Source Switch ID",
+     "key": "source_switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Trigger Interval",
+     "key": "trigger_interval",
+     "word": 1,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "ID 1",
+     "key": "id_1",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "ID 2",
+     "key": "id_2",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "ID 3",
+     "key": "id_3",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "ID 4",
+     "key": "id_4",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "18": {
+   "name": "PullRingRope",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Action",
+     "key": "action",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_SwitchOp",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Rope Length",
+     "key": "rope_length",
+     "word": 2,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "On Sound",
+     "key": "on_sound",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_PullRingSwitchSound",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Off Sound",
+     "key": "off_sound",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_PullRingSwitchSound",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Sound Direction",
+     "key": "sound_direction",
+     "word": 6,
+     "size": 2,
+     "type": "Enum_PullRingSoundDirection",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "105": {
+   "name": "MusicTrigger",
+   "properties": [
+    {
+     "name": "Music Type",
+     "key": "music_type",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_MusicTriggeredMusicType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Triggered By",
+     "key": "triggered_by",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_MusicTriggeredBy",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Music Delay",
+     "key": "music_delay",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "99": {
+   "name": "ElumPathTrans",
+   "properties": [
+    {
+     "name": "Level",
+     "key": "level",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Path",
+     "key": "path",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera",
+     "key": "camera",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "70": {
+   "name": "Elum",
+   "properties": []
+  },
+  "38": {
+   "name": "ElumStart",
+   "properties": []
+  },
+  "40": {
+   "name": "ElumWall",
+   "properties": []
+  },
+  "8": {
+   "name": "LiftPoint",
+   "properties": [
+    {
+     "name": "Lift Point ID",
+     "key": "lift_point_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start Point",
+     "key": "start_point",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Lift Type (Unused?)",
+     "key": "lift_type",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Lift Point Stop Type",
+     "key": "lift_point_stop_type",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_LiftPointStopType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Ignore Lift Mover",
+     "key": "ignore_lift_mover",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "86": {
+   "name": "MovingBomb",
+   "properties": [
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Triggered By Alarm",
+     "key": "triggered_by_alarm",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Max Rise",
+     "key": "max_rise",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start Speed",
+     "key": "start_speed",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Persist Offscreen",
+     "key": "persist_offscreen",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "87": {
+   "name": "MovingBombStopper",
+   "properties": [
+    {
+     "name": "Min Delay",
+     "key": "min_delay",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Max Delay",
+     "key": "max_delay",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "50": {
+   "name": "RingMudokon",
+   "properties": [
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Abe Must Face Mudokon",
+     "key": "abe_must_face_mudokon",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_RingMudokon_MustFaceMud",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Give Password",
+     "key": "give_password",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Action",
+     "key": "action",
+     "word": 6,
+     "size": 2,
+     "type": "Enum_SwitchOp",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Ring And Angry Mudokon Timeout",
+     "key": "ring_and_angry_mudokon_timeout",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Give Ring Without Password",
+     "key": "give_ring_without_password",
+     "word": 8,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "109": {
+   "name": "RingCancel",
+   "properties": []
+  },
+  "88": {
+   "name": "MeatSaw",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch Min Time Off",
+     "key": "switch_min_time_off",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Switch Max Time Off",
+     "key": "switch_max_time_off",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Max Rise Time",
+     "key": "max_rise_time",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Type",
+     "key": "type",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_MeatSawType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_MeatSawStartState",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Off Speed",
+     "key": "off_speed",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Automatic Min Time Off",
+     "key": "automatic_min_time_off",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Automatic Max Time Off",
+     "key": "automatic_max_time_off",
+     "word": 10,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Initial Position",
+     "key": "initial_position",
+     "word": 11,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "98": {
+   "name": "LCDScreen",
+   "properties": [
+    {
+     "name": "Message 1 ID",
+     "key": "message_1_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Random Message Min ID",
+     "key": "random_message_min_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Random Message Max ID",
+     "key": "random_message_max_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "81": {
+   "name": "InvisibleSwitch",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Action",
+     "key": "action",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_SwitchOp",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Delay",
+     "key": "delay",
+     "word": 2,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Set Off Alarm",
+     "key": "set_off_alarm",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_InvisibleSwitchScale",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "55": {
+   "name": "TrapDoor",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_TrapDoorStartState",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Self Closing",
+     "key": "self_closing",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Dest Level (Unused?)",
+     "key": "dest_level",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Direction",
+     "key": "direction",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "X Offset",
+     "key": "x_offset",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "52": {
+   "name": "BirdPortal",
+   "properties": [
+    {
+     "name": "Enter Side",
+     "key": "enter_side",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_PortalSide",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Level Destination",
+     "key": "level_destination",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Path Destination",
+     "key": "path_destination",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera Destination",
+     "key": "camera_destination",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Movie ID",
+     "key": "movie_id",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Portal Type",
+     "key": "portal_type",
+     "word": 6,
+     "size": 2,
+     "type": "Enum_PortalType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Mudokon Amount For Shrykull",
+     "key": "mudokon_amount_for_shrykull",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "97": {
+   "name": "BoomMachine",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Nozzle Side",
+     "key": "nozzle_side",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_BoomMachineNozzleSide",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Number Of Grenades",
+     "key": "number_of_grenades",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "82": {
+   "name": "Mudokon",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Job",
+     "key": "job",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_MudJobs",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Voice Pitch",
+     "key": "voice_pitch",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Rescue Switch ID",
+     "key": "rescue_switch_id",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Deaf",
+     "key": "deaf",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Persist Offscreen",
+     "key": "persist_offscreen",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "53": {
+   "name": "BirdPortalExit",
+   "properties": [
+    {
+     "name": "Exit Direction",
+     "key": "exit_direction",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_PortalSide",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "25": {
+   "name": "Slog",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Asleep",
+     "key": "asleep",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Wake Up Anger",
+     "key": "wake_up_anger",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Bark Anger",
+     "key": "bark_anger",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Chase Anger",
+     "key": "chase_anger",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Chase Delay",
+     "key": "chase_delay",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Anger Switch ID",
+     "key": "anger_switch_id",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "69": {
+   "name": "ChimeLock",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Solve Switch ID",
+     "key": "solve_switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Password Switch ID",
+     "key": "password_switch_id",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "73": {
+   "name": "FlintLockFire",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "68": {
+   "name": "LiftMover",
+   "properties": [
+    {
+     "name": "Lift Mover Switch ID",
+     "key": "lift_mover_switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Target Lift Point ID",
+     "key": "target_lift_point_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Move Direction",
+     "key": "move_direction",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_LiftMoverYDirection",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "72": {
+   "name": "Scrab",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Attack Delay",
+     "key": "attack_delay",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Patrol Type",
+     "key": "patrol_type",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_ScrabPatrolType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Left Min Delay",
+     "key": "left_min_delay",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Left Max Delay",
+     "key": "left_max_delay",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Right Min Delay",
+     "key": "right_min_delay",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Right Max Delay",
+     "key": "right_max_delay",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Spotting Abe Delay",
+     "key": "spotting_abe_delay",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disable Resources",
+     "key": "disable_resources",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Roar Randomly",
+     "key": "roar_randomly",
+     "word": 9,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "107": {
+   "name": "SlogSpawner",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Max Slogs",
+     "key": "max_slogs",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Max Slogs At A Time",
+     "key": "max_slogs_at_a_time",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_SlogSpawnerStartDirection",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Slog Spawn Interval",
+     "key": "slog_spawn_interval",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Spawner Switch ID",
+     "key": "spawner_switch_id",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "13": {
+   "name": "RockSack",
+   "properties": [
+    {
+     "name": "Rock Fall Direction",
+     "key": "rock_fall_direction",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "X Velocity",
+     "key": "x_velocity",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Y Velocity",
+     "key": "y_velocity",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Rock Amount",
+     "key": "rock_amount",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "111": {
+   "name": "ZzzSpawner",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Zzz Delay",
+     "key": "zzz_delay",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "61": {
+   "name": "SecurityClaw",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Alarm Switch ID",
+     "key": "alarm_switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Alarm Duration",
+     "key": "alarm_duration",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "95": {
+   "name": "SecurityDoor",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "X Position",
+     "key": "x_position",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Y Position",
+     "key": "y_position",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "22": {
+   "name": "TimedMine",
+   "properties": [
+    {
+     "name": "Switch ID(Unused?)",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "State",
+     "key": "state",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Ticks Before Explosion",
+     "key": "ticks_before_explosion",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "66": {
+   "name": "SligSpawner",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start State",
+     "key": "start_state",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_SligStartState",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Pause Time",
+     "key": "pause_time",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Left Min",
+     "key": "pause_left_min",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Left Max",
+     "key": "pause_left_max",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Right Min",
+     "key": "pause_right_min",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Pause Right Max",
+     "key": "pause_right_max",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Shoot Possessed Sligs",
+     "key": "shoot_possessed_sligs",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_ShootPossessedSligs",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Shoot On Sight Delay",
+     "key": "shoot_on_sight_delay",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Bullet Shoot Count",
+     "key": "bullet_shoot_count",
+     "word": 9,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "unknown",
+     "key": "unknown",
+     "word": 10,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 11,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 12,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Chase Abe When Spotted",
+     "key": "chase_abe_when_spotted",
+     "word": 13,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 14,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Panic Timeout",
+     "key": "panic_timeout",
+     "word": 15,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Amount Of Panic Sounds (Unused?)",
+     "key": "amount_of_panic_sounds",
+     "word": 16,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Panic Sound Timeout (Unused?)",
+     "key": "panic_sound_timeout",
+     "word": 17,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Stop Chase Delay",
+     "key": "stop_chase_delay",
+     "word": 18,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Time To Wait Before Chase",
+     "key": "time_to_wait_before_chase",
+     "word": 19,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Slig Bound/Persist ID",
+     "key": "slig_bound_persist_id",
+     "word": 20,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Alerted Listen Time",
+     "key": "alerted_listen_time",
+     "word": 21,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Percent Say What",
+     "key": "percent_say_what",
+     "word": 22,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Percent Beat Mudokon",
+     "key": "percent_beat_mudokon",
+     "word": 23,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Talk To Abe (Unused?)",
+     "key": "talk_to_abe",
+     "word": 24,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": false
+    },
+    {
+     "name": "Don't Shoot (Unused?)",
+     "key": "dont_shoot",
+     "word": 25,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Z Shoot Delay",
+     "key": "z_shoot_delay",
+     "word": 26,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Stay Awake",
+     "key": "stay_awake",
+     "word": 27,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 28,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Noise Wake Up Distance (Grids)",
+     "key": "noise_wake_up_distance",
+     "word": 29,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Slig Spawner Switch ID",
+     "key": "slig_spawner_switch_id",
+     "word": 30,
+     "size": 4,
+     "type": "SInt32",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "62": {
+   "name": "MotionDetector",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Device X",
+     "key": "device_x",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Device Y",
+     "key": "device_y",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Initial Move Direction",
+     "key": "initial_move_direction",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_MotionDetectorInitialMoveDirection",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Draw Flare",
+     "key": "draw_flare",
+     "word": 5,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Disable Switch ID",
+     "key": "disable_switch_id",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Alarm Switch ID",
+     "key": "alarm_switch_id",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Alarm Duration",
+     "key": "alarm_duration",
+     "word": 8,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "19": {
+   "name": "BackgroundAnimation",
+   "properties": [
+    {
+     "name": "Animation ID",
+     "key": "animation_id",
+     "word": 0,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Is Semi Trans",
+     "key": "is_semi_trans",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Semi Trans Mode",
+     "key": "semi_trans_mode",
+     "word": 2,
+     "size": 1,
+     "type": "Enum_TPageAbr",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Sound Effect",
+     "key": "sound_effect",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_BgAnimSounds",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "103": {
+   "name": "LCDStatusBoard",
+   "properties": []
+  },
+  "102": {
+   "name": "Preloader",
+   "properties": [
+    {
+     "name": "Unload Cams ASAP",
+     "key": "unload_cams_asap",
+     "word": 0,
+     "size": 4,
+     "type": "SInt32",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "35": {
+   "name": "Pulley",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 4,
+     "type": "Enum_Scale_int",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "114": {
+   "name": "SoftLanding",
+   "properties": []
+  },
+  "89": {
+   "name": "MudokonPathTrans",
+   "properties": [
+    {
+     "name": "Level",
+     "key": "level",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_LevelIds",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Path",
+     "key": "path",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Camera",
+     "key": "camera",
+     "word": 2,
+     "size": 4,
+     "type": "SInt32",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "37": {
+   "name": "AbeStart",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 4,
+     "type": "Enum_Scale_int",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "83": {
+   "name": "ZSligCover",
+   "properties": []
+  },
+  "74": {
+   "name": "ScrabLeftBound",
+   "properties": []
+  },
+  "75": {
+   "name": "ScrabRightBound",
+   "properties": []
+  },
+  "93": {
+   "name": "ScrabNoFall",
+   "properties": []
+  },
+  "32": {
+   "name": "LiftMudokon",
+   "properties": [
+    {
+     "name": "How Far To Walk",
+     "key": "how_far_to_walk",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Lift Switch ID",
+     "key": "lift_switch_id",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start Direction",
+     "key": "start_direction",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_LiftMudokonDirection",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Give Password",
+     "key": "give_password",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 4,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "36": {
+   "name": "HoneySack",
+   "properties": [
+    {
+     "name": "Chase Time",
+     "key": "chase_time",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "41": {
+   "name": "SlingMudokon",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Don't Whistle Password",
+     "key": "dont_whistle_password",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Code 1",
+     "key": "code_1",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Code 2",
+     "key": "code_2",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "34": {
+   "name": "BeeSwarmHole",
+   "properties": [
+    {
+     "name": "what_to_spawn",
+     "key": "what_to_spawn",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Start Interval",
+     "key": "start_interval",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Fall Switch ID",
+     "key": "fall_switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Movement Type",
+     "key": "movement_type",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_BeeSwarmHoleMovementType",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Bees Amount",
+     "key": "bees_amount",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Chase Time",
+     "key": "chase_time",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale (Unused?)",
+     "key": "scale",
+     "word": 7,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "71": {
+   "name": "MeatSack",
+   "properties": [
+    {
+     "name": "Meat Fall Direction",
+     "key": "meat_fall_direction",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "X Velocity",
+     "key": "x_velocity",
+     "word": 1,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Y Velocity",
+     "key": "y_velocity",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Amount Of Meat",
+     "key": "amount_of_meat",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "56": {
+   "name": "RollingBall",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Roll Direction",
+     "key": "roll_direction",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Release Switch ID",
+     "key": "release_switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 3,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Acceleration",
+     "key": "acceleration",
+     "word": 4,
+     "size": 2,
+     "type": "UInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "59": {
+   "name": "RollingBallStopper",
+   "properties": [
+    {
+     "name": "Stopper Switch ID",
+     "key": "stopper_switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Ball Switch ID",
+     "key": "ball_switch_id",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Direction",
+     "key": "direction",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_XDirection_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "43": {
+   "name": "Bees",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Swarm Size",
+     "key": "swarm_size",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Chase Time",
+     "key": "chase_time",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disable Resources",
+     "key": "disable_resources",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Amount Of Bees",
+     "key": "amount_of_bees",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    }
+   ]
+  },
+  "14": {
+   "name": "ZBall",
+   "properties": [
+    {
+     "name": "Start Position",
+     "key": "start_position",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_ZBallStartPos",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Speed",
+     "key": "speed",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_ZBallSpeed",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "60": {
+   "name": "FootSwitch",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Action",
+     "key": "action",
+     "word": 2,
+     "size": 2,
+     "type": "Enum_SwitchOp",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Triggered By",
+     "key": "triggered_by",
+     "word": 3,
+     "size": 2,
+     "type": "Enum_FootSwitchTriggeredBy",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "48": {
+   "name": "Paramite",
+   "properties": [
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 0,
+     "size": 2,
+     "type": "Enum_Scale_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Enter From Web",
+     "key": "enter_from_web",
+     "word": 1,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Alone - Chase Delay",
+     "key": "alone_chase_delay",
+     "word": 2,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Surprise Web Delay",
+     "key": "surprise_web_delay",
+     "word": 3,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Meat Eating Time",
+     "key": "meat_eating_time",
+     "word": 4,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Group - Chase Delay",
+     "key": "group_chase_delay",
+     "word": 5,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Disabled Resources",
+     "key": "disabled_resources",
+     "word": 6,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Surprise Web Switch ID",
+     "key": "surprise_web_switch_id",
+     "word": 7,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Hiss Before Attack",
+     "key": "hiss_before_attack",
+     "word": 8,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    },
+    {
+     "name": "Delete When Far Away",
+     "key": "delete_when_far_away",
+     "word": 9,
+     "size": 2,
+     "type": "Enum_Choice_short",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "20": {
+   "name": "Honey",
+   "properties": [
+    {
+     "name": "Switch ID",
+     "key": "switch_id",
+     "word": 0,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "State",
+     "key": "state",
+     "word": 1,
+     "size": 2,
+     "type": "SInt16",
+     "enum": false,
+     "visible": true
+    },
+    {
+     "name": "Scale",
+     "key": "scale",
+     "word": 2,
+     "size": 4,
+     "type": "Enum_Scale_int",
+     "enum": true,
+     "visible": true
+    }
+   ]
+  },
+  "42": {
+   "name": "HoneyDripTarget",
+   "properties": []
+  }
+ },
+ "structure_order": [
+  "MenuController",
+  "KillUnsavedMuds",
+  "DoorFlame",
+  "ResetPath",
+  "CreditsController",
+  "BackgroundGlukkon",
+  "GasEmitter",
+  "GasCountDown",
+  "Hoist",
+  "ContinuePoint",
+  "Door",
+  "PathTransition",
+  "Lever",
+  "LightEffect",
+  "ElectricWall",
+  "ContinueZone",
+  "StartController",
+  "Edge",
+  "WellLocal",
+  "WellExpress",
+  "InvisibleZone",
+  "EnemyStopper",
+  "Slig",
+  "DeathDrop",
+  "SligLeftBound",
+  "SligRightBound",
+  "SligPersist",
+  "SecurityOrb",
+  "FallingItem",
+  "Mine",
+  "Dove",
+  "UXB",
+  "HintFly",
+  "Bat",
+  "ShadowZone",
+  "BellHammer",
+  "TimerTrigger",
+  "PullRingRope",
+  "MusicTrigger",
+  "Elum",
+  "ElumPathTrans",
+  "ElumStart",
+  "ElumWall",
+  "LiftPoint",
+  "MovingBomb",
+  "MovingBombStopper",
+  "RingMudokon",
+  "RingCancel",
+  "MeatSaw",
+  "LCDScreen",
+  "InvisibleSwitch",
+  "TrapDoor",
+  "BirdPortal",
+  "BoomMachine",
+  "Mudokon",
+  "BirdPortalExit",
+  "Slog",
+  "ChimeLock",
+  "FlintLockFire",
+  "LiftMover",
+  "Scrab",
+  "SlogSpawner",
+  "RockSack",
+  "ZzzSpawner",
+  "SecurityClaw",
+  "SecurityDoor",
+  "TimedMine",
+  "SligSpawner",
+  "MotionDetector",
+  "BackgroundAnimation",
+  "LCDStatusBoard",
+  "Preloader",
+  "Pulley",
+  "SoftLanding",
+  "MudokonPathTrans",
+  "AbeStart",
+  "ZSligCover",
+  "ScrabLeftBound",
+  "ScrabRightBound",
+  "ScrabNoFall",
+  "LiftMudokon",
+  "HoneySack",
+  "SlingMudokon",
+  "BeeSwarmHole",
+  "MeatSack",
+  "RollingBall",
+  "RollingBallStopper",
+  "Bees",
+  "ZBall",
+  "FootSwitch",
+  "Paramite",
+  "Honey",
+  "HoneyDripTarget",
+  "HandStone",
+  "BellSongStone",
+  "MovieStone",
+  "SwitchStateBooleanLogic"
+ ],
+ "enums": {
+  "Enum_LineTypes": {
+   "0": "Floor",
+   "1": "Wall Left",
+   "2": "Wall Right",
+   "3": "Ceiling",
+   "4": "Background Floor",
+   "5": "Background Wall Left",
+   "6": "Background Wall Right",
+   "7": "Background Ceiling",
+   "8": "Track Line",
+   "9": "Art",
+   "10": "Bullet Wall",
+   "32": "eUnknown_32",
+   "36": "eUnknown_36"
+  },
+  "Enum_ShootPossessedSligs": {
+   "0": "No",
+   "1": "Yes",
+   "2": "Yes (ignore)"
+  },
+  "Enum_SligStartState": {
+   "0": "Listening",
+   "1": "Patrol",
+   "2": "Sleeping",
+   "3": "Chase",
+   "4": "Chase And Disappear",
+   "5": "Falling To Chase"
+  },
+  "Enum_SwitchOp": {
+   "0": "SetTrue",
+   "1": "SetFalse",
+   "2": "Toggle",
+   "3": "Increment",
+   "4": "Decrement"
+  },
+  "Enum_LevelIds": {
+   "-1": "None",
+   "0": "Menu",
+   "1": "RuptureFarms",
+   "2": "Lines",
+   "3": "Forest",
+   "4": "ForestTemple",
+   "5": "StockYards",
+   "6": "StockYardsReturn",
+   "7": "Removed7",
+   "8": "Desert",
+   "9": "DesertTemple",
+   "10": "Credits",
+   "11": "Removed11",
+   "12": "BoardRoom",
+   "13": "RuptureFarmsReturn",
+   "14": "ForestChase",
+   "15": "DesertEscape"
+  },
+  "Enum_Choice_short": {
+   "0": "No",
+   "1": "Yes"
+  },
+  "Enum_Scale_int": {
+   "0": "Full",
+   "1": "Half"
+  },
+  "Enum_Scale_short": {
+   "0": "Full",
+   "1": "Half"
+  },
+  "Enum_XDirection_short": {
+   "0": "Left",
+   "1": "Right"
+  },
+  "Enum_BooleanOperatorType": {
+   "0": "All On",
+   "1": "1 On And 2 Off",
+   "2": "1 Or 2 On",
+   "3": "1 On Or 2 Off"
+  },
+  "Enum_DoorFlame_Scale": {
+   "0": "Full",
+   "1": "Half",
+   "2": "Half (ignore)"
+  },
+  "Enum_DoorFlame_Colour": {
+   "0": "Unknown",
+   "1": "Red",
+   "2": "Green",
+   "3": "Blue"
+  },
+  "Enum_BellsongTypes": {
+   "0": "Whistle",
+   "1": "Chimes"
+  },
+  "Enum_DoorStates": {
+   "0": "Open",
+   "1": "Closed",
+   "2": "Hub Door Closed",
+   "3": "Closing (Internal Only)"
+  },
+  "Enum_ContinuePointSpawnDirection": {
+   "0": "Right",
+   "1": "Left"
+  },
+  "Enum_HoistType": {
+   "1": "Next Edge",
+   "0": "Next Floor",
+   "2": "Off Screen"
+  },
+  "Enum_HoistGrabDirection": {
+   "2": "Facing Any Direction",
+   "0": "Facing Left",
+   "1": "Facing Right"
+  },
+  "Enum_LeverSoundType": {
+   "0": "None",
+   "1": "Well",
+   "2": "Switch Bell Hammer",
+   "3": "Door",
+   "4": "Electric Wall",
+   "5": "Security Orb"
+  },
+  "Enum_LeverSoundDirection": {
+   "0": "Left And Right",
+   "1": "Left",
+   "2": "Right"
+  },
+  "Enum_LightType": {
+   "0": "Star",
+   "1": "Gold Glow",
+   "2": "Green Glow",
+   "3": "Flint Glow",
+   "4": "RedGreen Door Light",
+   "5": "RedGreen Hub Light"
+  },
+  "Enum_ElectricWallStartState": {
+   "0": "Off",
+   "1": "On"
+  },
+  "Enum_EdgeGrabDirection": {
+   "0": "Facing Left",
+   "1": "Facing Right",
+   "2": "Facing Any Direction"
+  },
+  "Enum_StopDirection": {
+   "0": "Left",
+   "1": "Right",
+   "2": "Both"
+  },
+  "UXBStartState": {
+   "0": "On",
+   "1": "Off"
+  },
+  "Enum_ShadowZoneScale": {
+   "0": "both",
+   "1": "half",
+   "2": "full"
+  },
+  "Enum_PullRingSwitchSound": {
+   "0": "None",
+   "1": "WellExit",
+   "2": "RingBellHammer",
+   "3": "DoorEffect"
+  },
+  "Enum_PullRingSoundDirection": {
+   "0": "Both",
+   "1": "Left",
+   "2": "Right"
+  },
+  "Enum_MusicTriggeredBy": {
+   "0": "Timer",
+   "1": "Touching",
+   "2": "Switch ID",
+   "3": "Unknown"
+  },
+  "Enum_MusicTriggeredMusicType": {
+   "0": "Drum Ambience",
+   "1": "Death Drum Short",
+   "2": "Secret Area Long",
+   "3": "Soft Chase",
+   "4": "Intense Chase",
+   "5": "Chime",
+   "6": "Secret Area Short"
+  },
+  "Enum_LiftPointStopType": {
+   "0": "Top Floor",
+   "1": "Bottom Floor",
+   "2": "Middle Floor",
+   "3": "Middle Lock Floor",
+   "4": "Start Point Only"
+  },
+  "Enum_RingMudokon_MustFaceMud": {
+   "0": "Yes",
+   "1": "No"
+  },
+  "Enum_MeatSawType": {
+   "0": "Automatic Persist Offscreen",
+   "1": "Automatic",
+   "2": "Switch ID"
+  },
+  "Enum_MeatSawStartState": {
+   "0": "Off",
+   "1": "On"
+  },
+  "Enum_InvisibleSwitchScale": {
+   "0": "Half",
+   "1": "Full",
+   "2": "Any"
+  },
+  "Enum_TrapDoorStartState": {
+   "0": "Open",
+   "1": "Closed"
+  },
+  "Enum_PortalSide": {
+   "0": "Right",
+   "1": "Left"
+  },
+  "Enum_PortalType": {
+   "0": "Abe",
+   "1": "Worker",
+   "2": "Shrykull",
+   "3": "Mudokon Teleport"
+  },
+  "Enum_BoomMachineNozzleSide": {
+   "0": "Right",
+   "1": "Left"
+  },
+  "Enum_MudJobs": {
+   "0": "Stand Scrub",
+   "1": "Sit Scrub",
+   "2": "Sit Chant"
+  },
+  "Enum_LiftMoverYDirection": {
+   "0": "Down",
+   "1": "Up"
+  },
+  "Enum_ScrabPatrolType": {
+   "0": "Walk",
+   "1": "Run Or Walk RNG 192",
+   "2": "Run OR Walk RNG 128",
+   "3": "Run Or Walk RNG 64",
+   "4": "Run"
+  },
+  "Enum_SlogSpawnerStartDirection": {
+   "0": "Right",
+   "1": "Left"
+  },
+  "Enum_MotionDetectorInitialMoveDirection": {
+   "0": "right",
+   "1": "left"
+  },
+  "Enum_TPageAbr": {
+   "1": "blend_1",
+   "2": "blend_2",
+   "3": "blend_3",
+   "0": "blend_0"
+  },
+  "Enum_BgAnimSounds": {
+   "-1": "None -1",
+   "0": "None 0",
+   "1": "Fire",
+   "40": "Fire (ignore)"
+  },
+  "Enum_LiftMudokonDirection": {
+   "0": "Right",
+   "1": "Left"
+  },
+  "Enum_BeeSwarmHoleMovementType": {
+   "0": "Hover",
+   "1": "Attack",
+   "2": "Follow Path"
+  },
+  "Enum_ZBallStartPos": {
+   "0": "Center",
+   "1": "Out",
+   "2": "In"
+  },
+  "Enum_ZBallSpeed": {
+   "0": "Normal",
+   "1": "Fast",
+   "2": "Slow"
+  },
+  "Enum_FootSwitchTriggeredBy": {
+   "0": "Abe",
+   "1": "Anyone"
+  }
+ },
+ "collision_structure": [
+  {
+   "name": "x1",
+   "type": "SInt16"
+  },
+  {
+   "name": "y1",
+   "type": "SInt16"
+  },
+  {
+   "name": "x2",
+   "type": "SInt16"
+  },
+  {
+   "name": "y2",
+   "type": "SInt16"
+  },
+  {
+   "name": "Type",
+   "type": "Enum_LineTypes"
+  },
+  {
+   "name": "Next",
+   "type": "SInt32"
+  },
+  {
+   "name": "Previous",
+   "type": "SInt32"
+  }
+ ]
+}
