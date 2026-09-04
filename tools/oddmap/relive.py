@@ -330,3 +330,165 @@ def parse_relive_schema(game_key):
 
 def load_relive_schema(game_key, game):
     return cached(HERE / "data" / game["relive_cache"], lambda: parse_relive_schema(game_key))
+
+# relive registers its basic types from numeric_limits narrowed to s32, spelling
+# quirks and all (TypesCollectionBase.cpp), so the blob is a constant
+_BASIC_TYPES_JSON = [
+    {"min_value": 0, "max_value": 255, "name": "Byte"},
+    {"min_value": 0, "max_value": 65535, "name": "UInt16"},
+    {"min_value": -32768, "max_value": 32767, "name": "SInt16"},
+    {"min_value": 0, "max_value": -1, "name": "Uint32"},
+    {"min_value": -2147483648, "max_value": 2147483647, "name": "SInt32"},
+]
+
+_BASE_PROPS = [{"Type": "SInt16", "Visible": True, "name": n}
+               for n in ("xpos", "ypos", "width", "height")]
+
+# words relive reads that the archive never captured, and what to write there:
+# a diff against a reference export holds them known-divergent, and a rebuild
+# that archives the word spends its entry loudly — bar the one dropped by design
+_EXPORT_VALUE_FALLBACKS = {
+    ("AE", "MovieHandstone", "Trigger Switch ID"): 0,
+    ("AE", "SecurityClaw", "Unknown"): 0,
+    ("AO", "ShadowZone", "R"): 0,
+    ("AO", "ShadowZone", "G"): 0,
+    ("AO", "ShadowZone", "B"): 0,
+    ("AE", "ShadowZone", "R"): 0,
+    ("AE", "ShadowZone", "G"): 0,
+    ("AE", "ShadowZone", "B"): 0,
+}
+
+def schema_blob(rel):
+    """the per-game `schema` root key the editor reads: identical for every path"""
+    by_name = {s["name"]: s for s in rel["structures"].values()}
+    structures = []
+    for literal in rel["structure_order"]:
+        descs = list(_BASE_PROPS)
+        for p in by_name[literal]["properties"]:
+            d = {"Type": p["type"], "Visible": p["visible"], "name": p["name"]}
+            if "id_str" in p:
+                d["Identity_string"] = p["id_str"]
+            descs.append(d)
+        structures.append({"name": literal, "enum_and_basic_type_properties": descs})
+    return {"object_structure_property_basic_types": _BASIC_TYPES_JSON,
+            "object_structure_property_enums": [{"name": n, "values": list(t.values())}
+                                                for n, t in rel["enums"].items()],
+            "object_structures": structures}
+
+def camera_id(name):
+    """the digit formula relive derives an id from an 8-char camera name with,
+    char arithmetic and all (JsonWriterBase)"""
+    return (1000 * (ord(name[3]) - 48) + 100 * (ord(name[4]) - 48)
+            + 10 * (ord(name[6]) - 48) + (ord(name[7]) - 48))
+
+def bucket_cells(path, geometry):
+    """authored grid cell -> the path's TLVs in list order (the tlvCell rule)"""
+    cells = {}
+    for t in path["tlvs"]:
+        cell = (t["y1"] // geometry["worldH"]) * path["w"] + (t["x1"] // geometry["worldW"])
+        if not 0 <= cell < path["w"] * path["h"]:
+            raise RuntimeError(f"{t['name']} at {t['x1']},{t['y1']} lands outside the grid")
+        cells.setdefault(cell, []).append(t)
+    return cells
+
+def widen_value(lo, hi, ty, size):
+    """a stored s16 word (with its neighbour for the 4-byte widths) as the
+    property's own width; a missing high word sign-extends"""
+    if size == 4:
+        if hi is None:
+            hi = -1 if lo < 0 else 0
+        v = (lo & 0xFFFF) | ((hi & 0xFFFF) << 16)
+        return v - (1 << 32) if ty != "Uint32" and v >= (1 << 31) else v
+    if size == 1:
+        return lo & 0xFF
+    return lo & 0xFFFF if ty == "UInt16" else lo
+
+def _property_value(game_key, literal, prop, words, rel, manifest):
+    lo = words.get(prop["word"])
+    fallback = _EXPORT_VALUE_FALLBACKS.get((game_key, literal, prop["name"]))
+    if lo is None:
+        if fallback is None:
+            manifest["missing"].add((literal, prop["name"]))
+            return None
+        manifest["fallbacks"].add((literal, prop["name"]))
+        v = fallback
+    else:
+        if fallback is not None:
+            raise RuntimeError(f"spent export fallback: {literal}.{prop['name']} is archived now")
+        v = widen_value(lo, words.get(prop["word"] + 1) if prop["size"] == 4 else None,
+                        prop["type"], prop["size"])
+    if not prop["enum"]:
+        return v
+    labels = rel["enums"][prop["type"]]
+    label = labels.get(str(v))
+    if label is None and prop["size"] == 2:
+        label = labels.get(str(v & 0xFFFF))
+    if label is None:
+        raise RuntimeError(f"{literal}.{prop['name']}: value {v} has no {prop['type']} label")
+    return label
+
+def _map_object(game_key, game, rel, t, counters, manifest):
+    s = rel["structures"][str(t["t"])]
+    counters[s["name"]] = counters.get(s["name"], 0) + 1
+    w, h = t["x2"] - t["x1"], t["y2"] - t["y1"]
+    if w < 0 or h < 0:  # relive aborts an export on a negative size
+        raise RuntimeError(f"{s['name']} at {t['x1']},{t['y1']}: negative size {w}x{h}")
+    props = {"xpos": t["x1"], "ypos": t["y1"], "width": w, "height": h}
+    fields = t.get("fields", {})
+    words = {word: fields[name] for word, name, *_ in game["schema"].get(t["t"], [])
+             if name in fields}
+    for prop in s["properties"]:
+        v = _property_value(game_key, s["name"], prop, words, rel, manifest)
+        if v is not None:
+            props[prop["name"]] = v
+    return {"name": f"{s['name']}_{counters[s['name']]}",
+            "object_structures_type": s["name"], "properties": props}
+
+def export_path(game_key, game, rel, level, path, muds_in_level):
+    """one path as a relive_api v4 document, plus the manifest of what the
+    archive could not supply — a written file missing a property would abort
+    relive's importer, so the caller decides whether an incomplete one ships"""
+    geometry = game["geometry"]
+    manifest = {"missing": set(), "fallbacks": set()}
+    counters = {}
+    cams_by_cell = {c["cell"]: c["name"] for c in path["cams"]}
+    buckets = bucket_cells(path, geometry)
+    cameras = []
+    for cell in sorted(set(cams_by_cell) | set(buckets)):
+        name = cams_by_cell.get(cell, "")
+        cameras.append({"name": name, "x": cell % path["w"], "y": cell // path["w"],
+                        "id": camera_id(name) if name else 0,
+                        "map_objects": [_map_object(game_key, game, rel, t, counters, manifest)
+                                        for t in buckets.get(cell, [])]})
+    link_names = [r["name"] for r in rel["collision_structure"][5:]]
+    items = []
+    for x1, y1, x2, y2, ltype in path["lines"]:
+        label = rel["enums"]["Enum_LineTypes"].get(str(ltype))
+        if label is None:
+            raise RuntimeError(f"collision type {ltype} has no Enum_LineTypes label")
+        item = {"x1": x1, "y1": y1, "x2": x2, "y2": y2, "Type": label}
+        for n in link_names:  # the links live only in the path chunk; -1 is the editor's default
+            item[n] = -1
+        items.append(item)
+    if game_key == "AO":
+        abe_x = abe_y = 0
+        muds = (0, 99, 75, 50)
+    else:
+        row = game["tables"][level["short"]][path["id"]]
+        abe_x, abe_y = row["abe_x"], row["abe_y"]
+        in_path = muds_in_level[level["id"]] if level["id"] < len(muds_in_level) else 0
+        muds = (in_path, 300, 20, 255)
+    doc = {"api_version": 4, "game": game_key,
+           "map": {"path_bnd": f"{level['short']}PATH.BND", "path_id": path["id"],
+                   "x_size": path["w"], "y_size": path["h"],
+                   "x_grid_size": geometry["worldW"], "y_grid_size": geometry["worldH"],
+                   "abe_start_xpos": abe_x, "abe_start_ypos": abe_y,
+                   "num_muds_in_path": muds[0], "total_muds": muds[1],
+                   "num_muds_for_bad_ending": muds[2], "num_muds_for_good_ending": muds[3],
+                   "lcdscreen_messages": [], "hintfly_messages": [],
+                   "collisions": {"structure": [{"Type": r["type"], "Visible": True, "name": r["name"]}
+                                                for r in rel["collision_structure"]],
+                                  "items": items},
+                   "cameras": cameras},
+           "schema": schema_blob(rel)}
+    return doc, manifest
