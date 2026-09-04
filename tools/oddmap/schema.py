@@ -249,7 +249,7 @@ def parse_object_schema(game_key):
         data_struct = head.group(1)
         fields = []
         last = -1
-        for am in re.finditer(r'\bADD(?:_HIDDEN)?\(\s*"([^"]+)",\s*mTlv\.([^\n;]+?)\s*\)', m.group(1)):
+        for am in re.finditer(r'\bADD(?:_HIDDEN|_LINKED)?\(\s*"([^"]+)",\s*mTlv\.([^,\n;]+?)\s*[,)]', m.group(1)):
             off = re.match(r"field_([0-9A-Fa-f]+)_", am.group(2))
             if off:
                 word = (int(off.group(1), 16) - base) // 2

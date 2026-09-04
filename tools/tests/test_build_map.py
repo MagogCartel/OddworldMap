@@ -538,6 +538,15 @@ class SchemaCaches(unittest.TestCase):
                     self.assertIsInstance(row[0], int)
                     self.assertRegex(row[1], r"^[a-z0-9_]+$")
 
+    def test_a_linked_member_is_cached_like_its_neighbours(self):
+        for game_key in ("AO", "AE"):
+            names = games.game_setup(game_key)["tlv_names"]
+            tid = next(t for t, n in names.items() if n == "ShadowZone")
+            cache = HERE / "data" / games.GAMES[game_key]["schema_cache"]
+            rows = json.loads(cache.read_text())[str(tid)]
+            self.assertEqual([r for r in rows if r[1] in ("r", "g", "b")],
+                             [[2, "r"], [3, "g"], [4, "b"]], f"{game_key} ShadowZone")
+
     @needs_decomp
     def test_the_committed_cache_matches_a_fresh_parse(self):
         for game_key in ("AO", "AE"):
