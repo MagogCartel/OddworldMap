@@ -1,6 +1,6 @@
 # 42. Level editor — could this site host one?
 
-**Status:** open — Phase 1 shipped 2026-09-04 (exporter, reference-reader oracle, structural diff), its cross-check diff pending a disc session; Phases 2–3 parked · **Effort:** Phases 2–3 large · **Where:** builder-only, no disc — the disc session owes the diff run plus the rebuild that retires the export fallbacks; Phase 2's FG1 layer split would need one too
+**Status:** open — Phase 1 complete 2026-09-05 (exporter, reference-reader oracle, structural diff, and the cross-check run); Phases 2–3 parked · **Effort:** Phases 2–3 large · **Where:** builder-only — Phase 2's FG1 layer split would need a disc
 
 **Outcome: what the site should produce is a *description* of a path, not a level — and the write path belongs in `tools/`, not on the page.** AliveTeam's level editor already exists, is released for Windows and Linux, and pins the exact decomp tree the builder's parsers already read; it reads the user's own LVL files and can patch them from a JSON. So the site's job is not to be an editor but to emit that JSON — and the first thing that JSON buys is not modding at all, it is a **cross-check of our extraction against AliveTeam's**, object for object, over 16,225 objects and 9,540 collision lines (measured 2026-08-26).
 
@@ -150,6 +150,27 @@ Ruled out as a framing rather than as an implementation. The editor already prod
 **The reason to keep the write path in `tools/` is not legal, though — it is the site's credibility.** The promise of this map is that everything on it is what the disc says. An editor living inside the map puts that at risk; an exporter living beside it does not. If Phase 2 lands, the About dialog's "ships no game code" stays true and gains one sentence saying what the export is and is not, and the README's rebuild section gains the export beside the build. That touches [68](item-068-repo-licensing.md), the open question of what terms this project states about itself, but does not settle it: a download is not a licence.
 
 ---
+
+## The cross-check, 2026-09-05
+
+**Every path the reference can export agrees with ours, object for object.** 179 of the 191, holding 14,975 objects and 9,022 collision lines: no divergence, no ordering warning, and one tolerated class — AE's `num_muds_in_path` on 105 paths, the reference-side mud indexing the runbook already predicted. relive_api's own reader still accepts all 191 documents with no remapped label.
+
+**The time-boxed leg passed, but one leg further along than the runbook expected.** `OpenPathBnd` takes a byte-exact PS1 LVL and `EnumeratePaths` returns `R1PATH.BND: 15 16 18 19 20`, exactly the path set the map holds. `ExportPathBinaryToJson` then aborts inside the FG1 reader: `CamConverter` picks a cam's FG1 format by testing the Bits payload's strip sizes against `16*240*2`, which is a PC cam's framing and never a PS1 one's, so an Oddysee cam is read as Exoddus and the first `eStartCompressedData` block hits `ALIVE_FATAL`. Nothing in the objects, collisions or camera grid comes from a `.CAM`, and `ProcessCamera` carries on with empty layers when it cannot find one, so `--dump-lvl` now shifts a letter of each `.CAM` directory name and every byte of path data stays the disc's own. The GOG copy is not needed.
+
+**The harness carried a second-order bug the `check` path could never reach.** The shim compiles relive_api with `ELPP_NO_DEFAULT_LOG_FILE`, leaving easylogging's default logger with file output on and nowhere to write, so the first `LOG_WARNING` dereferences a null stream. 191 documents had read clean past it; the export mode meets it on its first camera.
+
+**The one thing the diff found on our side was the camera an object is listed under.** The exporter derived it from the rect's top-left corner in both games, and Exoddus authors by the midpoint: 835 of its 10,602 objects were listed under the neighbouring camera, mostly the zones that straddle a cell boundary. Read off the index table the chunks themselves carry, each rule is exact over its own game — 5,625 and 10,602 objects, with the other rule wrong on 3 and 835 — and an object listed under the wrong camera would be written into that camera's TLV stream on import, so it is the spawn that moves rather than the listing. Everything else agreed from the first run, before any fix: identical object sets on all 179 paths, every property equal.
+
+**Twelve Oddysee paths the reference cannot export, in two classes, neither of them a disagreement about data.**
+
+- **Ten hit `WrongTLVLengthException` on `RingCancel`**, whose PS1 record is 28 bytes to the decomp struct's 24. The four extra payload bytes are zero on all ten placements, and the type is `EMPTY_CTOR` on both sides, so nothing is lost — but relive compares `field_2_length` to `sizeof` and refuses. Swept over both discs, it is the only type in either game whose record length disagrees with relive's struct, across 5,625 and 10,602 records.
+- **Two read their index table at the wrong offset**, `R1 P20` and `R6 P6`, because the PC tables miscount their collision lines by one. That one is ours as much as relive's, and it was a real defect in the shipped map data: a missing wall and Hoist on one path, a phantom line and a missing ContinuePoint on the other. `audit_path_meta` now counts the lines from the chunk, in *Count a path's collision lines from the chunk, not from the PC tables*.
+
+**The rebuild spent what was batched for it.** ShadowZone's R, G and B reach 1,656 placements; [93](item-093-securityclaw-layout.md)'s two words land; the collision links are captured. Apart from those the rebuild reproduced the committed data byte for byte. Only `MovieHandstone`'s export fallback survives, and it stays by design.
+
+**The links went to `tools/data/lines_{ao,ae}.json` rather than into `map_data`,** which is drift from the sketch worth stating: no viewer surface draws a link, and carried in `public/` they cost every Exoddus visitor 27 KB gzipped on the dataset first paint waits for. That is the same call the Phase 1 notes below record for the relive schema, and with the words captured the diff's link tolerance and its `--strict-links` flag are both gone.
+
+**Phase 2's gate is met and its trap is not.** The diff is clean, so the condition this file set on the download is satisfied; `ImportCameraAndFG1` still strips every FG1 chunk unconditionally, so the choice under Phase 2 stands untouched.
 
 ## Shipped: Phase 1, 2026-09-04
 

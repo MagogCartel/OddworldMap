@@ -29,7 +29,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 **Next up**:
 
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
-- [42. Level editor, Phase 1](item-042-level-editor.md) — the exporter and its oracle shipped; the cross-check diff waits on a disc session, and the later phases stay parked.
 
 **Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The open branches are upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing) and the member-type parser's blind spots ([92](item-092-member-type-parser-blind-spots.md)).
 
@@ -50,7 +49,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Moonshot
 
 - [**11.** Live position tracking](item-011-live-position-tracking.md) — a local bridge feeding Abe's live position to the map while practising. _Large, research first._
-- [**42.** Level editor](item-042-level-editor.md) — Phase 1's exporter, reference-reader oracle and structural diff shipped 2026-09-04; the cross-check diff runs at the next disc session, and Phases 2–3 are the moonshot it earns. _Diff disc-gated; Phases 2–3 large._
+- [**42.** Level editor](item-042-level-editor.md) — Phase 1 is complete: the cross-check ran 2026-09-05 and every path relive_api can export agrees with ours, object for object. Phases 2–3 are the moonshot it earns, and Phase 2's FG1 trap is the gate on the download. _Phases 2–3 large._
 
 ## Undecided
 
