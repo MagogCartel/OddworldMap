@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-09-05",
+   "tag": "improved",
+   "tiny": true,
+   "title": "Shadow zones show the colour they cast",
+   "detail": "A shadow zone tints the sprites on the plane it names, and its three colour fields were being read off the disc and then dropped. Every one of them now carries its red, green and blue alongside the rest, so you can see which zones bite hardest and which barely tint at all."
+  },
+  {
    "date": "2026-09-02",
    "tag": "new",
    "title": "The world graph saves as an image",

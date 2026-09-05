@@ -248,9 +248,8 @@ class ExportSweep(unittest.TestCase):
     exactly — anything new goes missing loudly here first"""
 
     FALLBACKS = {
-        "AO": {("ShadowZone", "R"), ("ShadowZone", "G"), ("ShadowZone", "B")},
-        "AE": {("ShadowZone", "R"), ("ShadowZone", "G"), ("ShadowZone", "B"),
-               ("MovieHandstone", "Trigger Switch ID"), ("SecurityClaw", "Unknown")},
+        "AO": set(),
+        "AE": {("MovieHandstone", "Trigger Switch ID"), ("SecurityClaw", "Unknown")},
     }
 
     # the corner and midpoint rules part only over a rect that straddles a cell
@@ -304,6 +303,9 @@ class ReliveDiff(unittest.TestCase):
         import relive_diff
         cls.diff = staticmethod(relive_diff.diff_documents)
         cls.doc, _ = export("AO", "R1", 15)
+        # the surviving fallbacks are Exoddus', so the known-divergent cases need a
+        # document holding a MovieHandstone
+        cls.fallback_doc, _ = export("AE", "BA", 2)
 
     def copy(self):
         return json.loads(json.dumps(self.doc))
@@ -345,11 +347,11 @@ class ReliveDiff(unittest.TestCase):
         self.assertEqual(len(self.diff(self.doc, strict_ao)["diffs"]), 1)
 
     def test_a_fallback_value_is_held_known_divergent(self):
-        other = self.copy()
-        zone = next(o for c in other["map"]["cameras"] for o in c["map_objects"]
-                    if o["object_structures_type"] == "ShadowZone")
-        zone["properties"]["R"] = 4096
-        result = self.diff(self.doc, other)
+        other = json.loads(json.dumps(self.fallback_doc))
+        stone = next(o for c in other["map"]["cameras"] for o in c["map_objects"]
+                     if o["object_structures_type"] == "MovieHandstone")
+        stone["properties"]["Trigger Switch ID"] = 4096
+        result = self.diff(self.fallback_doc, other)
         self.assertEqual(result["diffs"], [])
         self.assertEqual(len(result["known"]), 1)
 
@@ -371,14 +373,15 @@ class ReliveDiff(unittest.TestCase):
         self.assertTrue(any("different order" in w for w in result["warnings"]))
 
     def test_a_reorder_still_counts_the_known_divergences(self):
-        other = self.copy()
+        other = json.loads(json.dumps(self.fallback_doc))
         cam = next(c for c in other["map"]["cameras"]
                    if len(c["map_objects"]) > 1
-                   and any(o["object_structures_type"] == "ShadowZone" for o in c["map_objects"]))
-        zone = next(o for o in cam["map_objects"] if o["object_structures_type"] == "ShadowZone")
-        zone["properties"]["R"] = 4096
+                   and any(o["object_structures_type"] == "MovieHandstone" for o in c["map_objects"]))
+        stone = next(o for o in cam["map_objects"]
+                     if o["object_structures_type"] == "MovieHandstone")
+        stone["properties"]["Trigger Switch ID"] = 4096
         cam["map_objects"].reverse()
-        result = self.diff(self.doc, other)
+        result = self.diff(self.fallback_doc, other)
         self.assertEqual(result["diffs"], [])
         self.assertTrue(any("different order" in w for w in result["warnings"]))
         self.assertEqual(len(result["known"]), 1)

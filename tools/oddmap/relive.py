@@ -355,12 +355,6 @@ _BASE_PROPS = [{"Type": "SInt16", "Visible": True, "name": n}
 _EXPORT_VALUE_FALLBACKS = {
     ("AE", "MovieHandstone", "Trigger Switch ID"): 0,
     ("AE", "SecurityClaw", "Unknown"): 0,
-    ("AO", "ShadowZone", "R"): 0,
-    ("AO", "ShadowZone", "G"): 0,
-    ("AO", "ShadowZone", "B"): 0,
-    ("AE", "ShadowZone", "R"): 0,
-    ("AE", "ShadowZone", "G"): 0,
-    ("AE", "ShadowZone", "B"): 0,
 }
 
 def schema_blob(rel):
