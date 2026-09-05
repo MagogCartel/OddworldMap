@@ -23,13 +23,14 @@ sys.path.insert(0, str(HERE))
 from oddmap.decomp import load_cache  # noqa: E402
 from oddmap.games import GAMES, game_setup  # noqa: E402
 from oddmap.paths import SITE  # noqa: E402
-from oddmap.relive import export_path, load_relive_schema  # noqa: E402
+from oddmap.relive import export_path, load_line_links, load_relive_schema  # noqa: E402
 
 def export_game(game_key, out, only=None, allow_incomplete=False):
     """(files written, paths withheld, manifest) for one game; `only` narrows to
     one (level short, path id)"""
     game = game_setup(game_key)
     rel = load_relive_schema(game_key, game)
+    links = load_line_links(game_key, game)
     data = json.loads((SITE / game["data_file"]).read_text())
     muds = load_cache(game).get("muds_in_level") if game_key == "AE" else None
     written, withheld = 0, []
@@ -38,7 +39,7 @@ def export_game(game_key, out, only=None, allow_incomplete=False):
         for path in level["paths"]:
             if only and only != (level["short"], path["id"]):
                 continue
-            doc, manifest = export_path(game_key, game, rel, level, path, muds)
+            doc, manifest = export_path(game_key, game, rel, level, path, muds, links)
             missing |= manifest["missing"]
             fallbacks |= manifest["fallbacks"]
             if manifest["missing"] and not allow_incomplete:

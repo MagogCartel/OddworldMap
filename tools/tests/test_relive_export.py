@@ -39,7 +39,8 @@ def export(game_key, short, pid):
     level = next(lv for lv in map_data(game_key)["levels"] if lv["short"] == short)
     path = next(p for p in level["paths"] if p["id"] == pid)
     muds = muds_in_level() if game_key == "AE" else None
-    return relive.export_path(game_key, game, rel, level, path, muds)
+    links = relive.load_line_links(game_key, game)
+    return relive.export_path(game_key, game, rel, level, path, muds, links)
 
 
 class ReliveCache(unittest.TestCase):
@@ -282,10 +283,11 @@ class ExportSweep(unittest.TestCase):
             game = games.game_setup(game_key)
             rel = relive.load_relive_schema(game_key, game)
             muds = muds_in_level() if game_key == "AE" else None
+            links = relive.load_line_links(game_key, game)
             missing, fallbacks = set(), set()
             for level in map_data(game_key)["levels"]:
                 for path in level["paths"]:
-                    _, manifest = relive.export_path(game_key, game, rel, level, path, muds)
+                    _, manifest = relive.export_path(game_key, game, rel, level, path, muds, links)
                     missing |= manifest["missing"]
                     fallbacks |= manifest["fallbacks"]
             self.assertEqual(missing, set(), game_key)
@@ -308,7 +310,7 @@ class ReliveDiff(unittest.TestCase):
 
     def test_identical_documents_are_clean(self):
         result = self.diff(self.doc, self.copy())
-        self.assertEqual(result, {"diffs": [], "links": [], "known": [], "warnings": []})
+        self.assertEqual(result, {"diffs": [], "known": [], "warnings": []})
 
     def test_a_changed_property_names_the_object_and_key(self):
         other = self.copy()
@@ -324,13 +326,12 @@ class ReliveDiff(unittest.TestCase):
         result = self.diff(self.doc, other)
         self.assertTrue(any(f"({gone['x']}, {gone['y']})" in d for d in result["diffs"]))
 
-    def test_link_fields_divert_until_strict_promotes_them(self):
+    def test_a_link_field_is_a_divergence_like_any_other(self):
         other = self.copy()
         other["map"]["collisions"]["items"][0]["Next"] = 42
-        lax = self.diff(self.doc, other)
-        self.assertEqual((len(lax["diffs"]), len(lax["links"])), (0, 1))
-        strict = self.diff(self.doc, other, strict_links=True)
-        self.assertEqual((len(strict["diffs"]), len(strict["links"])), (1, 0))
+        result = self.diff(self.doc, other)
+        self.assertEqual(len(result["diffs"]), 1)
+        self.assertIn("collisions[0].Next:", result["diffs"][0])
 
     def test_the_references_mud_indexing_is_held_known_divergent(self):
         ae, _ = export("AE", "MI", 2)

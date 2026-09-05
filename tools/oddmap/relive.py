@@ -9,6 +9,7 @@ Cached under tools/data/ with the pathdata/objects discipline: re-parsed only
 when deleted, and only from the checkout at the pin. The parse validates its
 layouts against the decomp's own ALIVE_ASSERT_SIZEOF lines and raises on any
 type it cannot width, so a thinner sweep fails rather than caching wrong words."""
+import json
 import re
 
 from oddmap.decomp import cached
@@ -331,6 +332,10 @@ def parse_relive_schema(game_key):
 def load_relive_schema(game_key, game):
     return cached(HERE / "data" / game["relive_cache"], lambda: parse_relive_schema(game_key))
 
+def load_line_links(game_key, game):
+    """the collision links a disc build cached, keyed by level short and path id"""
+    return json.loads((HERE / "data" / game["links_file"]).read_text())
+
 # relive registers its basic types from numeric_limits narrowed to s32, spelling
 # quirks and all (TypesCollectionBase.cpp), so the blob is a constant
 _BASIC_TYPES_JSON = [
@@ -451,7 +456,7 @@ def _map_object(game_key, game, rel, t, counters, manifest):
     return {"name": f"{s['name']}_{counters[s['name']]}",
             "object_structures_type": s["name"], "properties": props}
 
-def export_path(game_key, game, rel, level, path, muds_in_level):
+def export_path(game_key, game, rel, level, path, muds_in_level, links):
     """one path as a relive_api v4 document, plus the manifest of what the
     archive could not supply — a written file missing a property would abort
     relive's importer, so the caller decides whether an incomplete one ships"""
@@ -468,14 +473,19 @@ def export_path(game_key, game, rel, level, path, muds_in_level):
                         "map_objects": [_map_object(game_key, game, rel, t, counters, manifest)
                                         for t in buckets.get(cell, [])]})
     link_names = [r["name"] for r in rel["collision_structure"][5:]]
+    rows = links["paths"][level["short"]][str(path["id"])]
+    if len(rows) != len(path["lines"]):
+        raise RuntimeError(f"{level['short']} P{path['id']}: {len(rows)} link rows for "
+                           f"{len(path['lines'])} lines")
     items = []
-    for x1, y1, x2, y2, ltype in path["lines"]:
+    for (x1, y1, x2, y2, ltype), row in zip(path["lines"], rows):
         label = rel["enums"]["Enum_LineTypes"].get(str(ltype))
         if label is None:
             raise RuntimeError(f"collision type {ltype} has no Enum_LineTypes label")
         item = {"x1": x1, "y1": y1, "x2": x2, "y2": y2, "Type": label}
-        for n in link_names:  # the links live only in the path chunk; -1 is the editor's default
-            item[n] = -1
+        by_key = dict(zip(links["columns"], row))
+        for n in link_names:  # the cache keys are norm()ed display strings, as the properties are
+            item[n] = by_key[norm(n)]
         items.append(item)
     if game_key == "AO":
         abe_x = abe_y = 0

@@ -4,14 +4,12 @@ of the same path from the real LVL — printing what disagrees and holding back
 the classes that are expected to, so a clean run means the extractions agree.
 
     python3 tools/relive_diff.py ours.json reference.json
-    python3 tools/relive_diff.py ours.json reference.json --strict-links
 
 Never a byte diff: the reference writer's key order is jsonxx's, its schema
 arrays iterate unordered_maps, and its camera images are garbage base64 from a
-PS1 CAM (never read here). Collision link fields stay a counted, non-fatal class
-until a rebuild captures them (--strict-links promotes them), and the property
-values the exporter's fallback table stands in for are held known-divergent by
-that same table, so retiring an entry there retires its tolerance here.
+PS1 CAM (never read here). The property values the exporter's fallback table
+stands in for are held known-divergent by that same table, so retiring an entry
+there retires its tolerance here.
 """
 import argparse
 import json
@@ -23,12 +21,10 @@ sys.path.insert(0, str(HERE))
 
 from oddmap.relive import _EXPORT_VALUE_FALLBACKS  # noqa: E402
 
-_LINK_KEYS = {"Next", "Previous", "Next 2", "Previous 2", "Length"}
-
-def diff_documents(ours, theirs, strict_links=False):
-    """{"diffs", "links", "known", "warnings"}: lists of finding strings. Clean
-    means no diffs (and no links under --strict-links)."""
-    out = {"diffs": [], "links": [], "known": [], "warnings": []}
+def diff_documents(ours, theirs):
+    """{"diffs", "known", "warnings"}: lists of finding strings. Clean means no
+    diffs."""
+    out = {"diffs": [], "known": [], "warnings": []}
     game = ours.get("game")
     known_props = {(lit, prop) for (gk, lit, prop) in _EXPORT_VALUE_FALLBACKS if gk == game}
 
@@ -57,8 +53,7 @@ def diff_documents(ours, theirs, strict_links=False):
         for key in sorted(set(a) | set(b)):
             if a.get(key) == b.get(key):
                 continue
-            finding = f"collisions[{i}].{key}: {a.get(key)!r} != {b.get(key)!r}"
-            out["diffs" if strict_links or key not in _LINK_KEYS else "links"].append(finding)
+            out["diffs"].append(f"collisions[{i}].{key}: {a.get(key)!r} != {b.get(key)!r}")
 
     a_cams = {(c["x"], c["y"]): c for c in a_map.get("cameras", [])}
     b_cams = {(c["x"], c["y"]): c for c in b_map.get("cameras", [])}
@@ -142,16 +137,13 @@ def main():
     ap = argparse.ArgumentParser(description="structurally diff two relive_api path JSONs")
     ap.add_argument("ours")
     ap.add_argument("reference")
-    ap.add_argument("--strict-links", action="store_true",
-                    help="collision link fields count as real divergence")
     args = ap.parse_args()
     result = diff_documents(json.loads(Path(args.ours).read_text()),
-                            json.loads(Path(args.reference).read_text()),
-                            strict_links=args.strict_links)
-    for kind in ("diffs", "links", "known", "warnings"):
+                            json.loads(Path(args.reference).read_text()))
+    for kind in ("diffs", "known", "warnings"):
         for line in result[kind]:
             print(f"{kind[:-1]}: {line}")
-    counts = ", ".join(f"{len(result[k])} {k}" for k in ("diffs", "links", "known", "warnings"))
+    counts = ", ".join(f"{len(result[k])} {k}" for k in ("diffs", "known", "warnings"))
     print(("CLEAN — " if not result["diffs"] else "DIVERGENT — ") + counts)
     sys.exit(1 if result["diffs"] else 0)
 

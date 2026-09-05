@@ -14,6 +14,7 @@ GAMES = {
         "schema_cache": "objects_ao.json",
         "enum_cache": "enums_ao.json",
         "relive_cache": "relive_ao.json",
+        "links_file": "lines_ao.json",
         "field_types_file": "field_types_ao.json",
         "enum_labels_file": "enum_labels_ao.json",
         "messages_file": "messages_ao.json",
@@ -23,6 +24,7 @@ GAMES = {
         "tlv": {"header_len": 0x18, "rect_off": 0x10, "min_len": 24, "max_len": 480,
                 "max_type": 115, "check_flags": True, "extra_fn": tlv_extra_ao},
         "fg1_bitmask": False,
+        "line_links": (("previous", 0x0C, "i"), ("next", 0x10, "i")),
         "parse_tables": parse_pathdata_cpp_ao,
     },
     "AE": {
@@ -33,6 +35,7 @@ GAMES = {
         "schema_cache": "objects_ae.json",
         "enum_cache": "enums_ae.json",
         "relive_cache": "relive_ae.json",
+        "links_file": "lines_ae.json",
         "field_types_file": "field_types_ae.json",
         "enum_labels_file": "enum_labels_ae.json",
         "messages_file": "messages_ae.json",
@@ -42,6 +45,8 @@ GAMES = {
         "tlv": {"header_len": 0x10, "rect_off": 0x08, "min_len": 16, "max_len": 512,
                 "max_type": 150, "check_flags": False, "extra_fn": tlv_extra_ae},
         "fg1_bitmask": True,
+        "line_links": (("previous", 0x0A, "h"), ("next", 0x0C, "h"), ("previous_2", 0x0E, "h"),
+                       ("next_2", 0x10, "h"), ("length", 0x12, "h")),
         "parse_tables": parse_pathdata_cpp_ae,
     },
 }

@@ -25,11 +25,11 @@ from pathlib import Path
 
 from oddmap.disc import Disc, Lvl, parse_chunks
 from oddmap.emit import (print_build_summary, require_stampable, stamp_cache_name,
-                         write_enum_labels, write_field_types)
+                         write_enum_labels, write_field_types, write_line_links)
 from oddmap.games import GAMES, game_setup
 from oddmap.image import decode_cam, ensure_tools
 from oddmap.messages import write_messages
-from oddmap.paths import SITE
+from oddmap.paths import HERE, SITE
 from oddmap.tables import AE_LEVEL_DISPLAY, AO_R2_ZULAGS
 from oddmap.tlv import discover_path_meta, walk_obj_region
 
@@ -72,6 +72,7 @@ def main():
     level_short = game["level_short"]
 
     data = {"id": args.game, "game": game["title"], "geometry": game["geometry"], "levels": []}
+    line_links = {}
     cam_stats = {"reused": 0, "decoded": 0, "failed": 0}
     for lid, short, display in game["levels"]:
         if only and short not in only:
@@ -131,8 +132,9 @@ def main():
                 nm = nm if re.fullmatch(r"[A-Z0-9]{4,8}", nm or "") else None
                 cells.append(nm)
 
-            # collision lines (20 bytes each; coords + type share the layout in both games)
-            lines = []
+            # collision lines (20 bytes each; coordinates and type share the layout
+            # in both games, the links after them do not)
+            lines, links = [], []
             co, cc = meta["coll_off"], meta["coll_count"]
             for i in range(cc):
                 p = co + i * 20
@@ -141,6 +143,8 @@ def main():
                 x1, y1, x2, y2 = struct.unpack_from("<hhhh", blob, p)
                 ltype = blob[p + 8]
                 lines.append([x1, y1, x2, y2, ltype])
+                links.append([struct.unpack_from("<" + code, blob, p + off)[0]
+                              for _name, off, code in game["line_links"]])
 
             # TLVs: linear walk of object region
             region_end = meta["idx_off"] if meta["idx_off"] > meta["obj_off"] else len(blob)
@@ -174,6 +178,7 @@ def main():
                     entry["fg"] = f"{game['cams_dir']}/{short}/{nm}_fg.png"
                 cams.append(entry)
 
+            line_links.setdefault(short, {})[str(path_id)] = links
             print(f"  path {path_id}: {W}x{H} cams={sum(1 for c in cells if c)} tlvs={len(tlvs)} lines={len(lines)}")
             level_entry["paths"].append({
                 "id": path_id, "w": W, "h": H,
@@ -214,6 +219,11 @@ def main():
     write_enum_labels(args.game, out)
     # game-wide, so a subset build writes it whole
     write_messages(args.game, discs, out / game["messages_file"])
+    # the collision links are the exporter's and no viewer surface draws them, so
+    # they land in the cache directory rather than in the served site — and beside
+    # a scratch --out, which is where a verification build compares them
+    links_dir = HERE / "data" if out.resolve() == SITE.resolve() else out
+    write_line_links(args.game, line_links, links_dir / game["links_file"], merge=bool(only))
     sw_file = out / "sw.js"
     # a scratch --out holds no worker, so a verification build stamps nothing
     cache_name = stamp_cache_name(sw_file, out / "cams") if sw_file.exists() else None

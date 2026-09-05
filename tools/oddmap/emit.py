@@ -52,6 +52,24 @@ def write_field_types(game_key, out):
     print(f"field types -> {dst} ({len(ft)} object types)")
     return dst
 
+def write_line_links(game_key, links, dst, merge):
+    """the words trailing each collision line's coordinates and type, per level and
+    path. Read off the disc like the messages and kept out of the served site: the
+    exporter needs them to write a lossless document and no viewer surface draws
+    them, so a visitor should not fetch them. A subset build merges, as the map
+    data does."""
+    columns = [name for name, _off, _code in game_setup(game_key)["line_links"]]
+    if merge and dst.exists():
+        merged = json.loads(dst.read_text())["paths"]
+        merged.update(links)
+        links = merged
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text(json.dumps({"columns": columns,
+                               "paths": {k: links[k] for k in sorted(links)}}, indent=1))
+    rows = sum(len(rows) for paths in links.values() for rows in paths.values())
+    print(f"collision links -> {dst} ({rows} lines)")
+    return dst
+
 def write_enum_labels(game_key, out):
     """the viewer's enum-value labels sidecar for one game: {type: {value: label}}.
     Generated from the decomp's enum sweep (cached, no disc) so the viewer renders
