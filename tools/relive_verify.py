@@ -16,11 +16,13 @@ checked in a subprocess of its own, because relive aborts the process outright
 on a missing numeric property.
 
 --dump-lvl needs a disc image ($ODDWORLD_DISC_AO / $ODDWORLD_DISC_AE) and writes
-the byte-exact LVL the reference exporter is then pointed at.
+the LVL the reference exporter is then pointed at, its path data the disc's own
+bytes and its cameras renamed out of reach (see hide_cams).
 """
 import argparse
 import os
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -93,6 +95,22 @@ def verify(game_keys):
                   f"{len(fallbacks)} fallback-filled properties")
     return failed
 
+def hide_cams(image):
+    """rename every .CAM in the archive directory so the reference exporter looks
+    for cameras it cannot find. It detects a cam's FG1 format from the Bits
+    payload's strip sizes, which a PS1 cam never satisfies, so it reads AO's
+    compressed FG1 blocks as AE's and dies on the first one — where a camera it
+    fails to open only costs the artwork the diff never reads. Nothing but the
+    directory name changes, so every byte of path data stays the disc's own."""
+    hidden = 0
+    for i in range(struct.unpack_from("<I", image, 16)[0]):
+        off = 32 + i * 24
+        name = bytes(image[off:off + 12]).split(b"\0")[0]
+        if name.upper().endswith(b".CAM"):
+            image[off + len(name) - 1] = ord("X")
+            hidden += 1
+    return hidden
+
 def dump_lvl(game_key, short, dst):
     from oddmap.disc import Disc, Lvl
     paths = [p for p in os.environ.get(GAMES[game_key]["env"], "").split(os.pathsep) if p]
@@ -105,14 +123,16 @@ def dump_lvl(game_key, short, dst):
         sys.exit(f"no {name} on the disc image(s)")
     disc = max(having, key=lambda d: d.files[name][1])
     lvl = Lvl(disc, name)
-    Path(dst).write_bytes(disc.read(lvl.lba, lvl.size))
-    print(f"{name} ({lvl.size} bytes) -> {dst}")
+    image = bytearray(disc.read(lvl.lba, lvl.size))
+    hidden = hide_cams(image)
+    Path(dst).write_bytes(bytes(image))
+    print(f"{name} ({lvl.size} bytes, {hidden} camera(s) hidden) -> {dst}")
 
 def main():
     ap = argparse.ArgumentParser(description="check exported paths against relive_api's reader")
     ap.add_argument("--game", choices=sorted(GAMES), help="one game (default: both)")
     ap.add_argument("--dump-lvl", nargs=3, metavar=("GAME", "LEVEL", "OUT"),
-                    help="write a byte-exact LVL off the disc image instead")
+                    help="write an LVL off the disc image instead, its cameras hidden")
     args = ap.parse_args()
     if args.dump_lvl:
         game_key = args.dump_lvl[0].upper()
