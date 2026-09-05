@@ -337,6 +337,55 @@ class PinnedCheckout(unittest.TestCase):
         parsed.assert_not_called()
 
 
+class PathMetaAudit(unittest.TestCase):
+    """a tabulated collision count the chunk itself contradicts"""
+
+    FMT = {k: v for k, v in games.GAMES["AO"]["tlv"].items() if k != "extra_fn"}
+    CELLS = 4
+
+    def chunk(self, lines, objects, entries):
+        """a path chunk: camera-name slots, `lines` collision records, `objects`
+        24-byte records, then one index entry per cell"""
+        blob = b"".join(f"AOP01C{i:02d}".encode() for i in range(self.CELLS))
+        blob += b"".join(struct.pack("<hhhhI", 8, 8, 9, 9, 0) + b"\xff" * 8
+                         for _ in range(lines))
+        blob += b"".join(struct.pack("<BBhI", 0, 0, 24, 6) + b"\0" * 16
+                         for _ in range(objects))
+        return blob + struct.pack(f"<{self.CELLS}i", *entries)
+
+    def meta(self, lines):
+        off = self.CELLS * 8
+        return {"w_units": 2048, "h_units": 960, "coll_off": off, "coll_count": lines,
+                "obj_off": off + lines * 20, "idx_off": 0}
+
+    def audit(self, blob, tabulated):
+        return tlv.audit_path_meta(blob, self.meta(tabulated), self.FMT, self.CELLS)
+
+    def test_a_count_the_index_table_confirms_is_left_alone(self):
+        blob = self.chunk(3, 2, [0, 24, -1, -1])
+        self.assertEqual(self.audit(blob, 3)["coll_count"], 3)
+
+    def test_a_count_one_short_is_corrected_from_the_chunk(self):
+        blob = self.chunk(3, 2, [0, 24, -1, -1])
+        audited = self.audit(blob, 2)
+        self.assertEqual(audited["coll_count"], 3)
+        self.assertEqual(audited["obj_off"], self.CELLS * 8 + 60)
+        self.assertEqual(audited["idx_off"], len(blob) - self.CELLS * 4)
+
+    def test_a_count_one_over_is_corrected_the_same_way(self):
+        blob = self.chunk(3, 2, [0, 24, -1, -1])
+        self.assertEqual(self.audit(blob, 4)["coll_count"], 3)
+
+    def test_a_table_of_nothing_but_gaps_leaves_the_count_standing(self):
+        blob = self.chunk(3, 2, [-1] * self.CELLS)
+        self.assertEqual(self.audit(blob, 2)["coll_count"], 2)
+
+    def test_a_count_no_offset_answers_raises(self):
+        blob = self.chunk(3, 2, [7, -1, -1, -1])  # no region start puts a record at +7
+        with self.assertRaisesRegex(RuntimeError, "collision count undetermined"):
+            self.audit(blob, 3)
+
+
 class PathDiscovery(unittest.TestCase):
     """the grid a path carries when the decomp tabulates none for it"""
 

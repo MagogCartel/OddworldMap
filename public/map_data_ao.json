@@ -12812,6 +12812,20 @@
         "slig_id": 0,
         "disabled_resources": 125
        }
+      },
+      {
+       "t": 3,
+       "name": "Hoist",
+       "x1": 1529,
+       "y1": 1177,
+       "x2": 1553,
+       "y2": 1278,
+       "extra": {},
+       "fields": {
+        "hoist_type": 0,
+        "grab_direction": 1,
+        "switch_id": 0
+       }
       }
      ],
      "lines": [
@@ -13023,6 +13037,13 @@
        21,
        623,
        690,
+       2
+      ],
+      [
+       1647,
+       717,
+       1647,
+       876,
        2
       ]
      ]
@@ -114393,6 +114414,24 @@
      ],
      "tlvs": [
       {
+       "t": 0,
+       "name": "ContinuePoint",
+       "x1": 580,
+       "y1": 155,
+       "x2": 603,
+       "y2": 262,
+       "extra": {
+        "zone": 6
+       },
+       "fields": {
+        "zone_number": 6,
+        "clear_from_id": 0,
+        "clear_to_id": 0,
+        "elum_restarts": 0,
+        "abe_spawn_direction": 0
+       }
+      },
+      {
        "t": 2,
        "name": "ContinueZone",
        "x1": 600,
@@ -116960,13 +116999,6 @@
        378,
        1837,
        1
-      ],
-      [
-       0,
-       36,
-       0,
-       0,
-       0
       ]
      ]
     }

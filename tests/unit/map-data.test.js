@@ -796,7 +796,7 @@ test("the export frame crops nothing the game renders", () => {
   setSpacing(false);
   assert.deepEqual(cropped, []);
   assert.deepEqual(beyond, {
-    "AO packed": { markers: 248, lines: 527 },
+    "AO packed": { markers: 248, lines: 526 },
     "AE packed": { markers: 0, lines: 46 },
     "AO spaced": { markers: 0, lines: 2 },
     "AE spaced": { markers: 0, lines: 0 },

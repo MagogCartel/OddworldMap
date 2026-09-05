@@ -209,6 +209,40 @@ def contiguous_objects(blob, start, fmt):
         pos += length
     return pos, origins
 
+def _entries_land(blob, table, obj_off, fmt):
+    """every camera's index entry starts a record when the object region does"""
+    for v in table:
+        if v == -1:
+            continue
+        pos = obj_off + v
+        if v < 0 or pos + fmt["header_len"] > len(blob):
+            return False
+        flags, _, length, typ = struct.unpack_from("<BBhI", blob, pos)
+        if not tlv_header_ok(fmt, flags, length, typ):
+            return False
+    return True
+
+def audit_path_meta(blob, meta, fmt, cells):
+    """the tabulated offsets against the chunk's own evidence. The decomp's
+    tables come from the PC build and two PS1 paths disagree with them by a
+    collision line, which slides the object region and leaves the index table
+    unreadable — so the count is taken from the chunk: the table ends the
+    chunk at 4 bytes a cell, its entries are offsets from the object region,
+    and only the true count puts that region where every entry starts a record.
+    Silent where the table already agrees, and raising rather than guessing
+    where no count answers or more than one does."""
+    idx_off = len(blob) - cells * 4
+    table = struct.unpack_from(f"<{cells}i", blob, idx_off) if idx_off > meta["coll_off"] else ()
+    if all(v == -1 for v in table):  # nothing to place the region against
+        return meta
+    fits = [n for n in range(max(0, meta["coll_count"] - 2), meta["coll_count"] + 3)
+            if _entries_land(blob, table, meta["coll_off"] + n * 20, fmt)]
+    if len(fits) != 1:
+        raise RuntimeError(f"collision count undetermined: tabulated {meta['coll_count']}, "
+                           f"index table at {idx_off} answers {fits}")
+    return {**meta, "coll_count": fits[0], "obj_off": meta["coll_off"] + fits[0] * 20,
+            "idx_off": idx_off}
+
 def discover_path_meta(blob, fmt, cell_w, cell_h):
     """the table for a path the decomp leaves null, read off the chunk itself.
     The camera-name table heads it at one 8-byte slot per cell, so the run of

@@ -3,6 +3,12 @@
   {
    "date": "2026-09-05",
    "tag": "fixed",
+   "title": "Two Oddysee paths were a line and an object short",
+   "detail": "The level tables the map reads its offsets from come from the PC release, and two paths on the PlayStation disc disagree with them by a single collision line. To the Stockyards was missing a hoist and a wall, and To the Board Room a continue point, while drawing a stray line along the edge of its first screen. The map now counts the lines off the disc itself and takes the tables' word only where the two agree."
+  },
+  {
+   "date": "2026-09-05",
+   "tag": "fixed",
    "tiny": true,
    "title": "The Bonewerkz security claws read their own words",
    "detail": "Exoddus' two security claws were showing the wrong numbers: the field before them is four bytes wide rather than two, so everything after it was being read one word early. Both now carry the values the game does."

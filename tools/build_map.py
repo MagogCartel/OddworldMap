@@ -31,7 +31,7 @@ from oddmap.image import decode_cam, ensure_tools
 from oddmap.messages import write_messages
 from oddmap.paths import HERE, SITE
 from oddmap.tables import AE_LEVEL_DISPLAY, AO_R2_ZULAGS
-from oddmap.tlv import discover_path_meta, walk_obj_region
+from oddmap.tlv import audit_path_meta, discover_path_meta, walk_obj_region
 
 def main():
     ap = argparse.ArgumentParser()
@@ -124,6 +124,12 @@ def main():
             W = max(1, meta["w_units"] // cell_w)
             H = max(1, meta["h_units"] // cell_h)
             n = W * H
+            if meta["coll_count"]:
+                audited = audit_path_meta(blob, meta, game["tlv"], n)
+                if audited["coll_count"] != meta["coll_count"]:
+                    print(f"  path {path_id}: {meta['coll_count']} collision lines tabulated, "
+                          f"{audited['coll_count']} in the chunk")
+                meta = audited
 
             # camera name table
             cells = []
