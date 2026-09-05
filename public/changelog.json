@@ -2,6 +2,13 @@
  "entries": [
   {
    "date": "2026-09-05",
+   "tag": "fixed",
+   "tiny": true,
+   "title": "The Bonewerkz security claws read their own words",
+   "detail": "Exoddus' two security claws were showing the wrong numbers: the field before them is four bytes wide rather than two, so everything after it was being read one word early. Both now carry the values the game does."
+  },
+  {
+   "date": "2026-09-05",
    "tag": "improved",
    "tiny": true,
    "title": "Shadow zones show the colour they cast",

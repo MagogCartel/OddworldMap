@@ -168795,8 +168795,8 @@
        "extra": {},
        "fields": {
         "scale": 1,
-        "disabled_resources": 0,
-        "unknown": 150
+        "disabled_resources": 150,
+        "unknown": 2
        }
       },
       {
@@ -169079,8 +169079,8 @@
        "extra": {},
        "fields": {
         "scale": 1,
-        "disabled_resources": 0,
-        "unknown": 150
+        "disabled_resources": 150,
+        "unknown": 2
        }
       },
       {

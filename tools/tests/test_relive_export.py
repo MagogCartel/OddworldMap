@@ -101,8 +101,6 @@ class WordAudit(unittest.TestCase):
         ("AE", "MovieHandstone", "movie_number"),
         ("AE", "MovieHandstone", "padding"),
         ("AE", "MovieHandstone", "trigger_switch_id"),
-        ("AE", "SecurityClaw", "disabled_resources"),
-        ("AE", "SecurityClaw", "unknown"),
     }
 
     def test_the_two_views_disagree_exactly_where_pinned(self):
@@ -249,7 +247,7 @@ class ExportSweep(unittest.TestCase):
 
     FALLBACKS = {
         "AO": set(),
-        "AE": {("MovieHandstone", "Trigger Switch ID"), ("SecurityClaw", "Unknown")},
+        "AE": {("MovieHandstone", "Trigger Switch ID")},
     }
 
     # the corner and midpoint rules part only over a rect that straddles a cell

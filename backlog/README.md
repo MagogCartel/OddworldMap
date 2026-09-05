@@ -46,7 +46,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
 - [**92.** The member-type parser's remaining blind spots](item-092-member-type-parser-blind-spots.md) — a sub-struct arm, a `class`-declared data struct and an uppercase member all escape it, so eleven objects still render `scale` raw; none is an upstream fault. _Small to medium (builder), anywhere._
-- [**93.** SecurityClaw's archive labels sit one word to the left](item-093-securityclaw-layout.md) — `Scale_int` is four bytes, so the member names after it lie; a corrections entry waiting on the next rebuild. _Small + rebuild._
 
 ## Moonshot
 
@@ -79,6 +78,7 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**93.** SecurityClaw's archive labels sit one word to the left](item-093-securityclaw-layout.md) — `Scale_int` is four bytes wide, so every member name after it numbers one word low; one corrections entry and the rebuild it waited for, and the glossary needed no touch-up because only the words move. _2026-09-05._
 - [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — save svg / save png in the diagram's own bar, both from one serializer: a self-contained SVG built from the same layout the screen draws, and the PNG that string rasterized at twice the screen. The route the sketch ranked first is the one that shipped, and it made the second painter unnecessary. _2026-09-02._
 - [**69.** Browser-level smoke tests](item-069-browser-smoke-tests.md) — the six assertions over boot, permalinks, follows, embed mode, search and settings, on the harness [63](item-063-alignment-anchor-diff.md) brought; the round-trip had to assert `viewHash()` reproduction, a plain view hash never being rewritten at all. _2026-09-02._
 - [**63.** Automate the alignment anchors as a screenshot diff](item-063-alignment-anchor-diff.md) — the four anchors as a CI gate with no reference images: geometry pinned as hand-verified literals, pixels probed against the committed artwork; a scale error moves the pins at any cell, and the deep-cell anchors carry the pitch class that does cancel at the original anchor's cell (0,0). _2026-09-02._

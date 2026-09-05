@@ -59,6 +59,13 @@ _SCHEMA_LAYOUT_CORRECTIONS = {
         [[0, "scale", "Scale_short"], [1, "movie_number"], [2, "trigger_switch_id"], [3, "padding"]],
         [[0, "movie_number"], [1, "scale", "Scale_short"], [2, "trigger_switch_id"]],
     ),
+    # SecurityClaw: Path_SecurityClaw opens with a 4-byte Scale_int, which
+    # ALIVE_ASSERT_SIZEOF_ALWAYS(0x18) confirms, so every member name after it
+    # numbers one word low
+    ("AE", 35): (
+        [[0, "scale", "Scale_int"], [1, "disabled_resources"], [2, "unknown"]],
+        [[0, "scale", "Scale_int"], [2, "disabled_resources"], [3, "unknown"]],
+    ),
 }
 
 def norm(label):

@@ -354,7 +354,6 @@ _BASE_PROPS = [{"Type": "SInt16", "Visible": True, "name": n}
 # that archives the word spends its entry loudly — bar the one dropped by design
 _EXPORT_VALUE_FALLBACKS = {
     ("AE", "MovieHandstone", "Trigger Switch ID"): 0,
-    ("AE", "SecurityClaw", "Unknown"): 0,
 }
 
 def schema_blob(rel):
