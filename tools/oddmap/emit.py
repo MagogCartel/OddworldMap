@@ -17,7 +17,7 @@ from oddmap.schema import load_enum_labels
 _FIELD_TYPE_OVERRIDES = {
     # a boolean declared as a direction instead of choice
     ("AE", "SligSpawner", "chase_abe_when_spotted"): ("XDirection_short", "Choice_short"),
-    # an enum the member-type parser can't reach: Path_Drill_Data sits outside the Tlvs include graph
+    # an enum the CTOR reads through a nested struct; the schema parser stops at its first segment
     ("AE", "Drill", "start_direction"): (None, "DrillDirection"),
 }
 
