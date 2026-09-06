@@ -234,3 +234,47 @@ test("no route leaves the diagram, crosses a node box, or shares a line", () => 
       }
   }
 });
+
+// spreading a box's stubs is not enough on its own: dealt in the wrong order,
+// a stub turning near the box climbs through the leg of one turning farther
+// out. Up-bound above down-bound and the nearer turn outermost is what keeps
+// a fan crossing-free, and only the fan's own stubs can tell
+test("no stub crosses another leaving the same side of a box", () => {
+  for (const data of games()) {
+    const g = worldGraph(data);
+    const L = graphLayout(g);
+    const boxes = [...g.nodes.values()].map((n) => ({ n, b: L.box(n) }));
+    const sideOf = ([x, y]) => {
+      const hit = boxes.find(
+        ({ b }) => y >= b.y && y <= b.y + GRAPH.nodeH && (x === b.x || x === b.x + GRAPH.nodeW),
+      );
+      return hit && `${hit.n.key} ${x === hit.b.x ? "l" : "r"}`;
+    };
+    const fans = new Map();
+    for (const { e, pts } of L.routes) {
+      const n = pts.length;
+      // a stub is the leg out of the box, its turn, and the climb away from it
+      for (const [edge, turn, next] of [
+        [pts[0], pts[1], pts[2]],
+        [pts[n - 1], pts[n - 2], pts[n - 3]],
+      ]) {
+        const key = sideOf(edge);
+        assert.ok(key, `${data.id} ${e.a}~${e.b} does not leave from a box edge`);
+        if (!fans.has(key)) fans.set(key, []);
+        fans.get(key).push({ e, edge, turn, next });
+      }
+    }
+    for (const [key, stubs] of fans)
+      for (const a of stubs)
+        for (const b of stubs) {
+          if (a === b) continue;
+          const [x1, x2] = [a.edge[0], a.turn[0]].sort((p, q) => p - q);
+          const [y1, y2] = [b.turn[1], b.next[1]].sort((p, q) => p - q);
+          const [bx, ay] = [b.turn[0], a.edge[1]];
+          assert.ok(
+            !(bx > x1 && bx < x2 && ay > y1 && ay < y2),
+            `${data.id} ${key}: ${a.e.a}~${a.e.b} crosses ${b.e.a}~${b.e.b}`,
+          );
+        }
+  }
+});
