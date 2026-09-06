@@ -320,7 +320,6 @@ export function paint(ctx, cam, w, h, dpr, transients = true) {
       const im = img(c.png);
       if (im.complete && im.naturalWidth) {
         ctx.globalAlpha = show.dim ? 0.35 : 1;
-        // source is 384px wide (24 MDEC macroblocks); only the first 368 columns are real
         ctx.drawImage(im, 0, 0, GEO.visW, GEO.visH, cx, cy, GEO.visW, GEO.visH);
         ctx.globalAlpha = 1;
       }
