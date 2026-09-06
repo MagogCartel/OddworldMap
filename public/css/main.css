@@ -211,7 +211,7 @@ body.fullnames .btnrow button {
   font-size: 11px;
 }
 /* a text button with no chrome: the treatment is shared, the size is not —
-   each surface sets its own, and the route bar's pair can be disabled */
+   each surface sets its own, and a member may be disabled */
 .linkbtn {
   background: none;
   border: 0;
