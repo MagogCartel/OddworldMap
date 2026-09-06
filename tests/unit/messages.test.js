@@ -207,6 +207,17 @@ test("messages: no shipped board labels a state no switch can reach", () => {
   }
 });
 
+test("messages: the hardwired-switch guard silences 26 shipped boards", () => {
+  setMessages(SHIPPED);
+  let silenced = 0;
+  for (const { t } of eachTlv("AE")) {
+    if (t.name !== "LCD" || t.fields.toggle_message_switch_id > 1) continue;
+    const live = { ...t, fields: { ...t.fields, toggle_message_switch_id: 2 } };
+    if (objectMessages("AE", live).some((m) => m.note.startsWith("switch"))) silenced++;
+  }
+  assert.equal(silenced, 26);
+});
+
 test("messages: Rupture Farms Return silences the boards its first visit taught with", () => {
   setMessages(SHIPPED);
   const boards = [...eachTlv("AO")].filter((r) => r.t.name === "LCDScreen");
