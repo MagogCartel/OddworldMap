@@ -338,7 +338,7 @@ Guidance for AI agents working in this repo. User-facing docs (controls, rebuild
 - Changelog entries are curated, not generated: draft with `tools/changelog.py`, then rewrite into a player-facing headline + detail. The feed is a date-stamped journal of the site, not a highlights reel — any user-visible change, however small, is welcome on it; what stays out is internal work players can't perceive (refactors, tooling, CI).
 - No game owns unsuffixed defaults: everything game-specific carries `ao`/`ae` in its name (files, JS globals, env vars, URL hashes). Do not reintroduce unsuffixed names for AO just because it came first.
 - Generated JSON is pretty-printed (`indent=1`) so history stays diffable; keep the format stable.
-- Prettier owns js/css/html formatting (`.prettierrc`: printWidth 100, defaults otherwise; exemptions in `.prettierignore` — `public/js/config.js` keeps its hand-aligned tables, JSON and Markdown keep their own formats).
+- Prettier owns js/css/html formatting (`.prettierrc`: printWidth 100, defaults otherwise; exemptions in `.prettierignore` — `public/js/config.js` keeps its hand-aligned tables, `public/levels/` keeps the emitter's bytes, JSON and Markdown keep their own formats).
   - The version is pinned exactly in devDependencies because output is version-dependent (like oxipng for the PNGs); bump it deliberately: upgrade, reformat the tree in a dedicated commit, and add that commit to `.git-blame-ignore-revs`.
   - New clones opt blame in once with `git config blame.ignoreRevsFile .git-blame-ignore-revs` (GitHub reads the file automatically).
 - Format only the staged files before each commit, so the commit doesn't drag in formatter drift from unrelated files:
