@@ -11795,7 +11795,8 @@
       {
        "cell": 32,
        "name": "MIP04C20",
-       "png": "cams/ae/MI/MIP04C20.png"
+       "png": "cams/ae/MI/MIP04C20.png",
+       "fg": "cams/ae/MI/MIP04C20_fg.png"
       },
       {
        "cell": 33,
@@ -11889,7 +11890,8 @@
       {
        "cell": 86,
        "name": "MIP04C15",
-       "png": "cams/ae/MI/MIP04C15.png"
+       "png": "cams/ae/MI/MIP04C15.png",
+       "fg": "cams/ae/MI/MIP04C15_fg.png"
       },
       {
        "cell": 87,
@@ -19544,7 +19546,8 @@
       {
        "cell": 13,
        "name": "MIP05C01",
-       "png": "cams/ae/MI/MIP05C01.png"
+       "png": "cams/ae/MI/MIP05C01.png",
+       "fg": "cams/ae/MI/MIP05C01_fg.png"
       },
       {
        "cell": 15,
@@ -31759,7 +31762,8 @@
       {
        "cell": 19,
        "name": "MIP10C18",
-       "png": "cams/ae/MI/MIP10C18.png"
+       "png": "cams/ae/MI/MIP10C18.png",
+       "fg": "cams/ae/MI/MIP10C18_fg.png"
       },
       {
        "cell": 20,
@@ -39039,7 +39043,8 @@
       {
        "cell": 39,
        "name": "NEP02C08",
-       "png": "cams/ae/NE/NEP02C08.png"
+       "png": "cams/ae/NE/NEP02C08.png",
+       "fg": "cams/ae/NE/NEP02C08_fg.png"
       },
       {
        "cell": 40,
@@ -41706,7 +41711,8 @@
       {
        "cell": 87,
        "name": "NEP03C11",
-       "png": "cams/ae/NE/NEP03C11.png"
+       "png": "cams/ae/NE/NEP03C11.png",
+       "fg": "cams/ae/NE/NEP03C11_fg.png"
       },
       {
        "cell": 91,
@@ -54322,7 +54328,8 @@
       {
        "cell": 37,
        "name": "PVP03C07",
-       "png": "cams/ae/PV/PVP03C07.png"
+       "png": "cams/ae/PV/PVP03C07.png",
+       "fg": "cams/ae/PV/PVP03C07_fg.png"
       },
       {
        "cell": 38,
@@ -55952,7 +55959,8 @@
       {
        "cell": 17,
        "name": "PVP04C02",
-       "png": "cams/ae/PV/PVP04C02.png"
+       "png": "cams/ae/PV/PVP04C02.png",
+       "fg": "cams/ae/PV/PVP04C02_fg.png"
       },
       {
        "cell": 18,
@@ -69780,7 +69788,8 @@
       {
        "cell": 13,
        "name": "PVP13C01",
-       "png": "cams/ae/PV/PVP13C01.png"
+       "png": "cams/ae/PV/PVP13C01.png",
+       "fg": "cams/ae/PV/PVP13C01_fg.png"
       },
       {
        "cell": 14,
@@ -77122,7 +77131,8 @@
       {
        "cell": 8,
        "name": "SVP02C05",
-       "png": "cams/ae/SV/SVP02C05.png"
+       "png": "cams/ae/SV/SVP02C05.png",
+       "fg": "cams/ae/SV/SVP02C05_fg.png"
       },
       {
        "cell": 9,
@@ -86311,7 +86321,8 @@
       {
        "cell": 56,
        "name": "SVP06C11",
-       "png": "cams/ae/SV/SVP06C11.png"
+       "png": "cams/ae/SV/SVP06C11.png",
+       "fg": "cams/ae/SV/SVP06C11_fg.png"
       },
       {
        "cell": 58,
@@ -119313,7 +119324,8 @@
       {
        "cell": 13,
        "name": "FDP07C06",
-       "png": "cams/ae/FD/FDP07C06.png"
+       "png": "cams/ae/FD/FDP07C06.png",
+       "fg": "cams/ae/FD/FDP07C06_fg.png"
       },
       {
        "cell": 16,
@@ -122576,7 +122588,8 @@
       {
        "cell": 7,
        "name": "FDP09C01",
-       "png": "cams/ae/FD/FDP09C01.png"
+       "png": "cams/ae/FD/FDP09C01.png",
+       "fg": "cams/ae/FD/FDP09C01_fg.png"
       },
       {
        "cell": 8,
@@ -128801,7 +128814,8 @@
       {
        "cell": 8,
        "name": "FDP12C06",
-       "png": "cams/ae/FD/FDP12C06.png"
+       "png": "cams/ae/FD/FDP12C06.png",
+       "fg": "cams/ae/FD/FDP12C06_fg.png"
       },
       {
        "cell": 11,
@@ -153230,7 +153244,8 @@
       {
        "cell": 9,
        "name": "BAP09C04",
-       "png": "cams/ae/BA/BAP09C04.png"
+       "png": "cams/ae/BA/BAP09C04.png",
+       "fg": "cams/ae/BA/BAP09C04_fg.png"
       },
       {
        "cell": 11,
@@ -196437,7 +196452,8 @@
       {
        "cell": 18,
        "name": "BRP02C13",
-       "png": "cams/ae/BR/BRP02C13.png"
+       "png": "cams/ae/BR/BRP02C13.png",
+       "fg": "cams/ae/BR/BRP02C13_fg.png"
       },
       {
        "cell": 25,
@@ -255775,7 +255791,8 @@
       {
        "cell": 21,
        "name": "STP01C01",
-       "png": "cams/ae/ST/STP01C01.png"
+       "png": "cams/ae/ST/STP01C01.png",
+       "fg": "cams/ae/ST/STP01C01_fg.png"
       },
       {
        "cell": 23,

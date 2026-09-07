@@ -8,7 +8,7 @@ const load = (name) => JSON.parse(read(name));
 
 const GAMES = [
   ["map_data_ao.json", 935],
-  ["map_data_ae.json", 1936],
+  ["map_data_ae.json", 1953],
 ];
 
 for (const [file, files] of GAMES)

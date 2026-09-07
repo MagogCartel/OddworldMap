@@ -65,13 +65,17 @@ def rgb555(px):
     r = (px & 0x1F) << 3; g = ((px >> 5) & 0x1F) << 3; b = ((px >> 10) & 0x1F) << 3
     return bytes((r | r >> 5, g | g >> 5, b | b >> 5, 255))
 
-def decode_fg1(fg1, cam_rgba, w, h, bitmask_format):
-    """walk an FG1 chunk stream, return overlay RGBA (or None if empty).
+def decode_fg1(fg1, cam_rgba, w, h):
+    """walk an FG1 chunk stream, return (overlay RGBA or None, walked to the end).
 
-    Partial blocks carry RGB555 pixels in AO and per-row u32 bitmasks (over the
-    camera bitmap) in AE; compressed sub-streams only exist in AO."""
+    Partial blocks carry their own RGB555 pixels in both games: the per-row u32
+    bitmask form is a PC one, and on the discs every block sits inside an
+    LZ-compressed sub-stream. A walk that does not reach its end marker has lost
+    the stride and is dropping blocks, which is silent in the output and so is
+    reported rather than left to be noticed."""
     overlay = bytearray(w * h * 4)
     any_px = False
+    clean = False
     stack = []          # saved (buffer, pos) while inside compressed sub-streams
     buf, pos = fg1, 4   # skip u32 count
     while True:
@@ -81,6 +85,7 @@ def decode_fg1(fg1, cam_rgba, w, h, bitmask_format):
         typ, layer, x, y, cw, ch = struct.unpack_from("<HHhhHH", buf, pos)
         if typ == 0xFFFF:            # end
             if stack: buf, pos = stack.pop(); continue
+            clean = True
             break
         if typ == 0xFFFC:            # end of compressed sub-stream
             buf, pos = stack.pop(); continue
@@ -100,43 +105,27 @@ def decode_fg1(fg1, cam_rgba, w, h, bitmask_format):
                     any_px = True
             pos += 12
             continue
-        if typ == 0:                 # partial block
-            if bitmask_format:       # AE: one u32 bitmask per row selecting cam pixels
-                if pos + 12 + ch * 4 > len(buf):
-                    break            # truncated chunk
-                for j in range(ch):
-                    yy = y + j
-                    if not (0 <= yy < h): continue
-                    bits = struct.unpack_from("<I", buf, pos + 12 + j * 4)[0]
-                    for i in range(min(cw, 32)):
-                        if bits >> i & 1:
-                            xx = x + i
-                            if 0 <= xx < w:
-                                o = (yy * w + xx) * 4
-                                overlay[o:o + 4] = cam_rgba[o:o + 4]
-                                any_px = True
-                pos += 12 + ch * 4
-            else:                    # AO: own RGB555 pixels follow
-                px_off = pos + 12
-                if px_off + cw * ch * 2 > len(buf):
-                    break            # truncated chunk
-                for j in range(ch):
-                    yy = y + j
-                    for i in range(cw):
-                        px = struct.unpack_from("<H", buf, px_off + (j * cw + i) * 2)[0]
-                        if px == 0: continue
-                        xx = x + i
-                        if 0 <= xx < w and 0 <= yy < h:
-                            overlay[(yy * w + xx) * 4:(yy * w + xx) * 4 + 4] = rgb555(px)
-                            any_px = True
-                pos = px_off + cw * ch * 2
+        if typ == 0:                 # partial block: own RGB555 pixels follow
+            px_off = pos + 12
+            if px_off + cw * ch * 2 > len(buf):
+                break                # truncated chunk
+            for j in range(ch):
+                yy = y + j
+                for i in range(cw):
+                    px = struct.unpack_from("<H", buf, px_off + (j * cw + i) * 2)[0]
+                    if px == 0: continue
+                    xx = x + i
+                    if 0 <= xx < w and 0 <= yy < h:
+                        overlay[(yy * w + xx) * 4:(yy * w + xx) * 4 + 4] = rgb555(px)
+                        any_px = True
+            pos = px_off + cw * ch * 2
             continue
         # unknown chunk type: bail out of this stream
         if stack: buf, pos = stack.pop(); continue
         break
-    return bytes(overlay) if any_px else None
+    return (bytes(overlay) if any_px else None), clean
 
-def decode_cam(lvl, cam_name, out_png, tmpdir, bitmask_fg1):
+def decode_cam(lvl, cam_name, out_png, tmpdir):
     try:
         cam = lvl.read(cam_name + ".CAM")
     except KeyError:
@@ -169,7 +158,9 @@ def decode_cam(lvl, cam_name, out_png, tmpdir, bitmask_fg1):
     fg_parts = [v for (tag, _), v in chunks.items() if tag == "FG1 "]
     overlay = None
     for part in fg_parts:
-        got = decode_fg1(part, rgba, w, h, bitmask_fg1)
+        got, clean = decode_fg1(part, rgba, w, h)
+        if not clean:
+            print(f"    ! FG1 stream not walked to its end: {cam_name}")
         if got is None:
             continue
         if overlay is None:

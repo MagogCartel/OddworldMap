@@ -177,7 +177,7 @@ def main():
                     # to them (FDP08C13, FDP10C14, BRP08C10), so a "failed" count of
                     # 3 is expected for AE; decode_cam's warning tells a missing file
                     # from a genuine decode failure.
-                    ok = decode_cam(lvl, nm, png_path, tmpdir, game["fg1_bitmask"])
+                    ok = decode_cam(lvl, nm, png_path, tmpdir)
                     cam_stats["decoded" if ok else "failed"] += 1
                 entry = {"cell": i, "name": nm, "png": png_rel if ok else None}
                 if (out / f"{game['cams_dir']}/{short}/{nm}_fg.png").exists():
