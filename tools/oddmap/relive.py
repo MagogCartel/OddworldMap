@@ -9,6 +9,7 @@ Cached under tools/data/ with the pathdata/objects discipline: re-parsed only
 when deleted, and only from the checkout at the pin. The parse validates its
 layouts against the decomp's own ALIVE_ASSERT_SIZEOF lines and raises on any
 type it cannot width, so a thinner sweep fails rather than caching wrong words."""
+import hashlib
 import json
 import re
 
@@ -328,6 +329,15 @@ def parse_relive_schema(game_key):
             "structure_order": order,
             "enums": {name: enum_labels[name] for name in enum_order},
             "collision_structure": collision}
+
+def canonical(doc):
+    """the document as one byte string both implementations can agree on: keys
+    sorted, no whitespace, and every value an int or an ASCII string, so
+    Python's dumps and a sorted stringify in the page produce the same bytes"""
+    return json.dumps(doc, sort_keys=True, separators=(",", ":")).encode()
+
+def digest(doc):
+    return hashlib.sha256(canonical(doc)).hexdigest()
 
 def load_relive_schema(game_key, game):
     return cached(HERE / "data" / game["relive_cache"], lambda: parse_relive_schema(game_key))

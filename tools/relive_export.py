@@ -23,7 +23,7 @@ sys.path.insert(0, str(HERE))
 from oddmap.decomp import load_cache  # noqa: E402
 from oddmap.games import GAMES, game_setup  # noqa: E402
 from oddmap.paths import SITE  # noqa: E402
-from oddmap.relive import export_path, load_line_links, load_relive_schema  # noqa: E402
+from oddmap.relive import digest, export_path, load_line_links, load_relive_schema  # noqa: E402
 
 def export_game(game_key, out, only=None, allow_incomplete=False):
     """(files written, paths withheld, manifest) for one game; `only` narrows to
@@ -50,16 +50,43 @@ def export_game(game_key, out, only=None, allow_incomplete=False):
             written += 1
     return written, withheld, missing, fallbacks
 
+def write_digests(dst):
+    """one canonical-form sha256 per path, which is what pins the page's exporter
+    to this one: the browser has no Python to compare itself against, so both
+    sides answer to the same file"""
+    out = {}
+    for game_key in sorted(GAMES):
+        game = game_setup(game_key)
+        rel = load_relive_schema(game_key, game)
+        links = load_line_links(game_key, game)
+        data = json.loads((SITE / game["data_file"]).read_text())
+        muds = load_cache(game).get("muds_in_level") if game_key == "AE" else None
+        rows = {}
+        for level in data["levels"]:
+            for path in level["paths"]:
+                doc, _ = export_path(game_key, game, rel, level, path, muds, links)
+                rows[f"{level['short']} P{path['id']}"] = digest(doc)
+        out[game_key] = rows
+    Path(dst).write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
+    return sum(len(v) for v in out.values())
+
 def main():
     ap = argparse.ArgumentParser(description="export paths as relive_api v4 JSON")
     ap.add_argument("--game", choices=sorted(GAMES), help="with --level and --path, one path; with --all, one game")
     ap.add_argument("--level", help="level short name, e.g. R1")
     ap.add_argument("--path", type=int, help="numeric path id")
     ap.add_argument("--all", action="store_true", help="every path of the game(s)")
-    ap.add_argument("--out", required=True, help="output directory (never public/)")
+    ap.add_argument("--out", help="output directory (never public/); required unless --digests")
     ap.add_argument("--allow-incomplete", action="store_true",
                     help="write files the importer would refuse, manifest printed the same")
+    ap.add_argument("--digests", metavar="FILE",
+                    help="write one canonical sha256 per path instead, for the page's exporter")
     args = ap.parse_args()
+    if args.digests:
+        print(f"{write_digests(args.digests)} path digests -> {args.digests}")
+        return
+    if not args.out:
+        ap.error("--out is required")
     if not args.all and not (args.game and args.level and args.path is not None):
         ap.error("either --all or all three of --game/--level/--path")
 

@@ -5,6 +5,8 @@ $ODDWORLD_DECOMP at a clone of the pin, so it runs there), and everything else
 runs from the committed tree.
 """
 
+import contextlib
+import io
 import json
 import shutil
 import subprocess
@@ -17,8 +19,9 @@ from unittest import mock
 sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parent)]
 
 from oddmap import games, relive, schema  # noqa: E402
-from oddmap.paths import DECOMP_COMMIT, HERE, SITE  # noqa: E402
+from oddmap.paths import DECOMP_COMMIT, HERE, ROOT, SITE  # noqa: E402
 from decomp_checkout import needs_decomp, stale  # noqa: E402
+import relive_export  # noqa: E402
 import relive_verify  # noqa: E402
 
 def relive_cache(game_key):
@@ -274,6 +277,17 @@ class ExportSweep(unittest.TestCase):
                             self.assertEqual(mine(t, path), cell, game_key)
                             straddling += other(t, path) != cell
             self.assertEqual(straddling, want, game_key)
+
+    def test_the_committed_digests_are_a_fresh_run(self):
+        """the page's exporter has no Python to compare itself against, so both
+        implementations answer to this file: it is the builder's side of that"""
+        with tempfile.TemporaryDirectory() as tmp, contextlib.redirect_stdout(io.StringIO()):
+            dst = Path(tmp) / "digests.json"
+            relive_export.write_digests(dst)
+            fresh = dst.read_bytes()
+        self.assertEqual(fresh, (ROOT / "tests/fixtures/relive-digests.json").read_bytes(),
+                         "relive-digests.json differs from a fresh run — rerun "
+                         "`python3 tools/relive_export.py --digests tests/fixtures/relive-digests.json`")
 
     def test_the_archive_answers_every_property_relive_reads(self):
         for game_key in ("AO", "AE"):
