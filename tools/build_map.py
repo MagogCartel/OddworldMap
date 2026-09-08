@@ -25,7 +25,8 @@ from pathlib import Path
 
 from oddmap.disc import Disc, Lvl, parse_chunks
 from oddmap.emit import (print_build_summary, require_stampable, stamp_cache_name,
-                         write_enum_labels, write_field_types, write_line_links)
+                         write_enum_labels, write_field_types, write_line_links,
+                         write_relive_export)
 from oddmap.games import GAMES, game_setup
 from oddmap.image import decode_cam, ensure_tools
 from oddmap.messages import write_messages
@@ -51,6 +52,7 @@ def main():
         for gk in sorted(GAMES):
             write_field_types(gk, Path(args.out))
             write_enum_labels(gk, Path(args.out))
+            write_relive_export(gk, Path(args.out))
         return
 
     game = game_setup(args.game)
@@ -223,6 +225,7 @@ def main():
     data_file.write_text(json.dumps(data, indent=1))
     write_field_types(args.game, out)  # decomp-derived sidecars, kept in sync each build
     write_enum_labels(args.game, out)
+    write_relive_export(args.game, out)
     # game-wide, so a subset build writes it whole
     write_messages(args.game, discs, out / game["messages_file"])
     # the collision links are the exporter's and no viewer surface draws them, so

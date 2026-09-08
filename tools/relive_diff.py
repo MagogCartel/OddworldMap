@@ -19,14 +19,14 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-from oddmap.relive import _EXPORT_VALUE_FALLBACKS  # noqa: E402
+from oddmap.relive import EXPORT_VALUE_FALLBACKS  # noqa: E402
 
 def diff_documents(ours, theirs):
     """{"diffs", "known", "warnings"}: lists of finding strings. Clean means no
     diffs."""
     out = {"diffs": [], "known": [], "warnings": []}
     game = ours.get("game")
-    known_props = {(lit, prop) for (gk, lit, prop) in _EXPORT_VALUE_FALLBACKS if gk == game}
+    known_props = {(lit, prop) for (gk, lit, prop) in EXPORT_VALUE_FALLBACKS if gk == game}
 
     for key in ("api_version", "game"):
         if ours.get(key) != theirs.get(key):

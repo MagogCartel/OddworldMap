@@ -236,7 +236,7 @@ class ExporterOutput(unittest.TestCase):
 
     def test_a_fallback_for_an_archived_word_fails_the_export(self):
         entry = {("AO", "AbeStart", "Scale"): 0}
-        with mock.patch.dict(relive._EXPORT_VALUE_FALLBACKS, entry), self.assertRaises(RuntimeError):
+        with mock.patch.dict(relive.EXPORT_VALUE_FALLBACKS, entry), self.assertRaises(RuntimeError):
             export("AO", *self.FIXTURES["AO"])
 
 

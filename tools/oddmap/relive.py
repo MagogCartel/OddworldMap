@@ -338,7 +338,7 @@ def load_line_links(game_key, game):
 
 # relive registers its basic types from numeric_limits narrowed to s32, spelling
 # quirks and all (TypesCollectionBase.cpp), so the blob is a constant
-_BASIC_TYPES_JSON = [
+BASIC_TYPES_JSON = [
     {"min_value": 0, "max_value": 255, "name": "Byte"},
     {"min_value": 0, "max_value": 65535, "name": "UInt16"},
     {"min_value": -32768, "max_value": 32767, "name": "SInt16"},
@@ -346,13 +346,13 @@ _BASIC_TYPES_JSON = [
     {"min_value": -2147483648, "max_value": 2147483647, "name": "SInt32"},
 ]
 
-_BASE_PROPS = [{"Type": "SInt16", "Visible": True, "name": n}
-               for n in ("xpos", "ypos", "width", "height")]
+BASE_PROPS = [{"Type": "SInt16", "Visible": True, "name": n}
+              for n in ("xpos", "ypos", "width", "height")]
 
 # words relive reads that the archive never captured, and what to write there:
 # a diff against a reference export holds them known-divergent, and a rebuild
 # that archives the word spends its entry loudly — bar the one dropped by design
-_EXPORT_VALUE_FALLBACKS = {
+EXPORT_VALUE_FALLBACKS = {
     ("AE", "MovieHandstone", "Trigger Switch ID"): 0,
 }
 
@@ -361,14 +361,14 @@ def schema_blob(rel):
     by_name = {s["name"]: s for s in rel["structures"].values()}
     structures = []
     for literal in rel["structure_order"]:
-        descs = list(_BASE_PROPS)
+        descs = list(BASE_PROPS)
         for p in by_name[literal]["properties"]:
             d = {"Type": p["type"], "Visible": p["visible"], "name": p["name"]}
             if "id_str" in p:
                 d["Identity_string"] = p["id_str"]
             descs.append(d)
         structures.append({"name": literal, "enum_and_basic_type_properties": descs})
-    return {"object_structure_property_basic_types": _BASIC_TYPES_JSON,
+    return {"object_structure_property_basic_types": BASIC_TYPES_JSON,
             "object_structure_property_enums": [{"name": n, "values": list(t.values())}
                                                 for n, t in rel["enums"].items()],
             "object_structures": structures}
@@ -410,7 +410,7 @@ def widen_value(lo, hi, ty, size):
 
 def _property_value(game_key, literal, prop, words, rel, manifest):
     lo = words.get(prop["word"])
-    fallback = _EXPORT_VALUE_FALLBACKS.get((game_key, literal, prop["name"]))
+    fallback = EXPORT_VALUE_FALLBACKS.get((game_key, literal, prop["name"]))
     if lo is None:
         if fallback is None:
             manifest["missing"].add((literal, prop["name"]))

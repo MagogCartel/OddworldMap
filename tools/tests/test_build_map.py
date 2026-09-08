@@ -526,6 +526,24 @@ class Sidecars(unittest.TestCase):
     def test_enum_labels_ae(self):
         self.assertReproduces(emit.write_enum_labels, "AE", "enum_labels_ae.json")
 
+    def test_relive_export_ao(self):
+        self.assertReproduces(emit.write_relive_export, "AO", "relive_export_ao.json")
+
+    def test_relive_export_ae(self):
+        self.assertReproduces(emit.write_relive_export, "AE", "relive_export_ae.json")
+
+    def test_the_served_export_data_is_the_caches_verbatim(self):
+        """the page reads relive's schema and the collision links through this
+        file, so a copy that drifted from the cache would export documents the
+        builder cannot reproduce"""
+        for game_key in ("AO", "AE"):
+            game = games.GAMES[game_key]
+            side = json.loads((SITE / game["relive_export_file"]).read_text())
+            for served, cache in (("schema", "relive_cache"), ("links", "links_file")):
+                self.assertEqual(side[served],
+                                 json.loads((HERE / "data" / game[cache]).read_text()),
+                                 f"{game_key} {served}")
+
     def test_a_stale_field_type_override_fails_the_emit(self):
         stale = {("AO", "Door", "no_such_field"): (None, "Choice_short")}
         with mock.patch.dict(emit._FIELD_TYPE_OVERRIDES, stale), self.assertRaises(RuntimeError):

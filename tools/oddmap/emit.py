@@ -6,7 +6,10 @@ import json
 import re
 import sys
 
+from oddmap import relive
+from oddmap.decomp import load_cache
 from oddmap.games import game_setup
+from oddmap.paths import HERE
 from oddmap.schema import load_enum_labels
 
 # decomp quirks corrected when emitting field_types (the schema cache stays
@@ -50,6 +53,42 @@ def write_field_types(game_key, out):
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.write_text(json.dumps({k: ft[k] for k in sorted(ft)}, indent=1))
     print(f"field types -> {dst} ({len(ft)} object types)")
+    return dst
+
+def write_relive_export(game_key, out):
+    """everything an export needs that the served site does not already carry,
+    from the committed caches alone: relive's schema, the payload layouts the
+    field names join through, the collision links, and — Exoddus alone reading
+    them from data rather than from a constant — its Abe starts and mud table.
+    It is served rather than cached because a page cannot read tools/data."""
+    game = game_setup(game_key)
+
+    def read(name):
+        return json.loads((HERE / "data" / name).read_text())
+
+    rel = read(game["relive_cache"])
+    doc = {"schema": rel,
+           "layouts": {str(tid): rows for tid, rows in sorted(game["schema"].items())},
+           "links": read(game["links_file"]),
+           # JS reorders an object's integer-like keys, so the order schema_blob
+           # reads out of the enum tables has to be carried rather than inferred
+           "enum_values": {name: list(table.values()) for name, table in rel["enums"].items()},
+           "basic_types": relive.BASIC_TYPES_JSON,
+           "base_properties": relive.BASE_PROPS,
+           "fallbacks": {}}
+    for (gk, literal, prop), v in sorted(relive.EXPORT_VALUE_FALLBACKS.items()):
+        if gk == game_key:
+            doc["fallbacks"].setdefault(literal, {})[prop] = v
+    if game_key == "AE":
+        cache = load_cache(game)
+        doc["muds_in_level"] = cache["muds_in_level"]
+        doc["abe"] = {short: {pid: [row["abe_x"], row["abe_y"]]
+                              for pid, row in sorted(rows.items(), key=lambda kv: int(kv[0]))}
+                      for short, rows in sorted(cache["tables"].items())}
+    dst = out / game["relive_export_file"]
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text(json.dumps(doc, indent=1))
+    print(f"relive export data -> {dst} ({len(doc['schema']['structures'])} object types)")
     return dst
 
 def write_line_links(game_key, links, dst, merge):
