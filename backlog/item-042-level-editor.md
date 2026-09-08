@@ -1,6 +1,6 @@
 # 42. Level editor — could this site host one?
 
-**Status:** open — Phase 1 complete 2026-09-05 (exporter, reference-reader oracle, structural diff, and the cross-check run); Phases 2–3 parked · **Effort:** Phases 2–3 large · **Where:** builder-only — Phase 2's FG1 layer split would need a disc
+**Status:** open — Phases 1 and 2 shipped (the cross-check 2026-09-05, the download 2026-09-08); Phase 3 parked · **Effort:** Phase 3 large · **Where:** anywhere; nothing left here needs a disc
 
 **Outcome: what the site should produce is a *description* of a path, not a level — and the write path belongs in `tools/`, not on the page.** AliveTeam's level editor already exists, is released for Windows and Linux, and pins the exact decomp tree the builder's parsers already read; it reads the user's own LVL files and can patch them from a JSON. So the site's job is not to be an editor but to emit that JSON — and the first thing that JSON buys is not modding at all, it is a **cross-check of our extraction against AliveTeam's**, object for object, over 16,225 objects and 9,540 collision lines (measured 2026-08-26).
 
@@ -150,6 +150,20 @@ Ruled out as a framing rather than as an implementation. The editor already prod
 **The reason to keep the write path in `tools/` is not legal, though — it is the site's credibility.** The promise of this map is that everything on it is what the disc says. An editor living inside the map puts that at risk; an exporter living beside it does not. If Phase 2 lands, the About dialog's "ships no game code" stays true and gains one sentence saying what the export is and is not, and the README's rebuild section gains the export beside the build. That touches [68](item-068-repo-licensing.md), the open question of what terms this project states about itself, but does not settle it: a download is not a licence.
 
 ---
+
+## Shipped: Phase 2, 2026-09-08
+
+**The download is an Export path as JSON button beside the two image exports**, handing the standing path over as `oddworld-ao-R1-P15.json`. It refuses rather than writing a document whose manifest holds a miss, relive's importer aborting the process outright on a missing numeric property, and the button's tooltip, the toast it leaves and the About dialog each say the same thing: a description of the path, no artwork, and an import drops that path's foreground masks.
+
+**The gate this file set had only one side to land on.** The choice was stated as "say so" against "emit the layers", the second costing a builder change and a disc rebuild. The second is not available at any price: `ApiFG1Reader`'s layer buffers are `u16[4][240][640]` and `MakeFG1Layer` scans a 640-wide mask in 32x16 blocks, because a PC camera bitmap is 640x240 in 40 strips of 16 columns (`ConvertAOCamera`). A PlayStation screen is 368 wide, which the committed artwork carries at 368x240. The masks are screen-space, the two platforms' screens are different widths, and no rebuild changes that — so the layers cannot be derived from this data at all, and "say so" is what shipped.
+
+The two halves of that rest on different evidence, which is worth stating because a sweep will not reproduce one of them. Oddysee's is measured: its partial blocks carry their own pixels and could in principle reach anywhere, and across every camera on the disc the rightmost block edge is exactly x=369, which ten of them reach and none passes. Exoddus' is structural: its partial blocks are bitmasks *selecting camera-bitmap pixels*, so a mask cannot exceed the 368-wide bitmap it draws from whatever its header claims — and sweeping its headers returns tens of thousands, because a header inside a compressed sub-stream can read as nonsense and be clipped away.
+
+**The page builds the document itself**, [js/reliveexport.js](../public/js/reliveexport.js) being a port of `export_path` over the same caches, reached through a `relive_export_{ao,ae}.json` sidecar that no boot fetches — 37 KB gzipped for Exoddus, and nothing reads it until the button is pressed. That keeps the call the Phase 1 notes below made about the collision links: what the viewer does not draw does not ride the first paint.
+
+**Neither implementation can run the other, so both answer to one file.** `tools/relive_export.py --digests` writes a canonical-form sha256 per path; the builder's suite regenerates and byte-compares it, and the page's suite hashes all 191 documents against it. The two agreed on nothing at first — JS reorders an object's integer-like keys, so `Enum_LevelIds`, which opens at `-1`, came back rotated by one — which is exactly the class of divergence a shared fixture is for. Driven in a real browser, both games' documents now hash to the digests the builder recorded.
+
+**What Phase 3 still owes is unchanged**, and the FG1 finding does not touch it: an edit made in the browser would ship through this same document, and the selection model, dirty state and `t.extra` re-derivation listed below are still what is missing.
 
 ## The cross-check, 2026-09-05
 
