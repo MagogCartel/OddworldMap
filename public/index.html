@@ -172,6 +172,12 @@
         >
           Export whole path
         </button>
+        <button
+          id="exportJsonBtn"
+          data-tip="Saves this path&#39;s objects and collision lines as the AliveTeam level editor&#39;s JSON.&#10;A description of the path, not a level: it carries no artwork, and importing it into your own LVL drops that path&#39;s foreground masks."
+        >
+          Export path as JSON
+        </button>
       </div>
       <h2>
         Objects
@@ -549,6 +555,14 @@
           <p class="ab-meta">
             Every level also has a <a href="/levels/">plain page of its own</a>, listing its paths
             with links into the map.
+          </p>
+          <p class="ab-meta">
+            A path can be saved as the
+            <a href="https://github.com/AliveTeam/qt-editor" target="_blank" rel="noopener"
+              >AliveTeam level editor</a
+            >&rsquo;s JSON: a description of its objects and collision lines, carrying no artwork
+            and no game code. It is something to read and to check this map against; importing it
+            into your own copy of the game drops that path&rsquo;s foreground masks.
           </p>
           <p class="ab-meta">
             Source code:

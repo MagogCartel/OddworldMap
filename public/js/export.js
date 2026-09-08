@@ -1,10 +1,13 @@
-// Export: the visible area or the whole path as PNG, and the world graph as
-// a standalone SVG or a PNG rasterized from it.
+// Export: the visible area or the whole path as PNG, the path's objects and
+// collision lines as the level editor's JSON, and the world graph as a
+// standalone SVG or a PNG rasterized from it.
 
 import { EXPORT_MAX_DIM, EXPORT_MAX_PX } from "./config.js";
+import { loadJson } from "./data.js";
 import { $, cv } from "./dom.js";
 import { graphName, graphSvg } from "./graphsvg.js";
 import { pathImage } from "./model.js";
+import { exportPath } from "./reliveexport.js";
 import { artworkReady, paint, preloadPath } from "./render.js";
 import { LAYOUT, cellOrigin, state } from "./state.js";
 import { toast } from "./toast.js";
@@ -106,6 +109,58 @@ pathBtn.onclick = async () => {
   } finally {
     pathBtn.disabled = false;
     pathBtn.textContent = PATH_LABEL;
+  }
+};
+
+// the editor data is a viewer surface nobody uses until they ask for it, so it
+// is fetched on the first export rather than at boot; one fetch per game however
+// many exports follow, and a fetch that came back with nothing is forgotten so
+// the next press is a real retry rather than the first failure repeating
+const editorData = new Map();
+function loadEditorData(id) {
+  let p = editorData.get(id);
+  if (!p) {
+    p = loadJson(`relive_export_${id.toLowerCase()}.json`).then((d) => {
+      if (!d) editorData.delete(id);
+      return d;
+    });
+    editorData.set(id, p);
+  }
+  return p;
+}
+
+const jsonBtn = $("exportJsonBtn");
+const JSON_LABEL = jsonBtn.textContent.trim();
+
+jsonBtn.onclick = async () => {
+  const { data, lvl, path } = state;
+  if (!path) return;
+  jsonBtn.disabled = true;
+  jsonBtn.textContent = "Preparing…";
+  try {
+    const side = await loadEditorData(data.id);
+    if (!side) {
+      toast("export failed: the editor data did not load");
+      return;
+    }
+    const { doc, manifest } = exportPath(data.id, data.geometry, lvl, path, side);
+    // relive's importer aborts outright on a missing numeric property, so an
+    // incomplete document must never be handed over looking whole
+    if (manifest.missing.size) {
+      toast(`export failed: no archived value for ${[...manifest.missing][0]}`);
+      return;
+    }
+    download(
+      new Blob([JSON.stringify(doc, null, 1)], { type: "application/json" }),
+      `oddworld-${data.id.toLowerCase()}-${lvl.short}-P${path.id}.json`,
+    );
+    toast("saved — importing it drops this path's foreground masks");
+  } catch (e) {
+    console.error(e);
+    toast("export failed");
+  } finally {
+    jsonBtn.disabled = false;
+    jsonBtn.textContent = JSON_LABEL;
   }
 };
 

@@ -315,6 +315,7 @@ body.fullnames .btnrow button {
 }
 #exportBtn,
 #exportPathBtn,
+#exportJsonBtn,
 #graphBtn,
 #numbersBtn {
   margin: 6px 12px 2px;
@@ -328,17 +329,20 @@ body.fullnames .btnrow button {
   width: calc(100% - 24px);
 }
 #exportBtn,
-#exportPathBtn {
+#exportPathBtn,
+#exportJsonBtn {
   margin: 6px 0 2px;
   width: 100%;
 }
 #exportBtn:hover,
 #exportPathBtn:not(:disabled):hover,
+#exportJsonBtn:not(:disabled):hover,
 #graphBtn:hover,
 #numbersBtn:hover {
   border-color: var(--accent);
 }
-#exportPathBtn:disabled {
+#exportPathBtn:disabled,
+#exportJsonBtn:disabled {
   opacity: 0.4;
   cursor: default;
 }

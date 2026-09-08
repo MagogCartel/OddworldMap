@@ -130,11 +130,13 @@ The **World graph** button under the path buttons (or **`v`**) puts the map away
 - add **`?embed=1`** to the URL for a view made for iframes on wikis and forums: the map fills the frame, fully interactive (hover, follow, the screen-list panel), with the sidebar starting closed but reachable through the menu button
   - a corner button opens the full site at the exact view
   - combine it with any permalink hash to embed an exact screen, e.g. `https://oddworldmap.com/?embed=1#AO/R1/15/…`
-- two **export** buttons sit under the Display toggles, and both draw the overlays, markers and plotted route that are on
+- three **export** buttons sit under the Display toggles; the two image ones draw the overlays, markers and plotted route that are on
   - **Export whole path** puts every screen of the path in one image, laid out edge to edge at the artwork's own resolution however far the view is zoomed out — Rupture Farms' widest path comes out as a 4416 × 720 `oddworld-ao-R1-P15-full.png` with all twenty of its screens on it, and the largest path either game has, Necrum Mines P4, as a 4416 × 3360 one with thirty-seven; turning on "Gaps between screens" can take a path past what a browser will hand back as a single image, and the export scales it to fit and says what it scaled to
   - the image is framed on the path's screens, so an object or a collision line the map draws out in the gap beyond the outermost ones can fall outside it: 248 dotted Oddysee markers do, and nothing that covers a screen ever does. Turning on "Gaps between screens" takes that ground in, since there it is canvas of its own
   - **Export view** saves what the canvas is showing, the visible area at the current zoom, as `oddworld-ao-R1-P15-view.png`
-  - both act on the map, so the world graph is put away while they are, and it saves from its own bar instead — see [World graph](#world-graph)
+  - **Export path as JSON** saves the path in the format the [AliveTeam level editor](https://github.com/AliveTeam/qt-editor) reads: every object with all of its fields, and every collision line, as `oddworld-ao-R1-P15.json`. It carries no artwork and no game code — a description of the path rather than a level, and the file this map is checked against object for object
+  - importing it into your own copy of the game replaces that path's objects and collision lines and **drops the path's foreground masks**, the layer that hides Abe behind scenery, because the importer rebuilds them from the file and this one has none to give
+  - the two image buttons act on the map, so the world graph is put away while they are, and it saves from its own bar instead — see [World graph](#world-graph)
 
 ### Settings
 
