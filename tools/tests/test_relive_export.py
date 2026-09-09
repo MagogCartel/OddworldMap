@@ -9,6 +9,7 @@ import contextlib
 import io
 import json
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -18,7 +19,7 @@ from unittest import mock
 
 sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).resolve().parent)]
 
-from oddmap import games, relive, schema  # noqa: E402
+from oddmap import disc, games, relive, schema  # noqa: E402
 from oddmap.paths import DECOMP_COMMIT, HERE, ROOT, SITE  # noqa: E402
 from decomp_checkout import needs_decomp, stale  # noqa: E402
 import relive_export  # noqa: E402
@@ -526,6 +527,31 @@ class Harness(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.harness(status=self.OK, build_ok=False, build=build)
         self.assertFalse((build / "decomp_head").exists())
+
+
+class HideCams(unittest.TestCase):
+    """hide_cams over a synthetic directory: two cameras, a path bundle, and a .CAM spelled past it"""
+
+    NAMES = [b"R1P01C01.CAM", b"R1PATH.BND", b"R1P02C03.CAM"]
+
+    def image(self):
+        directory = bytes(16) + struct.pack("<I", len(self.NAMES)) + bytes(12)
+        directory += b"".join(name.ljust(12, b"\0") + bytes(12) for name in self.NAMES)
+        return bytearray(directory + b"R1P09C09.CAM" + bytes(20))
+
+    def test_exactly_the_last_byte_of_each_cam_name_moves(self):
+        image = self.image()
+        before = bytes(image)
+        self.assertEqual(relive_verify.hide_cams(image), 2)
+        moved = [i for i in range(len(image)) if image[i] != before[i]]
+        self.assertEqual(moved, [32 + 11, 32 + 2 * 24 + 11])
+
+    def test_lvl_reads_the_renamed_directory_back(self):
+        image = self.image()
+        relive_verify.hide_cams(image)
+        stub = mock.Mock(files={"R1.LVL": (0, len(image))}, sector=lambda lba: bytes(image[:2048]),
+                         read=lambda lba, size: bytes(image[:size]))
+        self.assertEqual(set(disc.Lvl(stub, "R1.LVL").files), {"R1P01C01.CAX", "R1PATH.BND", "R1P02C03.CAX"})
 
 
 if __name__ == "__main__":
