@@ -66,29 +66,31 @@ def rgb555(px):
     return bytes((r | r >> 5, g | g >> 5, b | b >> 5, 255))
 
 def decode_fg1(fg1, cam_rgba, w, h):
-    """walk an FG1 chunk stream, return (overlay RGBA or None, walked to the end).
+    """walk an FG1 chunk stream, return (overlay RGBA or None, walked clean).
 
     Partial blocks carry their own RGB555 pixels in both games: the per-row u32
     bitmask form is a PC one, and on the discs every block sits inside an
-    LZ-compressed sub-stream. A walk that does not reach its end marker has lost
-    the stride and is dropping blocks, which is silent in the output and so is
+    LZ-compressed sub-stream. A walk that bails at any depth has lost the
+    stride and is dropping blocks, which is silent in the output and so is
     reported rather than left to be noticed."""
     overlay = bytearray(w * h * 4)
     any_px = False
-    clean = False
+    clean = True
     stack = []          # saved (buffer, pos) while inside compressed sub-streams
     buf, pos = fg1, 4   # skip u32 count
     while True:
         if pos + 12 > len(buf):
+            clean = False
             if stack: buf, pos = stack.pop(); continue
             break
         typ, layer, x, y, cw, ch = struct.unpack_from("<HHhhHH", buf, pos)
         if typ == 0xFFFF:            # end
             if stack: buf, pos = stack.pop(); continue
-            clean = True
             break
         if typ == 0xFFFC:            # end of compressed sub-stream
-            buf, pos = stack.pop(); continue
+            if stack: buf, pos = stack.pop(); continue
+            clean = False
+            break
         if typ == 0xFFFD:            # compressed sub-stream (layer=decomp size, x=comp size)
             sub = decompress_4or5(buf[pos + 12:pos + 12 + (x & 0xFFFF)])
             stack.append((buf, pos + 12 + (x & 0xFFFF)))
@@ -108,6 +110,7 @@ def decode_fg1(fg1, cam_rgba, w, h):
         if typ == 0:                 # partial block: own RGB555 pixels follow
             px_off = pos + 12
             if px_off + cw * ch * 2 > len(buf):
+                clean = False
                 break                # truncated chunk
             for j in range(ch):
                 yy = y + j
@@ -121,6 +124,7 @@ def decode_fg1(fg1, cam_rgba, w, h):
             pos = px_off + cw * ch * 2
             continue
         # unknown chunk type: bail out of this stream
+        clean = False
         if stack: buf, pos = stack.pop(); continue
         break
     return (bytes(overlay) if any_px else None), clean
@@ -160,7 +164,7 @@ def decode_cam(lvl, cam_name, out_png, tmpdir):
     for part in fg_parts:
         got, clean = decode_fg1(part, rgba, w, h)
         if not clean:
-            print(f"    ! FG1 stream not walked to its end: {cam_name}")
+            print(f"    ! FG1 stream not walked clean: {cam_name}")
         if got is None:
             continue
         if overlay is None:

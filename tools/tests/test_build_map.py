@@ -150,6 +150,67 @@ class Decompress4or5(unittest.TestCase):
         self.assertEqual(image.decompress_4or5(stream), b"AB")
 
 
+class DecodeFg1(unittest.TestCase):
+    """the FG1 walk over synthetic streams: a 4x2 canvas whose cam pixels are all 0x11"""
+
+    W, H = 4, 2
+    CAM = bytes([0x11]) * (W * H * 4)
+    RED = struct.pack("<H", 0x1F)
+    # a 2x1 partial block at (1, 0): one red pixel, one transparent
+    BLOCK = struct.pack("<HHhhHH", 0, 0, 1, 0, 2, 1) + RED + bytes(2)
+
+    @staticmethod
+    def header(typ, layer=0, x=0, y=0, cw=0, ch=0):
+        return struct.pack("<HHhhHH", typ, layer, x, y, cw, ch)
+
+    @classmethod
+    def sub(cls, body):
+        """body inside a 0xFFFD sub-stream, held as literal LZ runs"""
+        runs = [body[i:i + 128] for i in range(0, len(body), 128)]
+        lz = struct.pack("<I", len(body)) + b"".join(bytes([len(r) - 1]) + r for r in runs)
+        return cls.header(0xFFFD, layer=len(body), x=len(lz)) + lz
+
+    def decode(self, *chunks):
+        return image.decode_fg1(bytes(4) + b"".join(chunks), self.CAM, self.W, self.H)
+
+    def marked(self, overlay):
+        return {(i % self.W, i // self.W): bytes(overlay[i * 4:i * 4 + 4])
+                for i in range(self.W * self.H) if overlay[i * 4 + 3]}
+
+    def test_a_partial_block_marks_its_pixels_and_leaves_zero_transparent(self):
+        overlay, clean = self.decode(self.BLOCK, self.header(0xFFFF))
+        self.assertTrue(clean)
+        self.assertEqual(self.marked(overlay), {(1, 0): b"\xff\x00\x00\xff"})
+
+    def test_the_same_block_inside_a_sub_stream_marks_the_same_pixels(self):
+        overlay, clean = self.decode(self.sub(self.BLOCK + self.header(0xFFFC)), self.header(0xFFFF))
+        self.assertTrue(clean)
+        self.assertEqual(self.marked(overlay), {(1, 0): b"\xff\x00\x00\xff"})
+
+    def test_a_full_block_copies_the_cam_pixels(self):
+        overlay, clean = self.decode(self.header(0xFFFE, x=0, y=1, cw=2, ch=1), self.header(0xFFFF))
+        self.assertTrue(clean)
+        self.assertEqual(self.marked(overlay), {(0, 1): bytes([0x11]) * 4, (1, 1): bytes([0x11]) * 4})
+
+    def test_a_truncated_block_reports_unclean(self):
+        overlay, clean = self.decode(self.BLOCK[:-2])
+        self.assertFalse(clean)
+        self.assertIsNone(overlay)
+
+    def test_a_junk_type_inside_a_sub_stream_reports_unclean(self):
+        body = self.BLOCK + self.header(0x1234) + self.BLOCK + self.header(0xFFFC)
+        _, clean = self.decode(self.sub(body), self.header(0xFFFF))
+        self.assertFalse(clean)
+
+    def test_a_sub_stream_that_runs_out_reports_unclean(self):
+        _, clean = self.decode(self.sub(self.BLOCK), self.header(0xFFFF))
+        self.assertFalse(clean)
+
+    def test_a_bare_end_of_sub_stream_reports_unclean(self):
+        _, clean = self.decode(self.header(0xFFFC), self.header(0xFFFF))
+        self.assertFalse(clean)
+
+
 class ObjectFields(unittest.TestCase):
     schema = {1: [[0, "first"], [1, "second", "Path_X::Y"]], 2: []}
 
