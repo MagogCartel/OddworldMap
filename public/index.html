@@ -174,10 +174,16 @@
         </button>
         <button
           id="exportJsonBtn"
+          aria-describedby="exportJsonHelp"
           data-tip="Saves this path's objects and collision lines as the AliveTeam level editor's JSON.&#10;A description of the path, not a level: it carries no artwork, and importing it into your own LVL drops that path's foreground masks."
         >
           Export path as JSON
         </button>
+        <span id="exportJsonHelp" class="sr-only"
+          >Saves this path's objects and collision lines as the AliveTeam level editor's JSON. A
+          description of the path, not a level: it carries no artwork, and importing it into your
+          own LVL drops that path's foreground masks.</span
+        >
       </div>
       <h2>
         Objects

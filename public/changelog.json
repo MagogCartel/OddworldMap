@@ -5,7 +5,7 @@
    "tag": "new",
    "flagship": true,
    "title": "Save a path for the level editor",
-   "detail": "A third export button hands the path you are looking at over as a file the AliveTeam level editor can open: every object with all of its fields, and every collision line, in the editor's own format. It carries no artwork and no game code, which makes it a description of the path rather than a level, and it is the same file this map is checked against object for object. Open it to read the path, or import it into your own copy of the game to build on it, knowing that the import replaces that path's objects and lines and drops its foreground masks."
+   "detail": "A third export button hands the path you are looking at over as a file the AliveTeam level editor can open: every object with all of its fields, and every collision line, in the editor's own format. It carries no artwork and no game code, which makes it a description of the path rather than a level, and it is the same file this map is checked against object for object. Open it to read the path, or import it into your own copy of the game to build on it, knowing that the import replaces that path's objects and lines and drops its foreground masks. The button says so before you press it, on hover and to a screen reader alike."
   },
   {
    "date": "2026-09-07",

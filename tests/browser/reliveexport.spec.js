@@ -60,6 +60,17 @@ for (const [game, [level, path]] of Object.entries(BOOTS)) {
     await settleAny(page);
     expect(await standing(page)).toEqual({ game, level, path });
     expect(sidecar).toEqual([]);
+    // the caveat is written twice, for the pointer and for a reader
+    const { tip, help } = await page.evaluate(() => {
+      const b = document.getElementById("exportJsonBtn");
+      const help = document.getElementById(b.getAttribute("aria-describedby")).textContent;
+      return { tip: b.dataset.tip, help };
+    });
+    const words = (s) => s.replace(/\s+/g, " ").trim();
+    expect(words(help)).toBe(words(tip));
+    await expect(page.locator("#exportJsonBtn")).toHaveAccessibleDescription(
+      /drops that path's foreground masks/,
+    );
 
     const dl = await press(page);
     const id = game.toLowerCase();
