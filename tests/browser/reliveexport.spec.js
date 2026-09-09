@@ -1,0 +1,77 @@
+import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { test, expect } from "@playwright/test";
+import { trackErrors, settleAny } from "./helpers.js";
+import { canonical } from "../../public/js/reliveexport.js";
+
+const DIGESTS = JSON.parse(
+  readFileSync(new URL("../fixtures/relive-digests.json", import.meta.url), "utf8"),
+);
+
+// where a game-only hash boots
+const BOOTS = { AO: ["R1", 15], AE: ["MI", 1] };
+
+const standing = (page) =>
+  page.evaluate(async () => {
+    const st = await import(new URL("js/state.js", location.href).href);
+    return { game: st.state.data.id, level: st.state.lvl.short, path: st.state.path.id };
+  });
+
+// the sidecar requests the page makes, by path
+function sidecarLog(page) {
+  const log = [];
+  page.on("request", (r) => {
+    if (r.url().includes("relive_export_")) log.push(new URL(r.url()).pathname);
+  });
+  return log;
+}
+
+async function press(page) {
+  const [dl] = await Promise.all([page.waitForEvent("download"), page.click("#exportJsonBtn")]);
+  return dl;
+}
+
+// the button through the real fetch and anchor-click download
+for (const [game, [level, path]] of Object.entries(BOOTS)) {
+  test(`the ${game} JSON export hands over the document the builder recorded`, async ({ page }) => {
+    const errors = trackErrors(page);
+    const sidecar = sidecarLog(page);
+    await page.goto(`/#${game}`);
+    await settleAny(page);
+    expect(await standing(page)).toEqual({ game, level, path });
+    expect(sidecar).toEqual([]);
+
+    const dl = await press(page);
+    const id = game.toLowerCase();
+    expect(dl.suggestedFilename()).toBe(`oddworld-${id}-${level}-P${path}.json`);
+    const doc = JSON.parse(readFileSync(await dl.path(), "utf8"));
+    const digest = createHash("sha256").update(canonical(doc)).digest("hex");
+    expect(digest).toBe(DIGESTS[game][`${level} P${path}`]);
+
+    // the sidecar is fetched on the first press and never again
+    await press(page);
+    expect(sidecar).toEqual([`/relive_export_${id}.json`]);
+    expect(errors).toEqual([]);
+  });
+}
+
+test("a sidecar that failed to load is fetched again on the next press", async ({ page }) => {
+  const errors = trackErrors(page);
+  const sidecar = sidecarLog(page);
+  const downloads = [];
+  page.on("download", (d) => downloads.push(d.suggestedFilename()));
+  await page.route("**/relive_export_ao.json", (route) =>
+    route.fulfill({ contentType: "application/json", body: "not json" }),
+  );
+  await page.goto("/#AO");
+  await settleAny(page);
+  await page.click("#exportJsonBtn");
+  await expect(
+    page.locator(".toast", { hasText: "export failed: the editor data did not load" }),
+  ).toBeVisible();
+  expect(downloads).toEqual([]);
+  await page.unroute("**/relive_export_ao.json");
+  await press(page);
+  expect(sidecar).toEqual(["/relive_export_ao.json", "/relive_export_ao.json"]);
+  expect(errors).toEqual([]);
+});
