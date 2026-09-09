@@ -149,6 +149,14 @@ class Decompress4or5(unittest.TestCase):
         stream = struct.pack("<I", 2) + bytes([1]) + b"AB" + bytes([1]) + b"CD"
         self.assertEqual(image.decompress_4or5(stream), b"AB")
 
+    def test_a_back_copy_cut_at_its_control_byte_stops_short(self):
+        stream = struct.pack("<I", 5) + bytes([1]) + b"AB" + bytes([0x80])
+        self.assertEqual(image.decompress_4or5(stream), b"AB")
+
+    def test_a_back_copy_reaching_before_the_output_stops_short(self):
+        stream = struct.pack("<I", 5) + bytes([0x80, 0]) + bytes([1]) + b"AB"
+        self.assertEqual(image.decompress_4or5(stream), b"")
+
 
 class DecodeFg1(unittest.TestCase):
     """the FG1 walk over synthetic streams: a 4x2 canvas whose cam pixels are all 0x11"""
@@ -208,6 +216,14 @@ class DecodeFg1(unittest.TestCase):
 
     def test_a_bare_end_of_sub_stream_reports_unclean(self):
         _, clean = self.decode(self.header(0xFFFC), self.header(0xFFFF))
+        self.assertFalse(clean)
+
+    def test_a_sub_stream_too_short_for_its_prefix_reports_unclean(self):
+        _, clean = self.decode(self.header(0xFFFD, x=2) + bytes(2), self.header(0xFFFF))
+        self.assertFalse(clean)
+
+    def test_a_sub_stream_declared_past_the_buffer_reports_unclean(self):
+        _, clean = self.decode(self.header(0xFFFD, x=40) + bytes(2))
         self.assertFalse(clean)
 
 

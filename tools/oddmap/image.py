@@ -50,9 +50,11 @@ def decompress_4or5(data):
     while len(out) < dst_len and pos < len(data):
         c = data[pos]; pos += 1
         if c & 0x80:
+            if pos >= len(data): break
             n = ((c & 0x7C) >> 2) + 3
             back = ((c & 0x03) << 8) + data[pos] + 1; pos += 1
             start = len(out) - back
+            if start < 0: break
             for i in range(n):
                 out.append(out[start + i])
         else:
@@ -92,8 +94,12 @@ def decode_fg1(fg1, cam_rgba, w, h):
             clean = False
             break
         if typ == 0xFFFD:            # compressed sub-stream (layer=decomp size, x=comp size)
-            sub = decompress_4or5(buf[pos + 12:pos + 12 + (x & 0xFFFF)])
-            stack.append((buf, pos + 12 + (x & 0xFFFF)))
+            comp = x & 0xFFFF
+            if comp < 4 or pos + 12 + comp > len(buf):
+                clean = False
+                break                # truncated chunk
+            sub = decompress_4or5(buf[pos + 12:pos + 12 + comp])
+            stack.append((buf, pos + 12 + comp))
             buf, pos = sub, 0
             continue
         if typ == 0xFFFE:            # full block: copy cam pixels
