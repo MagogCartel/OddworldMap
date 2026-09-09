@@ -44,8 +44,9 @@ def main():
     ap.add_argument("--out", default=str(SITE))
     ap.add_argument("--levels", default="", help="comma list of level shorts to limit (e.g. R2,R6)")
     ap.add_argument("--emit-field-data", action="store_true",
-                    help="regenerate the viewer sidecars field_types_{ao,ae}.json and "
-                         "enum_labels_{ao,ae}.json from the decomp (no disc needed) and exit")
+                    help="regenerate the viewer sidecars field_types_{ao,ae}.json, "
+                         "enum_labels_{ao,ae}.json and relive_export_{ao,ae}.json from the "
+                         "committed caches (no disc needed) and exit")
     args = ap.parse_args()
 
     if args.emit_field_data:
