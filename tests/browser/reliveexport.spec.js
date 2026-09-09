@@ -31,6 +31,26 @@ async function press(page) {
   return dl;
 }
 
+// the sidecar with one Door property no layout supplies
+function doctored(game) {
+  const side = JSON.parse(
+    readFileSync(
+      new URL(`../../public/relive_export_${game.toLowerCase()}.json`, import.meta.url),
+      "utf8",
+    ),
+  );
+  const door = Object.values(side.schema.structures).find((s) => s.name === "Door");
+  door.properties.push({
+    name: "Unarchived",
+    word: 99,
+    size: 2,
+    type: "SInt16",
+    enum: false,
+    visible: true,
+  });
+  return side;
+}
+
 // the button through the real fetch and anchor-click download
 for (const [game, [level, path]] of Object.entries(BOOTS)) {
   test(`the ${game} JSON export hands over the document the builder recorded`, async ({ page }) => {
@@ -73,5 +93,21 @@ test("a sidecar that failed to load is fetched again on the next press", async (
   await page.unroute("**/relive_export_ao.json");
   await press(page);
   expect(sidecar).toEqual(["/relive_export_ao.json", "/relive_export_ao.json"]);
+  expect(errors).toEqual([]);
+});
+
+test("an incomplete document is refused rather than handed over", async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.route("**/relive_export_ao.json", (route) => route.fulfill({ json: doctored("AO") }));
+  const downloads = [];
+  page.on("download", (d) => downloads.push(d.suggestedFilename()));
+  await page.goto("/#AO");
+  await settleAny(page);
+  await page.click("#exportJsonBtn");
+  await expect(
+    page.locator(".toast", { hasText: "export failed: no archived value for Door.Unarchived" }),
+  ).toBeVisible();
+  expect(downloads).toEqual([]);
+  await expect(page.locator("#exportJsonBtn")).toBeEnabled();
   expect(errors).toEqual([]);
 });

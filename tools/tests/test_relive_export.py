@@ -237,6 +237,53 @@ class ExporterOutput(unittest.TestCase):
             self.assertEqual(json.dumps(self.docs[game_key], indent=1, sort_keys=True),
                              json.dumps(again, indent=1, sort_keys=True))
 
+    def doctored_ao(self):
+        """AO's schema with its Glukkon asking for a word no layout supplies: the
+        schema, the doctored structure, and the (level, path) pairs holding one"""
+        game = games.game_setup("AO")
+        rel = json.loads(json.dumps(relive.load_relive_schema("AO", game)))
+        glukkons = [(lv["short"], p["id"], t["t"]) for lv in map_data("AO")["levels"]
+                    for p in lv["paths"] for t in p["tlvs"] if t["name"] == "Glukkon"]
+        holding = list(dict.fromkeys((short, pid) for short, pid, _ in glukkons))
+        literal = rel["structures"][str(glukkons[0][2])]
+        literal["properties"].append({"name": "Unarchived", "word": 99, "size": 2,
+                                      "type": "SInt16", "enum": False, "visible": True})
+        return rel, literal, holding
+
+    def test_a_path_the_archive_cannot_complete_is_withheld_and_the_rest_written(self):
+        rel, literal, holding = self.doctored_ao()
+        total = sum(len(lv["paths"]) for lv in map_data("AO")["levels"])
+        with tempfile.TemporaryDirectory() as tmp, \
+             mock.patch.object(relive_export, "load_relive_schema", return_value=rel):
+            out = Path(tmp)
+            written, withheld, missing, _ = relive_export.export_game("AO", out)
+            self.assertEqual(withheld, [f"{short} P{pid}" for short, pid in holding])
+            self.assertEqual(missing, {(literal["name"], "Unarchived")})
+            self.assertEqual(written, total - len(holding))
+            self.assertEqual(len(list(out.iterdir())), written)
+            for short, pid in holding:
+                self.assertFalse((out / f"AO_{short}_P{pid}.json").exists())
+            written, withheld, *_ = relive_export.export_game("AO", out, allow_incomplete=True)
+            self.assertEqual((written, withheld), (total, []))
+            self.assertEqual(len(list(out.iterdir())), total)
+
+    def test_a_withheld_path_fails_the_run(self):
+        rel, literal, holding = self.doctored_ao()
+        names = ", ".join(f"{short} P{pid}" for short, pid in holding)
+        for flags, code in (((), 1), (("--allow-incomplete",), 0)):
+            with tempfile.TemporaryDirectory() as tmp:
+                argv = ["relive_export.py", "--all", "--game", "AO", "--out", tmp, *flags]
+                with mock.patch.object(relive_export, "load_relive_schema", return_value=rel), \
+                     mock.patch.object(sys, "argv", argv), \
+                     contextlib.redirect_stdout(io.StringIO()) as out, \
+                     self.assertRaises(SystemExit) as cm:
+                    relive_export.main()
+            self.assertEqual(cm.exception.code, code, flags)
+            printed = out.getvalue()
+            self.assertIn(f"AO: {literal['name']}.Unarchived has no archived value", printed)
+            self.assertEqual(f"withheld {len(holding)} incomplete path(s): {names}" in printed,
+                             code == 1, flags)
+
     def test_a_fallback_for_an_archived_word_fails_the_export(self):
         entry = {("AO", "AbeStart", "Scale"): 0}
         with mock.patch.dict(relive.EXPORT_VALUE_FALLBACKS, entry), self.assertRaises(RuntimeError):

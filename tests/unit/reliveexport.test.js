@@ -89,6 +89,31 @@ test("a written document carries every property relive reads", () => {
   }
 });
 
+// the manifest is what keeps an incomplete document from being handed over as
+// whole, so it has to name what a sidecar asks for that no layout supplies
+test("a property the archive cannot answer lands in the manifest", () => {
+  for (const g of GAMES) {
+    const { level, path } = paths(g).find((r) => r.path.tlvs.some((t) => t.name === "Door"));
+    const door = path.tlvs.find((t) => t.name === "Door");
+    const doctored = JSON.parse(JSON.stringify(side[g]));
+    const s = doctored.schema.structures[String(door.t)];
+    s.properties.push({
+      name: "Unarchived",
+      word: 99,
+      size: 2,
+      type: "SInt16",
+      enum: false,
+      visible: true,
+    });
+    const { doc, manifest } = exportPath(g, data[g].geometry, level, path, doctored);
+    assert.deepEqual([...manifest.missing], [`${s.name}.Unarchived`], g);
+    for (const cam of doc.map.cameras)
+      for (const o of cam.map_objects)
+        if (o.object_structures_type === s.name)
+          assert.ok(!("Unarchived" in o.properties), `${g} writes a value it does not hold`);
+  }
+});
+
 // the surviving fallback is what a diff against a reference export holds
 // known-divergent, so a new one must not appear silently
 test("only the pinned fallbacks stand in for an unarchived word", () => {
