@@ -338,7 +338,7 @@ class PinnedCheckout(unittest.TestCase):
 
 
 class PathMetaAudit(unittest.TestCase):
-    """a tabulated collision count the chunk itself contradicts"""
+    """a tabulated row the chunk itself contradicts"""
 
     FMT = {k: v for k, v in games.GAMES["AO"]["tlv"].items() if k != "extra_fn"}
     CELLS = 4
@@ -353,10 +353,10 @@ class PathMetaAudit(unittest.TestCase):
                          for _ in range(objects))
         return blob + struct.pack(f"<{self.CELLS}i", *entries)
 
-    def meta(self, lines):
+    def meta(self, lines, objects=2):
         off = self.CELLS * 8
         return {"w_units": 2048, "h_units": 960, "coll_off": off, "coll_count": lines,
-                "obj_off": off + lines * 20, "idx_off": 0}
+                "obj_off": off + lines * 20, "idx_off": off + lines * 20 + objects * 24}
 
     def audit(self, blob, tabulated):
         return tlv.audit_path_meta(blob, self.meta(tabulated), self.FMT, self.CELLS)
@@ -368,8 +368,13 @@ class PathMetaAudit(unittest.TestCase):
         return meta, out.getvalue()
 
     def test_a_count_the_index_table_confirms_is_left_alone(self):
+        meta, note = self.resolve(self.chunk(3, 2, [0, 24, -1, -1]), self.meta(3))
+        self.assertEqual((meta["coll_count"], note), (3, ""))
+
+    def test_the_chunks_own_table_position_replaces_the_tabulated_one(self):
         blob = self.chunk(3, 2, [0, 24, -1, -1])
-        self.assertEqual(self.audit(blob, 3)["coll_count"], 3)
+        meta, note = self.resolve(blob, {**self.meta(3), "idx_off": 0})
+        self.assertEqual((meta["idx_off"], note), (len(blob) - self.CELLS * 4, ""))
 
     def test_a_count_one_short_is_corrected_from_the_chunk(self):
         blob = self.chunk(3, 2, [0, 24, -1, -1])
