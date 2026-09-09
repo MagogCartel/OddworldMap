@@ -237,8 +237,7 @@ test("no route leaves the diagram, crosses a node box, or shares a line", () => 
 
 // spreading a box's stubs is not enough on its own: dealt in the wrong order,
 // a stub turning near the box climbs through the leg of one turning farther
-// out. Up-bound above down-bound and the nearer turn outermost is what keeps
-// a fan crossing-free, and only the fan's own stubs can tell
+// out, and only the fan's own stubs can tell
 test("no stub crosses another leaving the same side of a box", () => {
   for (const data of games()) {
     const g = worldGraph(data);

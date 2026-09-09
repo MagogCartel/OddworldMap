@@ -1,8 +1,6 @@
 // A path as a relive_api v4 document, the AliveTeam level editor's format —
 // the page's half of tools/oddmap/relive.py, reading the same caches through
-// the relive_export_* sidecar so the two implementations answer alike — which
-// `canonical` is the shared definition of, neither language being able to run
-// the other.
+// the relive_export_* sidecar so the two implementations answer alike.
 // No DOM, so it stays importable in bare Node.
 
 // which cell a rect was authored under is the path chunk's own index table to
