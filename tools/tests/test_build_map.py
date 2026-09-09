@@ -456,13 +456,41 @@ class PathDiscovery(unittest.TestCase):
         self.assertEqual(meta["idx_off"], 80)
         self.assertIn("leaving 20 bytes", out.getvalue())
 
-    def test_one_level_is_tabulated_nothing_at_all(self):
-        """level scope is as far as this reaches without a disc: spotting a
-        partially tabulated level needs the chunks to say which path is missing"""
-        empty = {gk: {short for short, paths in games.game_setup(gk)["tables"].items() if not paths}
-                 for gk in ("AO", "AE")}
-        self.assertEqual(empty, {"AO": {"S1"}, "AE": set()},
-                         "a table for S1 would retire the discovery")
+    def test_one_path_is_tabulated_nothing_at_all(self):
+        untabulated = set()
+        for game_key in ("AO", "AE"):
+            tables = games.game_setup(game_key)["tables"]
+            data = json.loads((SITE / games.GAMES[game_key]["data_file"]).read_text())
+            untabulated |= {(game_key, L["short"], P["id"]) for L in data["levels"]
+                            for P in L["paths"] if P["id"] not in tables[L["short"]]}
+        self.assertEqual(untabulated, {("AO", "S1", 1)}, "a table for S1 P1 would retire the discovery")
+
+
+class PathMetaCensus(unittest.TestCase):
+    """the audit's result over the shipped tree, the committed caches being the
+    oracle no disc is needed for"""
+
+    # (game, level, path): (tabulated, shipped), the PS1 chunks that contradict the PC tables
+    CORRECTED = {("AO", "R1", 20): (30, 31), ("AO", "R6", 6): (41, 40)}
+
+    def test_the_map_carries_the_tabulated_count_except_where_pinned(self):
+        found = {}
+        for game_key in ("AO", "AE"):
+            tables = games.game_setup(game_key)["tables"]
+            data = json.loads((SITE / games.GAMES[game_key]["data_file"]).read_text())
+            for level in data["levels"]:
+                for path in level["paths"]:
+                    row = tables[level["short"]].get(path["id"])
+                    if row and row["coll_count"] != len(path["lines"]):
+                        found[(game_key, level["short"], path["id"])] = (row["coll_count"], len(path["lines"]))
+        self.assertEqual(found, self.CORRECTED)
+
+    def test_a_tabulated_row_starts_its_objects_where_its_lines_end(self):
+        for game_key in ("AO", "AE"):
+            for short, paths in games.game_setup(game_key)["tables"].items():
+                for pid, row in paths.items():
+                    self.assertEqual(row["coll_off"] + 20 * row["coll_count"], row["obj_off"],
+                                     f"{game_key} {short} P{pid}")
 
 
 class CacheStamp(unittest.TestCase):
