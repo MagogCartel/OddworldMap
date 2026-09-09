@@ -273,6 +273,19 @@ def discover_path_meta(blob, fmt, cell_w, cell_h):
     return {"w_units": W * cell_w, "h_units": H * cell_h, "obj_off": obj_off,
             "idx_off": end, "coll_off": obj_off, "coll_count": 0}
 
+def resolve_path_meta(blob, path_id, tabulated, fmt, cell_w, cell_h):
+    """the offsets a path is read at: the decomp's row audited against the chunk,
+    or, where the decomp tabulates nothing, a row discovered from the chunk, which
+    is already its own reading and is not audited again."""
+    if tabulated is None:
+        return discover_path_meta(blob, fmt, cell_w, cell_h)
+    cells = max(1, tabulated["w_units"] // cell_w) * max(1, tabulated["h_units"] // cell_h)
+    meta = audit_path_meta(blob, tabulated, fmt, cells)
+    if meta["coll_count"] != tabulated["coll_count"]:
+        print(f"  path {path_id}: {tabulated['coll_count']} collision lines tabulated, "
+              f"{meta['coll_count']} in the chunk")
+    return meta
+
 def walk_obj_region(blob, obj_off, region_end, game, level_short):
     """linear walk of the packed TLV region with resync on garbage"""
     fmt = game["tlv"]

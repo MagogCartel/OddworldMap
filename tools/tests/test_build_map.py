@@ -361,6 +361,12 @@ class PathMetaAudit(unittest.TestCase):
     def audit(self, blob, tabulated):
         return tlv.audit_path_meta(blob, self.meta(tabulated), self.FMT, self.CELLS)
 
+    def resolve(self, blob, tabulated):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            meta = tlv.resolve_path_meta(blob, 1, tabulated, self.FMT, 1024, 480)
+        return meta, out.getvalue()
+
     def test_a_count_the_index_table_confirms_is_left_alone(self):
         blob = self.chunk(3, 2, [0, 24, -1, -1])
         self.assertEqual(self.audit(blob, 3)["coll_count"], 3)
@@ -379,6 +385,13 @@ class PathMetaAudit(unittest.TestCase):
     def test_a_table_of_nothing_but_gaps_leaves_the_count_standing(self):
         blob = self.chunk(3, 2, [-1] * self.CELLS)
         self.assertEqual(self.audit(blob, 2)["coll_count"], 2)
+
+    def test_a_tabulated_zero_count_is_audited_like_any_other(self):
+        meta, note = self.resolve(self.chunk(0, 2, [0, 24, -1, -1]), self.meta(0))
+        self.assertEqual((meta["coll_count"], note), (0, ""))
+        meta, note = self.resolve(self.chunk(1, 2, [0, 24, -1, -1]), self.meta(0))
+        self.assertEqual(meta["coll_count"], 1)
+        self.assertIn("path 1: 0 collision lines tabulated, 1 in the chunk", note)
 
     def test_a_count_no_offset_answers_raises(self):
         blob = self.chunk(3, 2, [7, -1, -1, -1])  # no region start puts a record at +7
@@ -428,6 +441,15 @@ class PathDiscovery(unittest.TestCase):
         # 4 cells and one object at the origin fits 1x4, 2x2 and 4x1 alike
         with self.assertRaises(RuntimeError):
             self.discover(self.chunk([1] * 4, [(0, 0)]))
+
+    def test_a_discovered_row_is_not_audited(self):
+        # 4 bytes of slack past the table: the audit's end-of-chunk rule would move it
+        blob = self.chunk([1] * 4, [(0, 0), (3, 0)], tail=b"\xff" * 16 + b"\0" * 4)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            meta = tlv.resolve_path_meta(blob, 1, None, self.FMT, self.CELL_W, self.CELL_H)
+        self.assertEqual(meta["idx_off"], 80)
+        self.assertIn("leaving 20 bytes", out.getvalue())
 
     def test_one_level_is_tabulated_nothing_at_all(self):
         """level scope is as far as this reaches without a disc: spotting a

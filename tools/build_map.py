@@ -32,7 +32,7 @@ from oddmap.image import decode_cam, ensure_tools
 from oddmap.messages import write_messages
 from oddmap.paths import HERE, SITE
 from oddmap.tables import AE_LEVEL_DISPLAY, AO_R2_ZULAGS
-from oddmap.tlv import audit_path_meta, discover_path_meta, walk_obj_region
+from oddmap.tlv import resolve_path_meta, walk_obj_region
 
 def main():
     ap = argparse.ArgumentParser()
@@ -103,13 +103,8 @@ def main():
         (out / game["cams_dir"] / short).mkdir(parents=True, exist_ok=True)
 
         cell_w, cell_h = game["geometry"]["worldW"], game["geometry"]["worldH"]
-        # a path the decomp tabulates nothing for reads its own grid; a path it
-        # does is never guessed at, so the two can't disagree
-        path_meta = dict(tables[short])
-        untabulated = sorted(k[1] for k in chunks if k[0] == "Path" and k[1] not in path_meta)
-        for path_id in untabulated:
-            path_meta[path_id] = discover_path_meta(chunks[("Path", path_id)], game["tlv"],
-                                                    cell_w, cell_h)
+        path_ids = sorted(k[1] for k in chunks if k[0] == "Path")
+        untabulated = [p for p in path_ids if p not in tables[short]]
         if untabulated:
             print(f"  no table for {', '.join(f'P{p}' for p in untabulated)}: "
                   "grid read from the path chunk")
@@ -118,20 +113,13 @@ def main():
         # destination ids (decoded with an identity level map) reveal which
         ender_ids = [i for i, s in level_short.items() if s == short and i != lid]
         raw_refs = {}
-        for path_id, meta in sorted(path_meta.items()):
-            key = ("Path", path_id)
-            if key not in chunks:
-                continue
-            blob = chunks[key]
+        for path_id in path_ids:
+            blob = chunks[("Path", path_id)]
+            meta = resolve_path_meta(blob, path_id, tables[short].get(path_id), game["tlv"],
+                                     cell_w, cell_h)
             W = max(1, meta["w_units"] // cell_w)
             H = max(1, meta["h_units"] // cell_h)
             n = W * H
-            if meta["coll_count"]:
-                audited = audit_path_meta(blob, meta, game["tlv"], n)
-                if audited["coll_count"] != meta["coll_count"]:
-                    print(f"  path {path_id}: {meta['coll_count']} collision lines tabulated, "
-                          f"{audited['coll_count']} in the chunk")
-                meta = audited
 
             # camera name table
             cells = []
