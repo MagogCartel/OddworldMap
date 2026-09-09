@@ -128,9 +128,9 @@ function mapScalars(gameId, side, level, path) {
   return { abe: [abeX, abeY], muds: [inPath, 300, 20, 255] };
 }
 
-/** One path as a v4 document, plus the manifest of what the archive could not
- * supply. A written file missing a property aborts relive's importer outright,
- * so a document with anything in `missing` must not be offered as whole. */
+// one path as a v4 document, plus the manifest of what the archive could not
+// supply: a written file missing a property aborts relive's importer outright,
+// so a document with anything in `missing` must not be offered as whole
 export function exportPath(gameId, geometry, level, path, side) {
   const manifest = { missing: new Set(), fallbacks: new Set() };
   const counters = {};
