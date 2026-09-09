@@ -68,11 +68,11 @@ def rgb555(px):
 def decode_fg1(fg1, cam_rgba, w, h):
     """walk an FG1 chunk stream, return (overlay RGBA or None, walked clean).
 
-    Partial blocks carry their own RGB555 pixels in both games: the per-row u32
-    bitmask form is a PC one, and on the discs every block sits inside an
-    LZ-compressed sub-stream. A walk that bails at any depth has lost the
-    stride and is dropping blocks, which is silent in the output and so is
-    reported rather than left to be noticed."""
+    Partial blocks carry their own RGB555 pixels in both games, and Exoddus
+    keeps every block inside an LZ-compressed sub-stream: the per-row u32
+    bitmask form and a game that never compresses are both PC facts. A walk
+    that bails at any depth has lost the stride and is dropping blocks, which
+    is silent in the output and so is reported rather than left to be noticed."""
     overlay = bytearray(w * h * 4)
     any_px = False
     clean = True
