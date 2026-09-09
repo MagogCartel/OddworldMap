@@ -125,16 +125,18 @@ test("the camera set is the named cameras plus the cells holding objects", () =>
 test("a collision item carries its link words, not the editor's default", () => {
   for (const g of GAMES) {
     const linkNames = side[g].schema.collision_structure.slice(5).map((r) => r.name);
+    const at = linkNames.map((n) => side[g].links.columns.indexOf(norm(n)));
+    assert.ok(!at.includes(-1), `${g} links.columns misses a link word`);
     let carried = 0;
     for (const { level, path } of paths(g)) {
       const { doc } = exportPath(g, data[g].geometry, level, path, side[g]);
       const rows = side[g].links.paths[level.short][String(path.id)];
       assert.equal(doc.map.collisions.items.length, path.lines.length);
       doc.map.collisions.items.forEach((item, i) => {
-        for (const n of linkNames) {
-          assert.equal(item[n], rows[i][side[g].links.columns.indexOf(norm(n))]);
+        linkNames.forEach((n, j) => {
+          assert.equal(item[n], rows[i][at[j]]);
           if (item[n] !== -1) carried++;
-        }
+        });
       });
     }
     assert.ok(carried > 0, `${g} writes every link as -1`);
