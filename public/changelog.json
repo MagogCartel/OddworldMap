@@ -16,7 +16,7 @@
   {
    "date": "2026-09-05",
    "tag": "fixed",
-   "title": "Two Oddysee paths were a line and an object short",
+   "title": "Two Oddysee paths were off by a collision line",
    "detail": "The level tables the map reads its offsets from come from the PC release, and two paths on the PlayStation disc disagree with them by a single collision line. To the Stockyards was missing a hoist and a wall, and To the Board Room a continue point, while drawing a stray line along the edge of its first screen. The map now counts the lines off the disc itself and takes the tables' word only where the two agree."
   },
   {
