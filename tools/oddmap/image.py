@@ -1,5 +1,5 @@
-"""Camera artwork: MDEC strips decoded through the bundled cam2rgba, both games'
-foreground-mask formats, and PNG encoding."""
+"""Camera artwork: MDEC strips decoded through the bundled cam2rgba, the
+foreground masks, and PNG encoding."""
 import shutil
 import struct
 import subprocess
