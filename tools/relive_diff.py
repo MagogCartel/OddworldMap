@@ -5,9 +5,8 @@ the classes that are expected to, so a clean run means the extractions agree.
 
     python3 tools/relive_diff.py ours.json reference.json
 
-Never a byte diff: the reference writer's key order is jsonxx's, its schema
-arrays iterate unordered_maps, and its camera images are garbage base64 from a
-PS1 CAM (never read here). The property values the exporter's fallback table
+Never a byte diff: the reference writer's key order is jsonxx's and its schema
+arrays iterate unordered_maps. The property values the exporter's fallback table
 stands in for are held known-divergent by that same table, so retiring an entry
 there retires its tolerance here.
 """
