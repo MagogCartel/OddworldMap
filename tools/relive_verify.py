@@ -97,11 +97,12 @@ def verify(game_keys):
 
 def hide_cams(image):
     """rename every .CAM in the archive directory so the reference exporter looks
-    for cameras it cannot find. It detects a cam's FG1 format from the Bits
-    payload's strip sizes, which a PS1 cam never satisfies, so it reads AO's
-    compressed FG1 blocks as AE's and dies on the first one — where a camera it
-    fails to open only costs the artwork the diff never reads. Nothing but the
-    directory name changes, so every byte of path data stays the disc's own."""
+    for cameras it cannot find. It tells an AO cam by the Bits payload's strip
+    sizes, a test no PS1 cam passes, so every PS1 cam is read in AE mode, whose
+    FG1 reader dies on the LZ-compressed sub-stream the discs open in both
+    games — where a camera it fails to find only costs the artwork the diff
+    never reads. Nothing but the directory name changes, so every byte of path
+    data stays the disc's own."""
     hidden = 0
     for i in range(struct.unpack_from("<I", image, 16)[0]):
         off = 32 + i * 24
