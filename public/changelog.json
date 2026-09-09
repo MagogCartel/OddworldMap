@@ -11,7 +11,7 @@
    "date": "2026-09-07",
    "tag": "fixed",
    "title": "Exoddus finally shows its foreground",
-   "detail": "The foreground masks overlay marks the scenery drawn in front of Abe, and on Exoddus it has been showing almost none of it: the discs store those blocks compressed and pixel-by-pixel, and the map was reading them as something else and giving up a few blocks in. Every Exoddus screen is rebuilt from the discs, which turns 107 thousand marked pixels into 4 million, and seventeen screens that looked as though they had no foreground at all turn out to have plenty. Oddysee was always read correctly and is unchanged."
+   "detail": "The foreground masks overlay marks the scenery drawn in front of Abe, and on Exoddus it has been showing almost none of it. The discs store those blocks compressed and pixel-by-pixel, and the map was reading them as something else and giving up a few blocks in. Every Exoddus screen is rebuilt from the discs, which turns 107 thousand marked pixels into 4 million, and seventeen screens that looked as though they had no foreground at all turn out to have plenty. Oddysee was always read correctly and is unchanged."
   },
   {
    "date": "2026-09-05",
