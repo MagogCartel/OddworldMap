@@ -24,7 +24,7 @@ btn.onclick = () => {
         }
       }
   const s = pool[Math.floor(Math.random() * pool.length)];
-  if (s) jumpToPlace(s.G, s.L, s.P, s.cam);
+  if (s) jumpToPlace(s.G, s.L.short, s.P.id, s.cam);
 };
 
 window.addEventListener("selection-changed", () => {

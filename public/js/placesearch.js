@@ -12,8 +12,9 @@ function gameCandidates(G) {
   for (const L of G.levels) {
     out.push({
       G,
-      L,
-      P: null,
+      lv: L.short,
+      pa: null,
+      levelName: L.name,
       code: L.short,
       name: L.name || null,
       text: (L.name || "").toLowerCase(),
@@ -26,8 +27,9 @@ function gameCandidates(G) {
       const text = [L.name, name, nickname, section].filter(Boolean).join(" ").toLowerCase();
       out.push({
         G,
-        L,
-        P,
+        lv: L.short,
+        pa: P.id,
+        levelName: L.name,
         code: `${L.short} P${P.id}`,
         name,
         nickname,
@@ -44,8 +46,9 @@ function gameCandidates(G) {
         ];
         out.push({
           G,
-          L,
-          P,
+          lv: L.short,
+          pa: P.id,
+          levelName: L.name,
           cam,
           code: `${L.short} P${P.id} C${cam}`,
           name,
@@ -61,7 +64,8 @@ function gameCandidates(G) {
   return out;
 }
 
-// data and annotations are fixed after boot, so the key needs no invalidation
+// the index holds names and codes, which nothing changes after boot, and names
+// its places rather than holding them, so the key needs no invalidation
 const candidateCache = new WeakMap();
 
 export function placeCandidates(games) {

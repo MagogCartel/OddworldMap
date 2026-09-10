@@ -13,12 +13,14 @@ import { cellAt, nearestCam, offScreen, tlvCell } from "./model.js";
 import { setHighlight } from "./render.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
+import { currentOf } from "./edits.js";
 
 const panel = $("camPanel"),
   title = $("camPanelTitle"),
   body = $("camPanelBody");
 
-let listedPath = null; // the path the open panel was built from
+let listedAt = null; // the place the open panel was built from
+const here = () => state.path && `${state.data.id}/${state.lvl.short}/${state.path.id}`;
 let lastOpen = null; // args of the current open, so a settings change can rebuild it
 let opener = null; // where focus returns when a panel holding it closes
 
@@ -26,7 +28,7 @@ function closeCamPanel() {
   // read before the hide: hiding a subtree holding the focus drops it to <body>
   const held = panel.contains(document.activeElement);
   panel.hidden = true;
-  listedPath = null;
+  listedAt = null;
   lastOpen = null;
   setHighlight(null);
   // the opener may be gone or hidden by now (its surface re-rendered or closed)
@@ -155,7 +157,7 @@ function list(cam, focus) {
     }
   }
   if (!n) body.innerHTML = `<div class="cp-none">no objects on this screen</div>`;
-  listedPath = path;
+  listedAt = here();
   lastOpen = { cam, focus };
   panel.hidden = false;
   window.dispatchEvent(new CustomEvent("float-opened", { detail: { id: "camPanel" } }));
@@ -178,7 +180,16 @@ $("camPanelClose").onclick = closeCamPanel;
 // hash write re-applies the hash) keep the panel, so a row jump doesn't
 // yank the list away mid-browse
 window.addEventListener("selection-changed", () => {
-  if (!panel.hidden && state.path !== listedPath) closeCamPanel();
+  if (!panel.hidden && here() !== listedAt) closeCamPanel();
+});
+
+// an edit stands the listed path as new objects: the same screen, listed again
+window.addEventListener("data-changed", (e) => {
+  if (panel.hidden || !lastOpen || listedAt !== `${e.detail.game}/${e.detail.lv}/${e.detail.pa}`)
+    return;
+  const top = body.scrollTop;
+  list(lastOpen.cam, lastOpen.focus && currentOf(lastOpen.focus));
+  body.scrollTop = top;
 });
 
 // field-display settings change how the listed objects render — raw vs

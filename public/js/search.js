@@ -11,6 +11,7 @@ import { pathVisible } from "./demo.js";
 import { state } from "./state.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToPlace, jumpToTlv } from "./navigate.js";
+import { pathIn } from "./model.js";
 import { toggleMenu } from "./interaction.js";
 
 const HIT_CAP = 1500,
@@ -47,7 +48,7 @@ function scopeAccepts(h) {
 
 function placeInScope(c) {
   if (searchScope === "game") return c.G === state.data;
-  if (searchScope === "level") return c.G === state.data && c.L === state.lvl;
+  if (searchScope === "level") return c.G === state.data && c.lv === state.lvl.short;
   return searchScope !== "path"; // the one place in path scope is where you stand
 }
 
@@ -139,12 +140,12 @@ function placeButton(c, terms) {
   // the code answers whole terms only, so marking every term inside it would
   // claim a match the query never made
   const codeTerms = terms.filter((term) => c.tokens.includes(term));
-  const ex = [c.P && c.L.name, c.nickname, c.section].filter(Boolean).join(" · ");
+  const ex = [c.pa != null && c.levelName, c.nickname, c.section].filter(Boolean).join(" · ");
   b.innerHTML =
     `<span class="loc">${c.G.id} · ${highlight(c.code, codeTerms)}</span>` +
     (c.name ? ` ${highlight(c.name, terms)}` : "") +
     (ex ? ` <span class="ex">${highlight(ex, terms)}</span>` : "");
-  b.onclick = () => jumpToPlace(c.G, c.L, c.P, c.cam);
+  b.onclick = () => jumpToPlace(c.G, c.lv, c.pa, c.cam);
   return b;
 }
 
@@ -200,7 +201,7 @@ function runSearch(q) {
   const places = [];
   for (const c of matchPlaces(state.games, orGroups, terms, state.data)) {
     if (!placeInScope(c)) continue;
-    if (c.P && !pathVisible(c.P)) {
+    if (c.pa != null && !pathVisible(pathIn(c.G, c.lv, c.pa))) {
       hidden++;
       continue;
     }
@@ -276,6 +277,10 @@ searchInput.addEventListener("input", () => {
 // summary has been promising were still coming. The boot game is announced
 // before anything is selected, and runSearch groups its hits around a selection
 window.addEventListener("games-changed", () => {
+  if (state.path && searchInput.value.trim().length >= 2) runSearch(searchInput.value);
+});
+// an edit stands a path as new objects, whose text the index has yet to read
+window.addEventListener("data-changed", () => {
   if (state.path && searchInput.value.trim().length >= 2) runSearch(searchInput.value);
 });
 

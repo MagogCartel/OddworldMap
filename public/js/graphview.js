@@ -224,6 +224,13 @@ window.addEventListener("settings-changed", (e) => {
   build();
   markHere(false);
 });
+// an edit can move a transition, and with it an edge or a column's order
+window.addEventListener("data-changed", () => {
+  drawn = null;
+  if (!state.graph) return;
+  build();
+  markHere(false);
+});
 window.addEventListener("resize", () => {
   if (state.graph && fitted) applyScale();
 });
@@ -238,7 +245,7 @@ plane.onclick = (e) => {
   const P = L?.paths.find((p) => p.id === +b.dataset.pa);
   if (!P) return;
   toggleGraph(false);
-  jumpToPlace(state.data, L, P, null);
+  jumpToPlace(state.data, L.short, P.id, null);
 };
 
 // Drag to pan, as the map does: a plain mouse can reach the bottom of a diagram

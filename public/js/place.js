@@ -13,7 +13,8 @@ const btn = $("placeBtn"),
   codeEl = $("placeCode"),
   nameEl = $("placeName");
 
-let shown = null; // the path the open panel describes
+let shown = null; // the place the open panel describes
+const here = () => state.path && `${state.data.id}/${state.lvl.short}/${state.path.id}`;
 
 function fill() {
   const { data, lvl, path } = state;
@@ -29,7 +30,7 @@ function fill() {
     (state.entry[lvl.short]?.has(path.id) ? `<div class="pl-entry">${esc(ENTRY_NOTE)}</div>` : "") +
     (isDemoPath(path) ? `<div class="pl-demo">${esc(DEMO_NOTE)}</div>` : "") +
     (note ? `<div class="pl-note">${esc(note)}</div>` : "");
-  shown = path;
+  shown = here();
 }
 
 function setOpen(open) {
@@ -56,7 +57,7 @@ export function togglePlace(open) {
 // the pushed hash rewrite re-fires selection-changed on the same path constantly,
 // and a rebuild would throw away the reader's scroll position
 function syncPlace() {
-  if (!panel.hidden && state.path && state.path !== shown) fill();
+  if (!panel.hidden && state.path && here() !== shown) fill();
 }
 
 btn.onclick = () => togglePlace();
@@ -73,6 +74,11 @@ window.addEventListener("selection-changed", () => {
   btn.classList.toggle("hasnote", !!pathNote(data.id, lvl.short, path));
   btn.hidden = false;
   syncPlace();
+});
+
+// an edit can move the entry mark the panel carries
+window.addEventListener("data-changed", () => {
+  if (!panel.hidden && state.path) fill();
 });
 
 // the world graph stands over the chip that opens this, and names the place in

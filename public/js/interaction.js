@@ -253,6 +253,12 @@ cv.addEventListener("pointerleave", () => {
   setPatrol(null);
 });
 
+// the pointed-at objects are the path's old ones after an edit
+window.addEventListener("data-changed", () => {
+  hoverTlvs = [];
+  tip.style.display = "none";
+});
+
 cv.addEventListener("click", () => {
   if (panMoved || graphHandover || state.show.ruler) return;
   if (state.show.route) {

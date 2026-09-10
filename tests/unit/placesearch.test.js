@@ -49,7 +49,8 @@ test("placeCandidates: one row per level, per path and per screen", () => {
   assert.equal(cands.length, 3 + 6 + 1); // 3 levels, 6 paths, 1 screen
 
   const level = cands.find((c) => c.code === "L1");
-  assert.equal(level.P, null);
+  assert.equal(level.pa, null);
+  assert.equal(level.lv, "L1");
   assert.equal(level.name, "Monsaic Lines");
   assert.equal(level.text, "monsaic lines");
   assert.deepEqual(level.tokens, ["l1"]);
@@ -57,6 +58,8 @@ test("placeCandidates: one row per level, per path and per screen", () => {
   // a path indexes its level's name alongside its own, so a level name finds
   // what is inside it
   const path = cands.find((c) => c.code === "L1 P3");
+  assert.equal(path.pa, 3);
+  assert.equal(path.levelName, "Monsaic Lines");
   assert.equal(path.name, "The Chant Gate");
   assert.equal(path.text, "monsaic lines the chant gate");
   assert.deepEqual(path.tokens, ["l1", "p3"]);
@@ -71,6 +74,15 @@ test("placeCandidates: one row per level, per path and per screen", () => {
   assert.equal(screen.text, "rupture farms return zulag 2");
   assert.deepEqual(screen.camTokens, ["c5", "c05", "r2p01c05"]);
   assert.deepEqual(screen.tokens, ["r2", "p1", "c5", "c05", "r2p01c05"]);
+});
+
+test("placeCandidates: a row names its place and holds no level or path object", () => {
+  // an edit stands a rebuilt level in the dataset; a row that kept the old one
+  // would land a click on the shipped data
+  for (const c of placeCandidates(GAMES)) {
+    assert.ok(!("L" in c) && !("P" in c), c.code);
+    assert.equal(typeof c.lv, "string");
+  }
 });
 
 test("matchPlaces: a screen answers only a query that names one", () => {
@@ -125,7 +137,7 @@ test("matchPlaces: the queries the sidebar's buttons were the only answer to", (
   assert.deepEqual(hits("zulag 2").slice(0, 4), ["AO R2 P1", "AO R2 P2", "AO R2 P3", "AO R2 P10"]);
 
   assert.deepEqual(hits("r2 p1"), ["AO R2 P1"]);
-  assert.ok(run(games, "p3").every((c) => c.P?.id === 3));
+  assert.ok(run(games, "p3").every((c) => c.pa === 3));
 
   // the nicknames, which are the half of this a player reaches for when they
   // know what a place is like but not what it is called

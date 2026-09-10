@@ -142,6 +142,10 @@ window.addEventListener("settings-changed", (e) => {
   if (e.detail?.key === "demoPaths" && !panel.hidden) renderCounts();
 });
 
+window.addEventListener("data-changed", () => {
+  if (!panel.hidden && state.path) renderCounts();
+});
+
 // narrow screens hold one floating panel at a time — two bottom sheets stack
 window.addEventListener("float-opened", (e) => {
   if (narrowMQ.matches && e.detail.id !== "numbersPanel") closeNumbers();

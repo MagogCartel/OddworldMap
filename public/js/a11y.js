@@ -15,11 +15,19 @@ let announced = null,
 
 window.addEventListener("selection-changed", () => {
   const { data, lvl, path } = state;
-  if (!path || path === announced) return;
-  announced = path;
+  const at = path && `${data.id}/${lvl.short}/${path.id}`;
+  if (!path || at === announced) return;
+  announced = at;
   const summary = placeSummary(data, lvl, path);
   // a name is not a live region, so this speaks nothing of its own
   cv.setAttribute("aria-label", `Oddworld map: ${summary}`);
   clearTimeout(timer);
   timer = setTimeout(() => (region.textContent = summary), SETTLE_MS);
+});
+
+// an edit stands the path as new objects: the name follows, the region stays
+// silent, the change having been announced where it was made
+window.addEventListener("data-changed", () => {
+  const { data, lvl, path } = state;
+  if (path) cv.setAttribute("aria-label", `Oddworld map: ${placeSummary(data, lvl, path)}`);
 });

@@ -38,6 +38,7 @@ import { pathDisplayName, pathNickname } from "./annotations.js";
 import { isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { orderPaths } from "./pathorder.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
+import { currentOf, pristineOf } from "./edits.js";
 
 function markOn(box, key) {
   for (const b of box.children) b.classList.toggle("on", b.dataset.key === key);
@@ -99,11 +100,15 @@ export function selectGame(G, keepView) {
     setLabel(b);
     b.title = L.name;
     b.dataset.key = L.short;
-    b.onclick = () => selectLevel(L);
+    b.onclick = () => selectLevel(levelOf(L.short));
     levelBtns.appendChild(b);
   });
   if (!keepView && G.levels.length) selectLevel(G.levels[0]);
 }
+
+// the level as it stands in the dataset now: an edit stands a rebuilt one in
+// its place, so a level is named by its short rather than held
+const levelOf = (short) => state.data.levels.find((l) => l.short === short) ?? null;
 
 const visiblePaths = (L) => {
   const ps = L.paths.filter(pathVisible);
@@ -133,7 +138,7 @@ function buildPathButtons() {
     }
     if (isDemoPath(P)) tip.push(DEMO_NOTE);
     if (tip.length) b.title = tip.join(" — ");
-    b.onclick = () => selectPath(P);
+    b.onclick = () => selectPathById(P.id);
     pathBtns.appendChild(b);
   });
   if (state.path) markOn(pathBtns, String(state.path.id));
@@ -143,7 +148,7 @@ function buildPathButtons() {
 // target path selects it itself, in one selection change — an intermediate
 // default-path selection would fire listeners against a path nobody chose
 function setLevel(L) {
-  state.lvl = L;
+  state.lvl = levelOf(L.short) ?? L;
   markOn(levelBtns, L.short);
   buildPathButtons();
 }
@@ -253,7 +258,7 @@ function focusOn(fx, fy) {
 export function objectHash(t) {
   const [fx, fy] = markerCentre(t);
   const v = { x: fx, y: fy, z: focusZoom(cv.clientWidth, cv.clientHeight) };
-  return formatHash(state.data.id, state.lvl.short, state.path.id, v, t, state.route);
+  return formatHash(state.data.id, state.lvl.short, state.path.id, v, pristineOf(t), state.route);
 }
 
 // ---- follow (click a door/portal/well to jump to its destination) -----
@@ -279,27 +284,39 @@ export function navigateToDest(d) {
   focusOn(fx, fy);
 }
 
+// the level, path and object a caller kept name places, not the objects now
+// standing for them
 export function jumpToTlv(G, L, P, t) {
   if (state.data !== G) selectGame(G, true);
-  if (state.lvl !== L) setLevel(L);
-  if (state.path !== P) selectPathById(P.id);
-  focusOn(...markerCentre(t));
+  if (state.lvl?.short !== L.short) setLevel(L);
+  if (state.path?.id !== P.id) selectPathById(P.id);
+  focusOn(...markerCentre(currentOf(t, state.path) ?? t));
 }
 
 // a whole place: one path, a level (which opens on the first path it lists),
 // or one screen of a path, centered when a camera id is named
-export function jumpToPlace(G, L, P, cam) {
+export function jumpToPlace(G, lv, pa, cam) {
   if (state.data !== G) selectGame(G, true);
-  if (!P) {
+  const L = levelOf(lv);
+  if (!L) return;
+  if (pa == null) {
     selectLevel(L);
     return;
   }
   if (state.lvl !== L) setLevel(L);
-  selectPathById(P.id);
+  selectPathById(pa);
   if (cam == null) return;
   const cell = camCell(state.path, cam);
   if (cell != null) focusOn(...cellCentre(cell, state.path));
 }
+
+// an edit stands a rebuilt level in the dataset: the entry set is game-wide,
+// and the level in hand lists its paths again from the objects now standing
+window.addEventListener("data-changed", (e) => {
+  if (!state.data || e.detail.game !== state.data.id) return;
+  state.entry = computeEntryPaths(state.data);
+  if (state.lvl?.short === e.detail.lv) buildPathButtons();
+});
 
 // ---- permalinks ---------------------------------------------------------
 let applyingHash = false,

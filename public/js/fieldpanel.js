@@ -134,7 +134,14 @@ function renderType({ name, fields }) {
   return det;
 }
 
-let renderedPath = null; // the path the panel was built from
+const typeKey = () =>
+  typesOnPath()
+    .map((t) => `${t.name}:${t.fields}`)
+    .join();
+
+let renderedAt = null; // the place the panel was built from
+let renderedTypes = ""; // and the type set it listed there, with each one's fields
+const here = () => state.path && `${state.data.id}/${state.lvl.short}/${state.path.id}`;
 
 // open the panel to a type's row, fired by the ⚙ on a screen-list object: bring
 // the sidebar up (it may be a closed drawer) and expand that type into view
@@ -150,7 +157,8 @@ function revealType(name) {
 export function renderFieldPanel() {
   const on = getSettings().fieldPrefs.mode === "more"; // mode only: no game is selected at boot
   section.hidden = !on;
-  renderedPath = state.path;
+  renderedAt = here();
+  renderedTypes = typeKey();
   body.textContent = "";
   if (!on) return;
   for (const type of typesOnPath()) body.append(renderType(type));
@@ -161,7 +169,12 @@ export function initFieldPanel() {
   // the same path on every pushed hash write, and a rebuild would collapse
   // whichever type row the user has open
   window.addEventListener("selection-changed", () => {
-    if (state.path !== renderedPath) renderFieldPanel();
+    if (here() !== renderedAt) renderFieldPanel();
+  });
+  // an edit changes values, never field names, and a rebuild collapses whichever
+  // row is open — so only a changed type set re-renders
+  window.addEventListener("data-changed", () => {
+    if (here() === renderedAt && typeKey() !== renderedTypes) renderFieldPanel();
   });
   window.addEventListener("settings-changed", (e) => {
     if (!e.detail || e.detail.key === "fieldPrefs") renderFieldPanel(); // show-more toggled

@@ -213,6 +213,15 @@ export function setPatrol(z) {
 }
 window.addEventListener("selection-changed", () => setPatrol(null));
 
+// an edit stands the path as new objects, which none of these point at any more
+window.addEventListener("data-changed", () => {
+  setConnFocus(null);
+  setWireFocus(null);
+  setHighlight(null);
+  setPatrol(null);
+  scheduleDraw();
+});
+
 // coalesce bursty redraw sources (pointer moves, image loads) into one paint per frame
 let drawPending = false;
 export function scheduleDraw() {
