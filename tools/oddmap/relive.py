@@ -402,7 +402,7 @@ def bucket_cells(game_key, path, geometry):
         y = (t["y1"] + t["y2"]) // 2 if midpoint else t["y1"]
         cell = (y // geometry["worldH"]) * path["w"] + (x // geometry["worldW"])
         if not 0 <= cell < path["w"] * path["h"]:
-            raise RuntimeError(f"{t['name']} at {t['x1']},{t['y1']} lands outside the grid")
+            raise RuntimeError(f"{t['name']} at {x},{y} lands outside the grid")
         cells.setdefault(cell, []).append(t)
     return cells
 

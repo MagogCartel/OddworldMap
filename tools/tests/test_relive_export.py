@@ -156,6 +156,14 @@ class ExporterOutput(unittest.TestCase):
             for cell, cam in cells.items():
                 self.assertEqual(cam["name"], named.get(cell, ""), game_key)
 
+    def test_a_rect_off_the_grid_is_named_by_the_point_that_left_it(self):
+        geo = games.GAMES["AE"]["geometry"]
+        path = {"w": 1, "h": 1, "tlvs": [{"name": "Zone", "x1": 0, "y1": 0,
+                                          "x2": 2 * geo["worldW"], "y2": 0}]}
+        with self.assertRaisesRegex(RuntimeError, f"Zone at {geo['worldW']},0 lands outside"):
+            relive.bucket_cells("AE", path, geo)
+        self.assertEqual(list(relive.bucket_cells("AO", path, games.GAMES["AO"]["geometry"])), [0])
+
     def test_a_named_camera_takes_its_id_from_its_name_digits(self):
         for game_key, doc in self.docs.items():
             for cam in doc["map"]["cameras"]:

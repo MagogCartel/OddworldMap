@@ -14,7 +14,7 @@ export function bucketCells(gameId, path, geometry) {
     const y = midpoint ? Math.floor((t.y1 + t.y2) / 2) : t.y1;
     const cell = Math.floor(y / geometry.worldH) * path.w + Math.floor(x / geometry.worldW);
     if (!(cell >= 0 && cell < path.w * path.h))
-      throw new Error(`${t.name} at ${t.x1},${t.y1} lands outside the grid`);
+      throw new Error(`${t.name} at ${x},${y} lands outside the grid`);
     if (!cells.has(cell)) cells.set(cell, []);
     cells.get(cell).push(t);
   }

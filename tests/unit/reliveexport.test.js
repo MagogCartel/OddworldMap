@@ -65,6 +65,16 @@ test("each game's cell rule is the one in force", () => {
   }
 });
 
+test("a rect off the grid is named by the point that left it", () => {
+  const geo = data.AE.geometry;
+  const path = { w: 1, h: 1, tlvs: [{ name: "Zone", x1: 0, y1: 0, x2: 2 * geo.worldW, y2: 0 }] };
+  assert.throws(
+    () => bucketCells("AE", path, geo),
+    new RegExp(`Zone at ${geo.worldW},0 lands outside`),
+  );
+  assert.deepEqual([...bucketCells("AO", path, data.AO.geometry).keys()], [0]);
+});
+
 test("a written document carries every property relive reads", () => {
   for (const g of GAMES) {
     const registered = {};
