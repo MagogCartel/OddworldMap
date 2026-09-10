@@ -14,6 +14,7 @@ import { setHighlight } from "./render.js";
 import { fieldPrefsFor, getSettings } from "./settings.js";
 import { jumpToTlv } from "./navigate.js";
 import { currentOf } from "./edits.js";
+import { selectObject } from "./editpanel.js";
 
 const panel = $("camPanel"),
   title = $("camPanelTitle"),
@@ -110,7 +111,10 @@ function list(cam, focus) {
         ? ` <span class="e">· <span class="gloss" data-tip="${esc(OFFSCREEN_NOTE)}">offscreen</span></span>`
         : "";
       b.innerHTML = esc(t.name) + off + (ex ? " " + ex : "");
-      b.onclick = () => jumpToTlv(state.data, state.lvl, state.path, t);
+      b.onclick = (e) => {
+        jumpToTlv(state.data, state.lvl, state.path, t);
+        if (state.edit) selectObject(t, { focus: e.detail === 0 }); // Enter counts no presses
+      };
       b.onmouseenter = () => setHighlight(t);
       b.onmouseleave = () => setHighlight(null);
       const wrap = document.createElement("div");

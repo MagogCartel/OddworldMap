@@ -1,5 +1,6 @@
 // Sidebar controls: category filters, display toggles, feedback link.
 
+import { setEditMode } from "./editpanel.js";
 import { CATS, PENS, catOf } from "./config.js";
 import { $, cv, filterBox } from "./dom.js";
 import { state } from "./state.js";
@@ -50,6 +51,7 @@ function syncShow(key, cb) {
   if (key === "spaced") setPitch(cb.checked); // moves every draw coordinate; it redraws itself
   if (key !== "ruler" && key !== "route") return;
   if (cb.checked) {
+    setEditMode(false); // one tool owns the click at a time
     const other = key === "ruler" ? "route" : "ruler"; // one measuring tool armed at a time
     const ocb = showUI.get(other);
     if (ocb.checked) {
@@ -58,9 +60,14 @@ function syncShow(key, cb) {
     }
   }
   if (key === "ruler" && !state.show.ruler) state.ruler = null; // measurements don't outlive the mode
-  cv.style.cursor = state.show.ruler || state.show.route ? "crosshair" : "";
+  cv.style.cursor = state.edit || state.show.ruler || state.show.route ? "crosshair" : "";
   if (key === "route") window.dispatchEvent(new CustomEvent("route-changed"));
 }
+// one tool owns the click at a time, from this side too
+window.addEventListener("edit-changed", () => {
+  if (!state.edit) return;
+  for (const k of ["ruler", "route"]) if (showUI.get(k).checked) toggleShow(k);
+});
 for (const [key, id] of Object.entries({
   spaced: "tSpaced",
   grid: "tGrid",

@@ -15,6 +15,7 @@ import {
   markerShown,
 } from "./config.js";
 import { $, cv, ctx, cssVar } from "./dom.js";
+import { editedFields } from "./edits.js";
 import { state, GEO, CELL_W, CELL_H, cellOrigin, dX, dY, worldLen } from "./state.js";
 import {
   camCenter,
@@ -37,6 +38,7 @@ const COLOR = {
   mapBgRgb: cssVar("--map-bg-rgb"),
   cellEmpty: cssVar("--cell-empty"),
   accentRgb: cssVar("--accent-rgb"),
+  editRgb: cssVar("--edit-rgb"),
 };
 
 const images = {}; // png -> Image
@@ -466,6 +468,14 @@ export function paint(ctx, cam, w, h, dpr, transients = true) {
       onScreen();
       ctx.restore();
     }
+    // an edited object says so on the map itself, exports included
+    if (Object.keys(editedFields(t)).length) {
+      const pad = 3 / cam.z;
+      ctx.strokeStyle = `rgb(${COLOR.editRgb})`;
+      ctx.lineWidth = 1.5 / cam.z;
+      ctx.setLineDash([]);
+      ctx.strokeRect(x1 - pad, y1 - pad, w + 2 * pad, h + 2 * pad);
+    }
     if (showLabels) {
       ctx.fillStyle = c.color;
       ctx.fillText(t.name, x1, y1 - 3 / cam.z);
@@ -591,6 +601,18 @@ export function paint(ctx, cam, w, h, dpr, transients = true) {
     ctx.setLineDash([7 / cam.z, 5 / cam.z]);
     ctx.strokeRect(x1 - pad, y1 - pad, w + 2 * pad, h + 2 * pad);
     ctx.setLineDash([]);
+  }
+
+  if (transients && state.sel) {
+    // the object being edited, outlined whether or not its category is on
+    const box = drawBox(state.sel);
+    const w = Math.max(box.w, 10),
+      h = Math.max(box.h, 10);
+    const pad = 5 / cam.z;
+    ctx.strokeStyle = `rgb(${COLOR.editRgb})`;
+    ctx.lineWidth = 3 / cam.z;
+    ctx.setLineDash([]);
+    ctx.strokeRect(box.x - pad, box.y - pad, w + 2 * pad, h + 2 * pad);
   }
 
   if (ruler) {

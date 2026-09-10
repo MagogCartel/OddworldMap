@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-09-10",
+   "tag": "new",
+   "flagship": true,
+   "title": "Edit an object's properties in the browser",
+   "detail": "Press Edit objects, or e, and click any marker: a panel lists every field the game stores for it. Each is a dropdown of the values the game knows or a number you can type, with what the disc shipped beside anything you changed and a way to put it back. The map follows the edit everywhere at once: a door sent to another camera draws its arrow there, a lever given a new switch id wires up, the tooltip and the screen list read the new value. An edited marker wears a second outline, so nothing you changed can pass for the game's own data."
+  },
+  {
    "date": "2026-09-08",
    "tag": "new",
    "flagship": true,

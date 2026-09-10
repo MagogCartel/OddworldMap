@@ -49,6 +49,7 @@ import {
   pathIn,
   patrolZone,
   resolveTarget,
+  smallestMarker,
   snapTarget,
   wireEnds,
   zoomAt,
@@ -67,6 +68,7 @@ import { markKeyHeld, toggleShow } from "./sidebar.js";
 import { getSettings, fieldPrefsFor } from "./settings.js";
 import { focusCamPanel, openCamPanel, openCamPanelNear } from "./campanel.js";
 import { togglePlace } from "./place.js";
+import { selectObject, setEditMode } from "./editpanel.js";
 import { toggleGraph } from "./graphview.js";
 import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
 import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
@@ -101,6 +103,11 @@ menuBtn.onclick = () => toggleMenu();
 scrim.onclick = () => toggleMenu(false);
 window.addEventListener("selection-changed", (e) => {
   if (isNarrow() && !e.detail.fromHash) toggleMenu(false); // reveal the map after picking
+});
+
+// the mode acts on the map, so on narrow the drawer comes off it
+window.addEventListener("edit-changed", () => {
+  if (state.edit && isNarrow()) toggleMenu(false);
 });
 
 // the graph takes the whole surface, so the drawer has to come off it
@@ -239,8 +246,8 @@ window.addEventListener("selection-changed", () => {
   scheduleDraw();
 });
 
-// the armed measuring tool owns the cursor; hover writes must not overwrite it
-const modeCursor = () => (state.show.ruler || state.show.route ? "crosshair" : "");
+// an armed tool owns the cursor; hover writes must not overwrite it
+const modeCursor = () => (state.edit || state.show.ruler || state.show.route ? "crosshair" : "");
 
 cv.addEventListener("pointerleave", () => {
   if (pointers.size) return; // a captured drag only leaves after release
@@ -280,6 +287,10 @@ cv.addEventListener("click", () => {
     return;
   }
   updateHover(); // taps arrive without a preceding hover move
+  if (state.edit) {
+    selectObject(smallestMarker(hoverTlvs));
+    return;
+  }
   for (const t of hoverTlvs) {
     const d = followableDest(t);
     if (d) {
@@ -409,6 +420,10 @@ window.addEventListener("keydown", (e) => {
   }
   if (e.key === "v") {
     if (!e.repeat) toggleGraph(); // a held key autorepeats; the mode must not
+    return;
+  }
+  if (e.key === "e") {
+    if (!e.repeat) setEditMode(!state.edit);
     return;
   }
   if (e.key === "l") {
@@ -555,7 +570,9 @@ function updateHover() {
                 (said.length > 3 ? `<br><span class="e">+${said.length - 3} more</span>` : "");
           const d = shownDest(t);
           let follow = "";
-          if (d && isLoopback(t)) {
+          if (state.edit) {
+            follow = `<br><span class="f">click to select</span>`;
+          } else if (d && isLoopback(t)) {
             follow = `<br><span class="f loop">⟳ loops back to itself</span>`;
           } else if (d && !followableDest(t)) {
             follow = `<br><span class="f loop">→ leads to ${esc(`${d.lv} P${d.pa}`)} — not on the map</span>`;

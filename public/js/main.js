@@ -22,6 +22,7 @@ import "./about.js";
 import "./typecard.js";
 import "./shuffle.js";
 import "./numbers.js";
+import "./editpanel.js";
 import "./minimap.js";
 import "./graphview.js";
 import "./offline.js";

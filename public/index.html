@@ -89,6 +89,14 @@
       >
         World graph
       </button>
+      <button
+        id="editBtn"
+        class="chrome"
+        aria-pressed="false"
+        data-tip="Edit objects on this path: click a marker to select it, then change its fields in the panel.&#10;Edits live in this browser tab and never travel in a link."
+      >
+        Edit objects
+      </button>
       <h2>
         Display
         <span class="h2tools"><button id="tReset" class="linkbtn">reset</button></span>
@@ -310,7 +318,16 @@
           <div id="numbersTypes"></div>
         </div>
       </div>
-      <div id="help">drag / arrows = pan · wheel / ± = zoom · hover = inspect · ? = shortcuts</div>
+      <div id="editPanel" hidden tabindex="-1" role="group" aria-labelledby="editTitle">
+        <div class="cp-head">
+          <span id="editTitle"></span>
+          <button id="editClose" class="closebtn" aria-label="Close">×</button>
+        </div>
+        <div id="editBody"></div>
+      </div>
+      <div id="help">
+        drag / arrows = pan · wheel / ± = zoom · hover = inspect · e = edit · ? = shortcuts
+      </div>
       <div id="hud"></div>
       <canvas
         id="minimap"
@@ -380,6 +397,10 @@
           <div class="sc-row">
             <span class="sc-keys"><kbd>v</kbd></span
             >the world graph: every path and the ways between them
+          </div>
+          <div class="sc-row">
+            <span class="sc-keys"><kbd>e</kbd></span
+            >edit objects: a click selects, the panel edits
           </div>
           <div class="sc-row">
             <span class="sc-keys"><kbd>s</kbd></span
@@ -551,8 +572,9 @@
             collection of interactive maps of classic games.
           </p>
           <p class="ab-meta">
-            Every screen, object and collision line is read from the game discs. Formats
-            reverse-engineered by the
+            Every screen, object and collision line is read from the game discs; an object you edit
+            in the browser is a layer over that, marked wherever it shows and never carried by a
+            link. Formats reverse-engineered by the
             <a href="https://github.com/AliveTeam/alive_reversing" target="_blank" rel="noopener"
               >AliveTeam / alive_reversing</a
             >

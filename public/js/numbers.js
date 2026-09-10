@@ -146,9 +146,11 @@ window.addEventListener("data-changed", () => {
   if (!panel.hidden && state.path) renderCounts();
 });
 
-// narrow screens hold one floating panel at a time — two bottom sheets stack
+// narrow screens hold one floating panel at a time — two bottom sheets stack —
+// and the edit panel takes this corner at every width
 window.addEventListener("float-opened", (e) => {
-  if (narrowMQ.matches && e.detail.id !== "numbersPanel") closeNumbers();
+  if (e.detail.id === "editPanel" || (narrowMQ.matches && e.detail.id !== "numbersPanel"))
+    closeNumbers();
 });
 
 // the world graph stands over the map this describes, and it is unusable and
