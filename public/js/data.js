@@ -53,3 +53,23 @@ export function loadGame(id, low) {
 
 // the games that have neither landed nor been given up on
 export const pendingGames = () => GAME_IDS.filter((id) => !settled.has(id));
+
+// the editor data is a viewer surface nobody uses until they ask for it, so it
+// is fetched on the first use rather than at boot; one fetch per game however
+// many uses follow, and a fetch that came back with nothing is forgotten so the
+// next ask is a real retry rather than the first failure repeating. `low` keeps
+// it behind the artwork the way the other game's dataset is.
+const editorData = new Map();
+export function loadEditorData(id, low) {
+  let p = editorData.get(id);
+  if (!p) {
+    p = loadJson(`relive_export_${id.toLowerCase()}.json`, low ? { priority: "low" } : null).then(
+      (d) => {
+        if (!d) editorData.delete(id);
+        return d;
+      },
+    );
+    editorData.set(id, p);
+  }
+  return p;
+}

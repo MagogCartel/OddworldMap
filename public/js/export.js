@@ -3,7 +3,7 @@
 // standalone SVG or a PNG rasterized from it.
 
 import { EXPORT_MAX_DIM, EXPORT_MAX_PX } from "./config.js";
-import { loadJson } from "./data.js";
+import { loadEditorData } from "./data.js";
 import { $, cv } from "./dom.js";
 import { graphName, graphSvg } from "./graphsvg.js";
 import { pathImage } from "./model.js";
@@ -111,23 +111,6 @@ pathBtn.onclick = async () => {
     pathBtn.textContent = PATH_LABEL;
   }
 };
-
-// the editor data is a viewer surface nobody uses until they ask for it, so it
-// is fetched on the first export rather than at boot; one fetch per game however
-// many exports follow, and a fetch that came back with nothing is forgotten so
-// the next press is a real retry rather than the first failure repeating
-const editorData = new Map();
-function loadEditorData(id) {
-  let p = editorData.get(id);
-  if (!p) {
-    p = loadJson(`relive_export_${id.toLowerCase()}.json`).then((d) => {
-      if (!d) editorData.delete(id);
-      return d;
-    });
-    editorData.set(id, p);
-  }
-  return p;
-}
 
 const jsonBtn = $("exportJsonBtn");
 const JSON_LABEL = jsonBtn.textContent.trim();
