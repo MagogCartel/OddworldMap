@@ -100,6 +100,7 @@ export const DEFAULT_BY_TYPE = {
   LCDStatusBoard: ["hide_board", "number_of_mudokons", "zulag_number"],
   LightEffect: ["type"],
   MusicTrigger: ["music_type", "triggered_by"],
+  ShadowZone: ["b", "g", "r", "scale"],
   SlapLock: ["give_invisibility_power_up", "has_ghost"],
   // machines & sacks
   BoneBag: ["bone_amount"],
