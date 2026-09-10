@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { census } from "../../public/js/census.js";
 import { AO_GEOMETRY, dataset, level, path, tlv } from "./fixtures.js";
 
-// an object authored in cell, off world units into its visible window
+// an object with its corner in cell, off world units into its visible window
 const obj = (name, cell, off = 50) => ({
   ...tlv(name),
   x1: cell * 1024 + 256 + off,
@@ -34,10 +34,10 @@ test("census: no cell means no screen tier", () => {
   assert.deepEqual(rows, [{ name: "Door", screen: null, path: 1, level: 1, game: 1 }]);
 });
 
-test("census: an object buckets by its authored cell, not where the packing draws it", () => {
-  // authored in cell 0's trailing slack (window 256..624), drawn over cell 1
+test("census: an object buckets by its corner's cell, not where the packing draws it", () => {
+  // its corner in cell 0's trailing slack (window 256..624), drawn over cell 1
   const slack = { ...tlv("Slig"), x1: 634, y1: 170, x2: 644, y2: 180 };
-  // authored in cell 1's slack, drawn centre outside the grid entirely
+  // its corner in cell 1's slack, drawn centre outside the grid entirely
   const edge = { ...tlv("Door"), x1: 1724, y1: 170, x2: 1734, y2: 180 };
   const P = path(1, [slack, edge], [], 2, 1);
   const L = level("L1", P);

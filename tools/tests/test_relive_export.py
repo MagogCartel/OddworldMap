@@ -301,12 +301,12 @@ class ExportSweep(unittest.TestCase):
         "AE": {("MovieHandstone", "Trigger Switch ID")},
     }
 
-    # the corner and midpoint rules part only over a rect that straddles a cell
-    # boundary, so this is what a regression to the other game's rule misplaces
-    STRADDLING = {"AO": 3, "AE": 835}
+    # the rects whose corner and midpoint fall in different cells: what a
+    # regression to the other game's rule misplaces
+    MISPLACED = {"AO": 3, "AE": 835}
 
     def test_each_games_cell_rule_is_the_one_in_force(self):
-        for game_key, want in self.STRADDLING.items():
+        for game_key, want in self.MISPLACED.items():
             geo = games.GAMES[game_key]["geometry"]
 
             def corner(t, path):
@@ -317,14 +317,14 @@ class ExportSweep(unittest.TestCase):
                     + ((t["x1"] + t["x2"]) // 2) // geo["worldW"]
 
             mine, other = (corner, midpoint) if game_key == "AO" else (midpoint, corner)
-            straddling = 0
+            misplaced = 0
             for level in map_data(game_key)["levels"]:
                 for path in level["paths"]:
                     for cell, tlvs in relive.bucket_cells(game_key, path, geo).items():
                         for t in tlvs:
                             self.assertEqual(mine(t, path), cell, game_key)
-                            straddling += other(t, path) != cell
-            self.assertEqual(straddling, want, game_key)
+                            misplaced += other(t, path) != cell
+            self.assertEqual(misplaced, want, game_key)
 
     def test_the_committed_digests_are_a_fresh_run(self):
         """the page's exporter has no Python to compare itself against, so both

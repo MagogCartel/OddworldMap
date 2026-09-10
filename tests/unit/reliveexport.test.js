@@ -42,11 +42,11 @@ test("every path exports to the digest the builder recorded", () => {
   }
 });
 
-// the two rules part only over a rect that straddles a cell boundary, so this is
-// what a regression to the other game's rule would misplace — the same count the
-// builder's own suite pins
+// the rects whose corner and midpoint fall in different cells, what a regression
+// to the other game's rule would misplace — the same count the builder's own
+// suite pins
 test("each game's cell rule is the one in force", () => {
-  const straddling = { AO: 3, AE: 835 };
+  const misplaced = { AO: 3, AE: 835 };
   for (const g of GAMES) {
     const geo = data[g].geometry;
     const corner = (t, p) => Math.floor(t.y1 / geo.worldH) * p.w + Math.floor(t.x1 / geo.worldW);
@@ -61,7 +61,7 @@ test("each game's cell rule is the one in force", () => {
           assert.equal(mine(t, path), cell, g);
           if (other(t, path) !== cell) moved++;
         }
-    assert.equal(moved, straddling[g], g);
+    assert.equal(moved, misplaced[g], g);
   }
 });
 

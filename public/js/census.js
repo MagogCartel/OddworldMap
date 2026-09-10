@@ -7,8 +7,8 @@
 import { tlvCell } from "./model.js";
 import { pathVisible } from "./demo.js";
 
-// the cell an object is authored in, never where it is drawn: what a screen
-// holds must not move with the pitch
+// the cell an object's top-left corner falls in, never where it is drawn:
+// what a screen holds must not move with the pitch
 const inCell = (t, P, cell, geo) => tlvCell(t, P, geo) === cell;
 
 // one row per name, in the order given; screen is null when no cell is named

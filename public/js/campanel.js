@@ -72,8 +72,8 @@ export function openCamPanelNear(x, y) {
 function list(cam, focus) {
   const { path } = state,
     cell = cam.cell;
-  // the cell an object is authored in, never where it is drawn: what a screen
-  // holds must not move with the pitch
+  // the cell an object's top-left corner falls in, never where it is drawn:
+  // what a screen holds must not move with the pitch
   const inCell = (t) => tlvCell(t, path, GEO) === cell;
   const byCat = new Map(CATS.map((c) => [c, []]));
   let n = 0;

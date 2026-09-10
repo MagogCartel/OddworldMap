@@ -394,7 +394,7 @@ def bucket_cells(game_key, path, geometry):
     was authored under is the chunk's own index table to answer and the games
     answer it differently: Oddysee places a rect by its top-left corner and
     Exoddus by its midpoint, each exact over its whole archive where the other
-    misplaces the zones that straddle a boundary."""
+    misplaces the rects whose corner and midpoint fall in different cells."""
     midpoint = game_key == "AE"
     cells = {}
     for t in path["tlvs"]:
