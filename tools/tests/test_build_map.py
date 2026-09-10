@@ -677,6 +677,17 @@ class Sidecars(unittest.TestCase):
                                  json.loads((HERE / "data" / game[cache]).read_text()),
                                  f"{game_key} {served}")
 
+    def test_the_export_data_carries_the_whole_level_map(self):
+        """a destination can name a level the served list does not keep — the
+        Exoddus enders — so the map is the builder's, every id of it"""
+        for game_key in ("AO", "AE"):
+            game = games.game_setup(game_key)
+            side = json.loads((SITE / game["relive_export_file"]).read_text())
+            self.assertEqual(side["level_short"], {str(k): v for k, v in game["level_short"].items()})
+        ae = json.loads((SITE / games.GAMES["AE"]["relive_export_file"]).read_text())
+        kept = {str(L["id"]) for L in json.loads((SITE / games.GAMES["AE"]["data_file"]).read_text())["levels"]}
+        self.assertEqual(set(ae["level_short"]) - kept, {"7", "11", "12", "13", "14", "15"})
+
     def test_the_export_data_carries_the_links_it_is_handed(self):
         game = games.GAMES["AO"]
         cached = json.loads((HERE / "data" / game["links_file"]).read_text())

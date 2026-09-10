@@ -59,9 +59,10 @@ def write_relive_export(game_key, out, links_dir=HERE / "data"):
     """everything an export needs that the served site does not already carry:
     relive's schema, the payload layouts the field names join through and —
     Exoddus alone reading them from data rather than from a constant — its Abe
-    starts and mud table, all from the committed caches; and the collision links
-    from `links_dir`, the cache unless a build hands over the ones it has just
-    written. It is served rather than cached because a page cannot read tools/data."""
+    starts and mud table — and the level-id map a destination's short is read
+    through, all from the committed caches; and the collision links from
+    `links_dir`, the cache unless a build hands over the ones it has just written.
+    It is served rather than cached because a page cannot read tools/data."""
     game = game_setup(game_key)
     rel = json.loads((HERE / "data" / game["relive_cache"]).read_text())
     doc = {"schema": rel,
@@ -72,6 +73,9 @@ def write_relive_export(game_key, out, links_dir=HERE / "data"):
            "enum_values": {name: list(table.values()) for name, table in rel["enums"].items()},
            "basic_types": relive.BASIC_TYPES_JSON,
            "base_properties": relive.BASE_PROPS,
+           # the served level list keeps one level per archive, so the ender ids
+           # destinations name reach the page only through this map
+           "level_short": {str(k): v for k, v in sorted(game["level_short"].items())},
            "fallbacks": {}}
     for (gk, literal, prop), v in sorted(relive.EXPORT_VALUE_FALLBACKS.items()):
         if gk == game_key:
