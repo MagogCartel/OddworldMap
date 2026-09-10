@@ -195,7 +195,7 @@ const FRAME_RATE_NOTE = "The engine counts thirty frames to the second.";
 
 // what a field's unit owes the reader, or null
 export const unitNote = (game, type, key) =>
-  fieldUnit(type, key, FIELD_TYPES[game]?.[type]?.[key]) === "frames" ? FRAME_RATE_NOTE : null;
+  fieldUnit(type, key, fieldType(game, type, key)) === "frames" ? FRAME_RATE_NOTE : null;
 
 // object -> field -> game type, and the generated enum labels (type -> value ->
 // text), both per game; the boot loads the sidecars and hands them over. Empty
@@ -209,6 +209,16 @@ export function setEnumLabels(byGame) {
   ENUM_LABELS = byGame || {};
 }
 
+// a field's decomp game type, or undefined for a bare int
+export const fieldType = (game, type, key) => FIELD_TYPES[game]?.[type]?.[key];
+
+// the map a field's values read through: the viewer's own transform for a value
+// type, else the generated enum labels; null for a bare int or a type no label covers
+export const valueMap = (game, type, key) => {
+  const t = fieldType(game, type, key);
+  return (t && (TRANSFORM[t] ?? ENUM_LABELS[game]?.[t])) || null;
+};
+
 // a transform entry against a value: a lookup map, or a function for open-ended
 // ranges. A miss (no entry, or value the map omits) yields undefined, so prettify
 // falls back to the raw value.
@@ -218,9 +228,8 @@ export const resolve = (entry, value) =>
 // a value's text: its label where the field's game type carries one, else its
 // unit where the glossary names one, else the raw int
 export const prettify = (game, type, key, value) => {
-  const t = FIELD_TYPES[game]?.[type]?.[key];
-  const label = resolve(TRANSFORM[t] ?? ENUM_LABELS[game]?.[t], value);
-  return label ?? resolve(UNITS[fieldUnit(type, key, t)], value) ?? value;
+  const label = resolve(valueMap(game, type, key), value);
+  return label ?? resolve(UNITS[fieldUnit(type, key, fieldType(game, type, key))], value) ?? value;
 };
 
 // a "what is this field" for the tooltip: the curated glossary prose plus the
@@ -228,10 +237,9 @@ export const prettify = (game, type, key, value) => {
 // where it's a timer. null when no prose is curated — the display affordance
 // means "there's an explanation here".
 export const fieldHelp = (game, type, key, { unitNote: withNote = true } = {}) => {
-  const t = FIELD_TYPES[game]?.[type]?.[key];
-  const prose = glossaryProse(type, key, t);
+  const prose = glossaryProse(type, key, fieldType(game, type, key));
   if (!prose) return null;
-  const map = TRANSFORM[t] ?? ENUM_LABELS[game]?.[t];
+  const map = valueMap(game, type, key);
   if (map && typeof map === "object") {
     const vals = Object.entries(map)
       .sort((a, b) => a[0] - b[0])
@@ -251,8 +259,7 @@ export const fieldHelp = (game, type, key, { unitNote: withNote = true } = {}) =
 export function onBackgroundPlane(game, t) {
   const scale = t.fields?.scale;
   if (scale == null) return false;
-  const type = FIELD_TYPES[game]?.[t.name]?.scale;
-  const label = type && resolve(TRANSFORM[type] ?? ENUM_LABELS[game]?.[type], scale);
+  const label = resolve(valueMap(game, t.name, "scale"), scale);
   return label ? /^half\b/.test(label) : scale === 1;
 }
 

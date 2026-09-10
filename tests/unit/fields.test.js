@@ -5,6 +5,8 @@ import {
   visibleFields,
   prettify,
   resolve,
+  fieldType,
+  valueMap,
   fieldEntries,
   fieldHelp,
   unitNote,
@@ -183,6 +185,20 @@ test("prettify: a bare int reads in the unit the glossary gives it", () => {
   assert.equal(prettify("G", "Slig", "bogus_unit", 7), 7);
   assert.equal(prettify("G", "Slig", "shoot_on_sight_delay", 8), 8);
   setGlossary(null);
+});
+
+test("fieldType / valueMap: the game type and the map its values read through", () => {
+  assert.equal(fieldType("G", "Slig", "start_state"), "Path_Slig::StartState");
+  assert.equal(fieldType("G", "Slig", "shoot_on_sight_delay"), undefined);
+  assert.deepEqual(valueMap("G", "Slig", "start_state"), {
+    0: "listening",
+    1: "patrol",
+    2: "sleeping",
+  });
+  assert.deepEqual(valueMap("G", "Slog", "asleep"), { 0: false, 1: true }); // the viewer's own transform wins
+  assert.equal(valueMap("G", "Door", "start_state"), null); // typed, but nothing labels it
+  assert.equal(valueMap("G", "Slig", "shoot_on_sight_delay"), null);
+  assert.equal(valueMap("X", "Slig", "start_state"), null);
 });
 
 test("resolve: a lookup map, a function for open-ended ranges, and a miss", () => {
