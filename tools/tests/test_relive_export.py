@@ -37,6 +37,15 @@ def placed_types(game_key):
 def muds_in_level():
     return json.loads((HERE / "data" / games.GAMES["AE"]["cache"]).read_text())["muds_in_level"]
 
+def corner_cell(t, path, geo):
+    return (t["y1"] // geo["worldH"]) * path["w"] + t["x1"] // geo["worldW"]
+
+def midpoint_cell(t, path, geo):
+    return (((t["y1"] + t["y2"]) // 2) // geo["worldH"]) * path["w"] \
+        + ((t["x1"] + t["x2"]) // 2) // geo["worldW"]
+
+AUTHORED_CELL = {"AO": corner_cell, "AE": midpoint_cell}
+
 def export(game_key, short, pid):
     game = games.game_setup(game_key)
     rel = relive.load_relive_schema(game_key, game)
@@ -150,7 +159,7 @@ class ExporterOutput(unittest.TestCase):
         for game_key, doc in self.docs.items():
             path, geo = self.paths[game_key], games.GAMES[game_key]["geometry"]
             named = {c["cell"]: c["name"] for c in path["cams"]}
-            holding = set(relive.bucket_cells(game_key, path, geo))
+            holding = {AUTHORED_CELL[game_key](t, path, geo) for t in path["tlvs"]}
             cells = {c["y"] * path["w"] + c["x"]: c for c in doc["map"]["cameras"]}
             self.assertEqual(set(cells), set(named) | holding, game_key)
             for cell, cam in cells.items():
@@ -316,22 +325,15 @@ class ExportSweep(unittest.TestCase):
     def test_each_games_cell_rule_is_the_one_in_force(self):
         for game_key, want in self.MISPLACED.items():
             geo = games.GAMES[game_key]["geometry"]
-
-            def corner(t, path):
-                return (t["y1"] // geo["worldH"]) * path["w"] + t["x1"] // geo["worldW"]
-
-            def midpoint(t, path):
-                return (((t["y1"] + t["y2"]) // 2) // geo["worldH"]) * path["w"] \
-                    + ((t["x1"] + t["x2"]) // 2) // geo["worldW"]
-
-            mine, other = (corner, midpoint) if game_key == "AO" else (midpoint, corner)
+            mine = AUTHORED_CELL[game_key]
+            other = midpoint_cell if mine is corner_cell else corner_cell
             misplaced = 0
             for level in map_data(game_key)["levels"]:
                 for path in level["paths"]:
                     for cell, tlvs in relive.bucket_cells(game_key, path, geo).items():
                         for t in tlvs:
-                            self.assertEqual(mine(t, path), cell, game_key)
-                            misplaced += other(t, path) != cell
+                            self.assertEqual(mine(t, path, geo), cell, game_key)
+                            misplaced += other(t, path, geo) != cell
             self.assertEqual(misplaced, want, game_key)
 
     def test_the_committed_digests_are_a_fresh_run(self):
