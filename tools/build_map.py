@@ -217,9 +217,7 @@ def main():
     write_relive_export(args.game, out)
     # game-wide, so a subset build writes it whole
     write_messages(args.game, discs, out / game["messages_file"])
-    # the collision links are the exporter's and no viewer surface draws them, so
-    # they land in the cache directory rather than in the served site — and beside
-    # a scratch --out, which is where a verification build compares them
+    # a scratch --out takes its own copy of the links, which is where a verification build compares them
     links_dir = HERE / "data" if out.resolve() == SITE.resolve() else out
     write_line_links(args.game, line_links, links_dir / game["links_file"], merge=bool(only))
     sw_file = out / "sw.js"

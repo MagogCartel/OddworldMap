@@ -93,9 +93,10 @@ def write_relive_export(game_key, out):
 
 def write_line_links(game_key, links, dst, merge):
     """the words trailing each collision line's coordinates and type, per level and
-    path. Read off the disc like the messages and kept out of the served site: the
-    exporter needs them to write a lossless document and no viewer surface draws
-    them, so a visitor should not fetch them. A subset build merges, as the map
+    path. Read off the disc like the messages and kept out of the map data, which
+    first paint waits for: the exporter needs them to write a lossless document and
+    no viewer surface draws them, so they reach the page only through the export
+    sidecar, fetched on the first export press. A subset build merges, as the map
     data does."""
     columns = [name for name, _off, _code in game_setup(game_key)["line_links"]]
     if merge and dst.exists():
