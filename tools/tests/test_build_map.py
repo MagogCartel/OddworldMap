@@ -11,6 +11,7 @@ checkout fails them instead.
 import contextlib
 import io
 import json
+import math
 import os
 import shutil
 import struct
@@ -790,6 +791,42 @@ class EnumCache(unittest.TestCase):
                 json.dumps({"labels": labels, "bad": sorted(bad)}, indent=1),
                 stale(self.cache_file(game_key).name),
             )
+
+
+class LinksCache(unittest.TestCase):
+    """the collision links are read at hand-written offsets, and what they carry
+    proves them: a link indexes a line of its own path, and Exoddus's length
+    column is the line's own"""
+
+    LINKED = {"AO": 1652, "AE": 1794}
+
+    def rows(self, game_key):
+        cache = json.loads((HERE / "data" / games.GAMES[game_key]["links_file"]).read_text())
+        data = json.loads((SITE / games.GAMES[game_key]["data_file"]).read_text())
+        paths = {(L["short"], P["id"]): P["lines"] for L in data["levels"] for P in L["paths"]}
+        self.assertEqual({(s, int(p)) for s, ps in cache["paths"].items() for p in ps}, set(paths))
+        for (short, pid), lines in sorted(paths.items()):
+            rows = cache["paths"][short][str(pid)]
+            self.assertEqual(len(rows), len(lines), f"{game_key} {short} P{pid}")
+            yield f"{game_key} {short} P{pid}", cache["columns"], lines, rows
+
+    def test_every_link_indexes_a_line_of_its_own_path(self):
+        for game_key in ("AO", "AE"):
+            linked = 0
+            for where, columns, lines, rows in self.rows(game_key):
+                for i, row in enumerate(rows):
+                    for column, v in zip(columns, row):
+                        if column == "length" or v == -1:
+                            continue
+                        self.assertTrue(0 <= v < len(lines), f"{where} line {i} {column}: {v}")
+                        linked += 1
+            self.assertEqual(linked, self.LINKED[game_key], game_key)
+
+    def test_the_exoddus_length_column_is_the_lines_own(self):
+        for where, columns, lines, rows in self.rows("AE"):
+            col = columns.index("length")
+            for i, ((x1, y1, x2, y2, _type), row) in enumerate(zip(lines, rows)):
+                self.assertEqual(row[col], int(math.hypot(x2 - x1, y2 - y1)), f"{where} line {i}")
 
 
 class PinnedRevision(unittest.TestCase):
