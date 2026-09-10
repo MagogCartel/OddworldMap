@@ -55,21 +55,18 @@ def write_field_types(game_key, out):
     print(f"field types -> {dst} ({len(ft)} object types)")
     return dst
 
-def write_relive_export(game_key, out):
-    """everything an export needs that the served site does not already carry,
-    from the committed caches alone: relive's schema, the payload layouts the
-    field names join through, the collision links, and — Exoddus alone reading
-    them from data rather than from a constant — its Abe starts and mud table.
-    It is served rather than cached because a page cannot read tools/data."""
+def write_relive_export(game_key, out, links_dir=HERE / "data"):
+    """everything an export needs that the served site does not already carry:
+    relive's schema, the payload layouts the field names join through and —
+    Exoddus alone reading them from data rather than from a constant — its Abe
+    starts and mud table, all from the committed caches; and the collision links
+    from `links_dir`, the cache unless a build hands over the ones it has just
+    written. It is served rather than cached because a page cannot read tools/data."""
     game = game_setup(game_key)
-
-    def read(name):
-        return json.loads((HERE / "data" / name).read_text())
-
-    rel = read(game["relive_cache"])
+    rel = json.loads((HERE / "data" / game["relive_cache"]).read_text())
     doc = {"schema": rel,
            "layouts": {str(tid): rows for tid, rows in sorted(game["schema"].items())},
-           "links": read(game["links_file"]),
+           "links": json.loads((links_dir / game["links_file"]).read_text()),
            # JS reorders an object's integer-like keys, so the order schema_blob
            # reads out of the enum tables has to be carried rather than inferred
            "enum_values": {name: list(table.values()) for name, table in rel["enums"].items()},

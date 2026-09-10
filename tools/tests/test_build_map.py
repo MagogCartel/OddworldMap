@@ -677,6 +677,16 @@ class Sidecars(unittest.TestCase):
                                  json.loads((HERE / "data" / game[cache]).read_text()),
                                  f"{game_key} {served}")
 
+    def test_the_export_data_carries_the_links_it_is_handed(self):
+        game = games.GAMES["AO"]
+        cached = json.loads((HERE / "data" / game["links_file"]).read_text())
+        with tempfile.TemporaryDirectory() as tmp, contextlib.redirect_stdout(io.StringIO()):
+            written = emit.write_line_links("AO", {"R1": cached["paths"]["R1"]},
+                                            Path(tmp) / game["links_file"], merge=False)
+            side = json.loads(emit.write_relive_export("AO", Path(tmp), Path(tmp)).read_text())
+            self.assertEqual(side["links"], json.loads(written.read_text()))
+        self.assertNotEqual(side["links"], cached)
+
     def test_a_stale_field_type_override_fails_the_emit(self):
         stale = {("AO", "Door", "no_such_field"): (None, "Choice_short")}
         with mock.patch.dict(emit._FIELD_TYPE_OVERRIDES, stale), self.assertRaises(RuntimeError):

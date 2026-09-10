@@ -214,12 +214,12 @@ def main():
     data_file.write_text(json.dumps(data, indent=1))
     write_field_types(args.game, out)  # decomp-derived sidecars, kept in sync each build
     write_enum_labels(args.game, out)
-    write_relive_export(args.game, out)
     # game-wide, so a subset build writes it whole
     write_messages(args.game, discs, out / game["messages_file"])
     # a scratch --out takes its own copy of the links, which is where a verification build compares them
     links_dir = HERE / "data" if out.resolve() == SITE.resolve() else out
     write_line_links(args.game, line_links, links_dir / game["links_file"], merge=bool(only))
+    write_relive_export(args.game, out, links_dir)  # carries the links, so after them
     sw_file = out / "sw.js"
     # a scratch --out holds no worker, so a verification build stamps nothing
     cache_name = stamp_cache_name(sw_file, out / "cams") if sw_file.exists() else None
