@@ -78,7 +78,7 @@ function transitions(data, level) {
   return { to, away };
 }
 
-const ordered = new WeakMap();
+let ordered = new WeakMap();
 
 // every path id in the level, in the order a player meets them, memoized whole
 export function levelOrder(data, level) {
@@ -185,7 +185,14 @@ export function orderPaths(data, level, paths) {
   return [...paths].sort((a, b) => at.get(a.id) - at.get(b.id));
 }
 
-const elected = new WeakMap();
+let elected = new WeakMap();
+
+// a dataset whose transitions changed: the elections and every walk seeded from
+// them are recomputed on the next ask, whichever level's object the change sat in
+export function invalidateEntry(data) {
+  elected.delete(data);
+  ordered = new WeakMap();
+}
 
 // where each level is entered: the way in from a level before it, else the
 // game's own start marker, else any arrival — a later level's door back in is

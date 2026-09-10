@@ -26,6 +26,7 @@ test("pure modules import in bare Node", async () => {
     "graphsvg",
     "reliveexport",
     "extra",
+    "edits",
   ]) {
     const m = await import(`../../public/js/${mod}.js`);
     assert.ok(Object.keys(m).length > 0, `${mod}.js has exports`);

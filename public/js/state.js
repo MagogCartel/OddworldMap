@@ -89,4 +89,6 @@ export const state = {
   ruler: null, // {x1, y1, x2, y2} in draw space
   graph: false, // the world graph is on screen in place of the map
   route: null, // route segments [{lv, pa, pts: [{x, y}, …]}, …], pts in draw space; drawn whenever set (show.route only gates editing)
+  edit: false, // edit mode: a click selects an object instead of following it
+  sel: null, // the object selected for editing
 };

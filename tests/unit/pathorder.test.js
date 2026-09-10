@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { levelOrder, orderPaths, levelEntry } from "../../public/js/pathorder.js";
+import { levelOrder, orderPaths, levelEntry, invalidateEntry } from "../../public/js/pathorder.js";
 import { setAnnotations, pathDisplayName } from "../../public/js/annotations.js";
 import { isDemoPath } from "../../public/js/demo.js";
 import { destOf, destTrusted, pathIn } from "../../public/js/model.js";
@@ -431,3 +431,21 @@ for (const [id, data] of GAMES) {
     }
   });
 }
+
+test("a dataset whose transitions changed recomputes its elections and every walk seeded from them", () => {
+  // level M's way in is elected from a door in level L; the door moves, M's own
+  // object is untouched, and only an explicit invalidation can reseed its walk
+  const enter = (pa) => ({
+    ...path(1, [tlv("PathTransition", { to_level: "M", to_path: pa })]),
+    name: "Way",
+  });
+  const M = level("M", area(3, "Room A", [5]), area(5, "Room B", [3]));
+  const data = dataset([level("L", enter(5)), M]);
+  assert.equal(levelEntry(data).M, 5);
+  assert.deepEqual(levelOrder(data, M), [5, 3]);
+  data.levels[0] = level("L", enter(3));
+  assert.equal(levelEntry(data).M, 5); // memoized
+  invalidateEntry(data);
+  assert.equal(levelEntry(data).M, 3);
+  assert.deepEqual(levelOrder(data, M), [3, 5]);
+});
