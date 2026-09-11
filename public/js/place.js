@@ -1,17 +1,19 @@
 // Where the map is: a chip in the map chrome naming the current level and path,
 // and the panel it discloses, which carries what the chip has no room for.
 
-import { DEMO_NOTE, ENTRY_NOTE } from "./config.js";
+import { DEMO_NOTE, EDITED_NOTE, ENTRY_NOTE } from "./config.js";
 import { $ } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
 import { pathDisplayName, pathNickname, pathNote } from "./annotations.js";
 import { isDemoPath } from "./demo.js";
+import { pathEdited, revertPath } from "./edits.js";
 
 const btn = $("placeBtn"),
   panel = $("placePanel"),
   codeEl = $("placeCode"),
-  nameEl = $("placeName");
+  nameEl = $("placeName"),
+  editedEl = $("placeEdited");
 
 let shown = null; // the place the open panel describes
 const here = () => state.path && `${state.data.id}/${state.lvl.short}/${state.path.id}`;
@@ -29,7 +31,12 @@ function fill() {
     (nickname ? `<div class="pl-nickname">${esc(nickname)}</div>` : "") +
     (state.entry[lvl.short]?.has(path.id) ? `<div class="pl-entry">${esc(ENTRY_NOTE)}</div>` : "") +
     (isDemoPath(path) ? `<div class="pl-demo">${esc(DEMO_NOTE)}</div>` : "") +
+    (pathEdited(path)
+      ? `<div class="pl-edited">${esc(EDITED_NOTE)} · <button type="button" class="linkbtn pl-revert">revert this path</button></div>`
+      : "") +
     (note ? `<div class="pl-note">${esc(note)}</div>` : "");
+  const revert = panel.querySelector(".pl-revert");
+  if (revert) revert.onclick = () => revertPath(data.id, lvl.short, path.id);
   shown = here();
 }
 
@@ -72,13 +79,16 @@ window.addEventListener("selection-changed", () => {
   codeEl.textContent = `${lvl.short} P${path.id}`;
   nameEl.textContent = pathDisplayName(data.id, lvl.short, path) || "";
   btn.classList.toggle("hasnote", !!pathNote(data.id, lvl.short, path));
+  editedEl.hidden = !pathEdited(path);
   btn.hidden = false;
   syncPlace();
 });
 
-// an edit can move the entry mark the panel carries
+// an edit marks the chip, and can move the entry mark the panel carries
 window.addEventListener("data-changed", () => {
-  if (!panel.hidden && state.path) fill();
+  if (!state.path) return;
+  editedEl.hidden = !pathEdited(state.path);
+  if (!panel.hidden) fill();
 });
 
 // the world graph stands over the chip that opens this, and names the place in

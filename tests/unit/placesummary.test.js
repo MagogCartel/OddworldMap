@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { placeSummary } from "../../public/js/placesummary.js";
 import { setAnnotations } from "../../public/js/annotations.js";
+import { materializePath, setLevelShort } from "../../public/js/edits.js";
 
 const load = (name) =>
   JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
@@ -39,6 +40,28 @@ test("placeSummary says a path carries a note, which is the dot a reader cannot 
   );
 });
 
+test("placeSummary says a path carries edits, which the marker's outline says to everyone else", () => {
+  setAnnotations({});
+  setLevelShort("AO", {});
+  const P = {
+    id: 1,
+    tlvs: [
+      { t: 3, name: "Hoist", x1: 0, y1: 0, x2: 10, y2: 10, extra: {}, fields: { hoist_type: 0 } },
+    ],
+  };
+  const edited = materializePath("AO", P, {
+    objects: { "Hoist@0,0": { fields: { hoist_type: 1 } } },
+  });
+  assert.equal(
+    placeSummary(AO, lvl("C1", "Credits"), edited),
+    "Abe's Oddysee, Credits, path 1, 1 object, edited on this device",
+  );
+  assert.equal(
+    placeSummary(AO, lvl("C1", "Credits"), P),
+    "Abe's Oddysee, Credits, path 1, 1 object",
+  );
+});
+
 test("every shipped path announces as one distinct, well-formed sentence", () => {
   setAnnotations(load("annotations.json"));
   for (const g of ["ao", "ae"]) {
@@ -49,7 +72,7 @@ test("every shipped path announces as one distinct, well-formed sentence", () =>
         const s = placeSummary(data, L, P);
         assert.match(
           s,
-          /^[^,]+, [^,]+, path \d+(, [^,]+)?, \d+ objects?(, with a note)?$/,
+          /^[^,]+, [^,]+, path \d+(, [^,]+)?, \d+ objects?(, with a note)?(, edited on this device)?$/,
           `${L.short} P${P.id}: ${s}`,
         );
         // a region rewritten with the text it already held announces nothing, so

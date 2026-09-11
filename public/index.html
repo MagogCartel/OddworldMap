@@ -183,14 +183,15 @@
         <button
           id="exportJsonBtn"
           aria-describedby="exportJsonHelp"
-          data-tip="Saves this path's objects and collision lines as the AliveTeam level editor's JSON.&#10;A description of the path, not a level: it carries no artwork, and importing it into your own LVL drops that path's foreground masks."
+          data-tip="Saves this path's objects and collision lines as the AliveTeam level editor's JSON.&#10;A description of the path, not a level: it carries no artwork, and importing it into your own LVL drops that path's foreground masks. A path you have edited saves under a name that says so."
         >
           Export path as JSON
         </button>
         <span id="exportJsonHelp" class="sr-only"
           >Saves this path's objects and collision lines as the AliveTeam level editor's JSON. A
           description of the path, not a level: it carries no artwork, and importing it into your
-          own LVL drops that path's foreground masks.</span
+          own LVL drops that path's foreground masks. A path you have edited saves under a name that
+          says so.</span
         >
       </div>
       <h2>
@@ -281,7 +282,7 @@
           aria-controls="placePanel"
         >
           <span id="placeCode"></span><span id="placeName"></span
-          ><span id="placeDot" aria-hidden="true"></span>
+          ><span id="placeEdited" hidden>edited</span><span id="placeDot" aria-hidden="true"></span>
         </button>
         <button
           id="shuffleBtn"
@@ -589,8 +590,9 @@
             <a href="https://github.com/AliveTeam/qt-editor" target="_blank" rel="noopener"
               >AliveTeam level editor</a
             >'s JSON: a description of its objects and collision lines, carrying no artwork and no
-            game code. It is something to read and to check this map against; importing it into your
-            own copy of the game drops that path's foreground masks.
+            game code. An unedited path's file is what this map is checked against; a path you have
+            edited saves under a name that says so and describes your edits. Importing either into
+            your own copy of the game drops that path's foreground masks.
           </p>
           <p class="ab-meta">
             Source code:

@@ -66,8 +66,8 @@ export const objectKey = (pristinePath, t) => objectKeys(pristinePath).get(t) ??
 
 // a materialized TLV -> the pristine one and the delta it carries
 const origin = new WeakMap();
-// a materialized path -> its place
-const edited = new WeakMap();
+// the paths standing as deltas
+const edited = new WeakSet();
 // what stood in a dataset before a swap: per dataset, its levels and paths by place
 const pristine = new WeakMap();
 function shipped(G) {
@@ -133,7 +133,9 @@ export function materializePath(gameId, pristine, pathEdits) {
     origin.set(fresh, { pristine: t, delta: JSON.parse(JSON.stringify(delta)) });
     return fresh;
   });
-  return { ...pristine, tlvs };
+  const fresh = { ...pristine, tlvs };
+  edited.add(fresh);
+  return fresh;
 }
 
 // the level as the store makes it, over the pristine level and paths recorded
@@ -147,7 +149,6 @@ function rebuildLevel(G, j) {
     const pk = pathKey(L.short, P.id);
     if (!was.paths.has(pk)) was.paths.set(pk, P);
     const fresh = materializePath(G.id, was.paths.get(pk), edits[G.id]?.[pk]);
-    if (fresh !== was.paths.get(pk)) edited.set(fresh, { game: G.id, lv: L.short, pa: P.id });
     // a path already standing as these deltas keeps its identity
     const standing = L.paths[i];
     return standing !== was.paths.get(pk) && sameDeltas(standing, fresh) ? standing : fresh;

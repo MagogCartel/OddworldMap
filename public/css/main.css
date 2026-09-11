@@ -164,6 +164,12 @@ body:not(.menu-open) #sidebar {
   color: var(--accent);
   margin-right: 3px;
 }
+.btnrow button.edited::after {
+  content: "\25C6";
+  color: rgb(var(--edit-rgb));
+  margin-left: 4px;
+  font-size: 9px;
+}
 .btnrow button.entry.on::before {
   color: var(--bg);
 }
@@ -556,6 +562,11 @@ body.graph-fit .gv-nm {
 .gv-pa {
   flex: none;
   color: var(--dim);
+}
+.gv-ed {
+  flex: none;
+  color: rgb(var(--edit-rgb));
+  font-size: 9px;
 }
 .gv-nm {
   overflow: hidden;
@@ -1298,6 +1309,16 @@ body.embed #openSiteBtn {
 #placeBtn.hasnote #placeDot {
   display: block;
 }
+#placeEdited {
+  flex: none;
+  color: rgb(var(--edit-rgb));
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+#placeEdited[hidden] {
+  display: none;
+}
 /* the path's details, under the chip that opens them */
 #placePanel {
   position: absolute;
@@ -1328,6 +1349,12 @@ body.embed #openSiteBtn {
 .pl-entry,
 .pl-demo {
   color: var(--dim);
+}
+.pl-edited,
+#tip .edited,
+#camPanel .edited,
+#searchResults .edited {
+  color: rgb(var(--edit-rgb));
 }
 .pl-note {
   margin-top: 7px;

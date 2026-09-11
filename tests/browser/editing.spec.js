@@ -1,5 +1,17 @@
+import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { test, expect } from "@playwright/test";
 import { trackErrors, settleAny } from "./helpers.js";
+import { canonical } from "../../public/js/reliveexport.js";
+
+const DIGESTS = JSON.parse(
+  readFileSync(new URL("../fixtures/relive-digests.json", import.meta.url), "utf8"),
+);
+
+async function download(page, selector) {
+  const [dl] = await Promise.all([page.waitForEvent("download"), page.click(selector)]);
+  return dl;
+}
 
 // the page's module singletons, stashed once so every poll below stays a
 // synchronous read
@@ -21,24 +33,30 @@ async function attach(page) {
 }
 const editOn = (page) => page.evaluate(() => window.__st.edit);
 
-// centre the standing path's first Door and return where it is on the screen. A
-// jump's own pushed write is flushed first and the re-apply of a hash it changed
-// waited for: a hashchange still queued when the camera is set would re-fit the
-// view from under the click that follows
+// centre the standing path's first Door by setting the camera itself, the way
+// settle() does, so no scheduled hash write can re-apply under the click; returns
+// where the door is on the screen. A jump's own pushed write is flushed first and
+// the re-apply of a hash it changed waited for: a hashchange still queued when
+// the camera is set would re-fit the view from under the click that follows
 const aimAtDoor = (page) =>
   page.evaluate(async () => {
     const st = window.__st;
+    const render = await import(new URL("js/render.js", location.href).href);
     window.__nav.flushHash();
     while (location.hash !== window.__applied)
       await new Promise((r) => window.addEventListener("hashchange", r, { once: true }));
     const t = st.path.tlvs.find((o) => o.name === "Door" && o.fields);
-    window.__nav.jumpToTlv(st.data, st.lvl, st.path, t);
     const [cx, cy] = window.__model.markerCentre(t);
-    const r = document.getElementById("cv").getBoundingClientRect();
-    const { cam } = st;
+    const cv = document.getElementById("cv");
+    Object.assign(
+      st.cam,
+      window.__model.centerCam({ x: cx, y: cy, z: 2 }, cv.clientWidth, cv.clientHeight),
+    );
+    render.draw();
+    const r = cv.getBoundingClientRect();
     return {
-      x: r.left + (cx - cam.x) * cam.z,
-      y: r.top + (cy - cam.y) * cam.z,
+      x: r.left + (cx - st.cam.x) * st.cam.z,
+      y: r.top + (cy - st.cam.y) * st.cam.z,
       x1: t.x1,
       y1: t.y1,
       camera: t.fields.camera,
@@ -95,6 +113,29 @@ test("the mode selects an object, the form edits it, and every surface follows",
   });
   await expect(page.locator("#editBody .ep-shipped")).toContainText(`shipped: ${door.camera}`);
 
+  // the edit says so wherever the object or its path shows
+  await page.mouse.move(door.x, door.y);
+  await expect(page.locator("#tip")).toContainText("edited on this device: camera");
+  await expect(page.locator("#pathBtns button.on")).toHaveClass(/edited/);
+  await expect(page.locator("#placeEdited")).toBeVisible();
+
+  // and every export of the path says so in its name
+  const json = await download(page, "#exportJsonBtn");
+  expect(json.suggestedFilename()).toBe("oddworld-ae-MI-P1-edited.json");
+  const doc = JSON.parse(readFileSync(await json.path(), "utf8"));
+  const exported = doc.map.cameras
+    .flatMap((c) => c.map_objects)
+    .find(
+      (o) =>
+        o.object_structures_type === "Door" &&
+        o.properties.xpos === door.x1 &&
+        o.properties.ypos === door.y1,
+    );
+  expect(exported.properties.Camera).toBe(door.camera + 1);
+  expect((await download(page, "#exportBtn")).suggestedFilename()).toBe(
+    "oddworld-ae-MI-P1-view-edited.png",
+  );
+
   // a Places hit onto the same path lands on the objects now standing
   await page.fill("#searchInput", "necrum mines");
   await page.waitForSelector("#searchResults .hit");
@@ -122,6 +163,12 @@ test("the mode selects an object, the form edits it, and every surface follows",
   await expect(page.locator("#editBtn")).toBeHidden();
   await page.keyboard.press("e");
   expect(await editOn(page)).toBe(false);
+  await expect(
+    page.locator('#graphPlane .gv-node[data-lv="MI"][data-pa="1"] .gv-ed'),
+  ).toBeVisible();
+  expect((await download(page, "#graphSvgBtn")).suggestedFilename()).toBe(
+    "oddworld-ae-graph-edited.svg",
+  );
   await page.keyboard.press("v");
   await page.waitForFunction(() => window.__st.graph === false);
 
@@ -133,6 +180,13 @@ test("the mode selects an object, the form edits it, and every surface follows",
   await page.locator("#editBody .ep-foot .linkbtn", { hasText: "Revert this path" }).click();
   await page.waitForFunction(() => window.__st.path === window.__pristine);
   expect(await page.evaluate(() => window.__edits.pathEdited(window.__st.path))).toBe(false);
+  await expect(page.locator("#placeEdited")).toBeHidden();
+  const plain = await download(page, "#exportJsonBtn");
+  expect(plain.suggestedFilename()).toBe("oddworld-ae-MI-P1.json");
+  const digest = createHash("sha256")
+    .update(canonical(JSON.parse(readFileSync(await plain.path(), "utf8"))))
+    .digest("hex");
+  expect(digest).toBe(DIGESTS.AE["MI P1"]);
   expect(errors).toEqual([]);
 });
 

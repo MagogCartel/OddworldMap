@@ -2,6 +2,8 @@
 // what the canvas is named. No DOM, so it stays importable in bare Node.
 
 import { pathDisplayName, pathNote } from "./annotations.js";
+import { EDITED_NOTE } from "./config.js";
+import { pathEdited } from "./edits.js";
 
 export function placeSummary(data, lvl, path) {
   const n = path.tlvs.length;
@@ -12,6 +14,7 @@ export function placeSummary(data, lvl, path) {
     pathDisplayName(data.id, lvl.short, path),
     `${n} object${n === 1 ? "" : "s"}`,
     pathNote(data.id, lvl.short, path) && "with a note",
+    pathEdited(path) && EDITED_NOTE,
   ]
     .filter(Boolean)
     .join(", ");

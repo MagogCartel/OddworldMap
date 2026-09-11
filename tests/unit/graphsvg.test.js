@@ -7,6 +7,7 @@ import { computeEntryPaths } from "../../public/js/model.js";
 import { setAnnotations } from "../../public/js/annotations.js";
 import { getSettings } from "../../public/js/settings.js";
 import { dataset, level, path, tlv } from "./fixtures.js";
+import { materializePath, setLevelShort } from "../../public/js/edits.js";
 
 const load = (name) =>
   JSON.parse(readFileSync(new URL(`../../public/${name}`, import.meta.url), "utf8"));
@@ -80,6 +81,36 @@ test("a diagram listing demo copies says so, and one without them never does", (
   });
 });
 
+test("a diagram holding an edited path says so in its name, its title and on the box", () => {
+  const hoist = {
+    t: 3,
+    name: "Hoist",
+    x1: 0,
+    y1: 0,
+    x2: 10,
+    y2: 10,
+    extra: {},
+    fields: { hoist_type: 0 },
+  };
+  const P = path(1, [hoist]);
+  const data = dataset([level("L", P, path(2, []))]);
+  const plain = graphSvg(data);
+  assert.equal(plain.edited, false);
+  assert.ok(!plain.svg.includes("◆") && !plain.svg.includes("with edits"));
+  setLevelShort("XX", {});
+  data.levels[0].paths[0] = materializePath("XX", P, {
+    objects: { "Hoist@0,0": { fields: { hoist_type: 1 } } },
+  });
+  const marked = graphSvg(data);
+  assert.equal(marked.edited, true);
+  assert.equal(count(marked.svg, /◆/g), 1);
+  assert.ok(marked.svg.includes("2 paths, 0 links, with edits made on this device"));
+  assert.equal(
+    graphName(data.id, plain.demo, marked.edited, "svg"),
+    "oddworld-xx-graph-edited.svg",
+  );
+});
+
 test("entry marks are computeEntryPaths', node for node", () => {
   for (const data of games()) {
     const g = worldGraph(data);
@@ -139,6 +170,10 @@ test("the inlined palette matches the stylesheet", () => {
     .split(",")
     .map((v) => (+v).toString(16).padStart(2, "0"));
   assert.equal(INK.accent, `#${accent.join("")}`);
+  const editRgb = decl("--edit-rgb")
+    .split(",")
+    .map((v) => (+v).toString(16).padStart(2, "0"));
+  assert.equal(INK.edit, `#${editRgb.join("")}`);
   const wire = css.match(/\.gv-wire \{[^}]*\}/)[0];
   const sw = wire.match(/stroke-width: ([\d.]+);/)[1];
   const op = wire.match(/(?<!-)opacity: ([\d.]+);/)[1];
@@ -165,8 +200,10 @@ test("the inlined palette matches the stylesheet", () => {
 });
 
 test("the export names the game and the diagram it holds", () => {
-  assert.equal(graphName("AO", false, "svg"), "oddworld-ao-graph.svg");
-  assert.equal(graphName("AE", true, "png"), "oddworld-ae-graph-demos.png");
+  assert.equal(graphName("AO", false, false, "svg"), "oddworld-ao-graph.svg");
+  assert.equal(graphName("AE", true, false, "png"), "oddworld-ae-graph-demos.png");
+  assert.equal(graphName("AE", false, true, "svg"), "oddworld-ae-graph-edited.svg");
+  assert.equal(graphName("AE", true, true, "png"), "oddworld-ae-graph-demos-edited.png");
 });
 
 test("a head sits on the travel end, whichever way the route was drawn", () => {

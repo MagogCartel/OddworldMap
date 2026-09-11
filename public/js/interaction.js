@@ -5,6 +5,7 @@ import { fieldEntries } from "./fields.js";
 import {
   KEY_PAN_PX,
   KEY_ZOOM_STEP,
+  EDITED_NOTE,
   OFFSCREEN_NOTE,
   PAGE_ZOOM_MIN,
   markerShown,
@@ -69,6 +70,7 @@ import { getSettings, fieldPrefsFor } from "./settings.js";
 import { focusCamPanel, openCamPanel, openCamPanelNear } from "./campanel.js";
 import { togglePlace } from "./place.js";
 import { selectObject, setEditMode } from "./editpanel.js";
+import { editedFields } from "./edits.js";
 import { toggleGraph } from "./graphview.js";
 import { addRoutePoint, routeArrive, routeSeam, undoRoutePoint } from "./route.js";
 import { closeDialog, openDialog, trapDialogKeys } from "./dialog.js";
@@ -314,8 +316,12 @@ cv.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   const t = hoverTlvs[0];
   const url = location.href.split("#")[0] + objectHash(t);
+  // the link names the shipped object, the one a recipient can resolve
+  const copied = Object.keys(editedFields(t)).length
+    ? `${t.name} link copied — it opens on the shipped ${t.name}`
+    : `${t.name} link copied`;
   (navigator.clipboard?.writeText(url) ?? Promise.reject()).then(
-    () => toast(`${t.name} link copied`),
+    () => toast(copied),
     () => toast("copy failed"),
   );
 });
@@ -568,6 +574,7 @@ function updateHover() {
               ? `<br><span class="e">${esc(DARK_NOTE)}</span>`
               : said.slice(0, 3).join("") +
                 (said.length > 3 ? `<br><span class="e">+${said.length - 3} more</span>` : "");
+          const edited = Object.keys(editedFields(t)).sort();
           const d = shownDest(t);
           let follow = "";
           if (state.edit) {
@@ -623,6 +630,9 @@ function updateHover() {
           return (
             `<div><span class="t">${esc(t.name)}</span> <span class="e">(${t.x1},${t.y1})–(${t.x2},${t.y2})</span>` +
             (offScreen(t) ? `<br><span class="e offscreen">${esc(OFFSCREEN_NOTE)}</span>` : "") +
+            (edited.length
+              ? `<br><span class="e edited">${esc(`${EDITED_NOTE}: ${edited.join(", ")}`)}</span>`
+              : "") +
             (about ? `<br><span class="e about">${esc(about)}</span>` : "") +
             messages +
             (ex ? `<br><span class="kv">${ex}</span>` : "") +

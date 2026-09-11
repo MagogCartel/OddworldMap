@@ -2,7 +2,7 @@
 // Fires a "selection-changed" window event (detail.fromHash) whenever a path is picked.
 
 import { clamp, esc } from "./util.js";
-import { DEMO_NOTE, ENTRY_NOTE, ZOOM_MIN, ZOOM_MAX } from "./config.js";
+import { DEMO_NOTE, EDITED_NOTE, ENTRY_NOTE, ZOOM_MIN, ZOOM_MAX } from "./config.js";
 import { $, cv, gameBtns, levelBtns, pathBtns } from "./dom.js";
 import { knownGame, loadGame } from "./data.js";
 import { toast } from "./toast.js";
@@ -38,7 +38,7 @@ import { pathDisplayName, pathNickname } from "./annotations.js";
 import { isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { orderPaths } from "./pathorder.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
-import { currentOf, pristineOf } from "./edits.js";
+import { currentOf, pathEdited, pristineOf } from "./edits.js";
 
 function markOn(box, key) {
   for (const b of box.children) b.classList.toggle("on", b.dataset.key === key);
@@ -137,6 +137,10 @@ function buildPathButtons() {
       tip.push(ENTRY_NOTE);
     }
     if (isDemoPath(P)) tip.push(DEMO_NOTE);
+    if (pathEdited(P)) {
+      b.classList.add("edited");
+      tip.push(EDITED_NOTE);
+    }
     if (tip.length) b.title = tip.join(" — ");
     b.onclick = () => selectPathById(P.id);
     pathBtns.appendChild(b);

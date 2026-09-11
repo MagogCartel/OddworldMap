@@ -8,6 +8,7 @@ import { $, cv } from "./dom.js";
 import { graphName, graphSvg } from "./graphsvg.js";
 import { pathImage } from "./model.js";
 import { exportPath } from "./reliveexport.js";
+import { pathEdited } from "./edits.js";
 import { artworkReady, paint, preloadPath } from "./render.js";
 import { LAYOUT, cellOrigin, state } from "./state.js";
 import { toast } from "./toast.js";
@@ -29,8 +30,10 @@ function download(blob, name) {
   a.click();
 }
 
+// an export of an edited path says so in its name, as the graph's does of its demo copies
+const edited = (path) => (path && pathEdited(path) ? "-edited" : "");
 const exportName = (kind) =>
-  `oddworld-${state.data.id.toLowerCase()}${state.lvl ? "-" + state.lvl.short : ""}${state.path ? "-P" + state.path.id : ""}-${kind}.png`;
+  `oddworld-${state.data.id.toLowerCase()}${state.lvl ? "-" + state.lvl.short : ""}${state.path ? "-P" + state.path.id : ""}-${kind}${edited(state.path)}.png`;
 
 $("exportBtn").onclick = () => {
   const name = exportName("view");
@@ -135,9 +138,11 @@ jsonBtn.onclick = async () => {
     }
     download(
       new Blob([JSON.stringify(doc, null, 1)], { type: "application/json" }),
-      `oddworld-${data.id.toLowerCase()}-${lvl.short}-P${path.id}.json`,
+      `oddworld-${data.id.toLowerCase()}-${lvl.short}-P${path.id}${edited(path)}.json`,
     );
-    toast("saved — importing it drops this path's foreground masks");
+    toast(
+      `saved${edited(path) ? " with your edits" : ""} — importing it drops this path's foreground masks`,
+    );
   } catch (e) {
     console.error(e);
     toast("export failed");
@@ -148,9 +153,9 @@ jsonBtn.onclick = async () => {
 };
 
 $("graphSvgBtn").onclick = () => {
-  const { svg, demo } = graphSvg(state.data, { entry: state.entry });
+  const { svg, demo, edited } = graphSvg(state.data, { entry: state.entry });
   const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-  download(blob, graphName(state.data.id, demo, "svg"));
+  download(blob, graphName(state.data.id, demo, edited, "svg"));
 };
 
 const gPngBtn = $("graphPngBtn");
@@ -175,7 +180,7 @@ gPngBtn.onclick = async () => {
       toast("export failed");
       return;
     }
-    const name = graphName(state.data.id, sized.demo, "png");
+    const name = graphName(state.data.id, sized.demo, sized.edited, "png");
     const url = URL.createObjectURL(new Blob([sized.svg], { type: "image/svg+xml;charset=utf-8" }));
     const img = new Image();
     try {

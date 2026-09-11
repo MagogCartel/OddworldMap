@@ -3,13 +3,14 @@
 // portal and transition between two of them an edge. A node is a button, so a
 // click travels there and the keyboard reaches every path in the game.
 
-import { CONN_COLORS, DEMO_NOTE, ENTRY_NOTE, GRAPH, KEY_PAN_PX } from "./config.js";
+import { CONN_COLORS, DEMO_NOTE, EDITED_NOTE, ENTRY_NOTE, GRAPH, KEY_PAN_PX } from "./config.js";
 import { $, cv, menuBtn } from "./dom.js";
 import { esc } from "./util.js";
 import { state } from "./state.js";
 import { pathDisplayName, pathNickname, pathNote } from "./annotations.js";
 import { hideAnchorTip } from "./anchortip.js";
 import { isDemoPath } from "./demo.js";
+import { pathEdited } from "./edits.js";
 import { marker, wirePath } from "./graphsvg.js";
 import { jumpToPlace, scheduleHash } from "./navigate.js";
 import { graphLayout, worldGraph } from "./worldgraph.js";
@@ -46,6 +47,7 @@ function nodeLines(n, links) {
     pathNickname(id, n.lv, n.P),
     state.entry[n.lv]?.has(n.pa) && ENTRY_NOTE,
     isDemoPath(n.P) && DEMO_NOTE,
+    pathEdited(n.P) && EDITED_NOTE,
     `${count} object${count === 1 ? "" : "s"}`,
     way("both", "both ways with"),
     way("to", "leads to"),
@@ -103,7 +105,8 @@ function column(c, L, data, links) {
         // the face is a code and a name; everything else a reader is told
         ` aria-label="${esc(`${n.lv} P${n.pa}, ${lines.join(", ")}`)}"` +
         ` style="left:${x}px;top:${y}px">` +
-        `<span class="gv-pa">P${n.pa}</span>${name ? `<span class="gv-nm">${esc(name)}</span>` : ""}` +
+        `<span class="gv-pa">P${n.pa}</span>${pathEdited(n.P) ? '<span class="gv-ed" aria-hidden="true">◆</span>' : ""}` +
+        `${name ? `<span class="gv-nm">${esc(name)}</span>` : ""}` +
         `</button>`
       );
     })

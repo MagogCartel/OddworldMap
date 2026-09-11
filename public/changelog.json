@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-09-11",
+   "tag": "improved",
+   "title": "Edited data says so wherever it shows",
+   "detail": "Beyond the outline on the marker itself, an edit now announces itself on every surface that reads the object. The tooltip, the screen list and a search hit name the fields you changed, and the path's button and the chip carry a mark. The world graph marks the path's box and says so in its title, and a screen reader hears it with the path. Every export of an edited path says so in its name (the JSON, both images and the graph), so nothing that leaves the page can pass for the game's own data. A copied link still opens on the shipped object, and says so."
+  },
+  {
    "date": "2026-09-10",
    "tag": "new",
    "flagship": true,

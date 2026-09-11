@@ -6,6 +6,7 @@
 import { pathDisplayName } from "./annotations.js";
 import { CONN_COLORS, GRAPH } from "./config.js";
 import { isDemoPath } from "./demo.js";
+import { pathEdited } from "./edits.js";
 import { computeEntryPaths } from "./model.js";
 import { esc } from "./util.js";
 import { graphLayout, worldGraph } from "./worldgraph.js";
@@ -18,6 +19,7 @@ export const INK = {
   dim: "#8a8f9c",
   line: "#32363f",
   accent: "#e8a33d",
+  edit: "#5fd8e8",
 };
 
 const STRIP = 44; // the title band above the diagram
@@ -40,8 +42,8 @@ export function wirePath({ e, pts }, attrs = "") {
   );
 }
 
-export const graphName = (id, demo, ext) =>
-  `oddworld-${id.toLowerCase()}-graph${demo ? "-demos" : ""}.${ext}`;
+export const graphName = (id, demo, edited, ext) =>
+  `oddworld-${id.toLowerCase()}-graph${demo ? "-demos" : ""}${edited ? "-edited" : ""}.${ext}`;
 
 // `scale` multiplies only the root width/height over a constant viewBox, so a
 // rasterizer that draws at intrinsic size is still crisp at 2x. Numeric
@@ -54,9 +56,12 @@ export function graphSvg(data, { entry = computeEntryPaths(data), scale = 1 } = 
   const w = laid.w,
     h = laid.h + STRIP;
   const demo = [...g.nodes.values()].some((n) => isDemoPath(n.P));
+  const edited = [...g.nodes.values()].some((n) => pathEdited(n.P));
   const kinds = [...new Set(g.edges.map((e) => e.kind))].sort();
   const name = (data.game || data.id).replace(/^Oddworld:\s*/, "");
-  const title = `${name} — ${g.nodes.size} paths, ${g.edges.length} links${demo ? ", with demo paths" : ""}`;
+  const title =
+    `${name} — ${g.nodes.size} paths, ${g.edges.length} links` +
+    `${demo ? ", with demo paths" : ""}${edited ? ", with edits made on this device" : ""}`;
 
   const head = (c) =>
     `<text x="${c.x}" y="${laid.top - GRAPH.headH + 12}" font-size="12" font-weight="600"` +
@@ -75,11 +80,14 @@ export function graphSvg(data, { entry = computeEntryPaths(data), scale = 1 } = 
     const { x, y } = laid.box(n);
     const pathName = pathDisplayName(data.id, n.lv, n.P) || "";
     const mark = entry[n.lv]?.has(n.pa) ? `<tspan fill="${INK.accent}">▸</tspan>` : "";
+    const changed = pathEdited(n.P)
+      ? `<tspan${mark ? ' dx="4"' : ""} fill="${INK.edit}">◆</tspan>`
+      : "";
     return (
       `<rect x="${x + 0.5}" y="${y + 0.5}" width="${GRAPH.nodeW - 1}" height="${GRAPH.nodeH - 1}"` +
       ` rx="4" fill="${INK.panel}" stroke="${INK.line}"/>` +
-      `<g transform="translate(${x + 8},${y})" clip-path="url(#gvt)"><text y="17">${mark}` +
-      `<tspan${mark ? ' dx="5"' : ""} fill="${INK.dim}">P${n.pa}</tspan>` +
+      `<g transform="translate(${x + 8},${y})" clip-path="url(#gvt)"><text y="17">${mark}${changed}` +
+      `<tspan${mark || changed ? ' dx="5"' : ""} fill="${INK.dim}">P${n.pa}</tspan>` +
       (pathName ? `<tspan dx="5" fill="${INK.text}">${esc(pathName)}</tspan>` : "") +
       `</text></g>`
     );
@@ -110,5 +118,5 @@ export function graphSvg(data, { entry = computeEntryPaths(data), scale = 1 } = 
     `<g font-size="11">` +
     laid.cols.map((c) => sec(c) + c.nodes.map(node).join("") + head(c)).join("") +
     `</g></g></svg>`;
-  return { svg, w, h, demo };
+  return { svg, w, h, demo, edited };
 }
