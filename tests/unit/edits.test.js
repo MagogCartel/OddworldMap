@@ -15,6 +15,8 @@ import { exportPath, canonical } from "../../public/js/reliveexport.js";
 import {
   applyFieldEdit,
   applyStoredEdits,
+  canRedo,
+  canUndo,
   currentOf,
   editedFields,
   forgetAll,
@@ -24,10 +26,12 @@ import {
   objectKeys,
   pathEdited,
   pristineOf,
+  redoEdit,
   editStore,
   restoreEdits,
   revertPath,
   sanitizeEdits,
+  undoEdit,
   setEnabled,
   setLevelShort,
   takeReport,
@@ -275,6 +279,98 @@ test("the stored shape is read by shape alone, and anything else in it is droppe
   });
 });
 
+test("a step undoes to the pristine path itself and redoes to the edit, a new step clearing the redo", () => {
+  restoreEdits({});
+  const G = world();
+  const [L0] = G.levels,
+    P1 = L0.paths[0],
+    d = P1.tlvs[0];
+  stand(G);
+  const n = applyFieldEdit(d, "camera", 18);
+  assert.ok(canUndo("AE", "MI", 1));
+  assert.equal(canRedo("AE", "MI", 1), false);
+  assert.ok(undoEdit("AE", "MI", 1));
+  assert.equal(state.path, P1);
+  assert.equal(state.lvl, L0);
+  assert.equal(pathEdited(P1), false);
+  assert.equal(canUndo("AE", "MI", 1), false);
+  assert.ok(canRedo("AE", "MI", 1));
+  assert.ok(redoEdit("AE", "MI", 1));
+  assert.notEqual(state.path, P1);
+  assert.equal(state.path.tlvs[0].fields.camera, 18);
+  assert.equal(state.path.tlvs[0].extra.to_cam, 18);
+  assert.equal(pristineOf(state.path.tlvs[0]), pristineOf(n));
+  undoEdit("AE", "MI", 1);
+  applyFieldEdit(d, "camera", 19); // a new step after an undo
+  assert.equal(canRedo("AE", "MI", 1), false);
+  assert.equal(state.path.tlvs[0].fields.camera, 19);
+  // an edit to the value already standing is no step and no swap
+  const before = state.path;
+  applyFieldEdit(state.path.tlvs[0], "camera", 19);
+  assert.equal(state.path, before);
+  undoEdit("AE", "MI", 1);
+  assert.equal(state.path, P1);
+  assert.equal(undoEdit("AE", "MI", 1), false);
+  assert.equal(state.path, P1);
+});
+
+test("a snapshot is the entry as it stood: the step after it cannot reach back", () => {
+  restoreEdits({});
+  const G = world();
+  const P1 = G.levels[0].paths[0];
+  stand(G);
+  applyFieldEdit(P1.tlvs[0], "camera", 18);
+  const first = state.path;
+  applyFieldEdit(P1.tlvs[0], "door_number", 5); // writes into the same live delta
+  assert.notEqual(state.path, first); // a second edit to the object stands the path anew
+  assert.deepEqual(editedFields(state.path.tlvs[0]), { camera: 18, door_number: 5 });
+  assert.equal(state.path.tlvs[0].fields.door_number, 5);
+  assert.equal(state.path.tlvs[0].fields.camera, 18);
+  assert.deepEqual(editedFields(first.tlvs[0]), { camera: 18 }); // the earlier materialization keeps its own
+  undoEdit("AE", "MI", 1);
+  assert.deepEqual(editedFields(state.path.tlvs[0]), { camera: 18 });
+  assert.equal(state.path.tlvs[0].fields.door_number, 1);
+  undoEdit("AE", "MI", 1);
+  assert.equal(state.path, P1);
+});
+
+test("a revert is one step: an undo brings every delta back, a redo reverts again", () => {
+  restoreEdits({});
+  const G = world();
+  const P1 = G.levels[0].paths[0];
+  stand(G);
+  applyFieldEdit(P1.tlvs[0], "camera", 18);
+  applyFieldEdit(P1.tlvs[1], "camera", 3);
+  revertPath("AE", "MI", 1);
+  assert.equal(state.path, P1);
+  assert.ok(undoEdit("AE", "MI", 1));
+  assert.equal(state.path.tlvs[0].fields.camera, 18);
+  assert.equal(state.path.tlvs[1].fields.camera, 3);
+  assert.ok(redoEdit("AE", "MI", 1));
+  assert.equal(state.path, P1);
+  revertPath("AE", "MI", 1); // a revert of nothing is not a step
+  assert.equal(canUndo("AE", "MI", 1), true);
+  assert.equal(canRedo("AE", "MI", 1), false);
+});
+
+test("each path keeps its own trail, and forgetting all empties every one", () => {
+  restoreEdits({});
+  const G = world();
+  const [L0] = G.levels;
+  stand(G);
+  applyFieldEdit(L0.paths[0].tlvs[0], "camera", 18);
+  stand(G, 2);
+  applyFieldEdit(state.path.tlvs[1], "camera", 3);
+  assert.equal(undoEdit("AE", "MI", 1), true);
+  assert.equal(state.lvl.paths[0], L0.paths[0]);
+  assert.equal(state.lvl.paths[1].tlvs[1].fields.camera, 3);
+  assert.equal(undoEdit("AE", "NE", 9), false); // no trail, no swap
+  assert.ok(canUndo("AE", "MI", 2));
+  forgetAll();
+  assert.equal(canUndo("AE", "MI", 1) || canRedo("AE", "MI", 1) || canUndo("AE", "MI", 2), false);
+  assert.equal(G.levels[0], L0);
+});
+
 test("on the shipped data an edited export carries the edit and the reverted one hashes to the fixture", () => {
   const G = load("map_data_ae.json"),
     side = load("relive_export_ae.json");
@@ -306,4 +402,13 @@ test("on the shipped data an edited export carries the edit and the reverted one
   assert.equal(state.path, P);
   const { doc: back } = exportPath("AE", G.geometry, state.lvl, state.path, side);
   assert.equal(createHash("sha256").update(canonical(back)).digest("hex"), digests.AE["MI P1"]);
+  // the revert was a step: one undo brings the edit back, and the trail then
+  // steps it away again to the fixture
+  assert.ok(undoEdit("AE", "MI", 1));
+  const { doc: again } = exportPath("AE", G.geometry, state.lvl, state.path, side);
+  assert.equal(at(again).properties.Camera, d.fields.camera + 1);
+  assert.ok(undoEdit("AE", "MI", 1));
+  assert.equal(state.path, P);
+  const { doc: fixture } = exportPath("AE", G.geometry, state.lvl, state.path, side);
+  assert.equal(createHash("sha256").update(canonical(fixture)).digest("hex"), digests.AE["MI P1"]);
 });

@@ -3,6 +3,7 @@
 // dataset as a new object built over the pristine one, its unedited TLVs kept by
 // identity and its edited ones fresh, with their navigation bucket derived
 // again; a path whose deltas are all gone stands as the pristine object itself.
+// A path's trail of steps is a trail of its store entry, kept for the session.
 // Nothing here writes into a fetched object. Importable in bare Node: no DOM.
 
 import { state } from "./state.js";
@@ -36,6 +37,7 @@ let edits = null;
 const all = () => (edits ??= sanitizeEdits(store.get(EDITS_KEY)));
 export const restoreEdits = (obj) => {
   edits = obj;
+  histories.clear();
 };
 export const editStore = () => all();
 function persist() {
@@ -71,6 +73,26 @@ export function sanitizeEdits(raw) {
 }
 
 const pathKey = (lv, pa) => `${lv}/${pa}`;
+
+// the trail of a path's deltas, per place and for the session: its store entry
+// as it stood before each step, cloned since the funnels write into the live one
+const histories = new Map();
+const clone = (pe) => (pe ? JSON.parse(JSON.stringify(pe)) : null);
+function trail(gameId, pk) {
+  const k = `${gameId}/${pk}`;
+  let h = histories.get(k);
+  if (!h) histories.set(k, (h = { undo: [], redo: [] }));
+  return h;
+}
+function record(gameId, pk, before) {
+  const h = trail(gameId, pk);
+  h.undo.push(before);
+  h.redo.length = 0;
+}
+export const canUndo = (gameId, lv, pa) =>
+  (histories.get(`${gameId}/${pathKey(lv, pa)}`)?.undo.length ?? 0) > 0;
+export const canRedo = (gameId, lv, pa) =>
+  (histories.get(`${gameId}/${pathKey(lv, pa)}`)?.redo.length ?? 0) > 0;
 
 // a pristine path's objects by origin: name and top-left, with an ordinal where
 // the tuple repeats inside the path, so a delta names one object and not the first
@@ -166,7 +188,7 @@ export function materializePath(gameId, pristine, pathEdits) {
       extra: deriveExtra(gameId, { ...t, fields }, LEVEL_SHORT[gameId]),
     };
     // the delta as materialized, not the live entry a later step writes into
-    origin.set(fresh, { pristine: t, delta: JSON.parse(JSON.stringify(delta)) });
+    origin.set(fresh, { pristine: t, delta: clone(delta) });
     return fresh;
   });
   const fresh = { ...pristine, tlvs };
@@ -254,6 +276,13 @@ export function applyFieldEdit(t, field, value, where = {}) {
     shipped(G).paths.get(pk) ?? G.levels.find((L) => L.short === lv).paths.find((p) => p.id === pa);
   const key = objectKey(P, pristine);
   if (!key) throw new Error(`${pristine.name} is not on ${lv} P${pa}`);
+  const standing = all()[gameId]?.[pk]?.objects?.[key]?.fields?.[field] ?? pristine.fields[field];
+  if (standing === value)
+    return currentOf(
+      pristine,
+      G.levels.find((L) => L.short === lv).paths.find((p) => p.id === pa),
+    );
+  record(gameId, pk, clone(all()[gameId]?.[pk] ?? null));
   const game = (all()[gameId] ??= {});
   const path = (game[pk] ??= { objects: {} });
   const delta = (path.objects[key] ??= { fields: {} });
@@ -273,6 +302,7 @@ export function applyFieldEdit(t, field, value, where = {}) {
 export function revertPath(gameId, lv, pa) {
   const game = all()[gameId];
   if (!game?.[pathKey(lv, pa)]) return;
+  record(gameId, pathKey(lv, pa), clone(game[pathKey(lv, pa)]));
   delete game[pathKey(lv, pa)];
   if (!Object.keys(game).length) delete edits[gameId];
   persist();
@@ -283,6 +313,7 @@ export function revertPath(gameId, lv, pa) {
 export function forgetAll() {
   const was = all();
   edits = {};
+  histories.clear();
   persist();
   for (const [gameId, game] of Object.entries(was)) {
     const G = gameOf(gameId);
@@ -292,6 +323,37 @@ export function forgetAll() {
       swapPath(G, lv, +pa);
     }
   }
+}
+
+// a step back or forward puts the entry the trail holds into the store and
+// swaps, the way a revert does; the map follows through the swap alone
+function restore(gameId, lv, pa, snapshot) {
+  const pk = pathKey(lv, pa);
+  const game = (all()[gameId] ??= {});
+  if (snapshot) game[pk] = clone(snapshot);
+  else delete game[pk];
+  if (!Object.keys(game).length) delete edits[gameId];
+  persist();
+  const G = gameOf(gameId);
+  if (G) swapPath(G, lv, pa);
+}
+
+export function undoEdit(gameId, lv, pa) {
+  const pk = pathKey(lv, pa),
+    h = trail(gameId, pk);
+  if (!h.undo.length) return false;
+  h.redo.push(clone(all()[gameId]?.[pk] ?? null));
+  restore(gameId, lv, pa, h.undo.pop());
+  return true;
+}
+
+export function redoEdit(gameId, lv, pa) {
+  const pk = pathKey(lv, pa),
+    h = trail(gameId, pk);
+  if (!h.redo.length) return false;
+  h.undo.push(clone(all()[gameId]?.[pk] ?? null));
+  restore(gameId, lv, pa, h.redo.pop());
+  return true;
 }
 
 // the stored deltas over a dataset that has not reached the page yet: each is
