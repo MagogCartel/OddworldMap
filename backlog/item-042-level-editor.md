@@ -1,6 +1,6 @@
 # 42. Level editor — could this site host one?
 
-**Status:** open — Phases 1 and 2 shipped, and Phase 3's first slice, object properties; moving objects, adding and removing them and editing collision lines are the parked slices · **Effort:** the parked slices large · **Where:** anywhere; nothing left here needs a disc
+**Status:** open — Phases 1 and 2 shipped, and Phase 3's first two slices, object properties and undo/redo; moving objects, adding and removing them and editing collision lines are the parked slices · **Effort:** the parked slices large · **Where:** anywhere; nothing left here needs a disc
 
 **Outcome: what the site should produce is a *description* of a path, not a level — and the write path belongs in `tools/`, not on the page.** AliveTeam's level editor already exists, is released for Windows and Linux, and pins the exact decomp tree the builder's parsers already read; it reads the user's own LVL files and can patch them from a JSON. So the site's job is not to be an editor but to emit that JSON — and the first thing that JSON buys is not modding at all, it is a **cross-check of our extraction against AliveTeam's**, object for object, over 16,225 objects and 9,540 collision lines (measured 2026-08-26).
 
@@ -151,6 +151,10 @@ Ruled out as a framing rather than as an implementation. The editor already prod
 
 ---
 
+## Shipped: Phase 3, slice 2, 2026-09-13
+
+**The trail is a trail of the store, never of the map.** A step is what a hand did to a path's deltas through the two funnels, a field committed or the path reverted, and the trail holds the path's store entry as it stood before each one, cloned because the funnels write into the live entry. Undo and redo put the held entry back and swap, the way a revert does, so every surface follows through the swap that already exists and nothing downstream knows a trail is there. It is kept per path and for the session, the edits themselves persisting as before; a revert is one step, so a mistaken one comes back with one press; a boot apply is no step, and forgetting all in Settings empties every trail. Ctrl/⌘ Z and Shift (Ctrl/⌘ Y too) act on the path in hand whenever the mode is on and the keyboard is not in a form field, where the browser's own undo keeps the keystroke, and the panel's footer carries the two buttons. The later slices inherit undo the moment their edits route through the funnels: the snapshot is the whole entry.
+
 ## Shipped: Phase 3, slice 1, 2026-09-12
 
 **Editing is a local sandbox over data that is never mutated.** An edit is a per-field delta keyed by the object's pristine origin (its name and top-left, with an ordinal where the tuple repeats inside the path: 10 groups in Oddysee, 41 in Exoddus); a path carrying deltas stands in the dataset as a new object built over the pristine one, its unedited TLVs kept by identity and its edited ones fresh with their navigation bucket derived again; a path whose deltas are all gone stands as the pristine object itself, which makes an unedited export's digest structural rather than asserted. The deltas live on the device under one localStorage key, read by shape alone, and apply inside `loadGame`'s chain before a dataset is shown, each answering to its object or being dropped with a note. Edit mode (a sidebar button, `e`) turns a click into a selection; the panel lists every archived field as a select over the labelled values or an s16 number input, with what the disc shipped beside anything changed; the map follows through a `data-changed` event; and edited state is marked wherever it shows, exports included, in every export's name.
@@ -159,7 +163,7 @@ Ruled out as a framing rather than as an implementation. The editor already prod
 
 **The gap list above was right about what and wrong about how.** The caches needed no invalidation: once the data is copy-on-write, a memo keyed on path or level identity misses on its own, and only the two game-wide election memos in `pathorder.js` are reset by hand — a level's walk starts from an entry another level's door decides. The hole an adversarial review of the plan found was not a memo at all but the place-search rows holding level and path objects, through which one click landed the viewer on the shipped data with the edits gone; the answer is a rule rather than a fix, the navigation seam resolving levels and paths by short and id and every "same path" guard comparing places, never identity. The selection model became a mode and a `state.sel` slot, cleared on a real path change and re-pointed by the one helper every swap goes through. Persistence, which the Ruled-out section left open as "a different proposition", was decided for the device, with the marks as the condition: a later visit can never mistake an edit for the game's data.
 
-**What remains is the rest of the scope the sketch's later slices name:** undo and redo over the delta store, moving and resizing objects (a `rect` delta the materialization already spreads), adding and removing them, and the collision lines. Each is planned after the one before it ships.
+**What remains is the rest of the scope the sketch's later slices name:** moving and resizing objects (a `rect` delta the materialization already spreads), adding and removing them, and the collision lines. Each is planned after the one before it ships.
 
 ## Shipped: Phase 2, 2026-09-08
 

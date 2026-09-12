@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-09-13",
+   "tag": "new",
+   "title": "Undo and redo an edit, one step at a time",
+   "detail": "Every change you make to an object can be stepped back one at a time, with Ctrl+Z or ⌘Z (Shift for redo, Ctrl+Y or ⌘Y too) or the undo and redo buttons in the edit panel. Putting a whole path back as the disc has it is one step like any other, so a mistaken revert comes back with one press. Each path keeps its own trail for as long as the tab is open; the edits themselves stay on the device as before, and forgetting them all in Settings clears the trail with them."
+  },
+  {
    "date": "2026-09-12",
    "tag": "new",
    "title": "Edits stay on this device between visits",

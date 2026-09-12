@@ -356,6 +356,54 @@ test("a stored edit boots unapplied, and says so, when a field table does not lo
   expect(errors).toEqual([]);
 });
 
+test("undo and redo step a path's edits, on the keys and in the panel", async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto("/#AE");
+  await settleAny(page);
+  await attach(page);
+  await page.keyboard.press("e");
+  await page.waitForFunction(() => window.__st.edit === true);
+  const door = await aimAtDoor(page);
+  await page.mouse.click(door.x, door.y);
+  const camera = () => page.locator('#editBody input[data-field="camera"]');
+  const cam = () => page.evaluate(() => window.__st.sel.fields.camera);
+  for (const v of [door.camera + 1, door.camera + 2]) {
+    await camera().fill(String(v));
+    await camera().press("Tab");
+    await page.waitForFunction((c) => window.__st.sel?.fields.camera === c, v);
+  }
+  // the chord acts once the keyboard has left the panel's fields
+  await page.evaluate(() => document.activeElement?.blur());
+  await page.keyboard.press("Control+z");
+  expect(await cam()).toBe(door.camera + 1);
+  await page.keyboard.press("Control+Shift+z");
+  expect(await cam()).toBe(door.camera + 2);
+  await page.keyboard.press("Control+z");
+  await page.keyboard.press("Control+z");
+  expect(await cam()).toBe(door.camera);
+  expect(await page.evaluate(() => window.__edits.pathEdited(window.__st.path))).toBe(false);
+  await page.keyboard.press("Control+z"); // the trail's floor: nothing to step back to
+  expect(await cam()).toBe(door.camera);
+  await expect(page.locator("#editBody .ep-foot .linkbtn", { hasText: "undo" })).toBeDisabled();
+  await expect(page.locator("#editBody .ep-foot .linkbtn", { hasText: "redo" })).toBeEnabled();
+  const plain = await download(page, "#exportJsonBtn");
+  expect(plain.suggestedFilename()).toBe("oddworld-ae-MI-P1.json");
+  const digest = createHash("sha256")
+    .update(canonical(JSON.parse(readFileSync(await plain.path(), "utf8"))))
+    .digest("hex");
+  expect(digest).toBe(DIGESTS.AE["MI P1"]);
+  // in a field the chord is the browser's, and the trail is not spent
+  await camera().focus();
+  await page.keyboard.press("Control+z");
+  expect(await cam()).toBe(door.camera);
+  await page.evaluate(() => document.activeElement?.blur());
+  await page.keyboard.press("Control+y");
+  expect(await cam()).toBe(door.camera + 1);
+  await page.locator("#editBody .ep-foot .linkbtn", { hasText: "undo" }).click();
+  expect(await cam()).toBe(door.camera);
+  expect(errors).toEqual([]);
+});
+
 test("an embed shows the shipped map: no button, and the key is refused", async ({ page }) => {
   const errors = trackErrors(page);
   await page.goto("/?embed=1#AE");

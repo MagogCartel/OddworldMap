@@ -13,13 +13,17 @@ import { getSettings } from "./settings.js";
 import { GAME_IDS, loadEditorData } from "./data.js";
 import {
   applyFieldEdit,
+  canRedo,
+  canUndo,
   editedFields,
   forgetAll,
   gameEdits,
   hasLevelShort,
   pristineOf,
+  redoEdit,
   revertPath,
   setLevelShort,
+  undoEdit,
 } from "./edits.js";
 import { toast } from "./toast.js";
 import { scheduleDraw } from "./render.js";
@@ -99,6 +103,11 @@ export function selectObject(t, { focus = false } = {}) {
   } else opener = null;
   scheduleDraw();
 }
+
+// the trail is the path in hand's, so the keys act with the panel closed too
+const here3 = () => [state.data.id, state.lvl.short, state.path.id];
+const undoHere = () => state.path && undoEdit(...here3());
+const redoHere = () => state.path && redoEdit(...here3());
 
 function commit(field, value) {
   try {
@@ -225,6 +234,19 @@ function render() {
   foot.textContent = total
     ? `${total} field${total === 1 ? "" : "s"} edited on this path`
     : "nothing edited on this path";
+  // the steps stand whether or not the path has edits: a redo follows an undo of everything
+  const step = (label, can, act, title) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "linkbtn";
+    b.textContent = label;
+    b.title = title;
+    b.disabled = !can;
+    b.onclick = act;
+    foot.append(" · ", b);
+  };
+  step("undo", canUndo(...here3()), undoHere, "Undo the last edit on this path (Ctrl+Z, ⌘Z)");
+  step("redo", canRedo(...here3()), redoHere, "Redo (Shift+Ctrl+Z, ⇧⌘Z)");
   if (total) {
     const back = document.createElement("button");
     back.type = "button";
@@ -269,9 +291,17 @@ window.addEventListener("float-opened", (e) => {
     selectObject(null);
 });
 
+// a form field keeps its own keys: Escape there is the field's, and the undo
+// chord is the browser's own undo of the typing
 window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !panel.hidden && !e.target.matches?.("input, textarea, select"))
-    selectObject(null);
+  const inField = e.target.matches?.("input, textarea, select");
+  if (e.key === "Escape" && !panel.hidden && !inField) selectObject(null);
+  if (!state.edit || !state.path || inField || e.altKey || !(e.ctrlKey || e.metaKey)) return;
+  const k = e.key.toLowerCase();
+  if (k !== "z" && k !== "y") return;
+  e.preventDefault();
+  if (k === "y" || e.shiftKey) redoHere();
+  else undoHere();
 });
 
 // the settings row counting what the device holds, with a two-press way to
