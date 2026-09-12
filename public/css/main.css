@@ -1636,6 +1636,14 @@ body.embed #openSiteBtn {
 .st-def:empty {
   display: none;
 }
+.st-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0 2px;
+  font-size: 12px;
+}
 .st-desc {
   color: var(--dim);
   font-size: 12px;

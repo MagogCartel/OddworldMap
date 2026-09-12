@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-09-12",
+   "tag": "new",
+   "title": "Edits stay on this device between visits",
+   "detail": "An object you edit is still edited when you come back. The change is kept on this device as its difference from the disc, applied again the moment the map loads, and marked wherever it shows, so a later visit can never mistake it for the game's own data. Settings counts what the device holds and forgets it all in two presses; a path's own revert lives in the edit panel. Should a rebuild of the map move an object out from under an edit, that edit is forgotten and the map says so. An embedded map always shows the disc's data."
+  },
+  {
    "date": "2026-09-11",
    "tag": "improved",
    "title": "Edited data says so wherever it shows",

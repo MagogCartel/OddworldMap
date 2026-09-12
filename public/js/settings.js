@@ -32,7 +32,7 @@ export const SETTINGS_DEFAULTS = {
 export const SHOW_KEYS = ["spaced", "grid", "coll", "fg", "conn", "wires", "pens", "labels", "dim"];
 
 // localStorage may be unavailable (private mode, blocked); never let that break the viewer
-const store = {
+export const store = {
   get(key) {
     try {
       return localStorage.getItem(key);

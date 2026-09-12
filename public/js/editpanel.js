@@ -10,10 +10,12 @@ import { tlvCell } from "./model.js";
 import { LIVE_WHEN, fieldHelp, fieldType, valueMap } from "./fields.js";
 import { fieldUnit } from "./glossary.js";
 import { getSettings } from "./settings.js";
-import { loadEditorData } from "./data.js";
+import { GAME_IDS, loadEditorData } from "./data.js";
 import {
   applyFieldEdit,
   editedFields,
+  forgetAll,
+  gameEdits,
   hasLevelShort,
   pristineOf,
   revertPath,
@@ -271,3 +273,35 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && !panel.hidden && !e.target.matches?.("input, textarea, select"))
     selectObject(null);
 });
+
+// the settings row counting what the device holds, with a two-press way to
+// forget all of it; the second press is asked for afresh whenever the dialog opens
+const editsCount = $("editsCount"),
+  editsForget = $("editsForget");
+let forgetArmed = false;
+function renderEditsRow() {
+  let objects = 0,
+    paths = 0;
+  for (const id of GAME_IDS) {
+    const n = gameEdits(id);
+    objects += n.objects;
+    paths += n.paths;
+  }
+  editsCount.textContent = objects
+    ? `Object edits: ${objects} object${objects === 1 ? "" : "s"} on ${paths} path${paths === 1 ? "" : "s"}`
+    : "Object edits: none";
+  editsForget.hidden = !objects;
+  editsForget.textContent = "forget all";
+  forgetArmed = false;
+}
+editsForget.onclick = () => {
+  if (!forgetArmed) {
+    forgetArmed = true;
+    editsForget.textContent = "press again to forget";
+    return;
+  }
+  forgetAll();
+  renderEditsRow();
+};
+window.addEventListener("settings-opened", renderEditsRow);
+window.addEventListener("data-changed", renderEditsRow);

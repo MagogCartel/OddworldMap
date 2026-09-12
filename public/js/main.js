@@ -3,7 +3,15 @@
 import { $ } from "./dom.js";
 import { resize } from "./render.js";
 import { addGame, selectGame, applyHash } from "./navigate.js";
-import { GAME_IDS, bootGame, loadGame, loadJson } from "./data.js";
+import {
+  GAME_IDS,
+  bootGame,
+  loadEditorData,
+  loadFieldSidecars,
+  loadGame,
+  loadJson,
+} from "./data.js";
+import { hasStoredEdits, setEnabled } from "./edits.js";
 import { setAnnotations } from "./annotations.js";
 import { setFieldTypes, setEnumLabels } from "./fields.js";
 import { setGlossary } from "./glossary.js";
@@ -36,28 +44,30 @@ const embedded = new URLSearchParams(location.search).get("embed") === "1";
 if (embedded) {
   document.body.classList.add("embed");
   toggleMenu(false);
+  setEnabled(false); // someone else's page shows the shipped map
 }
 
 // the game this visit is looking at, in flight while the sidecars come down:
 // awaiting both games would spend the whole download budget of the one on
-// screen before a line of it is drawn
-const booting = loadGame(bootGame(location.hash, embedded ? null : storedLocationHash()));
+// screen before a line of it is drawn. A boot that will apply saved edits needs
+// the editor data too, so that fetch starts beside the dataset's
+const bootId = bootGame(location.hash, embedded ? null : storedLocationHash());
+if (hasStoredEdits(bootId)) loadEditorData(bootId);
+const booting = loadGame(bootId);
 
 Promise.all([
   loadJson("annotations.json"),
-  loadJson("field_types_ao.json"),
-  loadJson("field_types_ae.json"),
-  loadJson("enum_labels_ao.json"),
-  loadJson("enum_labels_ae.json"),
+  loadFieldSidecars("AO"),
+  loadFieldSidecars("AE"),
   loadJson("glossary_fields.json"),
   loadJson("glossary_types.json"),
   loadJson("messages_ao.json"),
   loadJson("messages_ae.json"),
-]).then(async ([annotations, ftAo, ftAe, elAo, elAe, glossary, types, msgAo, msgAe]) => {
+]).then(async ([annotations, fdAo, fdAe, glossary, types, msgAo, msgAe]) => {
   setAnnotations(annotations); // before the path buttons build their labels
   // before any tooltip/search prettifies
-  setFieldTypes({ AO: ftAo || {}, AE: ftAe || {} });
-  setEnumLabels({ AO: elAo || {}, AE: elAe || {} });
+  setFieldTypes({ AO: fdAo.fieldTypes || {}, AE: fdAe.fieldTypes || {} });
+  setEnumLabels({ AO: fdAo.enumLabels || {}, AE: fdAe.enumLabels || {} });
   setGlossary(glossary);
   setTypeInfo(types);
   setMessages({ AO: msgAo, AE: msgAe });

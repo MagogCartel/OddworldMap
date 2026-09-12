@@ -38,7 +38,7 @@ import { pathDisplayName, pathNickname } from "./annotations.js";
 import { isDemoPath, pathVisible, revealPath } from "./demo.js";
 import { orderPaths } from "./pathorder.js";
 import { displayLabel, getSettings, rememberLocation } from "./settings.js";
-import { currentOf, pathEdited, pristineOf } from "./edits.js";
+import { currentOf, pathEdited, pristineOf, takeReport } from "./edits.js";
 
 function markOn(box, key) {
   for (const b of box.children) b.classList.toggle("on", b.dataset.key === key);
@@ -73,6 +73,13 @@ export function addGame(G) {
     b.dataset.key = G.id;
     b.onclick = () => selectGame(G);
     gameBtns.appendChild(b);
+    // what the saved edits met on the way in
+    const said = takeReport(G.id);
+    const edits = (n) => `${n} saved edit${n === 1 ? "" : "s"}`;
+    if (said?.dropped)
+      toast(`${edits(said.dropped)} no longer match the map data and were forgotten`);
+    if (said?.unapplied)
+      toast(`${edits(said.unapplied)} not applied: the editor data did not load`);
   }
   window.dispatchEvent(new CustomEvent("games-changed"));
 }

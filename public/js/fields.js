@@ -208,6 +208,12 @@ export function setFieldTypes(byGame) {
 export function setEnumLabels(byGame) {
   ENUM_LABELS = byGame || {};
 }
+// one game's tables ahead of the full set: a stored delta is validated when its
+// dataset lands, which can precede the boot's own fetch of the pair
+export function armFieldData(game, fieldTypes, enumLabels) {
+  FIELD_TYPES[game] = fieldTypes || {};
+  ENUM_LABELS[game] = enumLabels || {};
+}
 
 // a field's decomp game type, or undefined for a bare int
 export const fieldType = (game, type, key) => FIELD_TYPES[game]?.[type]?.[key];

@@ -27,6 +27,7 @@ import {
   editStore,
   restoreEdits,
   revertPath,
+  sanitizeEdits,
   setEnabled,
   setLevelShort,
   takeReport,
@@ -234,7 +235,7 @@ test("stored deltas apply where they still answer to an object and are dropped w
   const G = world();
   const P1 = G.levels[0].paths[0];
   assert.deepEqual(applyStoredEdits(G), { applied: 1, dropped: 4 });
-  assert.deepEqual(takeReport("AE"), { applied: 1, dropped: 4 });
+  assert.deepEqual(takeReport("AE"), { applied: 1, dropped: 4, unapplied: 0 });
   assert.equal(editStore().AE["MI/1"].objects["Door@400,10"], undefined);
   assert.equal(takeReport("AE"), null);
   assert.notEqual(G.levels[0].paths[0], P1);
@@ -243,6 +244,35 @@ test("stored deltas apply where they still answer to an object and are dropped w
   assert.deepEqual(gameEdits("AE"), { objects: 1, paths: 1 });
   restoreEdits({});
   assert.equal(hasStoredEdits("AE"), false);
+});
+
+test("the stored shape is read by shape alone, and anything else in it is dropped", () => {
+  assert.deepEqual(sanitizeEdits(null), {});
+  assert.deepEqual(sanitizeEdits("{not json"), {});
+  assert.deepEqual(sanitizeEdits('"a string"'), {});
+  assert.deepEqual(sanitizeEdits("[]"), {});
+  const kept = {
+    AE: { "MI/1": { objects: { "Door@10,10#2": { fields: { camera: 20, scale: -1 } } } } },
+  };
+  assert.deepEqual(sanitizeEdits(JSON.stringify(kept)), kept);
+  const noisy = {
+    AE: {
+      "MI/1": {
+        objects: {
+          "Door@10,10": { fields: { camera: 20, bad: 1.5, big: 40000, word: "x" } },
+          "not a key": { fields: { camera: 1 } },
+          "Zone@0,0": { fields: {} },
+        },
+      },
+      "mi/x": { objects: { "Door@1,1": { fields: { camera: 1 } } } },
+      "NE/2": "junk",
+    },
+    ao: { "R1/1": { objects: { "Door@1,1": { fields: { camera: 1 } } } } },
+    AO: null,
+  };
+  assert.deepEqual(sanitizeEdits(JSON.stringify(noisy)), {
+    AE: { "MI/1": { objects: { "Door@10,10": { fields: { camera: 20 } } } } },
+  });
 });
 
 test("on the shipped data an edited export carries the edit and the reverted one hashes to the fixture", () => {

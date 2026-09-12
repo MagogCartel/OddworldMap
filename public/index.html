@@ -93,7 +93,7 @@
         id="editBtn"
         class="chrome"
         aria-pressed="false"
-        data-tip="Edit objects on this path: click a marker to select it, then change its fields in the panel.&#10;Edits live in this browser tab and never travel in a link."
+        data-tip="Edit objects on this path: click a marker to select it, then change its fields in the panel.&#10;Edits stay on this device and never travel in a link."
       >
         Edit objects
       </button>
@@ -489,7 +489,7 @@
             >
             <div class="st-desc">
               Stores the app and the screens you visit, so the map opens and works with no
-              connection at all. Turning it off removes everything stored.
+              connection at all. Turning it off removes the stored app and artwork.
             </div>
             <div id="offlineStore" hidden>
               <div class="ofl-intro">
@@ -497,6 +497,14 @@
               </div>
               <div id="oflRows"></div>
               <button type="button" class="linkbtn" id="oflBoth" hidden></button>
+            </div>
+            <div class="st-row">
+              <span id="editsCount"></span>
+              <button type="button" class="linkbtn" id="editsForget" hidden>forget all</button>
+            </div>
+            <div class="st-desc">
+              Objects edited on the map stay on this device across visits, marked wherever they
+              show, and never travel in a link.
             </div>
           </section>
           <section class="st-sec">

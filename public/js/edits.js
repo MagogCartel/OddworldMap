@@ -10,6 +10,7 @@ import { deriveExtra } from "./extra.js";
 import { pathVisible, revealPath } from "./demo.js";
 import { invalidateEntry } from "./pathorder.js";
 import { valueMap } from "./fields.js";
+import { store } from "./settings.js";
 
 const S16_MIN = -32768,
   S16_MAX = 32767;
@@ -27,12 +28,47 @@ export const setEnabled = (on) => {
   enabled = on;
 };
 
-// {game: {"LV/PA": {objects: {key: {fields: {name: value}}}}}}
-let edits = {};
-export const restoreEdits = (all) => {
-  edits = all;
+// {game: {"LV/PA": {objects: {key: {fields: {name: value}}}}}}, read from the
+// device once and written back on every change; shape is the only thing the
+// read checks, each delta answering to its object when its dataset arrives
+const EDITS_KEY = "owm:edits";
+let edits = null;
+const all = () => (edits ??= sanitizeEdits(store.get(EDITS_KEY)));
+export const restoreEdits = (obj) => {
+  edits = obj;
 };
-export const editStore = () => edits;
+export const editStore = () => all();
+function persist() {
+  if (Object.keys(all()).length) store.set(EDITS_KEY, JSON.stringify(edits));
+  else store.remove(EDITS_KEY);
+}
+
+export function sanitizeEdits(raw) {
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return {};
+  }
+  const out = {};
+  if (!parsed || typeof parsed !== "object") return out;
+  for (const [game, paths] of Object.entries(parsed)) {
+    if (!/^[A-Z]{2}$/.test(game) || !paths || typeof paths !== "object") continue;
+    for (const [pk, pe] of Object.entries(paths)) {
+      if (!/^[A-Z0-9]+\/\d+$/.test(pk) || !pe?.objects || typeof pe.objects !== "object") continue;
+      for (const [key, d] of Object.entries(pe.objects)) {
+        if (!/^\w+@-?\d+,-?\d+(#\d+)?$/.test(key) || !d?.fields || typeof d.fields !== "object")
+          continue;
+        const fields = {};
+        for (const [f, v] of Object.entries(d.fields))
+          if (Number.isInteger(v) && v >= S16_MIN && v <= S16_MAX) fields[f] = v;
+        if (Object.keys(fields).length)
+          ((out[game] ??= {})[pk] ??= { objects: {} }).objects[key] = { fields };
+      }
+    }
+  }
+  return out;
+}
 
 const pathKey = (lv, pa) => `${lv}/${pa}`;
 
@@ -87,12 +123,12 @@ export function currentOf(t, path = state.path) {
   return path.tlvs.find((c) => c === p || origin.get(c)?.pristine === p) ?? null;
 }
 
-export const hasStoredEdits = (gameId) => enabled && Object.keys(edits[gameId] ?? {}).length > 0;
+export const hasStoredEdits = (gameId) => enabled && Object.keys(all()[gameId] ?? {}).length > 0;
 
 export function gameEdits(gameId) {
   let objects = 0,
     paths = 0;
-  for (const pe of Object.values(edits[gameId] ?? {})) {
+  for (const pe of Object.values(all()[gameId] ?? {})) {
     const n = Object.keys(pe.objects).length;
     if (n) paths++;
     objects += n;
@@ -148,7 +184,7 @@ function rebuildLevel(G, j) {
   const paths = PL.paths.map((P, i) => {
     const pk = pathKey(L.short, P.id);
     if (!was.paths.has(pk)) was.paths.set(pk, P);
-    const fresh = materializePath(G.id, was.paths.get(pk), edits[G.id]?.[pk]);
+    const fresh = materializePath(G.id, was.paths.get(pk), all()[G.id]?.[pk]);
     // a path already standing as these deltas keeps its identity
     const standing = L.paths[i];
     return standing !== was.paths.get(pk) && sameDeltas(standing, fresh) ? standing : fresh;
@@ -218,7 +254,7 @@ export function applyFieldEdit(t, field, value, where = {}) {
     shipped(G).paths.get(pk) ?? G.levels.find((L) => L.short === lv).paths.find((p) => p.id === pa);
   const key = objectKey(P, pristine);
   if (!key) throw new Error(`${pristine.name} is not on ${lv} P${pa}`);
-  const game = (edits[gameId] ??= {});
+  const game = (all()[gameId] ??= {});
   const path = (game[pk] ??= { objects: {} });
   const delta = (path.objects[key] ??= { fields: {} });
   if (value === pristine.fields[field]) delete delta.fields[field];
@@ -226,6 +262,7 @@ export function applyFieldEdit(t, field, value, where = {}) {
   if (!Object.keys(delta.fields).length) delete path.objects[key];
   if (!Object.keys(path.objects).length) delete game[pk];
   if (!Object.keys(game).length) delete edits[gameId];
+  persist();
   swapPath(G, lv, pa);
   return currentOf(
     pristine,
@@ -234,18 +271,20 @@ export function applyFieldEdit(t, field, value, where = {}) {
 }
 
 export function revertPath(gameId, lv, pa) {
-  const game = edits[gameId];
+  const game = all()[gameId];
   if (!game?.[pathKey(lv, pa)]) return;
   delete game[pathKey(lv, pa)];
   if (!Object.keys(game).length) delete edits[gameId];
+  persist();
   const G = gameOf(gameId);
   if (G) swapPath(G, lv, pa);
 }
 
 export function forgetAll() {
-  const all = edits;
+  const was = all();
   edits = {};
-  for (const [gameId, game] of Object.entries(all)) {
+  persist();
+  for (const [gameId, game] of Object.entries(was)) {
     const G = gameOf(gameId);
     if (!G) continue;
     for (const pk of Object.keys(game)) {
@@ -264,7 +303,7 @@ const reports = new Map();
 export function applyStoredEdits(G) {
   let applied = 0,
     dropped = 0;
-  const game = edits[G.id] ?? {};
+  const game = all()[G.id] ?? {};
   for (const [pk, pe] of Object.entries(game)) {
     const [lv, pa] = pk.split("/");
     const L = G.levels.find((l) => l.short === lv);
@@ -284,13 +323,24 @@ export function applyStoredEdits(G) {
     if (!Object.keys(pe.objects).length) delete game[pk];
   }
   if (!Object.keys(game).length) delete edits[G.id];
+  if (dropped) persist();
   if (applied)
     G.levels.forEach((L, j) => {
       if (Object.keys(game).some((pk) => pk.startsWith(`${L.short}/`)))
         G.levels[j] = rebuildLevel(G, j);
     });
-  reports.set(G.id, { applied, dropped });
+  reports.set(G.id, { applied, dropped, unapplied: 0 });
   return { applied, dropped };
+}
+
+// a dataset whose level map never arrived: nothing applies, the store stays as
+// it is, and the page is told how much it is not seeing
+export function reportUnapplied(gameId) {
+  const unapplied = Object.values(all()[gameId] ?? {}).reduce(
+    (n, pe) => n + Object.values(pe.objects).reduce((m, d) => m + Object.keys(d.fields).length, 0),
+    0,
+  );
+  reports.set(gameId, { applied: 0, dropped: 0, unapplied });
 }
 
 export function takeReport(gameId) {

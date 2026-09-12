@@ -3,6 +3,8 @@
 // No DOM, so it stays importable in bare Node.
 
 import { parseHash } from "./model.js";
+import { applyStoredEdits, hasStoredEdits, reportUnapplied, setLevelShort } from "./edits.js";
+import { armFieldData } from "./fields.js";
 
 // the games in canonical order; the first is what a visit boots on when
 // nothing names one
@@ -46,8 +48,43 @@ export function loadGame(id, low) {
       id,
       (p = loadJson(GAME_FILES[id], low ? { priority: "low" } : null)
         .then((d) => (d && d.levels && d.levels.length ? d : null))
+        .then((d) => withStoredEdits(d, low))
         .finally(() => settled.add(id))),
     );
+  return p;
+}
+
+// the deltas saved on this device apply before anything sees the dataset: every
+// dataset passes through here, so none reaches the page un-applied. The level
+// map they derive destinations through rides the editor sidecar, and the field
+// tables they are validated against are awaited too, or a delta a rebuild
+// un-labelled would slip through whenever the dataset outran the boot's own
+// fetch of them. A table that did not load validates against nothing, so it
+// refuses like a missing sidecar: nothing applies and the page is told
+async function withStoredEdits(d, low) {
+  if (!d || !hasStoredEdits(d.id)) return d;
+  const [side, fd] = await Promise.all([loadEditorData(d.id, low), loadFieldSidecars(d.id, low)]);
+  if (side && fd.fieldTypes && fd.enumLabels) {
+    setLevelShort(d.id, side.level_short);
+    armFieldData(d.id, fd.fieldTypes, fd.enumLabels);
+    applyStoredEdits(d);
+  } else reportUnapplied(d.id);
+  return d;
+}
+
+// the field-type and enum-label pair, one fetch per game shared between the
+// boot's own use and the validation above
+const fieldSidecars = new Map();
+export function loadFieldSidecars(id, low) {
+  let p = fieldSidecars.get(id);
+  if (!p) {
+    const opts = low ? { priority: "low" } : null;
+    p = Promise.all([
+      loadJson(`field_types_${id.toLowerCase()}.json`, opts),
+      loadJson(`enum_labels_${id.toLowerCase()}.json`, opts),
+    ]).then(([fieldTypes, enumLabels]) => ({ fieldTypes, enumLabels }));
+    fieldSidecars.set(id, p);
+  }
   return p;
 }
 
