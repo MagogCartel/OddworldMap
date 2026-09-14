@@ -56,6 +56,11 @@ test("sanitizeSettings: showRawValues defaults off and round-trips", () => {
   assert.equal(sanitizeSettings('{"showRawValues":true}').showRawValues, true);
 });
 
+test("sanitizeSettings: editObjects defaults off and round-trips", () => {
+  assert.equal(sanitizeSettings(null).editObjects, false);
+  assert.equal(sanitizeSettings('{"editObjects":true}').editObjects, true);
+});
+
 test("sanitizeView: absent or unreadable snapshot yields null", () => {
   assert.equal(sanitizeView(null), null);
   assert.equal(sanitizeView("{not json"), null);

@@ -326,9 +326,7 @@
         </div>
         <div id="editBody"></div>
       </div>
-      <div id="help">
-        drag / arrows = pan · wheel / ± = zoom · hover = inspect · e = edit · ? = shortcuts
-      </div>
+      <div id="help">drag / arrows = pan · wheel / ± = zoom · hover = inspect · ? = shortcuts</div>
       <div id="hud"></div>
       <canvas
         id="minimap"
@@ -401,7 +399,7 @@
           </div>
           <div class="sc-row">
             <span class="sc-keys"><kbd>e</kbd></span
-            >edit objects: a click selects, the panel edits
+            >edit objects, with the setting on: a click selects, the panel edits
           </div>
           <div class="sc-row">
             <span class="sc-keys"><kbd>Ctrl/⌘ Z</kbd><kbd>⇧</kbd></span
@@ -502,14 +500,6 @@
               <div id="oflRows"></div>
               <button type="button" class="linkbtn" id="oflBoth" hidden></button>
             </div>
-            <div class="st-row">
-              <span id="editsCount"></span>
-              <button type="button" class="linkbtn" id="editsForget" hidden>forget all</button>
-            </div>
-            <div class="st-desc">
-              Objects edited on the map stay on this device across visits, marked wherever they
-              show, and never travel in a link.
-            </div>
           </section>
           <section class="st-sec">
             <h3>Buttons and names</h3>
@@ -552,6 +542,19 @@
               Adds a Fields panel to the sidebar for picking, per object type, which of the game's
               stored fields (Slig shooting behaviour, patrol timings, and more) show in tooltips and
               the screen list.
+            </div>
+            <label class="checkrow"
+              ><input type="checkbox" id="sEditObjects" autocomplete="off" /> Edit object
+              properties</label
+            >
+            <div class="st-row" id="editsHeld" hidden>
+              <span id="editsCount"></span>
+              <button type="button" class="linkbtn" id="editsForget">forget all</button>
+            </div>
+            <div class="st-desc">
+              Adds an Edit objects button to the sidebar (or press e): a click on a marker selects
+              it, and a panel changes any field the game stores for it, with what the disc shipped
+              beside anything you change.
             </div>
             <label class="checkrow"
               ><input type="checkbox" id="sRawValues" autocomplete="off" /> Show raw field

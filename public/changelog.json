@@ -1,6 +1,12 @@
 {
  "entries": [
   {
+   "date": "2026-09-14",
+   "tag": "improved",
+   "title": "Editing waits behind a setting",
+   "detail": "The Edit objects button no longer sits in the sidebar of every visit. It appears, with its e key, once Settings → Objects and fields → \"Edit object properties\" is on, beside the other settings for custom-level builders and the curious. Edits you have already made keep applying and keep their marks with the setting off. Its row counts them across both games and forgets them all in two presses, so nothing on the device goes unaccounted for."
+  },
+  {
    "date": "2026-09-13",
    "tag": "new",
    "title": "Undo and redo an edit, one step at a time",

@@ -33,6 +33,12 @@ async function attach(page) {
 }
 const editOn = (page) => page.evaluate(() => window.__st.edit);
 
+// the setting that arms the mode, seeded before any module runs
+const armEditing = (page) =>
+  page.addInitScript(() =>
+    localStorage.setItem("owm:settings", JSON.stringify({ editObjects: true })),
+  );
+
 // centre the standing path's first Door by setting the camera itself, the way
 // settle() does, so no scheduled hash write can re-apply under the click; returns
 // where the door is on the screen. A jump's own pushed write is flushed first and
@@ -82,6 +88,7 @@ test("the mode selects an object, the form edits it, and every surface follows",
   page,
 }) => {
   const errors = trackErrors(page);
+  await armEditing(page);
   await page.goto("/#AE");
   await settleAny(page);
   await attach(page);
@@ -206,6 +213,7 @@ test("edits stay on the device: a reload keeps them, any way in applies them, fo
   page,
 }) => {
   const errors = trackErrors(page);
+  await armEditing(page);
   await page.goto("/#AE");
   await settleAny(page);
   await attach(page);
@@ -259,11 +267,11 @@ test("edits stay on the device: a reload keeps them, any way in applies them, fo
   await settleAny(page);
   await attach(page);
   await page.click("#settingsBtn");
-  await expect(page.locator("#editsCount")).toHaveText("Object edits: 1 object on 1 path");
+  await expect(page.locator("#editsCount")).toHaveText("1 object edited on 1 path");
   await page.click("#editsForget");
   await expect(page.locator("#editsForget")).toHaveText("press again to forget");
   await page.click("#editsForget");
-  await expect(page.locator("#editsCount")).toHaveText("Object edits: none");
+  await expect(page.locator("#editsHeld")).toBeHidden();
   await page.click("#settingsClose");
   expect(await page.evaluate(() => localStorage.getItem("owm:edits"))).toBeNull();
   expect((await doorCamera(page, door)).edited).toBe(false);
@@ -358,6 +366,7 @@ test("a stored edit boots unapplied, and says so, when a field table does not lo
 
 test("undo and redo step a path's edits, on the keys and in the panel", async ({ page }) => {
   const errors = trackErrors(page);
+  await armEditing(page);
   await page.goto("/#AE");
   await settleAny(page);
   await attach(page);
@@ -404,8 +413,68 @@ test("undo and redo step a path's edits, on the keys and in the panel", async ({
   expect(errors).toEqual([]);
 });
 
+test("editing waits behind a setting, and the data never does", async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto("/#AE");
+  await settleAny(page);
+  await attach(page);
+  await expect(page.locator("#editBtn")).toBeHidden();
+  await page.keyboard.press("e");
+  expect(await editOn(page)).toBe(false);
+
+  // the setting reveals the button and lets the key in
+  await page.click("#settingsBtn");
+  await expect(page.locator("#editsHeld")).toBeHidden();
+  await page.check("#sEditObjects");
+  await page.click("#settingsClose");
+  await expect(page.locator("#settingsOverlay")).toBeHidden(); // the fade still takes clicks
+  await expect(page.locator("#editBtn")).toBeVisible();
+  await page.keyboard.press("e");
+  await page.waitForFunction(() => window.__st.edit === true);
+  const door = await aimAtDoor(page);
+  await page.mouse.click(door.x, door.y);
+  const input = page.locator('#editBody input[data-field="camera"]');
+  await input.fill(String(door.camera + 2));
+  await input.press("Tab");
+  await page.waitForFunction((c) => window.__st.sel?.fields.camera === c, door.camera + 2);
+
+  // off again: the mode leaves and the button goes, the edit stands, marked and counted
+  await page.click("#settingsBtn");
+  await page.uncheck("#sEditObjects");
+  expect(await editOn(page)).toBe(false);
+  await expect(page.locator("#editPanel")).toBeHidden();
+  await expect(page.locator("#editsCount")).toHaveText("1 object edited on 1 path");
+  await page.click("#settingsClose");
+  await expect(page.locator("#editBtn")).toBeHidden();
+  await page.keyboard.press("e");
+  expect(await editOn(page)).toBe(false);
+  expect(await doorCamera(page, door)).toEqual({
+    camera: door.camera + 2,
+    toCam: door.camera + 2,
+    edited: true,
+  });
+  await expect(page.locator("#placeEdited")).toBeVisible();
+
+  // a reload applies the edit with the setting still off
+  await page.reload();
+  await settleAny(page);
+  await attach(page);
+  await expect(page.locator("#editBtn")).toBeHidden();
+  expect((await doorCamera(page, door)).edited).toBe(true);
+  expect((await download(page, "#exportJsonBtn")).suggestedFilename()).toBe(
+    "oddworld-ae-MI-P1-edited.json",
+  );
+  await page.click("#settingsBtn");
+  await page.check("#sEditObjects");
+  await page.click("#settingsClose");
+  await page.keyboard.press("e");
+  await page.waitForFunction(() => window.__st.edit === true);
+  expect(errors).toEqual([]);
+});
+
 test("an embed shows the shipped map: no button, and the key is refused", async ({ page }) => {
   const errors = trackErrors(page);
+  await armEditing(page);
   await page.goto("/?embed=1#AE");
   await settleAny(page);
   await attach(page);

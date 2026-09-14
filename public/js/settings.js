@@ -25,6 +25,7 @@ export const SETTINGS_DEFAULTS = {
   screenList: true,
   cacheMap: false,
   showRawValues: false,
+  editObjects: false,
 };
 // fieldPrefs (not a boolean; added by sanitizeSettings) — which object fields
 // to show: mode "default" (the notable ones) or "more" (per-game, per-type
@@ -232,6 +233,10 @@ export function initSettings() {
 
   bind("sRawValues", "showRawValues", () =>
     window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "rawValues" } })),
+  );
+
+  bind("sEditObjects", "editObjects", () =>
+    window.dispatchEvent(new CustomEvent("settings-changed", { detail: { key: "editObjects" } })),
   );
 
   // fieldPrefs isn't a boolean setting, so it gets a custom binding: the

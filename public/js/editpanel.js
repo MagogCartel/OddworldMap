@@ -52,14 +52,20 @@ async function arm(gameId) {
   return true;
 }
 
+// the setting arms the mode and never the data: stored edits apply and are
+// marked whatever it says
+const allowed = () => getSettings().editObjects;
+
 export async function setEditMode(on) {
   if (on === state.edit || arming) return;
   if (on) {
     // an embed is someone else's page, and the graph covers the map
-    if (document.body.classList.contains("embed") || state.graph || !state.data) return;
+    if (document.body.classList.contains("embed") || state.graph || !state.data || !allowed())
+      return;
     arming = true;
     const ok = await arm(state.data.id);
     arming = false;
+    if (!allowed()) return;
     if (!ok) {
       toast("editing needs the editor data, which did not load");
       return;
@@ -259,7 +265,13 @@ function render() {
   if (focused) body.querySelector(`[data-field="${CSS.escape(focused)}"]`)?.focus();
 }
 
+btn.hidden = !allowed();
 btn.onclick = () => setEditMode(!state.edit);
+window.addEventListener("settings-changed", (e) => {
+  if (e.detail.key !== "editObjects") return;
+  btn.hidden = !allowed();
+  if (!allowed()) setEditMode(false);
+});
 $("editClose").onclick = () => selectObject(null);
 
 window.addEventListener("data-changed", () => {
@@ -306,7 +318,8 @@ window.addEventListener("keydown", (e) => {
 
 // the settings row counting what the device holds, with a two-press way to
 // forget all of it; the second press is asked for afresh whenever the dialog opens
-const editsCount = $("editsCount"),
+const editsHeld = $("editsHeld"),
+  editsCount = $("editsCount"),
   editsForget = $("editsForget");
 let forgetArmed = false;
 function renderEditsRow() {
@@ -317,10 +330,8 @@ function renderEditsRow() {
     objects += n.objects;
     paths += n.paths;
   }
-  editsCount.textContent = objects
-    ? `Object edits: ${objects} object${objects === 1 ? "" : "s"} on ${paths} path${paths === 1 ? "" : "s"}`
-    : "Object edits: none";
-  editsForget.hidden = !objects;
+  editsHeld.hidden = !objects;
+  editsCount.textContent = `${objects} object${objects === 1 ? "" : "s"} edited on ${paths} path${paths === 1 ? "" : "s"}`;
   editsForget.textContent = "forget all";
   forgetArmed = false;
 }
