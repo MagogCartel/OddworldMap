@@ -308,7 +308,7 @@ body.fullnames .btnrow button {
   font-size: 11px;
 }
 #toggles {
-  padding: 0 12px 10px;
+  padding: 0 12px 4px;
 }
 #toggles .checkrow {
   padding: 2.5px 2px;
@@ -337,6 +337,7 @@ body.fullnames .btnrow button {
   padding: 5px 10px;
   cursor: pointer;
   font-size: 12px;
+  line-height: normal;
   width: calc(100% - 24px);
 }
 .actbtn:not(:disabled):hover {
@@ -346,11 +347,30 @@ body.fullnames .btnrow button {
   opacity: 0.4;
   cursor: default;
 }
-#exportBtn,
-#exportPathBtn,
-#exportJsonBtn {
-  margin: 6px 0 2px;
-  width: 100%;
+/* the exports fold under one control: a disclosure, so a tap or a key opens it
+   as readily as a click, and a button stays in view while its export runs */
+#exportMenu > summary {
+  list-style: none;
+  text-align: center;
+  user-select: none;
+}
+#exportMenu > summary::-webkit-details-marker {
+  display: none;
+}
+#exportMenu > summary::before {
+  content: "\25B8";
+  display: inline-block;
+  margin-right: 6px;
+  color: var(--dim);
+  font-size: 9px;
+  transition: transform 0.12s;
+}
+#exportMenu[open] > summary::before {
+  transform: rotate(90deg);
+}
+#exportMenu > button {
+  margin: 2px 12px 2px 24px;
+  width: calc(100% - 36px);
 }
 #sbFooter {
   margin-top: auto;

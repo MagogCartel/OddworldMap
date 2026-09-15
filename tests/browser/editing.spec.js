@@ -8,7 +8,10 @@ const DIGESTS = JSON.parse(
   readFileSync(new URL("../fixtures/relive-digests.json", import.meta.url), "utf8"),
 );
 
+// the exports fold under one control, closed at boot
 async function download(page, selector) {
+  if (!(await page.locator("#exportMenu").evaluate((d) => d.open)))
+    await page.click("#exportMenu > summary");
   const [dl] = await Promise.all([page.waitForEvent("download"), page.click(selector)]);
   return dl;
 }

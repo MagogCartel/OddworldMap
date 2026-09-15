@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-09-15",
+   "tag": "improved",
+   "tiny": true,
+   "title": "The three exports fold into one button",
+   "detail": "Export view, Export whole path and Export path as JSON were three rows at the foot of the Display toggles. One Export button stands there now and opens to the three on a click, a tap or the keyboard, staying open while an export runs so the button you pressed still says what it is doing. The exports themselves are unchanged."
+  },
+  {
    "date": "2026-09-14",
    "tag": "improved",
    "title": "Editing waits behind a setting",

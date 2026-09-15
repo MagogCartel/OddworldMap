@@ -26,6 +26,13 @@ function sidecarLog(page) {
   return log;
 }
 
+// the exports fold under one control, closed at boot
+async function openExports(page) {
+  await expect(page.locator("#exportJsonBtn")).toBeHidden();
+  await page.click("#exportMenu > summary");
+  await expect(page.locator("#exportJsonBtn")).toBeVisible();
+}
+
 async function press(page) {
   const [dl] = await Promise.all([page.waitForEvent("download"), page.click("#exportJsonBtn")]);
   return dl;
@@ -60,6 +67,7 @@ for (const [game, [level, path]] of Object.entries(BOOTS)) {
     await settleAny(page);
     expect(await standing(page)).toEqual({ game, level, path });
     expect(sidecar).toEqual([]);
+    await openExports(page);
     // the caveat is written twice, for the pointer and for a reader
     const { tip, help } = await page.evaluate(() => {
       const b = document.getElementById("exportJsonBtn");
@@ -86,6 +94,22 @@ for (const [game, [level, path]] of Object.entries(BOOTS)) {
   });
 }
 
+test("the exports open from the keyboard, and stay open while one runs", async ({ page }) => {
+  const errors = trackErrors(page);
+  await page.goto("/#AO");
+  await settleAny(page);
+  await expect(page.locator("#exportJsonBtn")).toBeHidden();
+  await page.focus("#exportMenu > summary");
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#exportJsonBtn")).toBeVisible();
+  await press(page);
+  await expect(page.locator("#exportJsonBtn")).toBeVisible();
+  await page.focus("#exportMenu > summary");
+  await page.keyboard.press("Space");
+  await expect(page.locator("#exportJsonBtn")).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
 test("a sidecar that failed to load is fetched again on the next press", async ({ page }) => {
   const errors = trackErrors(page);
   const sidecar = sidecarLog(page);
@@ -96,6 +120,7 @@ test("a sidecar that failed to load is fetched again on the next press", async (
   );
   await page.goto("/#AO");
   await settleAny(page);
+  await openExports(page);
   await page.click("#exportJsonBtn");
   await expect(
     page.locator(".toast", { hasText: "export failed: the editor data did not load" }),
@@ -114,6 +139,7 @@ test("an incomplete document is refused rather than handed over", async ({ page 
   page.on("download", (d) => downloads.push(d.suggestedFilename()));
   await page.goto("/#AO");
   await settleAny(page);
+  await openExports(page);
   await page.click("#exportJsonBtn");
   await expect(
     page.locator(".toast", { hasText: "export failed: no archived value for Door.Unarchived" }),
