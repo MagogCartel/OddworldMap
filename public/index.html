@@ -83,6 +83,7 @@
       <div class="btnrow" id="pathBtns"></div>
       <button
         id="graphBtn"
+        class="actbtn"
         title="the whole game as one diagram: every path, and every way between them"
         aria-expanded="false"
         aria-controls="graphView"
@@ -91,7 +92,7 @@
       </button>
       <button
         id="editBtn"
-        class="chrome"
+        class="chrome actbtn"
         aria-pressed="false"
         data-tip="Edit objects on this path: click a marker to select it, then change its fields in the panel.&#10;Edits stay on this device and never travel in a link."
       >
@@ -173,15 +174,19 @@
           data-tip="Click waypoints to plot a route; the bar totals the distance.&#10;Clicking a door rides it and keeps plotting."
           ><input type="checkbox" id="tRoute" autocomplete="off" /> Route planner<kbd>r</kbd></label
         >
-        <button id="exportBtn" title="save the visible area as an image">Export view</button>
+        <button id="exportBtn" class="actbtn" title="save the visible area as an image">
+          Export view
+        </button>
         <button
           id="exportPathBtn"
+          class="actbtn"
           title="save every screen of this path, edge to edge at full resolution"
         >
           Export whole path
         </button>
         <button
           id="exportJsonBtn"
+          class="actbtn"
           aria-describedby="exportJsonHelp"
           data-tip="Saves this path's objects and collision lines as the AliveTeam level editor's JSON.&#10;A description of the path, not a level: it carries no artwork, and importing it into your own LVL drops that path's foreground masks. A path you have edited saves under a name that says so."
         >
@@ -203,7 +208,11 @@
         >
       </h2>
       <div class="filters" id="filterBox"></div>
-      <button id="numbersBtn" title="count picked object types on the screen, path, level and game">
+      <button
+        id="numbersBtn"
+        class="actbtn"
+        title="count picked object types on the screen, path, level and game"
+      >
         By the numbers
       </button>
       <!-- populated by fieldpanel.js; shown only when "Show more object fields" is on -->

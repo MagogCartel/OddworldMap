@@ -327,12 +327,8 @@ body.fullnames .btnrow button {
   border-color: var(--accent);
   color: var(--accent);
 }
-#exportBtn,
-#exportPathBtn,
-#exportJsonBtn,
-#graphBtn,
-#editBtn,
-#numbersBtn {
+/* the sidebar's full-width action button; a member may be disabled */
+.actbtn {
   margin: 6px 12px 2px;
   background: var(--panel2);
   color: var(--text);
@@ -343,24 +339,18 @@ body.fullnames .btnrow button {
   font-size: 12px;
   width: calc(100% - 24px);
 }
+.actbtn:not(:disabled):hover {
+  border-color: var(--accent);
+}
+.actbtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
 #exportBtn,
 #exportPathBtn,
 #exportJsonBtn {
   margin: 6px 0 2px;
   width: 100%;
-}
-#exportBtn:hover,
-#exportPathBtn:not(:disabled):hover,
-#exportJsonBtn:not(:disabled):hover,
-#graphBtn:hover,
-#editBtn:hover,
-#numbersBtn:hover {
-  border-color: var(--accent);
-}
-#exportPathBtn:disabled,
-#exportJsonBtn:disabled {
-  opacity: 0.4;
-  cursor: default;
 }
 #sbFooter {
   margin-top: auto;
