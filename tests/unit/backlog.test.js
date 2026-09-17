@@ -23,6 +23,7 @@ const STATUS = ["open", "undecided", "deferred", "ongoing", "shipped", "retired"
 // resolve here — an unresolvable hash is a typo, not a foreign pin
 const FOREIGN_PINS = new Set([
   "e2badb8df", // alive_reversing master, the tree the released editor pins
+  "464ad4a61", // alive_reversing beta, the head the live-map investigation read
 ]);
 const SECTION_BY_STATUS = {
   undecided: "Undecided",

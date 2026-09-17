@@ -55,6 +55,8 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 Each needs a verdict before anyone builds it.
 
+- [**94.** Live map](item-094-live-map.md) — the game's own sprites and animations over the artwork. Sprites and frame timing are disc data and can be rebuilt byte for byte; motion is player-relative game code and cannot, so the claim has to be tiered. Needs the disc probe, then a verdict on scope, the foreground-mask rebuild, size and rights. _Large; the pixels need a disc._
+
 ## Deferred
 
 Decided not now, with the reason recorded.
