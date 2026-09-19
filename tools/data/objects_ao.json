@@ -1055,11 +1055,13 @@
   ],
   [
    2,
-   "triggered_by_alarm"
+   "triggered_by_alarm",
+   "Choice_short"
   ],
   [
    3,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    4,
@@ -1075,7 +1077,8 @@
   ],
   [
    7,
-   "persist_offscreen"
+   "persist_offscreen",
+   "Choice_short"
   ]
  ],
  "87": [

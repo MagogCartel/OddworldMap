@@ -119,7 +119,7 @@ def parse_member_types(game_key):
         src = p.read_text(errors="replace")
         for am in re.finditer(r'(?<!enum )\b(?:struct|union)\s+([A-Za-z_]\w*)\b[^{;]*\{', src):
             aggregates.add(am.group(1))
-        for sm in re.finditer(r'\bstruct\s+(Path_[A-Za-z0-9_]+)\b([^{;]*)\{', src):
+        for sm in re.finditer(r'\b(?:struct|class)\s+(Path_[A-Za-z0-9_]+)\b([^{;]*)\{', src):
             struct = sm.group(1)
             if "TlvObjectBase" in sm.group(2):  # a viewer-API wrapper, not a data struct
                 continue
@@ -136,7 +136,7 @@ def parse_member_types(game_key):
             kept.append(body[i:])
             for mm in re.finditer(
                     r'(?m)^\s*([A-Za-z_]\w*(?:::[A-Za-z_]\w*)*)\s+'
-                    r'(field_[0-9A-Fa-f]+_\w+|[a-z_]\w*)\s*(?:=\s*[^;]+)?;', "".join(kept)):
+                    r'(field_[0-9A-Fa-f]+_\w+|[A-Za-z_]\w*)\s*(?:=\s*[^;]+)?;', "".join(kept)):
                 ty, member = mm.group(1), mm.group(2)
                 declared.add((struct, member))
                 if ty in _SKIP_TYPES:

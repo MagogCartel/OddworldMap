@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-09-19",
+   "tag": "improved",
+   "tiny": true,
+   "title": "Moving bombs and pants lockers say their plane",
+   "detail": "A moving bomb's plane and its two flags, and the plane on Exoddus' Slig pants lockers, showed as bare 0s and 1s rather than words. The decompilation declares them in two shapes the builder's type reader could not see: one data struct written as a class, and one member spelled with a capital. Oddysee's 35 bombs now read their plane as full and, all but two, their alarm trigger as false; the seven lockers read full as well. The words show with more object fields turned on, in the field picker, in the editor, and in search, which matches on them. The stored values are unchanged, and no marker moved."
+  },
+  {
    "date": "2026-09-15",
    "tag": "improved",
    "tiny": true,

@@ -132,6 +132,11 @@
   "initial_move_direction": "Path_MotionDetector::InitialMoveDirection",
   "scale": "Scale_short"
  },
+ "MovingBomb": {
+  "persist_offscreen": "Choice_short",
+  "scale": "Scale_short",
+  "triggered_by_alarm": "Choice_short"
+ },
  "Mudokon": {
   "deaf": "Choice_short",
   "job": "Path_Mudokon::MudJobs",

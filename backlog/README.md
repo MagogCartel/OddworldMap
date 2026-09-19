@@ -44,7 +44,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Code and build
 
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
-- [**92.** The member-type parser's remaining blind spots](item-092-member-type-parser-blind-spots.md) — a sub-struct arm, a `class`-declared data struct and an uppercase member all escape it, so eleven objects still render `scale` raw; none is an upstream fault. _Small to medium (builder), anywhere._
+- [**92.** The member-type parser's remaining blind spots](item-092-member-type-parser-blind-spots.md) — the sub-struct arm is the gap left, so nine objects still render `scale` raw with four enums beside them; the `class`-declared struct and the uppercase member closed, and neither was an upstream fault. _Small to medium (builder), anywhere._
 
 ## Moonshot
 
