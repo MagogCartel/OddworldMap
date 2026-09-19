@@ -141,6 +141,24 @@ class InheritMemberTypes(unittest.TestCase):
         self.assertEqual(flat[("B", "m")], "T")
 
 
+class ArmType(unittest.TestCase):
+    TYPES = {("Path_Drill_Data", "field_18_behavior"): "DrillBehavior"}
+    STRUCTS = {("Path_Drill", "field_10_data"): "Path_Drill_Data"}
+
+    def arm(self, struct, segs):
+        return schema._arm_type(struct, segs, self.TYPES, self.STRUCTS)
+
+    def test_a_bare_member_takes_its_own_declaration(self):
+        self.assertEqual(self.arm("Path_Drill_Data", ["field_18_behavior"]), "DrillBehavior")
+
+    def test_a_dotted_expression_types_the_arm_it_ends_on(self):
+        self.assertEqual(self.arm("Path_Drill", ["field_10_data", "field_18_behavior"]),
+                         "DrillBehavior")
+
+    def test_an_unswept_sub_struct_leaves_the_arm_untyped(self):
+        self.assertIsNone(self.arm("Path_Drill", ["field_10_other", "field_18_behavior"]))
+
+
 class Decompress4or5(unittest.TestCase):
     def test_literal_run_then_overlapping_back_copy(self):
         stream = struct.pack("<I", 5) + bytes([1]) + b"AB" + bytes([0x80, 1])
@@ -622,14 +640,23 @@ class CacheStamp(unittest.TestCase):
 class MemberTypes(unittest.TestCase):
     @needs_decomp
     def test_a_base_structs_member_carries_its_declared_type(self):
-        types = schema.parse_member_types("AE")
+        types, _ = schema.parse_member_types("AE")
         self.assertEqual(types[("Path_WellLocal", "field_0_scale")], "Scale_short")
 
     @needs_decomp
     def test_a_union_typed_member_carries_no_type(self):
-        types = schema.parse_member_types("AO")
+        types, _ = schema.parse_member_types("AO")
         self.assertEqual(types[("Path_WellLocal", "field_18_scale")], "Scale_short")
         self.assertNotIn(("Path_WellLocal", "field_24_off_level_or_dx"), types)
+
+    @needs_decomp
+    def test_a_sub_struct_and_a_union_are_swept_for_their_arms(self):
+        types, structs = schema.parse_member_types("AE")
+        self.assertEqual(structs[("Path_Drill", "field_10_data")], "Path_Drill_Data")
+        self.assertEqual(types[("Path_Drill_Data", "field_18_behavior")], "DrillBehavior")
+        types, structs = schema.parse_member_types("AO")
+        self.assertEqual(structs[("Path_WellExpress", "field_24_off_level_or_dx")], "OffLevelOrDx")
+        self.assertEqual(types[("OffLevelOrDx", "level")], "LevelIds")
 
 
 class Sidecars(unittest.TestCase):

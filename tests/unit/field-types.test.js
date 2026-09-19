@@ -55,11 +55,16 @@ test("field types: a base struct's member carries its declared type", () => {
   assert.equal(AE.WellExpress.scale, "Scale_short");
   assert.equal(AE.ScrabSpawner.scrab_scale, "Scale_short");
   assert.equal(AE.ScrabSpawner.scrab_persistant, "Choice_short");
-  // AO's wells also inherit a union-typed member; an aggregate is no enum, so
-  // the fields reading its arms stay untyped rather than shipping a type no
-  // label can serve
+});
+
+test("field types: a field reading a sub-struct arm carries the arm's own type", () => {
+  assert.equal(AE.Drill.behavior, "DrillBehavior");
+  assert.equal(AE.Teleporter.level, "LevelIds");
+  assert.equal(AO.HandStone.camera_1_level, "LevelIds");
+  // AO's wells inherit one union word, read as a level by the express well and as
+  // a bare offset by the local one, so the arm decides and the two disagree
+  assert.equal(AO.WellExpress.off_level, "LevelIds");
   assert.ok(!("disabled_xpos" in AO.WellLocal));
-  assert.ok(!("off_level" in AO.WellExpress));
 });
 
 test("field types: decomp quirks are overridden at emission", () => {

@@ -91,17 +91,20 @@
   ],
   [
    1,
-   "scale"
+   "scale",
+   "Scale_short"
   ]
  ],
  "54": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "type"
+   "type",
+   "BellsongTypes"
   ],
   [
    2,
@@ -119,11 +122,13 @@
  "100": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "camera_1_level"
+   "camera_1_level",
+   "LevelIds"
   ],
   [
    2,
@@ -135,7 +140,8 @@
   ],
   [
    4,
-   "camera_2_level"
+   "camera_2_level",
+   "LevelIds"
   ],
   [
    5,
@@ -147,7 +153,8 @@
   ],
   [
    7,
-   "camera_3_level"
+   "camera_3_level",
+   "LevelIds"
   ],
   [
    8,
@@ -498,7 +505,8 @@
   ],
   [
    6,
-   "off_level"
+   "off_level",
+   "LevelIds"
   ],
   [
    7,

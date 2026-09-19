@@ -62,7 +62,11 @@
   "scale": "Scale_short"
  },
  "Drill": {
-  "start_direction": "DrillDirection"
+  "behavior": "DrillBehavior",
+  "scale": "Scale_short",
+  "start_direction": "DrillDirection",
+  "start_position_bottom": "Choice_short",
+  "start_state_on": "Choice_short"
  },
  "Edge": {
   "can_grab": "Choice_short",
@@ -92,6 +96,18 @@
   "hanging": "Choice_short",
   "persistant": "Choice_short",
   "scale": "Scale_short",
+  "start_direction": "XDirection_short"
+ },
+ "FlyingSlig": {
+  "persistant": "Choice_short",
+  "scale": "Scale_short",
+  "spawn_delay_state": "Path_FlyingSlig_Data::SpawnDelayStates",
+  "start_direction": "XDirection_short"
+ },
+ "FlyingSligSpawner": {
+  "persistant": "Choice_short",
+  "scale": "Scale_short",
+  "spawn_delay_state": "Path_FlyingSlig_Data::SpawnDelayStates",
   "start_direction": "XDirection_short"
  },
  "FootSwitch": {
@@ -310,8 +326,21 @@
   "scale": "Scale_short",
   "start_direction": "StartDirection"
  },
+ "Slurg": {
+  "scale": "Scale_short",
+  "start_direction": "XDirection_short"
+ },
+ "SlurgSpawner": {
+  "scale": "Scale_short",
+  "start_direction": "XDirection_short"
+ },
  "StatusLight": {
   "ignore_grid_snapping": "Choice_short",
+  "scale": "Scale_short"
+ },
+ "Teleporter": {
+  "camera_swap_effect": "ScreenChangeEffects",
+  "level": "LevelIds",
   "scale": "Scale_short"
  },
  "TimedMine": {

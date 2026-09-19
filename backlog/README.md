@@ -30,7 +30,7 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 
 - [12. Curated path names](item-012-curated-path-names.md) — a content pass, a sitting at a time.
 
-**Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The open branches are upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing) and the member-type parser's blind spots ([92](item-092-member-type-parser-blind-spots.md)).
+**Field system:** every gameplay object carries its full field archive, each value transform is write-once and collision-safe and keyed by the field's game type, enum values are generated straight from the decomp, and per-object default visibility is curated. A bare-int field carries the unit it is measured in ([28](item-028-readable-units.md)). The one open branch is upstream label fixes ([29](item-029-decomp-label-sweep.md), ongoing).
 
 **Machine constraint:** a builder change that reads new data off the discs needs a rebuild, which needs the disc images. Batch those for a disc-machine session; one rebuild ships them all. Everything else can be built anywhere.
 
@@ -44,7 +44,6 @@ Item-specific reasoning and cross-references stay inside this folder. An item ma
 ## Code and build
 
 - [**57.** One module lifecycle: explicit `init()`](item-057-module-lifecycle.md) — the current boot order is a load-bearing accident. _Medium._
-- [**92.** The member-type parser's remaining blind spots](item-092-member-type-parser-blind-spots.md) — the sub-struct arm is the gap left, so nine objects still render `scale` raw with four enums beside them; the `class`-declared struct and the uppercase member closed, and neither was an upstream fault. _Small to medium (builder), anywhere._
 
 ## Moonshot
 
@@ -79,13 +78,14 @@ Rejected or disproved, kept so they are not re-proposed.
 
 Newest first, and a finished item is worth reading for the same reason an open one is: whether shipped or retired, each records what was decided, what was ruled out and where its own sketch turned out wrong.
 
+- [**92.** The member-type parser's remaining blind spots](item-092-member-type-parser-blind-spots.md) — a `class`-declared data struct, an uppercase member and a dotted ADD reading a sub-struct arm; the sweep walks out from the data structs through every aggregate they declare, so 560 objects over ten types read their values as words, and the union arm [41](item-041-inherited-field-types.md) left raw came with it. _2026-09-19._
 - [**93.** SecurityClaw's archive labels sit one word to the left](item-093-securityclaw-layout.md) — `Scale_int` is four bytes wide, so every member name after it numbers one word low; one corrections entry and the rebuild it waited for, and the glossary needed no touch-up because only the words move. _2026-09-05._
 - [**90.** Export the world graph as an image](item-090-export-the-world-graph.md) — save svg / save png in the diagram's own bar, both from one serializer: a self-contained SVG built from the same layout the screen draws, and the PNG that string rasterized at twice the screen. The route the sketch ranked first is the one that shipped, and it made the second painter unnecessary. _2026-09-02._
 - [**69.** Browser-level smoke tests](item-069-browser-smoke-tests.md) — the six assertions over boot, permalinks, follows, embed mode, search and settings, on the harness [63](item-063-alignment-anchor-diff.md) brought; the round-trip had to assert `viewHash()` reproduction, a plain view hash never being rewritten at all. _2026-09-02._
 - [**63.** Automate the alignment anchors as a screenshot diff](item-063-alignment-anchor-diff.md) — the four anchors as a CI gate with no reference images: geometry pinned as hand-verified literals, pixels probed against the committed artwork; a scale error moves the pins at any cell, and the deep-cell anchors carry the pitch class that does cancel at the original anchor's cell (0,0). _2026-09-02._
 - [**64.** CI check that the committed sidecars match a re-emit](item-064-sidecar-reemit-check.md) — the enum sweep joined the other parsers' cache discipline, so the emit runs from the committed tree and CI byte-compares all four sidecars; the "emit + cmp" half turned out to already exist as the unittest. _2026-09-02._
 - [**67.** Crawlable content for search engines](item-067-crawlable-content.md) — every level has a plain page under `/levels/`, its paths in play order linking into the viewer, and the sitemap names them all; emitted from the committed data by a Node script that reuses the viewer's own modules, and byte-checked against a fresh emit in CI. _2026-09-01._
-- [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — a member resolves through its base chain, so the wells' `scale` reads full/half; the union the AO wells inherit stays untyped, a type without labels having no business in the sidecar. _2026-09-01._
+- [**41.** Type a field a struct inherits](item-041-inherited-field-types.md) — a member resolves through its base chain, so the wells' `scale` reads full/half; an aggregate-valued member stays untyped, a type without labels having no business in the sidecar. _2026-09-01._
 - [**89.** What the packed layout still misreports](item-089-packed-layout-untruths.md) — the collision lines, the marker boxes, and last the counts: a screen lists the objects whose corner falls in its cell, the third answer the sketch never weighed, so the tag and the tally finally agree. _2026-08-31._
 - [**66.** Add a `404.html`](item-066-404-page.md) — a missing address lands on a page of the map's own with the way back; self-contained, every URL on it root-absolute, since Pages serves it at whatever address was asked. _2026-08-30._
 - [**68.** Say what the repo is licensed as](item-068-repo-licensing.md) — `LICENSE` names the holder and carries the same per-tree scope the README publishes, above a verbatim licence body; the `package.json` half evaporated on inspection, the package being private, and GPL-2.0 turned out to be inherited from the vendored decoder rather than chosen. _2026-08-29._

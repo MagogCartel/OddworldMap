@@ -19,6 +19,10 @@
   "direction": "XDirection_short",
   "scale": "Scale_short"
  },
+ "BellSongStone": {
+  "scale": "Scale_short",
+  "type": "BellsongTypes"
+ },
  "BirdPortal": {
   "enter_side": "PortalSide",
   "level_destination": "LevelIds",
@@ -81,6 +85,12 @@
   "scale": "Scale_short",
   "triggered_by": "FootSwitchTriggerBy"
  },
+ "HandStone": {
+  "camera_1_level": "LevelIds",
+  "camera_2_level": "LevelIds",
+  "camera_3_level": "LevelIds",
+  "scale": "Scale_short"
+ },
  "Hoist": {
   "grab_direction": "Path_Hoist::GrabDirection",
   "hoist_type": "Path_Hoist::Type"
@@ -130,6 +140,9 @@
  "MotionDetector": {
   "draw_flare": "Choice_short",
   "initial_move_direction": "Path_MotionDetector::InitialMoveDirection",
+  "scale": "Scale_short"
+ },
+ "MovieStone": {
   "scale": "Scale_short"
  },
  "MovingBomb": {
@@ -261,6 +274,7 @@
  },
  "WellExpress": {
   "emit_leaves": "Choice_short",
+  "off_level": "LevelIds",
   "on_level": "LevelIds",
   "scale": "Scale_short"
  },

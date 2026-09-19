@@ -20,6 +20,11 @@
   "2": "tasks door with secret music",
   "3": "tasks door"
  },
+ "DrillBehavior": {
+  "0": "not interactable",
+  "1": "toggle",
+  "2": "use"
+ },
  "DrillDirection": {
   "0": "down",
   "1": "right",

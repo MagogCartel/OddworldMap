@@ -3,6 +3,12 @@
   {
    "date": "2026-09-19",
    "tag": "improved",
+   "title": "Ten object types read their values in words",
+   "detail": "A drill's behaviour said 0, 1 or 2; it now says not interactable, toggle or use. A teleporter names the level it sends you to and the wipe it plays. A bell stone says whether it whistles or chimes, an Oddysee hand stone the level each of its three views looks at, and an express well the level it rides to while its switch is off. Slurgs, flying sligs and their spawners gain their start direction, and nine of the ten types the plane they sit on. That is 560 objects across both games, all of them reading raw until now because the decompilation declares these fields one struct deeper than the map's reader looked."
+  },
+  {
+   "date": "2026-09-19",
+   "tag": "improved",
    "tiny": true,
    "title": "Moving bombs and pants lockers say their plane",
    "detail": "A moving bomb's plane and its two flags, and the plane on Exoddus' Slig pants lockers, showed as bare 0s and 1s rather than words. The decompilation declares them in two shapes the builder's type reader could not see: one data struct written as a class, and one member spelled with a capital. Oddysee's 35 bombs now read their plane as full and, all but two, their alarm trigger as false; the seven lockers read full as well. The words show with more object fields turned on, in the field picker, in the editor, and in search, which matches on them. The stored values are unchanged, and no marker moved."

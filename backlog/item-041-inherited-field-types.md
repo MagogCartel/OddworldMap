@@ -27,3 +27,8 @@ Eight fields gained a type and no layout moved: both games' wells' `scale` (`Sca
 The union's arms stay unresolved. The CTOR reads `field_24_off_level_or_dx.level` for WellExpress's `off_level`, which is genuinely `LevelIds`, but resolving an arm through a union body is a second parser for two fields, so both stay raw — the refinement is here if anyone wants it.
 
 The trap had a catcher after all, one layer up from where the finding looked: `tests/unit/enum-labels.test.js` sweeps every shipped field type through `TRANSFORM` and the labels, so the naive fix fails a unit test rather than shipping — `write_enum_labels`' own check indeed never sees a union. And the fix corrected [29](item-029-decomp-label-sweep.md)'s scan on the way through: its bare-`s16` scale list carried three fields that were never bare, the scan having read the schema cache, which is blind to whatever the parser misses.
+
+## Grown since filing
+
+**The union's arms resolved, 2026-09-19.** [92](item-092-member-type-parser-blind-spots.md)'s arm walk is the second parser this item declined to write, and it arrived for the nine sub-struct scales rather than for these two fields: the sweep follows a data struct's aggregates wherever they are declared, and an ADD is typed by the arm it ends on, so `WellExpress.off_level` reads as a level name. `WellLocal.disabled_xpos` reads the same inherited word as the union's `dx` and stays raw, the arm being what decides.
+

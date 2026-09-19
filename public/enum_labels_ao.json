@@ -1,4 +1,8 @@
 {
+ "BellsongTypes": {
+  "0": "whistle",
+  "1": "chimes"
+ },
  "BgAnimSounds": {
   "-1": "none -1",
   "0": "none 0",

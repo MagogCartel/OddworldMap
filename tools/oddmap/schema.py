@@ -110,23 +110,34 @@ def parse_member_types(game_key):
     MeatSaw enum), so a nested enum is qualified with its owning struct; the
     decomp's own qualified references carry the cross-object sharing. A derived
     struct answers for its base chain's members (the wells' scale is declared on
-    Path_WellBase). Primitives and aggregate-valued fields carry no type — a
-    union's arms stay unresolved even where the CTOR reads one."""
-    paths = _relive_headers(game_key)
-
-    aggregates, bases, declared, raw = set(), {}, set(), []
-    for p in paths:
+    Path_WellBase). Primitives carry no type. Two maps come back: the enum-ish
+    declarations a value renders through, and the aggregate-valued ones — a
+    sub-struct or a union — a dotted ADD walks to reach the arm it reads."""
+    bodies, aggregates = {}, set()
+    for p in _relive_headers(game_key):
         src = p.read_text(errors="replace")
         for am in re.finditer(r'(?<!enum )\b(?:struct|union)\s+([A-Za-z_]\w*)\b[^{;]*\{', src):
             aggregates.add(am.group(1))
-        for sm in re.finditer(r'\b(?:struct|class)\s+(Path_[A-Za-z0-9_]+)\b([^{;]*)\{', src):
-            struct = sm.group(1)
+        for sm in re.finditer(r'(?<!enum )\b(?:struct|class|union)\s+([A-Za-z_]\w*)\b([^{;]*)\{', src):
             if "TlvObjectBase" in sm.group(2):  # a viewer-API wrapper, not a data struct
                 continue
-            bm = re.search(r':\s*public\s+(Path_\w+)', sm.group(2))
+            bodies.setdefault(sm.group(1), []).append(
+                (sm.group(2), src[sm.end():_match_brace(src, sm.end() - 1) - 1]))
+
+    # swept out from the Path_* data structs: a sub-struct or union one of them
+    # declares is swept in turn, whatever its own name (Slurg_Path_Data, the wells'
+    # OffLevelOrDx), a dotted ADD reading an arm of it
+    queue = [name for name in bodies if name.startswith("Path_")]
+    bases, declared, raw, seen = {}, set(), [], set()
+    while queue:
+        struct = queue.pop(0)
+        if struct in seen:
+            continue
+        seen.add(struct)
+        for inherits, body in bodies[struct]:
+            bm = re.search(r':\s*public\s+(Path_\w+)', inherits)
             if bm:
                 bases[struct] = bm.group(1)
-            body = src[sm.end():_match_brace(src, sm.end() - 1) - 1]
             nested = set(re.findall(_ENUM_RE, body))
             # cut nested enum bodies so their enumerators aren't read as members
             kept, i = [], 0
@@ -144,15 +155,16 @@ def parse_member_types(game_key):
                 if "::" not in ty and ty in nested:
                     ty = f"{struct}::{ty}"
                 raw.append((struct, member, ty))
+                if ty in bodies:
+                    queue.append(ty)
 
-    types = {}
+    types, structs = {}, {}
     for struct, member, ty in raw:  # second pass: now that every aggregate name is known
-        if "::" not in ty and ty in aggregates:
-            continue  # an aggregate-valued field (struct or union), not an enum
-        if ty.split("::")[-1].endswith(("_data", "_Data")):
-            continue
-        types[(struct, member)] = ty
-    return _inherit_member_types(types, bases, declared)
+        leaf = ty.split("::")[-1]
+        aggregate = ("::" not in ty and ty in aggregates) or leaf.endswith(("_data", "_Data"))
+        (structs if aggregate else types)[(struct, member)] = ty
+    return (_inherit_member_types(types, bases, declared),
+            _inherit_member_types(structs, bases, declared))
 
 def _lib_headers(game_key):
     """every header of one game's AliveLib tree plus AliveLibCommon. Enum
@@ -232,6 +244,16 @@ def parse_enum_labels(game_key):
         labels[key] = {v: c.get(en, _derive_label(en)).lower() for v, en in vals.items()}
     return labels, bad
 
+def _arm_type(struct, segs, types, structs):
+    """the declared type an ADD's expression ends on. A dotted one reads an arm of
+    a sub-struct or a union (mTlv.field_10_data.field_18_behavior), so walk the
+    aggregate declarations to the struct the leaf is declared in."""
+    for seg in segs[:-1]:
+        struct = structs.get((struct, seg))
+        if not struct:
+            return None
+    return types.get((struct, segs[-1]))
+
 def parse_object_schema(game_key):
     """per-type payload field layout from the relive_api CTOR blocks: each
     ADD("Name", mTlv.field_XX_...) gives a field's payload word (from the hex
@@ -247,7 +269,7 @@ def parse_object_schema(game_key):
     src = (REPO / f"Source/Tools/relive_api/Tlvs{game_key}.hpp").read_text()
     base = 0x18 if game_key == "AO" else 0x10
     ctor = f"CTOR_{game_key}"
-    member_types = parse_member_types(game_key)
+    member_types, member_structs = parse_member_types(game_key)
 
     schema = {}
     for m in re.finditer(rf"{ctor}\([^)]*\)\s*\{{(.*?)\n    \}}", src, re.S):
@@ -266,8 +288,8 @@ def parse_object_schema(game_key):
                     word = last + 1
             else:
                 word = last + 1
-            member = re.split(r"[.\[]", am.group(2))[0]
-            ty = member_types.get((data_struct, member))
+            segs = [re.sub(r"\[.*", "", seg) for seg in am.group(2).split(".")]
+            ty = _arm_type(data_struct, segs, member_types, member_structs)
             fields.append([word, norm(am.group(1)), ty] if ty else [word, norm(am.group(1))])
             last = word
         if fields:

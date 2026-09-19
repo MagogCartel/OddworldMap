@@ -601,7 +601,8 @@
   ],
   [
    4,
-   "level"
+   "level",
+   "LevelIds"
   ],
   [
    5,
@@ -609,11 +610,13 @@
   ],
   [
    6,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    7,
-   "camera_swap_effect"
+   "camera_swap_effect",
+   "ScreenChangeEffects"
   ],
   [
    8,
@@ -1252,11 +1255,13 @@
  "82": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "spawn_delay_state"
+   "spawn_delay_state",
+   "Path_FlyingSlig_Data::SpawnDelayStates"
   ],
   [
    2,
@@ -1272,7 +1277,8 @@
   ],
   [
    5,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    6,
@@ -1312,17 +1318,20 @@
   ],
   [
    15,
-   "persistant"
+   "persistant",
+   "Choice_short"
   ]
  ],
  "92": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
-   "spawn_delay_state"
+   "spawn_delay_state",
+   "Path_FlyingSlig_Data::SpawnDelayStates"
   ],
   [
    2,
@@ -1338,7 +1347,8 @@
   ],
   [
    5,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    6,
@@ -1378,7 +1388,8 @@
   ],
   [
    15,
-   "persistant"
+   "persistant",
+   "Choice_short"
   ]
  ],
  "4": [
@@ -1630,7 +1641,8 @@
  "90": [
   [
    0,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    1,
@@ -1646,7 +1658,8 @@
   ],
   [
    4,
-   "behavior"
+   "behavior",
+   "DrillBehavior"
   ],
   [
    5,
@@ -1654,7 +1667,8 @@
   ],
   [
    6,
-   "start_state_on"
+   "start_state_on",
+   "Choice_short"
   ],
   [
    7,
@@ -1670,11 +1684,13 @@
   ],
   [
    10,
-   "start_position_bottom"
+   "start_position_bottom",
+   "Choice_short"
   ],
   [
    11,
-   "start_direction"
+   "start_direction",
+   "DrillDirection"
   ]
  ],
  "24": [
@@ -2077,11 +2093,13 @@
   ],
   [
    1,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    3,
@@ -2908,11 +2926,13 @@
   ],
   [
    1,
-   "start_direction"
+   "start_direction",
+   "XDirection_short"
   ],
   [
    2,
-   "scale"
+   "scale",
+   "Scale_short"
   ],
   [
    3,
