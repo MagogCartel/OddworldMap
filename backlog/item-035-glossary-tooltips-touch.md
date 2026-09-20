@@ -33,3 +33,8 @@ The glossary reached the reader through a native `title`, which no phone shows, 
 `js/anchortip.js` (born `glosstip.js`, renamed when it generalised), delegating on `[data-tip]` from the document. `#tip` deliberately untouched — the two write the same panel surface twice, and [21](item-021-css-design-inheritance.md) owned that fold.
 
 **Recorded exclusion:** search result rows carry no glossary affordance on purpose. It is a scanning surface, `<mark>` highlights and dotted underlines would collide, and the definition is one jump away in context.
+
+## Grown since filing
+
+**A touch route reached the stale case, 2026-09-20.** The sidebar's four remaining `title` buttons took a `data-tip` instead, and on narrow a tap on one of them can close the drawer — the first anchor whose own tap takes it off-screen, where the pointer events this module filters out would have hidden it. `syncMenu` hides an open tip when the drawer closes, beside the focus move it already made for the same removal.
+

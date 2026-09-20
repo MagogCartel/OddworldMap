@@ -2,6 +2,7 @@
 
 import { esc, formatDist, segDist } from "./util.js";
 import { fieldEntries } from "./fields.js";
+import { hideAnchorTip } from "./anchortip.js";
 import {
   KEY_PAN_PX,
   KEY_ZOOM_STEP,
@@ -90,6 +91,7 @@ function syncMenu() {
   menuBtn.title = label;
   menuBtn.setAttribute("aria-label", label);
   if (!open && sidebar.contains(document.activeElement)) menuBtn.focus();
+  if (!open) hideAnchorTip(); // a tap that closes the drawer takes its own anchor off-screen
   sidebar.inert = !open; // sliding it off-screen leaves its controls focusable
 }
 document.body.classList.toggle("menu-open", !isNarrow()); // set before first paint: open on wide, out of the way on narrow

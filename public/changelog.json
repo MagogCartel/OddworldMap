@@ -1,6 +1,13 @@
 {
  "entries": [
   {
+   "date": "2026-09-20",
+   "tag": "improved",
+   "tiny": true,
+   "title": "Four sidebar buttons lose the hover wait",
+   "detail": "World graph, Export view, Export whole path and By the numbers used the browser's own tooltip: you hovered and waited for it, and on a phone it never appeared at all. They now show the same instant note the Display toggles and Export path as JSON already carry, and a tap reaches it too. The words are the ones they had, tidied to read as sentences."
+  },
+  {
    "date": "2026-09-19",
    "tag": "improved",
    "title": "Ten object types read their values in words",
