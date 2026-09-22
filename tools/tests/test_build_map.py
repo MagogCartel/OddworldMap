@@ -106,6 +106,9 @@ class DeriveLabel(unittest.TestCase):
     def test_leaves_an_all_caps_run_alone(self):
         self.assertEqual(schema._derive_label("eTLVSpawn_1"), "TLVSpawn")
 
+    def test_an_underscore_is_a_word_break(self):
+        self.assertEqual(schema._derive_label("eMudancheeVault_Ender_7"), "Mudanchee Vault Ender")
+
 
 class InheritMemberTypes(unittest.TestCase):
     def test_a_base_members_type_reaches_the_derived_struct(self):

@@ -76,10 +76,12 @@ def norm(label):
 
 def _derive_label(enumerator):
     """a readable label from an enumerator name: drop the value suffix and the
-    decomp's `e` prefix, split CamelCase (eChaseAndDisappear_4 -> Chase And Disappear)"""
+    decomp's `e` prefix, split CamelCase and underscores into words
+    (eChaseAndDisappear_4 -> Chase And Disappear)"""
     n = re.sub(r"_\d+$", "", enumerator)
     n = re.sub(r"^e(?=[A-Z])", "", n)
     n = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", n)
+    n = re.sub(r"_+", " ", n).strip()
     return n[:1].upper() + n[1:] if n else enumerator
 
 def _inherit_member_types(types, bases, declared):
