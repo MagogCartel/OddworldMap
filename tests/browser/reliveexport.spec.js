@@ -26,7 +26,6 @@ function sidecarLog(page) {
   return log;
 }
 
-// the exports fold under one control, closed at boot
 async function openExports(page) {
   await expect(page.locator("#exportJsonBtn")).toBeHidden();
   await page.click("#exportMenu > summary");

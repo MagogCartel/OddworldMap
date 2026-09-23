@@ -94,8 +94,7 @@ export const pendingGames = () => GAME_IDS.filter((id) => !settled.has(id));
 // the editor data is a viewer surface nobody uses until they ask for it, so it
 // is fetched on the first use rather than at boot; one fetch per game however
 // many uses follow, and a fetch that came back with nothing is forgotten so the
-// next ask is a real retry rather than the first failure repeating. `low` keeps
-// it behind the artwork the way the other game's dataset is.
+// next ask is a real retry rather than the first failure repeating.
 const editorData = new Map();
 export function loadEditorData(id, low) {
   let p = editorData.get(id);
