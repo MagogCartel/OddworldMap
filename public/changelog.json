@@ -12,7 +12,7 @@
    "tag": "fixed",
    "tiny": true,
    "title": "The ender levels' names read as words",
-   "detail": "Where a field names an Exoddus level, the endgame revisits showed with an underscore stitched into the name, mudanchee vault_ender and brewery_ender among them. They read as words now: mudanchee vault ender, brewery ender and the rest."
+   "detail": "Where a field names an Exoddus level, the six ender levels showed with an underscore stitched into the name, mudanchee vault_ender and brewery_ender among them. They read as words now: mudanchee vault ender, brewery ender and the rest."
   },
   {
    "date": "2026-09-20",
